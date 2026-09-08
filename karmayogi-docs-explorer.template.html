@@ -370,7 +370,7 @@
     <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>
-      <div class="sub">6 features</div>
+      <div class="sub">7 features</div>
     </div>
 
     <button class="bub item" style="left:655px; top:130px; width:130px; height:130px; font-size:15px" onclick="openFeature('course')">Course</button>
@@ -379,6 +379,7 @@
     <button class="bub item" style="left:652px; top:747px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('assigned')">My Assigned Courses</button>
     <button class="bub item assess" style="left:384px; top:592px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('standalone')">Standalone Assessment</button>
     <button class="bub item assess" style="left:380px; top:278px; width:144px; height:144px; font-size:13px" onclick="openFeature('cap')">Comprehensive Assessment Program</button>
+    <button class="bub item" style="left:508px; top:30px; width:128px; height:128px; font-size:14px" onclick="openFeature('pathway')">Learning Pathway</button>
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
   </section>
@@ -818,6 +819,55 @@
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/comprehensive-assessment-program/lld.md"></article><div class="md-src">source: docs/learning-hub/comprehensive-assessment-program/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/comprehensive-assessment-program/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/comprehensive-assessment-program/operations-manual.md</div></div>
     </div><!-- /fdoc cap -->
+
+    <!-- ═══ LEARNING PATHWAY ═══ -->
+    <div class="fdoc" data-fdoc="pathway" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M8 12h5M8 16h8M8 8h3"/></svg></div>
+        <div>
+          <div class="fp-title">Learning Pathway</div>
+          <div class="fp-sub">A guided, multi-stage journey &mdash; milestones of courses and checkpoints that unlock one at a time.</div>
+          <div class="fp-chips"><span class="chip">Category&nbsp; <code>courseCategory = "Learning Pathway"</code></span><span class="chip">Status&nbsp; thin backend &mdash; content-model overlay, no dedicated service</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A pathway looks like a course laid out as a staircase of up to five <strong>milestones</strong>, each a small bundle of courses (some mandatory, some optional) ending in its own checkpoint assessment. The next milestone stays locked until the current one's mandatory courses are done and its checkpoint is passed &mdash; and every one of those locks is worked out on the learner's own device from ordinary course-progress data, not fetched from a dedicated "pathway progress" API.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> Learning Pathway is not a bespoke backend feature &mdash; it is an ordinary content/collection node distinguished only by <code>courseCategory = "Learning Pathway"</code>, with milestones embedded as opaque JSON. There is no attempt-limit/cool-off enforcement anywhere, and several pieces (access control rules, discovery inclusion, certificate/QR/karma issuance) depend on external services or remote config not present in the four repos traced. Treat this page as thorough but bounded by that scope.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Content overlay, not a service</b><p>Every write reuses the generic Content CRUD actors; only the enriched read is pathway-aware.</p></div>
+          <div class="fp-card"><b>Client-derived unlock</b><p>Web and mobile each independently recompute milestone lock state &mdash; no server push, no shared code between them.</p></div>
+          <div class="fp-card"><b>Per-milestone achievement</b><p>Finishing a milestone can award its own certificate, not just one at the very end.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Discover and enrol</b><p>Discovery rides on generic search/listing or the learner web portal's org-targeted curated strips &mdash; there's no purpose-built "Explore Pathways" page.</p><div class="api">POST <code>sunbirdigot/v4/search</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 &middot; Clear the entry gate</b><p>If a preliminary assessment is configured, milestone one stays locked until it's passed.</p><div class="api">Enriched read exposes <code>preliminaryAssessment</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 &middot; Work a milestone and unlock the next</b><p>Mandatory courses done &rarr; checkpoint unlocks &rarr; pass it &rarr; next milestone opens immediately, no refresh.</p><div class="api">GET <code>course/v5/content/state/read</code></div></div>
+          <div class="uc-card"><div class="who">Publisher</div><b class="t">UC-4 &middot; Build and publish</b><p>4-step wizard: metadata, milestone structure, preview, access control &mdash; then publish.</p><div class="api">POST <code>action/content/v3/create</code> &middot; <code>action/content/v3/publish/:id</code></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/learning-pathway/apis.md"></article><div class="md-src">source: docs/learning-hub/learning-pathway/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/learning-pathway/hld.md"></article><div class="md-src">source: docs/learning-hub/learning-pathway/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/learning-pathway/lld.md"></article><div class="md-src">source: docs/learning-hub/learning-pathway/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/learning-pathway/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/learning-pathway/operations-manual.md</div></div>
+    </div><!-- /fdoc pathway -->
 
     <!-- ═══ EXPLORE CONTENT (main-page feature) ═══ -->
     <div class="fdoc" data-fdoc="explore" hidden>
