@@ -1,0 +1,1114 @@
+<title>Karmayogi Docs Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap">
+
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #F5F6F9; color: #241C15;
+    font-family: Lato, 'Trebuchet MS', -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+  :focus-visible { outline: 2px solid #1B4CA1; outline-offset: 2px; border-radius: 6px; }
+
+  /* ── scalable stage ─────────────────────────────── */
+  #stagewrap { width: 100%; display: flex; justify-content: center; overflow: hidden; }
+  #stage {
+    position: relative; width: 1440px; height: 900px; flex: none;
+    transform-origin: top center;
+  }
+
+  /* ── views ──────────────────────────────────────── */
+  .view { position: absolute; inset: 0; opacity: 1; transition: opacity .35s ease; }
+  .view.hidden { opacity: 0; pointer-events: none; }
+  .view[data-gone] { display: none; }
+
+  /* ── shared chrome ──────────────────────────────── */
+  .topbar {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 6;
+    display: flex; align-items: center; gap: 14px; padding: 16px 32px;
+  }
+  .wordmark b { display: block; font-weight: 900; font-size: 17px; letter-spacing: -0.02em; }
+  .wordmark b em { font-style: normal; color: #EF951E; }
+  .wordmark span { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #767E8C; }
+  .search {
+    margin-left: auto; display: flex; align-items: center; gap: 10px;
+    background: #FFFFFF; border: 1px solid #00000014; border-radius: 99px;
+    padding: 9px 18px; width: 300px; color: #767E8C; font-size: 13px;
+    box-shadow: 0 1px 3px #1b214312;
+  }
+  .backpill {
+    position: absolute; top: 84px; left: 32px; z-index: 6;
+    display: flex; align-items: center; gap: 8px;
+    background: #FFFFFF; border: 1px solid #00000014; border-radius: 99px;
+    padding: 8px 18px; font-size: 13px; font-weight: 700; color: #1B4CA1;
+    cursor: pointer; box-shadow: 0 1px 4px #1b214315; border: 1px solid #00000014;
+  }
+  .backpill:hover { background: #E8EDF6; }
+  .hint {
+    position: absolute; bottom: 24px; left: 0; right: 0; text-align: center;
+    font-size: 13px; font-weight: 700; color: #767E8C;
+  }
+  .orbitbg { position: absolute; left: 0; top: 0; pointer-events: none; }
+
+  /* ── bubbles ────────────────────────────────────── */
+  .bub {
+    position: absolute; border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; cursor: pointer; padding: 16px; border: 0;
+    font-family: inherit;
+    transition: left .55s cubic-bezier(.4,0,.2,1), top .55s cubic-bezier(.4,0,.2,1),
+                width .55s cubic-bezier(.4,0,.2,1), height .55s cubic-bezier(.4,0,.2,1),
+                opacity .35s ease, filter .2s ease, background .55s, color .55s, border-color .55s;
+  }
+  .bub:hover { filter: brightness(1.05); }
+  .bub .sub { font-size: 10.5px; font-weight: 700; color: #767E8C; letter-spacing: .06em; margin-top: 3px; }
+
+  .bub.center {
+    background: #1B4CA1; color: #FFFFFF; cursor: default;
+    box-shadow: 0 16px 38px -12px #1B4CA199; z-index: 3; gap: 2px;
+  }
+  .bub.center .sub { color: #FFFFFFB0; text-transform: uppercase; letter-spacing: .1em; font-size: 10.5px; }
+  .bub.hub {
+    background: #FFFFFF; border: 3px solid #1B4CA1; color: #1B4CA1;
+    font-weight: 900; font-size: 16px; box-shadow: 0 12px 28px -12px #1B4CA155;
+  }
+  .bub.item {
+    background: #FFFFFF; border: 2px solid #1B4CA1; color: #1B4CA1;
+    font-weight: 700; font-size: 14px; box-shadow: 0 10px 24px -10px #1b214340;
+  }
+  .bub.assess {
+    background: #FDF3E4; border-color: #EF951E; color: #B96D08;
+    box-shadow: 0 10px 24px -10px #B96D0840;
+  }
+  .bub.dim { opacity: 0; }
+
+  /* pulse for "you can click me" */
+  @keyframes pulse-blink {
+    0%, 100% { box-shadow: 0 12px 28px -12px #1B4CA155; transform: scale(1); }
+    50% { box-shadow: 0 0 0 14px #EF951E33, 0 12px 28px -12px #1B4CA155; transform: scale(1.06); }
+  }
+  .bub.pulse { animation: pulse-blink .55s ease-in-out 3; }
+
+  /* staggered pop-in when a view appears */
+  @keyframes pop { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: scale(1); } }
+  .view.entering .bub:not(.center) { animation: pop .45s cubic-bezier(.34,1.4,.64,1) backwards; }
+  .view.entering .bub:nth-of-type(2) { animation-delay: .05s; }
+  .view.entering .bub:nth-of-type(3) { animation-delay: .11s; }
+  .view.entering .bub:nth-of-type(4) { animation-delay: .17s; }
+  .view.entering .bub:nth-of-type(5) { animation-delay: .23s; }
+  .view.entering .bub:nth-of-type(6) { animation-delay: .29s; }
+  .view.entering .bub:nth-of-type(7) { animation-delay: .35s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bub, .view { transition: none !important; animation: none !important; }
+    .view.entering .bub { animation: none !important; }
+  }
+
+  /* ── toast ──────────────────────────────────────── */
+  #toast {
+    position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: #241C15; color: #FFFFFF; font-size: 13px; font-weight: 700;
+    border-radius: 99px; padding: 11px 22px; opacity: 0; pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease; z-index: 50; white-space: nowrap;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── feature page ───────────────────────────────── */
+  #v-feat { background: #F5F6F9; }
+  .fp-top {
+    display: flex; align-items: center; gap: 14px; padding: 14px 32px;
+    background: #FFFFFF; border-bottom: 1px solid #00000010;
+  }
+  .fp-hero {
+    background: linear-gradient(180deg, #E8EDF6 0%, #F5F6F9 100%);
+    padding: 20px 40px 0; border-bottom: 1px solid #00000010;
+  }
+  .fp-back {
+    display: inline-flex; align-items: center; gap: 8px; background: #FFFFFF;
+    border: 1px solid #00000014; border-radius: 99px; padding: 7px 16px;
+    font-size: 13px; font-weight: 700; color: #1B4CA1; cursor: pointer;
+    box-shadow: 0 1px 3px #1b214310; margin-bottom: 16px;
+  }
+  .fp-back:hover { background: #E8EDF6; }
+  .fp-head { display: flex; align-items: flex-start; gap: 18px; }
+  .fp-icon {
+    width: 62px; height: 62px; border-radius: 50%; background: #1B4CA1; flex: none;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 24px -10px #1B4CA180;
+  }
+  .fp-title { font-size: 30px; font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; }
+  .fp-sub { font-size: 14.5px; color: #4E5562; margin-top: 5px; max-width: 720px; }
+  .fp-chips { display: flex; gap: 8px; margin-top: 13px; flex-wrap: wrap; }
+  .chip {
+    font-size: 11.5px; font-weight: 700; background: #FFFFFF; border: 1px solid #00000014;
+    border-radius: 99px; padding: 4px 12px; color: #4E5562;
+  }
+  .chip code { font-family: Menlo, Consolas, monospace; font-size: 11px; color: #1B4CA1; }
+  .chip.ok { background: #1D89231F; border-color: transparent; color: #1D8923; }
+  .fp-tabs { display: flex; gap: 4px; margin-top: 22px; }
+  .fp-tab {
+    padding: 11px 20px; font-size: 14px; font-weight: 700; color: #767E8C;
+    border: 0; background: transparent; border-bottom: 3px solid transparent;
+    cursor: pointer; font-family: inherit;
+  }
+  .fp-tab:hover { color: #241C15; }
+  .fp-tab.active { font-weight: 900; color: #1B4CA1; border-bottom-color: #1B4CA1; }
+  .fp-body { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 28px; padding: 26px 40px; }
+  .fp-h2 { font-size: 18px; font-weight: 900; letter-spacing: -0.02em; margin: 0 0 10px; }
+  .fp-p { font-size: 14.5px; color: #4E5562; line-height: 1.65; max-width: 66ch; margin: 0 0 20px; }
+  .fp-cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 22px; }
+  .fp-card {
+    background: #FFFFFF; border: 1px solid #00000014; border-radius: 12px;
+    padding: 15px 16px; box-shadow: 0 1px 3px #1b214310;
+  }
+  .fp-card b { display: block; font-size: 13.5px; font-weight: 900; color: #1B4CA1; margin-bottom: 4px; }
+  .fp-card p { font-size: 12.5px; color: #4E5562; line-height: 1.5; margin: 0; }
+  .fp-steps { display: flex; align-items: stretch; }
+  .fp-step { flex: 1; background: #FFFFFF; border: 1px solid #00000014; padding: 13px 15px; }
+  .fp-step + .fp-step { border-left: 0; }
+  .fp-step:first-child { border-radius: 12px 0 0 12px; }
+  .fp-step:last-child { border-radius: 0 12px 12px 0; }
+  .fp-step b { display: block; font-size: 11px; font-weight: 900; color: #EF951E; letter-spacing: .1em; margin-bottom: 3px; }
+  .fp-step p { font-size: 12.5px; color: #4E5562; line-height: 1.5; margin: 0; }
+  .fp-side { display: flex; flex-direction: column; gap: 14px; }
+  .side-box {
+    background: #FFFFFF; border: 1px solid #00000014; border-radius: 12px;
+    padding: 16px; box-shadow: 0 1px 3px #1b214310;
+  }
+  .side-box .lbl {
+    font-size: 10.5px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase;
+    color: #767E8C; margin-bottom: 10px;
+  }
+  .side-box.blue { background: #E8EDF6; border-color: transparent; }
+  .side-links { display: flex; flex-direction: column; gap: 7px; font-size: 13px; font-weight: 700; color: #4E5562; }
+  .side-pills { display: flex; flex-wrap: wrap; gap: 7px; }
+  .side-pill { font-size: 12px; font-weight: 700; color: #1B4CA1; background: #E8EDF6; border-radius: 99px; padding: 4px 12px; }
+  .side-pill.warm { color: #B96D08; background: #FDF3E4; }
+  .tabpanel[hidden] { display: none; }
+  .fdoc[hidden] { display: none; }
+  #v-feat { overflow-y: auto; }
+  .one-col { grid-template-columns: minmax(0,1fr); }
+  .tw { overflow-x: auto; border: 1px solid #00000014; border-radius: 12px; margin: 0 0 22px; background: #FFFFFF; box-shadow: 0 1px 3px #1b214310; }
+  .tw table { border-collapse: collapse; width: 100%; font-size: 13px; min-width: 640px; }
+  .tw th {
+    text-align: left; font-size: 10.5px; font-weight: 900; letter-spacing: .11em; text-transform: uppercase;
+    color: #767E8C; padding: 10px 14px; background: #EEF1F6; border-bottom: 1px solid #00000014;
+  }
+  .tw td { padding: 10px 14px; border-bottom: 1px solid #00000010; color: #4E5562; vertical-align: top; line-height: 1.5; }
+  .tw tr:last-child td { border-bottom: 0; }
+  .tw code, .fp-p code, li code { font-family: Menlo, Consolas, monospace; font-size: .88em; background: #EEF1F6; border-radius: 4px; padding: 1px 6px; color: #1B4CA1; white-space: nowrap; }
+  .method { font-family: Menlo, Consolas, monospace; font-size: 10.5px; font-weight: 700; border-radius: 5px; padding: 2px 8px; display: inline-block; }
+  .method.post { background: #E8EDF6; color: #1B4CA1; }
+  .method.get { background: #1D89231F; color: #1D8923; }
+  .method.patch { background: #FDF3E4; color: #B96D08; }
+  .pre {
+    background: #241C15; color: #E8EDF6; border-radius: 12px; padding: 16px 18px;
+    overflow-x: auto; margin: 0 0 22px; font-family: Menlo, Consolas, monospace;
+    font-size: 12px; line-height: 1.7; white-space: pre;
+  }
+  .pre .k { color: #F3AE55; } .pre .c { color: #9BA3B5; }
+  .flowline { display: flex; align-items: stretch; margin-bottom: 22px; flex-wrap: wrap; gap: 0; }
+  .uc-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; margin-bottom: 24px; }
+  .uc-card { background: #FFFFFF; border: 1px solid #00000014; border-radius: 12px; padding: 16px 18px; box-shadow: 0 1px 3px #1b214310; }
+  .uc-card .who { font-size: 10.5px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; color: #EF951E; margin-bottom: 5px; }
+  .uc-card b.t { display: block; font-size: 14.5px; font-weight: 900; color: #241C15; margin-bottom: 6px; }
+  .uc-card p { font-size: 12.5px; color: #4E5562; line-height: 1.55; margin: 0 0 8px; }
+  .uc-card .api { font-size: 11px; color: #767E8C; border-top: 1px dashed #00000014; padding-top: 8px; }
+  .uc-card .api code { white-space: normal; }
+  .note-banner {
+    border: 1px solid #EF951E4D; border-left: 3px solid #EF951E; background: #FDF3E4;
+    border-radius: 10px; padding: 12px 16px; font-size: 12.5px; color: #6B4A0E; line-height: 1.6;
+    margin-bottom: 22px; max-width: 900px;
+  }
+  .statechips { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 22px; }
+  .st { font-family: Menlo, Consolas, monospace; font-size: 11px; font-weight: 700; border-radius: 7px; padding: 6px 11px; border: 1.5px solid #1B4CA1; color: #1B4CA1; background: #FFFFFF; }
+  .st.warm { border-color: #EF951E; color: #B96D08; background: #FDF3E4; }
+  .st.ok { border-color: #1D8923; color: #1D8923; background: #1D89231F; }
+  .st.bad { border-color: #D12E2E; color: #D12E2E; background: #D12E2E14; }
+  .statechips .arr { color: #767E8C; font-size: 13px; font-weight: 900; }
+</style>
+
+<style>
+/* ── markdown-rendered tech tabs (APIs · HLD · LLD) ─── */
+.mdwrap { max-width: 900px; }
+.mdwrap h1 { font-size: 21px; font-weight: 900; letter-spacing: -0.02em; margin: 0 0 14px; }
+.mdwrap h2 { font-size: 18px; font-weight: 900; letter-spacing: -0.02em; margin: 26px 0 10px; padding-top: 18px; border-top: 1px solid #00000010; }
+.mdwrap h1 + h2, .mdwrap h2:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
+.mdwrap h3 { font-size: 14.5px; font-weight: 900; margin: 20px 0 7px; }
+.mdwrap p, .mdwrap li { font-size: 14px; color: #4E5562; line-height: 1.65; }
+.mdwrap p { margin: 0 0 12px; }
+.mdwrap ul, .mdwrap ol { margin: 0 0 14px; padding-left: 20px; }
+.mdwrap li { margin-bottom: 5px; }
+.mdwrap li::marker { color: #1B4CA1; }
+.mdwrap strong { color: #241C15; }
+.mdwrap a { color: #1B4CA1; font-weight: 700; text-decoration: none; }
+.mdwrap a:hover { text-decoration: underline; }
+.mdwrap code { font-family: Menlo, Consolas, monospace; font-size: .86em; background: #EEF1F6; border-radius: 4px; padding: 1px 6px; color: #1B4CA1; }
+.mdwrap pre { background: #241C15; border-radius: 12px; padding: 15px 17px; overflow-x: auto; margin: 0 0 18px; }
+.mdwrap pre code { background: transparent; color: #E8EDF6; padding: 0; font-size: 12px; line-height: 1.65; white-space: pre; }
+.mdwrap table { border-collapse: collapse; width: 100%; font-size: 13px; margin: 0 0 20px; display: block; overflow-x: auto; border: 1px solid #00000014; border-radius: 10px; background: #FFFFFF; }
+.mdwrap th { text-align: left; font-size: 10.5px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: #767E8C; padding: 9px 13px; background: #EEF1F6; border-bottom: 1px solid #00000014; white-space: nowrap; }
+.mdwrap td { padding: 9px 13px; border-bottom: 1px solid #00000010; color: #4E5562; vertical-align: top; line-height: 1.5; }
+.mdwrap tr:last-child td { border-bottom: 0; }
+.mdwrap blockquote { border: 1px solid #EF951E4D; border-left: 3px solid #EF951E; background: #FDF3E4; border-radius: 10px; padding: 11px 15px; margin: 0 0 18px; }
+.mdwrap blockquote p { color: #6B4A0E; font-size: 12.5px; margin: 0; }
+.mdwrap .mermaid { background: #FFFFFF; border: 1px solid #00000014; border-radius: 12px; padding: 16px; margin: 0 0 18px; overflow-x: auto; text-align: center; }
+.mfig { position: relative; background: #FFFFFF; border: 1px solid #00000014; border-radius: 12px; margin: 0 0 18px; padding: 16px; }
+.mfig > svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.mopen { position: absolute; top: 10px; right: 10px; display: inline-flex; align-items: center; gap: 7px; background: #1B4CA1; color: #FFFFFF; border: 0; border-radius: 99px; padding: 7px 15px; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px #1B4CA140; z-index: 2; }
+.mopen:hover { background: #194593; }
+.mopen svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; }
+/* full-screen diagram popup */
+.moverlay { position: fixed; inset: 0; background: #0D1120E0; z-index: 999; display: flex; flex-direction: column; }
+.mmbar { display: flex; align-items: center; gap: 8px; padding: 12px 20px; flex: none; }
+.mmbar .ttl { color: #FFFFFF; font-weight: 900; font-size: 14px; margin-right: auto; letter-spacing: -0.01em; }
+.mmbar button { width: 36px; height: 36px; border-radius: 50%; border: 0; background: #FFFFFF22; color: #FFFFFF; font-family: inherit; font-size: 17px; font-weight: 900; cursor: pointer; line-height: 1; }
+.mmbar button:hover { background: #FFFFFF3D; }
+.mmbar button.wide { width: auto; border-radius: 99px; padding: 0 14px; font-size: 12px; height: 36px; }
+.mmbar .mpct { color: #FFFFFFC0; font-family: Menlo, Consolas, monospace; font-size: 12px; min-width: 48px; text-align: center; }
+.mmview { flex: 1; overflow: auto; cursor: grab; }
+.mmview.dragging { cursor: grabbing; }
+.mmview .mscale { transform-origin: 0 0; width: max-content; padding: 24px; }
+.mmview .mscale svg { display: block; max-width: none; background: #FFFFFF; border-radius: 14px; padding: 22px; }
+.mdwrap .mermaid-fallback { position: relative; }
+.mdwrap .mermaid-fallback::before { content: "mermaid diagram — renders when online (or in the static site)"; display: block; font-size: 11px; font-weight: 700; color: #767E8C; margin-bottom: 6px; }
+.md-missing { border: 1.5px dashed #D12E2E66; border-radius: 12px; padding: 20px; color: #D12E2E; font-size: 13px; font-weight: 700; }
+.md-src { margin-top: 20px; font-family: Menlo, Consolas, monospace; font-size: 10.5px; color: #767E8C; border-top: 1px dashed #00000014; padding-top: 9px; }
+</style>
+
+
+<div id="stagewrap">
+<div id="stage">
+
+  <!-- ══════════ VIEW 1 · LANDING ══════════ -->
+  <section class="view" id="v-land">
+    <div class="topbar">
+      <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
+        <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#EF951E" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M8 20c2 8 7 12 12 12s10-4 12-12" stroke="#1B4CA1" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="20" cy="24" r="2.6" fill="#EF951E"/>
+      </svg>
+      <div class="wordmark"><b><em>Karmayogi</em> Bharat</b><span>Platform documentation</span></div>
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+        Search a feature&hellip;
+      </div>
+    </div>
+
+    <!-- pentagon: 4 hubs + 1 main-page feature -->
+    <svg class="orbitbg" width="1440" height="900" fill="none">
+      <line x1="720" y1="505" x2="720" y2="195" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="1015" y2="409" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="902" y2="756" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="538" y2="756" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="425" y2="409" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
+    </svg>
+
+    <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
+      <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
+        <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#F3AE55" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M8 20c2 8 7 12 12 12s10-4 12-12" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="20" cy="24" r="2.6" fill="#F3AE55"/>
+      </svg>
+      <div style="font-weight:900; font-size:17px; letter-spacing:-0.02em">iGOT Karmayogi</div>
+      <div class="sub">4 hubs &middot; 1 feature</div>
+    </div>
+
+    <button class="bub hub" id="learn-hub" style="left:646px; top:121px; width:148px; height:148px;" onclick="openHub(this)">
+      Learning Hub<span class="sub">6 features</span>
+    </button>
+    <button class="bub hub" style="left:941px; top:335px; width:148px; height:148px;" onclick="notWired()">
+      Discussion Hub<span class="sub">coming soon</span>
+    </button>
+    <button class="bub hub" style="left:828px; top:682px; width:148px; height:148px;" onclick="notWired()">
+      Event Hub<span class="sub">coming soon</span>
+    </button>
+    <button class="bub hub" style="left:464px; top:682px; width:148px; height:148px; font-size:15px" onclick="notWired()">
+      Competency Hub<span class="sub">coming soon</span>
+    </button>
+    <button class="bub item" style="left:355px; top:339px; width:140px; height:140px; font-size:15px; font-weight:900; flex-direction:column; gap:3px" onclick="openFeature('explore')">
+      Explore Content<span class="sub">feature</span>
+    </button>
+
+    <div class="hint">Click a hub to open its features &mdash; Explore Content opens directly</div>
+  </section>
+
+  <!-- ══════════ VIEW 2 · LEARNING HUB ══════════ -->
+  <section class="view hidden" data-gone id="v-hub">
+    <div class="topbar">
+      <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
+        <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#EF951E" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M8 20c2 8 7 12 12 12s10-4 12-12" stroke="#1B4CA1" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="20" cy="24" r="2.6" fill="#EF951E"/>
+      </svg>
+      <div class="wordmark"><b><em>Karmayogi</em> Bharat</b><span>Platform documentation</span></div>
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+        Search a feature&hellip;
+      </div>
+    </div>
+
+    <button class="backpill" onclick="goLanding()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      iGOT Karmayogi
+    </button>
+
+    <svg class="orbitbg" width="1440" height="900" fill="none">
+      <line x1="720" y1="505" x2="720" y2="195" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="988" y2="350" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="988" y2="660" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="720" y2="815" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="452" y2="660" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="452" y2="350" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
+    </svg>
+
+    <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
+      <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>
+      <div class="sub">6 features</div>
+    </div>
+
+    <button class="bub item" style="left:655px; top:130px; width:130px; height:130px; font-size:15px" onclick="openFeature('course')">Course</button>
+    <button class="bub item" style="left:920px; top:282px; width:136px; height:136px;" onclick="openFeature('curated')">Curated Program</button>
+    <button class="bub item" id="blended" style="left:920px; top:592px; width:136px; height:136px;" onclick="openFeature('blended')">Blended Program</button>
+    <button class="bub item" style="left:652px; top:747px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('assigned')">My Assigned Courses</button>
+    <button class="bub item assess" style="left:384px; top:592px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('standalone')">Standalone Assessment</button>
+    <button class="bub item assess" style="left:380px; top:278px; width:144px; height:144px; font-size:13px" onclick="openFeature('cap')">Comprehensive Assessment Program</button>
+
+    <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
+  </section>
+
+  <!-- ══════════ VIEW 3 · FEATURE PAGE ══════════ -->
+  <section class="view hidden" data-gone id="v-feat">
+    <div class="fp-top">
+      <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
+        <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#EF951E" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M8 20c2 8 7 12 12 12s10-4 12-12" stroke="#1B4CA1" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="20" cy="24" r="2.6" fill="#EF951E"/>
+      </svg>
+      <div style="font-weight:900; font-size:15px; letter-spacing:-0.02em"><span style="color:#EF951E">Karmayogi</span> Bharat <span style="font-weight:700; color:#767E8C; font-size:12px">&middot; Platform documentation</span></div>
+    </div>
+
+    <div class="fdoc" data-fdoc="blended">
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+        Back to Learning Hub
+      </button>
+      <div class="fp-head">
+        <div class="fp-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H15a3 3 0 0 1 3 3v13H6.5A2.5 2.5 0 0 1 4 17.5z"/><circle cx="11" cy="10" r="2.2"/><path d="M7.5 16c.6-1.7 1.9-2.6 3.5-2.6s2.9.9 3.5 2.6"/></svg>
+        </div>
+        <div>
+          <div class="fp-title">Blended Program</div>
+          <div class="fp-sub">Instructor-led learning that mixes online modules with classroom sessions &mdash; batches, seat limits, attendance and offline session tracking.</div>
+          <div class="fp-chips">
+            <span class="chip">Category&nbsp; <code>Blended Program</code></span>
+            <span class="chip">Route&nbsp; <code>/app/toc/:programId</code></span>
+            <span class="chip">Workflow&nbsp; <code>blendedprogram</code></span>
+            <span class="chip ok">&#10003; Verified from repos &middot; Aug 2026</span>
+          </div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+      </div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="fp-body tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A Blended Program pairs self-paced online content with scheduled instructor-led sessions. An MDO creates a program, opens batches with seat limits, and Karmayogis apply or are nominated. Completion requires both the online modules and attendance at the offline sessions.</p>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Batches &amp; seats</b><p>Enrolment windows, capacity caps and waitlists per batch.</p></div>
+          <div class="fp-card"><b>Attendance</b><p>Offline session check-in that counts toward completion.</p></div>
+          <div class="fp-card"><b>Approvals</b><p>Nomination and MDO-admin approval before a seat is confirmed.</p></div>
+        </div>
+        <h2 class="fp-h2">How a Karmayogi experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 &middot; DISCOVER</b><p>Finds the program in the Learning Hub</p></div>
+          <div class="fp-step"><b>2 &middot; APPLY</b><p>Requests a seat in an open batch</p></div>
+          <div class="fp-step"><b>3 &middot; LEARN</b><p>Online modules plus classroom sessions</p></div>
+          <div class="fp-step"><b>4 &middot; CERTIFY</b><p>Certificate on full completion</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How a Karmayogi experiences it</div>
+            <div>Roles involved</div>
+            <div>Glossary</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab shows the services behind this feature; <b style="color:#1B4CA1">LLD</b> covers the data model and sequence flows.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">Course</span>
+            <span class="side-pill">Curated Program</span>
+            <span class="side-pill warm">Standalone Assessment</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- USE CASES -->
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <h2 class="fp-h2">Actors</h2>
+        <p class="fp-p"><strong>Karmayogi</strong> (the learner), <strong>MDO Admin</strong> (the learner's ministry/department administrator, an approver), <strong>Program Coordinator (PC)</strong> (owns the program, an approver, works the Creation Portal console), <strong>Author</strong> (creates the program content), <strong>Batch Creator</strong> (opens and maintains batches), and <strong>Instructor</strong> (assigned per batch, runs sessions and marks attendance). Which approvers are involved depends on the batch's approval type &mdash; see the four modes in LLD.</p>
+
+        <h2 class="fp-h2">Learner journeys</h2>
+        <div class="uc-grid">
+          <div class="uc-card">
+            <div class="who">Karmayogi</div><b class="t">UC-1 &middot; Request enrolment into a batch</b>
+            <p>From the program's TOC page the learner picks an open batch and requests a seat. Before the request goes out, the portal checks for a <strong>conflict</strong> (an active enrolment in another Blended Program blocks the request) and, if the batch demands it, collects a <strong>profile survey / questionnaire</strong> first (driven by <code>batchAttributes.userProfileFileds</code> or the program's <code>wfSurveyLink</code>). The request creates a workflow application in state <code>INITIATE</code>, then moves to the first approval step.</p>
+            <div class="api">POST <code>workflow/blendedprogram/enrol</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Karmayogi</div><b class="t">UC-2 &middot; Withdraw an enrolment request</b>
+            <p>Until approved (and, depending on program rules, after), the learner can withdraw. The workflow moves to <code>WITHDRAWN</code>; the seat is released. The UI shows the request state on the batch card throughout (&ldquo;sent for MDO approval&rdquo;, &ldquo;approved&rdquo;, &hellip;) via the status-message mapping.</p>
+            <div class="api">POST <code>workflow/blendedprogram/unenrol</code> (action <code>WITHDRAW</code>)</div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Karmayogi</div><b class="t">UC-3 &middot; Learn: online modules + sessions</b>
+            <p>Once <code>APPROVED</code>, the learner is enrolled in the batch and the program appears in My Learning. Online content progress is written per node; classroom/offline sessions come from <code>batchAttributes.sessionDetails_v2</code>, and session completion contributes to the overall completion percentage.</p>
+            <div class="api">POST <code>content/v2/state/read</code> &middot; GET <code>learner/course/v4/user/enrollment/details/:userId</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Karmayogi</div><b class="t">UC-4 &middot; Submit a program assignment</b>
+            <p>Blended programs can carry assignments: the learner uploads an answer file, submits a draft, then submits final; the coordinator side is notified and can evaluate. Files live in the BP assignment store.</p>
+            <div class="api">POST <code>assignment/v1/submitDraft</code> &middot; <code>assignment/v1/submit</code> &middot; <code>storage/v1/bp/assignment/answer</code> &middot; <code>v1/notifyAssignment/submit</code></div>
+          </div>
+        </div>
+
+        <h2 class="fp-h2">Approver &amp; admin journeys</h2>
+        <div class="uc-grid">
+          <div class="uc-card">
+            <div class="who">MDO Admin / PC</div><b class="t">UC-5 &middot; Approve or reject a request</b>
+            <p>Approvers see pending applications in their console and act on each. A one-step batch needs only MDO <em>or</em> PC; a two-step batch chains both in the configured order. Approval moves the workflow to the next state (<code>SEND_FOR_PC_APPROVAL</code> or <code>APPROVED</code>); rejection ends it at <code>REJECTED</code>.</p>
+            <div class="api">POST <code>workflowhandler/transition</code> &middot; <code>workflow/v2/userWFApplicationFieldsSearch</code> &middot; <code>workflowhandler/applicationsSearch</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">MDO Admin / PC</div><b class="t">UC-6 &middot; Remove an enrolled learner</b>
+            <p>After approval, an admin can remove a learner from the batch; the workflow records <code>REMOVED</code> and the seat frees up. The learner sees the removal message on the program page.</p>
+            <div class="api">POST <code>workflowhandler/transition</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Batch Creator</div><b class="t">UC-7 &middot; Create and configure a batch</b>
+            <p>From the Creation Portal, a batch is opened as <code>enrollmentType: "invite-only"</code> with name, start/end/enrolment-end dates, seat cap, venue address and lat-long, QR attendance on/off, instructors, cadre list and profile-field requirements. If custom profile fields are chosen, the portal <strong>auto-creates a survey form</strong> and stamps its link into the batch; a <strong>default certificate template is auto-attached</strong> on creation.</p>
+            <div class="api">POST <code>learner/course/v1/batch/create</code> &middot; <code>forms/v2/createForm</code> &middot; <code>course/batch/cert/v1/template/add</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">MDO Admin / PC</div><b class="t">UC-8 &middot; Generate the batch enrolment report</b>
+            <p>Requester role is validated (MDO/PC roles only), then the report is generated <strong>asynchronously</strong>: a request row goes to <code>IN_PROGRESS</code>, a Kafka consumer joins workflow state with enrolment data, and the finished file is downloaded per org/course/batch.</p>
+            <div class="api">POST <code>bp/v2/generate/report</code> &middot; <code>bp/v2/bpreport/status</code> &middot; GET <code>bp/v1/bpreport/download/:orgId/:courseId/:batchId/:file</code></div>
+          </div>
+        </div>
+
+        <h2 class="fp-h2">Authoring &amp; batch management (Creation Portal)</h2>
+        <div class="uc-grid">
+          <div class="uc-card">
+            <div class="who">Author / Content Creator</div><b class="t">UC-9 &middot; Create and publish the program itself</b>
+            <p>A Blended Program is authored in <code>sunbird-cb-creationportal</code> like any collection: create &rarr; build hierarchy &rarr; send to review &rarr; publish (with reject and retire paths). Assessments attach as question sets with their own review/publish cycle.</p>
+            <div class="api">POST <code>action/content/create</code> &middot; <code>content/hierarchy/update</code> &middot; <code>content/v3/review/:id</code> &middot; <code>content/v3/publish/:id</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Program Coordinator / Admin</div><b class="t">UC-10 &middot; Nominate &amp; bulk-enrol learners</b>
+            <p>Beyond self-enrolment, admins can <strong>nominate</strong> learners into a batch (select or bulk-upload &mdash; the workflow is created on the learner's behalf) or bulk-enrol directly. Users can also be added to or removed from a batch individually.</p>
+            <div class="api">POST <code>workflow/blendedprogram/nominate</code> &middot; <code>program/v2/admin/bulkEnroll</code> &middot; <code>authApi/batch/addUser</code> / <code>removeUser</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Program Coordinator / MDO</div><b class="t">UC-11 &middot; Work the request queue in the Creation Portal</b>
+            <p>The program's detail page has a &ldquo;New requests&rdquo; console: approve (with the next-step message when a second approval is pending) or reject <strong>with a mandatory reason</strong>. The pending queue can be exported as CSV for offline processing.</p>
+            <div class="api">POST <code>v1/blendedprogram/workflow/update</code> &middot; GET <code>workflow/blendedprogram/getUserApprovalDataInCsv</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Instructor / Coordinator</div><b class="t">UC-12 &middot; Run sessions and mark attendance</b>
+            <p>Sessions (offline or online) live in the batch's session plan. Attendance is taken either by <strong>QR code</strong> (per batch, downloadable, with scan status) or manually in the attendance dialog &mdash; and marking attendance is literally a <strong>progress write</strong>: attended = status 2 / 100% on the session node, which is why sessions count toward completion. Marking is time-boxed after the session date.</p>
+            <div class="api">POST <code>blendedprogram/v1/update/progress</code> &middot; GET <code>batch/v1/enrollment/qrcode/download</code> / <code>status</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Coordinator</div><b class="t">UC-13 &middot; Track learners and certify</b>
+            <p>Per-batch learner progress is read in bulk (v2 endpoint), certificates ride the batch template attached at creation, and can be re-issued for corrections.</p>
+            <div class="api">POST <code>authApi/batch/getUserProgressV2</code> &middot; <code>course/batch/cert/v1/issue?reIssue=true</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Batch Creator</div><b class="t">UC-14 &middot; Maintain the batch over its life</b>
+            <p>Batch details and attributes are editable after creation (same payload shape via update); an unused batch can be deleted. Mandatory-profile-field options, cadre lists and the default certificate template all come from system settings, so they are configuration rather than code.</p>
+            <div class="api">PATCH <code>authApi/batch/update</code> &middot; POST <code>learner/course/v1/batch/delete</code> &middot; <code>data/v2/system/settings/get/&hellip;</code></div>
+          </div>
+        </div>
+
+        <h2 class="fp-h2">Edge cases worth documenting</h2>
+        <div class="tw"><table>
+          <thead><tr><th>Situation</th><th>Behaviour</th></tr></thead>
+          <tbody>
+            <tr><td>Learner already in another Blended Program</td><td>Enrolment request is blocked client-side with a conflict message before any workflow is created.</td></tr>
+            <tr><td>Batch full</td><td>Enrolled/approved count is checked via the status-count API against <code>currentBatchSize</code>; the request CTA is disabled.</td></tr>
+            <tr><td>Enrolment window closed</td><td><code>enrollmentEndDate</code> on the batch gates the request button.</td></tr>
+            <tr><td>Survey required but not submitted</td><td>The enrol call is not made until the form (via <code>forms/v2/getFormById</code> / <code>saveFormSubmit</code>) is completed.</td></tr>
+            <tr><td>Duplicate request</td><td>The user's existing workflow application is fetched on page load (<code>blendedprogram/user/search</code>); the UI renders the current state instead of offering enrol again.</td></tr>
+            <tr><td>Attendance marked late</td><td>The attendance dialog is disabled once the allowed window after the session date has passed (date check in <code>content-sessions</code>).</td></tr>
+            <tr><td>Rejection without a reason</td><td>Not possible from the Creation Portal console &mdash; the reject dialog requires a reason, which travels with the workflow update.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- APIS -->
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/blended-program/apis.md"></article><div class="md-src">source: docs/learning-hub/blended-program/apis.md</div></div>
+
+    <!-- HLD -->
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/blended-program/hld.md"></article><div class="md-src">source: docs/learning-hub/blended-program/hld.md</div></div>
+
+    <!-- LLD -->
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/blended-program/lld.md"></article><div class="md-src">source: docs/learning-hub/blended-program/lld.md</div></div>
+    </div><!-- /fdoc blended -->
+
+    <!-- ═══ COURSE ═══ -->
+    <div class="fdoc" data-fdoc="course" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h9a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3z"/><path d="M17 7.5h2v13H8"/></svg></div>
+        <div>
+          <div class="fp-title">Course</div>
+          <div class="fp-sub">The standard self-paced unit of learning &mdash; one-click enrolment, node-by-node progress, Karma Points and a certificate on completion.</div>
+          <div class="fp-chips"><span class="chip">Category&nbsp; <code>Course</code></span><span class="chip">Route&nbsp; <code>/app/toc/:courseId</code></span><span class="chip ok">&#10003; Verified from repos &middot; Aug 2026</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">The building block of the Learning Hub. Unlike a Blended Program, a Course has <strong>no approval workflow</strong>: tapping Enrol writes the enrolment directly and the course lands in My Learning at 0%. Progress is tracked per content node, Karma Points accrue on completion events, and a certificate issues when every mandatory node is complete.</p>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Instant enrolment</b><p>One call, no approvers &mdash; the contrast that defines every other category.</p></div>
+          <div class="fp-card"><b>Node-level progress</b><p>Every video, PDF and quiz reports its own state; the course rolls them up.</p></div>
+          <div class="fp-card"><b>Rewards</b><p>Karma Points and certificates hang off the same completion signal.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Enrol</b><p>From the TOC page, one click enrols into the course's batch. Re-clicking is safe; the record is keyed on user + course + batch.</p><div class="api">POST <code>learner/course/v1/enrol</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 &middot; Learn &amp; resume</b><p>The viewer writes real-time progress; <code>lastReadContentId</code> powers the Resume button back into the exact node.</p><div class="api">POST <code>content/v2/state/read</code> &middot; <code>user/realTimeProgress/update</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 &middot; Leave a course</b><p>Unenroll is soft &mdash; the course leaves My Learning but history and any earned certificate stay.</p><div class="api">POST <code>course/v2/unenroll</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-4 &middot; Complete, claim, certify</b><p>At 100% the learner claims Karma Points and downloads the certificate; ratings and share-with-a-colleague close the loop.</p><div class="api">POST <code>claimkarmapoints</code> &middot; GET <code>cohorts/course/batch/cert/download/:id</code> &middot; POST <code>user/rating</code> &middot; <code>user/v1/content/recommend</code></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/course/apis.md"></article><div class="md-src">source: docs/learning-hub/course/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/course/hld.md"></article><div class="md-src">source: docs/learning-hub/course/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/course/lld.md"></article><div class="md-src">source: docs/learning-hub/course/lld.md</div></div>
+    </div><!-- /fdoc course -->
+
+    <!-- ═══ CURATED PROGRAM ═══ -->
+    <div class="fdoc" data-fdoc="curated" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 8 12 13l9.5-5z"/><path d="M6 10.5V16c0 1.7 2.7 3 6 3s6-1.3 6-3v-5.5"/></svg></div>
+        <div>
+          <div class="fp-title">Curated Program</div>
+          <div class="fp-sub">An editorially assembled collection of courses enrolled as one unit &mdash; auto-assigned batch, progress rolled up from the child courses.</div>
+          <div class="fp-chips"><span class="chip">Category&nbsp; <code>Curated Program</code></span><span class="chip">Enrol&nbsp; <code>curatedprogram/v1/enrol</code></span><span class="chip ok">&#10003; Verified from repos &middot; Aug 2026</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A parent collection whose children are ordinary courses. Enrolling in the program <strong>auto-assigns</strong> the learner into its batch in one call &mdash; no approval, no batch picking &mdash; and the program's completion is <strong>computed from the child courses'</strong> individual enrolments. The sibling category <em>Moderated Program</em> uses the same mechanics through a separate open-program enrol endpoint.</p>
+        <div class="fp-cards">
+          <div class="fp-card"><b>One-click, auto-batched</b><p>The enrol call resolves the batch itself.</p></div>
+          <div class="fp-card"><b>Roll-up progress</b><p>Parent % is derived by merging each child course's enrolment.</p></div>
+          <div class="fp-card"><b>Editorial surface</b><p>Featured on home strips and campaign pages via curated collections.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Enrol in the program</b><p>One call; the response carries the assigned batch. Moderated Programs route to the open-program variant of the same call.</p><div class="api">POST <code>curatedprogram/v1/enrol</code> &middot; <code>openprogram/v1/enrol</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 &middot; Work through child courses</b><p>Each child behaves as a normal course; the parent card shows the merged percentage and the next course to take.</p><div class="api">GET <code>enrollment/details</code> &middot; POST <code>course/v1/hierarchy/:id</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 &middot; Complete and certify</b><p>When the roll-up reaches 100%, program-level completion triggers the certificate exactly as for a course.</p><div class="api">GET <code>cohorts/course/batch/cert/download/:id</code></div></div>
+          <div class="uc-card"><div class="who">Author / Curator</div><b class="t">UC-4 &middot; Assemble and publish</b><p>Built in the Creation Portal as a collection of existing courses, through the same create &rarr; review &rarr; publish cycle.</p><div class="api">POST <code>action/content/create</code> &middot; <code>content/hierarchy/update</code> &middot; <code>content/v3/publish/:id</code></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/curated-program/apis.md"></article><div class="md-src">source: docs/learning-hub/curated-program/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/curated-program/hld.md"></article><div class="md-src">source: docs/learning-hub/curated-program/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/curated-program/lld.md"></article><div class="md-src">source: docs/learning-hub/curated-program/lld.md</div></div>
+    </div><!-- /fdoc curated -->
+
+    <!-- ═══ MY ASSIGNED COURSES ═══ -->
+    <div class="fdoc" data-fdoc="assigned" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="8" r="3.2"/><path d="M4.5 20c0-3.3 2.5-5.5 5.5-5.5 1.2 0 2.3.3 3.2 1"/><path d="M14.5 18.5l2 2 3.5-4"/></svg></div>
+        <div>
+          <div class="fp-title">My Assigned Courses</div>
+          <div class="fp-sub">Courses pushed to a learner by their organisation &mdash; resolved by an access-settings rules engine, including external partner (CIOS) courses.</div>
+          <div class="fp-chips"><span class="chip">Service&nbsp; <code>cb-ext-course-service</code></span><span class="chip">API&nbsp; <code>user/v2/assignedcourses</code></span><span class="chip ok">&#10003; Backend verified from source</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">The learner-facing view of content assignment: courses an MDO has directed at a user, surfaced as &ldquo;My Assigned Courses&rdquo; with mandatory-course nudges. This is the one Learning Hub feature whose <strong>backend is fully in the attached repos</strong> &mdash; <code>CourseAccessController</code> and <code>CourseAccessServiceImpl</code> in <code>cb-ext-course-service</code>.</p>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Rules, not lists</b><p>Assignments resolve from cached access-setting rules, then a composite search finds matching courses.</p></div>
+          <div class="fp-card"><b>External courses too</b><p>A dedicated endpoint resolves assigned partner content via the CIOS integration search.</p></div>
+          <div class="fp-card"><b>Admin view</b><p>An admin can read any user's assignments through the admin variant.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; See what's assigned to me</b><p>The portal calls the v2 endpoint with the user's token; the service resolves the org's access-setting rules and returns the matching courses with the learner's enrolment state.</p><div class="api">POST <code>user/v2/assignedcourses</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 &middot; Assigned external (partner) courses</b><p>Marketplace/CIOS content assigned by the org is resolved by a separate endpoint against the CIOS search host.</p><div class="api">POST <code>user/v1/assigned/externalcourses</code></div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-3 &middot; Inspect a learner's assignments</b><p>Support and compliance view: the admin endpoint takes the target userId in the path and answers with that user's assigned set.</p><div class="api">POST <code>admin/user/v2/assignedcourses/:userId</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-4 &middot; Mandatory-course pressure</b><p>Assigned mandatory courses drive the notification modal and the mandatory-course shelf, with deadlines shown until completion.</p><div class="api">Feature route <code>/app/learn/mandatory-course</code> &middot; GET <code>content/user/info</code></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/my-assigned-courses/apis.md"></article><div class="md-src">source: docs/learning-hub/my-assigned-courses/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/my-assigned-courses/hld.md"></article><div class="md-src">source: docs/learning-hub/my-assigned-courses/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/my-assigned-courses/lld.md"></article><div class="md-src">source: docs/learning-hub/my-assigned-courses/lld.md</div></div>
+    </div><!-- /fdoc assigned -->
+
+    <!-- ═══ STANDALONE ASSESSMENT ═══ -->
+    <div class="fdoc" data-fdoc="standalone" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5h6v3H9z"/><path d="M8.5 12l2 2 4-4.5"/></svg></div>
+        <div>
+          <div class="fp-title">Standalone Assessment</div>
+          <div class="fp-sub">An assessment taken as its own learning object &mdash; question sets served securely, auto-saved attempts, versioned submission and result APIs, retakes.</div>
+          <div class="fp-chips"><span class="chip">Category&nbsp; <code>Standalone Assessment</code></span><span class="chip">Library&nbsp; <code>sb-cb-ui-assessment</code></span><span class="chip ok">&#10003; Verified from repos &middot; Aug 2026</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A question set consumed through the assessment player rather than the content viewer. Questions are fetched separately from the assessment shell (so answers are never shipped with the paper), attempts auto-save, and submission and results run through <strong>versioned endpoints currently at v5</strong>. The same machinery also powers assessments embedded inside courses and the pre-enrolment assessments some programs require.</p>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Split delivery</b><p>Assessment shell and question bodies come from separate reads.</p></div>
+          <div class="fp-card"><b>Attempt safety</b><p>Auto-save during the attempt; submission is explicit.</p></div>
+          <div class="fp-card"><b>Retakes</b><p>A dedicated retake endpoint governs re-attempts per assessment.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Start an attempt</b><p>The player reads the assessment shell (sections, timing, rules), then fetches questions by id in batches as the learner progresses.</p><div class="api">POST <code>assessment/v5/read</code> &middot; <code>question/v5/read</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 &middot; Auto-save &amp; submit</b><p>Answers are saved server-side during the attempt, then submitted; the submit API has evolved v2&rarr;v5 and old versions remain for embedded/legacy content.</p><div class="api">POST <code>assessment/save</code> &middot; <code>user/evaluate/assessment/submit/v5</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 &middot; See results &amp; retake</b><p>Result read is versioned alongside submit; retakes are requested per assessment id and honour the configured attempt policy.</p><div class="api">POST <code>user/assessment/v5/result</code> &middot; GET <code>user/assessment/v5/retake/:assessmentId</code></div></div>
+          <div class="uc-card"><div class="who">Author</div><b class="t">UC-4 &middot; Author the question set</b><p>Created in the Creation Portal as a question set with its own review/publish cycle; CQF quality checks have their own create/update/autopublish path.</p><div class="api">POST <code>questionset/v1/create &middot; review &middot; publish</code> &middot; <code>cqfquestionset/&hellip;</code></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/standalone-assessment/apis.md"></article><div class="md-src">source: docs/learning-hub/standalone-assessment/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/standalone-assessment/hld.md"></article><div class="md-src">source: docs/learning-hub/standalone-assessment/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/standalone-assessment/lld.md"></article><div class="md-src">source: docs/learning-hub/standalone-assessment/lld.md</div></div>
+    </div><!-- /fdoc standalone -->
+
+    <!-- ═══ COMPREHENSIVE ASSESSMENT PROGRAM ═══ -->
+    <div class="fdoc" data-fdoc="cap" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg></div>
+        <div>
+          <div class="fp-title">Comprehensive Assessment Program</div>
+          <div class="fp-sub">A program-level assessment category, typically assigned/mandated, that reuses the assessment engine end to end.</div>
+          <div class="fp-chips"><span class="chip">Category&nbsp; <code>Comprehensive Assessment Program</code></span><span class="chip">Status&nbsp; thin in attached repos</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What the code shows</h2>
+        <p class="fp-p">CAP appears in the attached repos as a distinct <code>ECourseCategory</code> with three verified behaviours: it is the <strong>default deep-link target of the mandatory-notification modal</strong> (learners are pushed to it by notification), its cards are <strong>exempt from end-date display</strong> in the consumption strips, and it has its own section handling in the home-page content strips. Its consumption mechanics are those of the assessment engine documented under Standalone Assessment.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> no CAP-specific enrolment or evaluation endpoint appears in the attached repos &mdash; the category rides the shared assessment and course rails. If there is a dedicated CAP backend (e.g. in the assessment service), attaching that repo would let this page say more. Treat this page as a stub-plus, not finished documentation.</div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Arrive by mandate</b><p>A mandatory notification (modal) deep-links the learner into the CAP by assessment id &mdash; discovery is push, not browse.</p><div class="api">Portal <code>mandatory-notification-modal</code> &rarr; TOC deep link</div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 &middot; Attempt and complete</b><p>The attempt lifecycle is the assessment engine's: read &rarr; save &rarr; submit &rarr; result, with completion feeding the learner's record.</p><div class="api">See Standalone Assessment &rsaquo; APIs</div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-3 &middot; Mandate and track</b><p>Assignment and tracking ride content assignment + assigned-courses resolution and the standard reports.</p><div class="api">See My Assigned Courses</div></div>
+          <div class="uc-card"><div class="who">Author</div><b class="t">UC-4 &middot; Author the program</b><p>Created in the Creation Portal under the CAP category with question sets attached.</p><div class="api">POST <code>action/content/create</code> &middot; <code>questionset/v1/&hellip;</code></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/comprehensive-assessment-program/apis.md"></article><div class="md-src">source: docs/learning-hub/comprehensive-assessment-program/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/comprehensive-assessment-program/hld.md"></article><div class="md-src">source: docs/learning-hub/comprehensive-assessment-program/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/comprehensive-assessment-program/lld.md"></article><div class="md-src">source: docs/learning-hub/comprehensive-assessment-program/lld.md</div></div>
+    </div><!-- /fdoc cap -->
+
+    <!-- ═══ EXPLORE CONTENT (main-page feature) ═══ -->
+    <div class="fdoc" data-fdoc="explore" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> iGOT Karmayogi</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></div>
+        <div>
+          <div class="fp-title">Explore Content</div>
+          <div class="fp-sub">The platform-wide discovery surface &mdash; global search, the Explore menu, facet browsing and every &ldquo;see all&rdquo; listing, served by the composite search APIs.</div>
+          <div class="fp-chips"><span class="chip">Routes&nbsp; <code>/app/explore &middot; /app/globalsearch</code></span><span class="chip">Service&nbsp; <code>search-service</code></span><span class="chip ok">&#10003; Verified incl. gateway path</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">Explore Content is how a Karmayogi finds what to learn next. One search box at the top of the portal covers everything &mdash; courses, programs, assessments and events &mdash; and the Explore menu offers the same catalogue as browsable categories. Filters narrow the results to what fits: competency, topic, content provider, language, duration. There is nothing to set up and no path to follow; type a word or tap a tile, and the catalogue answers.</p>
+        <div class="fp-cards">
+          <div class="fp-card"><b>One search, everything</b><p>Courses, programs, assessments and events in a single result list &mdash; no need to know where content lives.</p></div>
+          <div class="fp-card"><b>Filter to fit</b><p>Narrow by competency, provider, language or category until what remains is worth your time.</p></div>
+          <div class="fp-card"><b>Always current</b><p>Newly published content shows up in search shortly after it goes live &mdash; no waiting for a catalogue refresh.</p></div>
+        </div>
+        <h2 class="fp-h2">How a Karmayogi experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 &middot; SEARCH</b><p>Type in the top bar, or open the Explore menu</p></div>
+          <div class="fp-step"><b>2 &middot; FILTER</b><p>Narrow by competency, provider or language</p></div>
+          <div class="fp-step"><b>3 &middot; PREVIEW</b><p>Open a result to see its details and ratings</p></div>
+          <div class="fp-step"><b>4 &middot; START</b><p>Enrol or begin learning right from the result</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Search from anywhere</b><p>The top bar and global search page send the query plus filters; facets in the response render the filter rail.</p><div class="api">POST <code>composite/v5/search</code> (legacy strips: <code>sunbirdigot/search</code>)</div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 &middot; Browse by facet</b><p>Explore-menu tiles and filter chips are the same API with <code>filters</code> set and an empty query.</p><div class="api">POST <code>composite/v5/search</code> with <code>filters</code> + <code>facets</code></div></div>
+          <div class="uc-card"><div class="who">Program Coordinator</div><b class="t">UC-3 &middot; Role-aware search</b><p>v5 parses the JWT for roles and org; the PC console uses the dedicated Blended Program search.</p><div class="api">POST <code>composite/v4/bp/search</code></div></div>
+          <div class="uc-card"><div class="who">Author</div><b class="t">UC-4 &middot; Search while authoring</b><p>The Creation Portal searches drafts and published content through v4 search.</p><div class="api">POST <code>sunbirdigot/v4/search</code> &rarr; <code>composite/v4/search</code></div></div>
+        </div>
+        <div class="tw"><table>
+          <thead><tr><th>Edge case</th><th>Behaviour</th></tr></thead>
+          <tbody>
+            <tr><td><code>visibility: Private</code> on public search</td><td>Rejected with <code>ERR_ACCESS_DENIED</code> &mdash; enforced in the controller</td></tr>
+            <tr><td>Result missing right after publish</td><td>Expected &mdash; the index updates via the publish pipeline (eventual consistency)</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="explore-content/apis.md"></article><div class="md-src">source: docs/explore-content/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="explore-content/hld.md"></article><div class="md-src">source: docs/explore-content/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="explore-content/lld.md"></article><div class="md-src">source: docs/explore-content/lld.md</div></div>
+    </div><!-- /fdoc explore -->
+  </section>
+
+</div>
+</div>
+
+<div id="toast" role="status"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ── responsive stage scaling ── */
+  var stage = document.getElementById('stage');
+  var wrap = document.getElementById('stagewrap');
+  function fit() {
+    var w = window.innerWidth - 8, h = window.innerHeight, s;
+    if (window.innerWidth >= 1024) {
+      /* desktop: fit BOTH dimensions so home/hub views fill the screen with no scroll */
+      s = Math.min(w / 1440, h / 900);
+      document.body.style.overflowY = 'hidden';
+    } else {
+      s = Math.min(1, w / 1440);
+      document.body.style.overflowY = '';
+    }
+    stage.style.transform = 'scale(' + s + ')';
+    wrap.style.height = Math.floor(900 * s) + 'px';
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  var vLand = document.getElementById('v-land');
+  var vHub = document.getElementById('v-hub');
+  var vFeat = document.getElementById('v-feat');
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function swap(from, to) {
+    from.classList.add('hidden');
+    setTimeout(function () {
+      from.setAttribute('data-gone', '');
+      to.removeAttribute('data-gone');
+      /* force reflow so the fade-in transition runs */
+      void to.offsetWidth;
+      to.classList.remove('hidden');
+      to.classList.add('entering');
+      setTimeout(function () { to.classList.remove('entering'); }, 900);
+    }, reduced ? 0 : 300);
+  }
+
+  /* landing → hub: the clicked bubble glides to the center first */
+  window.openHub = function (el) {
+    if (reduced) { swap(vLand, vHub); return; }
+    vLand.querySelectorAll('.bub').forEach(function (b) {
+      if (b !== el) b.classList.add('dim');
+    });
+    el.style.left = '618px'; el.style.top = '403px';
+    el.style.width = '204px'; el.style.height = '204px';
+    el.style.background = '#1B4CA1'; el.style.color = '#FFFFFF';
+    el.style.zIndex = 4;
+    setTimeout(function () {
+      swap(vLand, vHub);
+      /* reset landing for the next visit */
+      setTimeout(function () {
+        vLand.querySelectorAll('.bub').forEach(function (b) { b.classList.remove('dim'); });
+        el.removeAttribute('style');
+        el.style.left = '646px'; el.style.top = '121px';
+        el.style.width = '148px'; el.style.height = '148px';
+      }, 600);
+    }, 480);
+  };
+
+  window.goLanding = function () { swap(vHub, vLand); };
+  var featBackTo = vHub; /* where the feature page's back button returns to */
+  window.openFeature = function (id) {
+    document.querySelectorAll('.fdoc').forEach(function (d) { d.hidden = (d.dataset.fdoc !== id); });
+    var doc = document.querySelector('.fdoc[data-fdoc="' + id + '"]');
+    if (doc) {
+      /* reset to the Overview tab on every open */
+      var first = doc.querySelector('.fp-tab');
+      if (first) window.setTab(first);
+      vFeat.scrollTop = 0;
+    }
+    /* main-page features open from the landing; hub features from the hub view */
+    var from = !vLand.hasAttribute('data-gone') ? vLand : vHub;
+    featBackTo = from;
+    swap(from, vFeat); window.scrollTo({ top: 0 });
+  };
+  window.goHub = function () { swap(vFeat, featBackTo); };
+
+  /* ── not-wired clicks: blink what IS clickable ── */
+  var toast = document.getElementById('toast');
+  var toastTimer = null;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 2200);
+  }
+  function blink(el) {
+    el.classList.remove('pulse');
+    void el.offsetWidth;
+    el.classList.add('pulse');
+  }
+  window.notWired = function () {
+    blink(document.getElementById('learn-hub'));
+    showToast('Demo: only Learning Hub is wired up — try the blinking bubble');
+  };
+
+  /* ── feature page tabs (scoped to the open feature doc) ── */
+  window.setTab = function (btn) {
+    var doc = btn.closest('.fdoc') || document;
+    doc.querySelectorAll('.fp-tab').forEach(function (t) { t.classList.remove('active'); });
+    btn.classList.add('active');
+    doc.querySelectorAll('.tabpanel').forEach(function (p) {
+      p.hidden = (p.dataset.panel !== btn.dataset.tab);
+    });
+  };
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script>/*__MARKED_JS__*/</script>
+<script id="md-store" type="application/json">__MD_STORE__</script>
+<script>
+(function () {
+  "use strict";
+  var store = {};
+  try { store = JSON.parse(document.getElementById('md-store').textContent); } catch (e) {}
+  var hasMarked = typeof window.marked !== 'undefined';
+  var hasMermaid = typeof window.mermaid !== 'undefined';
+  if (hasMermaid) { try { window.mermaid.initialize({ startOnLoad: false, theme: 'neutral' }); } catch (e) { hasMermaid = false; } }
+
+  document.querySelectorAll('.mdwrap[data-md]').forEach(function (el) {
+    var key = el.dataset.md, md = store[key];
+    if (!md) { el.innerHTML = '<div class="md-missing">Missing: docs/' + key + ' — re-run tools/build_docs_explorer.py</div>'; return; }
+    if (!hasMarked) { var pre = document.createElement('pre'); pre.textContent = md; el.appendChild(pre); return; }
+    el.innerHTML = window.marked.parse(md);
+    el.querySelectorAll('a[href$=".md"]').forEach(function (a) { a.setAttribute('title', a.getAttribute('href')); a.setAttribute('href', '#'); a.addEventListener('click', function (ev) { ev.preventDefault(); }); });
+    el.querySelectorAll('pre code.language-mermaid').forEach(function (code) {
+      var d = document.createElement('div');
+      d.className = 'mermaid'; d.textContent = code.textContent; d.dataset.src = code.textContent;
+      code.parentElement.replaceWith(d);
+    });
+  });
+
+  /* inline figure: diagram at natural/fit size + a single Zoom button */
+  function mountZoomable(n, svg) {
+    var fig = document.createElement('div'); fig.className = 'mfig';
+    fig.innerHTML = svg +
+      '<button type="button" class="mopen">' +
+        '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5M11 8v6M8 11h6"/></svg>' +
+        'Zoom</button>';
+    fig.dataset.src = n.dataset.src;
+    n.replaceWith(fig);
+    fig.querySelector('.mopen').addEventListener('click', function () { openDiagramModal(fig.dataset.src); });
+  }
+
+  /* full-screen popup with Zoom in / Zoom out / reset / close */
+  function openDiagramModal(src) {
+    var ov = document.createElement('div'); ov.className = 'moverlay';
+    ov.innerHTML =
+      '<div class="mmbar">' +
+        '<span class="ttl">Diagram</span>' +
+        '<button type="button" data-z="out" title="Zoom out" aria-label="Zoom out">&minus;</button>' +
+        '<span class="mpct">&hellip;</span>' +
+        '<button type="button" data-z="in" title="Zoom in" aria-label="Zoom in">+</button>' +
+        '<button type="button" data-z="reset" class="wide" title="Fit to screen">fit</button>' +
+        '<button type="button" data-z="close" title="Close" aria-label="Close">&#10005;</button>' +
+      '</div>' +
+      '<div class="mmview"><div class="mscale"></div></div>';
+    document.body.appendChild(ov);
+    var view = ov.querySelector('.mmview'), sc = ov.querySelector('.mscale'), pct = ov.querySelector('.mpct');
+    var scale = 1, fitScale = 1;
+    function apply() { sc.style.transform = 'scale(' + scale + ')'; pct.textContent = Math.round(scale * 100) + '%'; }
+    function computeFit() {
+      var s = sc.querySelector('svg'); if (!s) return;
+      var w = s.getBoundingClientRect().width / scale || s.clientWidth, h = s.getBoundingClientRect().height / scale || s.clientHeight;
+      if (!w || !h) return;
+      fitScale = Math.min((window.innerWidth - 90) / w, (window.innerHeight - 130) / h);
+      fitScale = Math.max(0.3, Math.min(fitScale, 2.5));
+      scale = fitScale; apply();
+    }
+    function close() { document.removeEventListener('keydown', onKey); ov.remove(); }
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    document.addEventListener('keydown', onKey);
+    ov.querySelector('.mmbar').addEventListener('click', function (e) {
+      var z = e.target && e.target.closest('button') && e.target.closest('button').dataset.z;
+      if (!z) return;
+      if (z === 'in') { scale = Math.min(4, scale + 0.25); apply(); }
+      else if (z === 'out') { scale = Math.max(0.25, scale - 0.25); apply(); }
+      else if (z === 'reset') { scale = fitScale; apply(); }
+      else if (z === 'close') { close(); }
+    });
+    var drag = null;
+    view.addEventListener('mousedown', function (e) {
+      drag = { x: e.clientX, y: e.clientY, l: view.scrollLeft, t: view.scrollTop };
+      view.classList.add('dragging'); e.preventDefault();
+    });
+    window.addEventListener('mousemove', function (e) {
+      if (!drag) return;
+      view.scrollLeft = drag.l - (e.clientX - drag.x);
+      view.scrollTop = drag.t - (e.clientY - drag.y);
+    });
+    window.addEventListener('mouseup', function () { drag = null; view.classList.remove('dragging'); });
+    /* fresh render at full resolution inside the popup */
+    if (hasMermaid) {
+      try {
+        window.mermaid.render('mpop-' + (++seq), src).then(function (r) {
+          sc.innerHTML = r.svg; apply(); setTimeout(computeFit, 30);
+        }).catch(function () { sc.innerHTML = '<pre style="color:#fff">' + src.replace(/</g, '&lt;') + '</pre>'; });
+      } catch (e) { sc.innerHTML = '<pre style="color:#fff">' + src.replace(/</g, '&lt;') + '</pre>'; }
+    } else {
+      sc.innerHTML = '<pre style="color:#fff">' + src.replace(/</g, '&lt;') + '</pre>';
+    }
+  }
+
+  var seq = 0;
+  function runMermaid(scope) {
+    if (!scope) return;
+    var nodes = [].slice.call(scope.querySelectorAll('.mermaid')).filter(function (n) { return !n.dataset.done; });
+    if (!nodes.length) return;
+    if (!hasMermaid) { nodes.forEach(function (n) { var p = document.createElement('pre'); var c = document.createElement('code'); c.textContent = n.dataset.src; p.appendChild(c); p.className = 'mermaid-fallback'; n.replaceWith(p); }); return; }
+    nodes.forEach(function (n) {
+      n.dataset.done = '1';
+      var id = 'mmd-' + (++seq);
+      try {
+        window.mermaid.render(id, n.dataset.src).then(function (r) { mountZoomable(n, r.svg); })
+          .catch(function () { n.textContent = n.dataset.src; n.classList.add('mermaid-fallback'); });
+      } catch (e) { n.textContent = n.dataset.src; n.classList.add('mermaid-fallback'); }
+    });
+  }
+
+  var origSetTab = window.setTab;
+  window.setTab = function (btn) {
+    origSetTab(btn);
+    var doc = btn.closest ? (btn.closest('.fdoc') || document) : document;
+    var panel = doc.querySelector('.tabpanel[data-panel="' + btn.dataset.tab + '"]');
+    runMermaid(panel);
+  };
+  var origOpen = window.openFeature;
+  window.openFeature = function (id) {
+    origOpen(id);
+    var doc = document.querySelector('.fdoc[data-fdoc="' + id + '"]');
+    if (doc) runMermaid(doc.querySelector('.tabpanel:not([hidden])'));
+  };
+})();
+</script>

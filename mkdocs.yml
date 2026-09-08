@@ -1,0 +1,64 @@
+# Optional: renders this tree as a static site with `pip install mkdocs-material && mkdocs serve`
+# The markdown is vanilla CommonMark + Mermaid, so it also renders on GitHub
+# and can be dropped into Astro Starlight / Docusaurus unchanged.
+site_name: iGOT Karmayogi Platform Documentation
+theme:
+  name: material
+  palette:
+    primary: indigo
+markdown_extensions:
+  - tables
+  - admonition
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+nav:
+  - Home: index.md
+  - Platform:
+      - API Gateway: platform/api-gateway.md
+      - Content Lifecycle: platform/content-lifecycle.md
+  - Explore Content:
+      - explore-content/index.md
+      - Use Cases: explore-content/use-cases.md
+      - APIs: explore-content/apis.md
+      - HLD: explore-content/hld.md
+      - LLD: explore-content/lld.md
+  - Learning Hub:
+      - learning-hub/index.md
+      - Blended Program:
+          - learning-hub/blended-program/index.md
+          - Use Cases: learning-hub/blended-program/use-cases.md
+          - APIs: learning-hub/blended-program/apis.md
+          - HLD: learning-hub/blended-program/hld.md
+          - LLD: learning-hub/blended-program/lld.md
+      - Course:
+          - learning-hub/course/index.md
+          - Use Cases: learning-hub/course/use-cases.md
+          - APIs: learning-hub/course/apis.md
+          - HLD: learning-hub/course/hld.md
+          - LLD: learning-hub/course/lld.md
+      - Curated Program:
+          - learning-hub/curated-program/index.md
+          - Use Cases: learning-hub/curated-program/use-cases.md
+          - APIs: learning-hub/curated-program/apis.md
+          - HLD: learning-hub/curated-program/hld.md
+          - LLD: learning-hub/curated-program/lld.md
+      - My Assigned Courses:
+          - learning-hub/my-assigned-courses/index.md
+          - Use Cases: learning-hub/my-assigned-courses/use-cases.md
+          - APIs: learning-hub/my-assigned-courses/apis.md
+          - HLD: learning-hub/my-assigned-courses/hld.md
+          - LLD: learning-hub/my-assigned-courses/lld.md
+      - Standalone Assessment:
+          - learning-hub/standalone-assessment/index.md
+          - Use Cases: learning-hub/standalone-assessment/use-cases.md
+          - APIs: learning-hub/standalone-assessment/apis.md
+          - HLD: learning-hub/standalone-assessment/hld.md
+          - LLD: learning-hub/standalone-assessment/lld.md
+      - Comprehensive Assessment Program:
+          - learning-hub/comprehensive-assessment-program/index.md
+          - Use Cases: learning-hub/comprehensive-assessment-program/use-cases.md
+          - APIs: learning-hub/comprehensive-assessment-program/apis.md
+          - HLD: learning-hub/comprehensive-assessment-program/hld.md
+          - LLD: learning-hub/comprehensive-assessment-program/lld.md
