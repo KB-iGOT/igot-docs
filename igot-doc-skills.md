@@ -2,8 +2,9 @@
 name: igot-doc
 description: >-
   Generate iGOT Karmayogi platform documentation in the team's established
-  style — code-verified feature docs (Overview, Use Cases, APIs, HLD, LLD) as
-  Markdown, wired into the visual Docs Explorer. Use this skill whenever the
+  style — code-verified feature docs (Overview, Use Cases, APIs, HLD, LLD,
+  Operations Manual) as Markdown, wired into the visual Docs Explorer. Use
+  this skill whenever the
   user asks to "generate documentation" for an iGOT/Karmayogi feature, hub,
   content type or service, asks to document APIs/HLD/LLD, asks to add a
   feature to the docs explorer or the docs/ markdown tree, or asks to update
@@ -88,7 +89,7 @@ and add the boundary note. Do not silently guess.
 ### 2 · Write the markdown set
 
 Create `docs/learning-hub/<feature-slug>/` (or the matching hub folder) with
-exactly five files. Follow the shapes below — existing folders (
+exactly six files. Follow the shapes below — existing folders (
 `blended-program/` is the fullest reference) show the style in situ.
 
 **`index.md`** — plain language for non-technical readers, and strictly
@@ -132,6 +133,16 @@ verified payloads. Close with the **Verification boundary** blockquote:
 > that repo to close the gap.
 ```
 
+**`operations-manual.md`** — the sixth file, audience is ops/support staff
+keeping the feature running in production, not developers. Cover: common
+support issues and their verified fix/workaround, configuration (feature
+flags, env vars, admin-console toggles) with defaults, monitoring/alerts
+(what to watch and where), and the escalation path/ownership. Source it from
+runbooks, support playbooks, or on-call docs the same way as everything
+else — verified facts only, boundary-noted where no such source is attached.
+If nothing is attached yet, write the honest stub (see CAP's stub-plus
+convention) rather than inventing procedures.
+
 ### 3 · Wire into the explorer
 
 - The tech tabs pick up the new markdown automatically **if** the feature's
@@ -139,9 +150,10 @@ verified payloads. Close with the **Verification boundary** blockquote:
   paths.
 - A brand-new feature also needs, in `karmayogi-docs-explorer.template.html`:
   a bubble on the right hub ring (`onclick="openFeature('<id>')"`), and an
-  `fdoc` block (hero + authored-HTML Overview and Use Cases panels + three
-  `mdwrap` tech panels). Copy an existing `fdoc` as the pattern; keep the
-  hero chips factual (Category / Route / verification status).
+  `fdoc` block (hero + authored-HTML Overview and Use Cases panels + four
+  `mdwrap` tech panels: APIs, HLD, LLD, Operations Manual). Copy an existing
+  `fdoc` as the pattern; keep the hero chips factual (Category / Route /
+  verification status).
 - Rebuild with `tools/build_docs_explorer.py` and update `mkdocs.yml` nav.
 
 ### 4 · Verify before delivering
@@ -184,6 +196,13 @@ is how the whole team's output stays consistent. When in doubt whether a
 one-off request is a new convention, ask: "should this become the standard?"
 
 ### Changelog
+
+- **2026-09-08** · Six-file structure: added `operations-manual.md` (ops/
+  support runbook: common issues, config, monitoring, escalation) as the
+  sixth file and explorer tab for every feature, applied retroactively to
+  all seven existing features as honest stubs pending real runbook sources.
+  Feature set is open-ended — Discussion Hub, Event Hub, Competency Hub, and
+  further sub-features will be added as source material is supplied.
 
 - **2026-08-28 (3)** · Overview discipline: overviews (index.md and the
   explorer's Overview tab) are user-benefit only — no API names, no service

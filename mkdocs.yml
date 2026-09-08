@@ -24,6 +24,7 @@ nav:
       - APIs: explore-content/apis.md
       - HLD: explore-content/hld.md
       - LLD: explore-content/lld.md
+      - Operations Manual: explore-content/operations-manual.md
   - Learning Hub:
       - learning-hub/index.md
       - Blended Program:
@@ -32,33 +33,39 @@ nav:
           - APIs: learning-hub/blended-program/apis.md
           - HLD: learning-hub/blended-program/hld.md
           - LLD: learning-hub/blended-program/lld.md
+          - Operations Manual: learning-hub/blended-program/operations-manual.md
       - Course:
           - learning-hub/course/index.md
           - Use Cases: learning-hub/course/use-cases.md
           - APIs: learning-hub/course/apis.md
           - HLD: learning-hub/course/hld.md
           - LLD: learning-hub/course/lld.md
+          - Operations Manual: learning-hub/course/operations-manual.md
       - Curated Program:
           - learning-hub/curated-program/index.md
           - Use Cases: learning-hub/curated-program/use-cases.md
           - APIs: learning-hub/curated-program/apis.md
           - HLD: learning-hub/curated-program/hld.md
           - LLD: learning-hub/curated-program/lld.md
+          - Operations Manual: learning-hub/curated-program/operations-manual.md
       - My Assigned Courses:
           - learning-hub/my-assigned-courses/index.md
           - Use Cases: learning-hub/my-assigned-courses/use-cases.md
           - APIs: learning-hub/my-assigned-courses/apis.md
           - HLD: learning-hub/my-assigned-courses/hld.md
           - LLD: learning-hub/my-assigned-courses/lld.md
+          - Operations Manual: learning-hub/my-assigned-courses/operations-manual.md
       - Standalone Assessment:
           - learning-hub/standalone-assessment/index.md
           - Use Cases: learning-hub/standalone-assessment/use-cases.md
           - APIs: learning-hub/standalone-assessment/apis.md
           - HLD: learning-hub/standalone-assessment/hld.md
           - LLD: learning-hub/standalone-assessment/lld.md
+          - Operations Manual: learning-hub/standalone-assessment/operations-manual.md
       - Comprehensive Assessment Program:
           - learning-hub/comprehensive-assessment-program/index.md
           - Use Cases: learning-hub/comprehensive-assessment-program/use-cases.md
           - APIs: learning-hub/comprehensive-assessment-program/apis.md
           - HLD: learning-hub/comprehensive-assessment-program/hld.md
           - LLD: learning-hub/comprehensive-assessment-program/lld.md
+          - Operations Manual: learning-hub/comprehensive-assessment-program/operations-manual.md
