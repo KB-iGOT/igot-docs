@@ -197,6 +197,15 @@ one-off request is a new convention, ask: "should this become the standard?"
 
 ### Changelog
 
+- **2026-09-08 (2)** · Added Learning Pathway (`docs/learning-hub/learning-pathway/`)
+  as the first feature sourced from the team's own Confluence
+  As-Built/HLD/LLD/Operations Manual pages (space `TES`) rather than a fresh
+  repo trace — those pages were themselves produced by the same research
+  discipline, so they were used directly as the verified source, re-shaped
+  into this repo's six-file/tab convention. Confirms Confluence pages
+  following this team's documentation style are an acceptable primary
+  source alongside direct repo tracing.
+
 - **2026-09-08** · Six-file structure: added `operations-manual.md` (ops/
   support runbook: common issues, config, monitoring, escalation) as the
   sixth file and explorer tab for every feature, applied retroactively to

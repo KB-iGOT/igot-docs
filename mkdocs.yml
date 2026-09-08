@@ -69,3 +69,10 @@ nav:
           - HLD: learning-hub/comprehensive-assessment-program/hld.md
           - LLD: learning-hub/comprehensive-assessment-program/lld.md
           - Operations Manual: learning-hub/comprehensive-assessment-program/operations-manual.md
+      - Learning Pathway:
+          - learning-hub/learning-pathway/index.md
+          - Use Cases: learning-hub/learning-pathway/use-cases.md
+          - APIs: learning-hub/learning-pathway/apis.md
+          - HLD: learning-hub/learning-pathway/hld.md
+          - LLD: learning-hub/learning-pathway/lld.md
+          - Operations Manual: learning-hub/learning-pathway/operations-manual.md
