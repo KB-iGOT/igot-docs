@@ -222,6 +222,30 @@ one-off request is a new convention, ask: "should this become the standard?"
 
 ### Changelog
 
+- **2026-09-09 (3)** · Diagram legibility: global Mermaid config
+  (`mermaid.initialize` in the template) sets `fontSize: 17px`,
+  `flowchart.rankSpacing: 130`, `flowchart.nodeSpacing: 60` — applies to
+  every diagram in every feature's HLD/LLD, not per-feature. For an
+  unusually wide diagram (many parallel nodes in one rank), add a
+  per-diagram `%%{init: {"flowchart": {"rankSpacing": N}}}%%` line as the
+  first line inside that one ` ```mermaid ` block rather than changing the
+  global default — keeps other diagrams from being over-stretched. Also:
+  `.mfig > svg` no longer force-shrinks to the column width
+  (`max-width:100%` → `max-width:none` + `overflow-x:auto` on `.mfig`) — a
+  wide diagram scrolls at natural size instead of squeezing illegible.
+  Triggered by the Peer Validation topology diagram being unreadable at
+  default spacing/width-capping.
+
+- **2026-09-09 (2)** · Added Peer Validation (`docs/learning-hub/peer-validation/`),
+  sourced from a code-tracing research report the doc owner produced with a
+  separate Claude analysis session across 8 repos (3 backends, 3 web
+  frontends, 1 mobile app — no dedicated Peer Validation service; state is
+  split across Elasticsearch and two independent Cassandra tables). Mobile
+  facts were folded inline into each file rather than kept as a separate
+  "mobile" section, matching the single-narrative style used elsewhere.
+  Bubble placed by bisecting the CAP↔Standalone Assessment gap per the
+  placement convention above.
+
 - **2026-09-09** · Hub-ring bubble placement convention: new spokes are
   placed by bisecting the angle between the two nearest existing spokes at
   the hub's existing radius (not eyeballed), with exactly one dashed

@@ -257,8 +257,8 @@
 .mdwrap blockquote { border: 1px solid #EF951E4D; border-left: 3px solid #EF951E; background: #FDF3E4; border-radius: 10px; padding: 11px 15px; margin: 0 0 18px; }
 .mdwrap blockquote p { color: #6B4A0E; font-size: 12.5px; margin: 0; }
 .mdwrap .mermaid { background: #FFFFFF; border: 1px solid #00000014; border-radius: 12px; padding: 16px; margin: 0 0 18px; overflow-x: auto; text-align: center; }
-.mfig { position: relative; background: #FFFFFF; border: 1px solid #00000014; border-radius: 12px; margin: 0 0 18px; padding: 16px; }
-.mfig > svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.mfig { position: relative; background: #FFFFFF; border: 1px solid #00000014; border-radius: 12px; margin: 0 0 18px; padding: 16px; overflow-x: auto; }
+.mfig > svg { display: block; max-width: none; height: auto; margin: 0 auto; }
 .mopen { position: absolute; top: 10px; right: 10px; display: inline-flex; align-items: center; gap: 7px; background: #1B4CA1; color: #FFFFFF; border: 0; border-radius: 99px; padding: 7px 15px; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px #1B4CA140; z-index: 2; }
 .mopen:hover { background: #194593; }
 .mopen svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; }
@@ -366,13 +366,14 @@
       <line x1="720" y1="505" x2="452" y2="660" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="452" y2="350" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="565" y2="237" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="410" y2="505" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
     <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>
-      <div class="sub">7 features</div>
+      <div class="sub">8 features</div>
     </div>
 
     <button class="bub item" style="left:655px; top:130px; width:130px; height:130px; font-size:15px" onclick="openFeature('course')">Course</button>
@@ -382,6 +383,7 @@
     <button class="bub item assess" style="left:384px; top:592px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('standalone')">Standalone Assessment</button>
     <button class="bub item assess" style="left:380px; top:278px; width:144px; height:144px; font-size:13px" onclick="openFeature('cap')">Comprehensive Assessment Program</button>
     <button class="bub item" style="left:501px; top:173px; width:128px; height:128px; font-size:14px" onclick="openFeature('pathway')">Learning Pathway</button>
+    <button class="bub item" style="left:342px; top:437px; width:136px; height:136px; font-size:14px" onclick="openFeature('peervalidation')">Peer Validation</button>
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
   </section>
@@ -871,6 +873,54 @@
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/learning-pathway/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/learning-pathway/operations-manual.md</div></div>
     </div><!-- /fdoc pathway -->
 
+    <!-- ═══ PEER VALIDATION ═══ -->
+    <div class="fdoc" data-fdoc="peervalidation" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m16 11 2 2 4-4"/></svg></div>
+        <div>
+          <div class="fp-title">Peer Validation</div>
+          <div class="fp-sub">A named colleague, not a machine, has to approve a course completion before it counts.</div>
+          <div class="fp-chips"><span class="chip">Trigger&nbsp; <code>30-60 days after completion</code></span><span class="chip ok">&#10003; Verified from 8 repos &middot; Sept 2026</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">Some courses come with a peer-validation survey attached by the department. Days after a Karmayogi finishes such a course, they're prompted to answer a short survey, optionally attach proof, and name two or three peers who can vouch for the work. Each peer reviews independently and approves or rejects &mdash; a <strong>one-shot, unchangeable decision</strong>. There is no owning backend service: the survey, the notification/status tracking, and the reporting each live in a separate system, correlated only by shared IDs.</p>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Terminal by design</b><p>A rejection is a dead end today &mdash; no resubmission path exists.</p></div>
+          <div class="fp-card"><b>No escalation</b><p>An unreviewed request just sits &mdash; nothing reminds or reassigns the peer.</p></div>
+          <div class="fp-card"><b>Display-only expiry</b><p>"Expired" is calculated when viewed, never persisted &mdash; the underlying row can stay pending indefinitely.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Get prompted and submit</b><p>Days after finishing an eligible course, a survey prompt appears; the learner answers, optionally attaches proof, and names 2-3 peers.</p><div class="api">POST <code>peersurvey/submit</code></div></div>
+          <div class="uc-card"><div class="who">Peer</div><b class="t">UC-2 &middot; Review and decide</b><p>Each named peer reviews independently and approves or rejects &mdash; a decision that can never be changed once made.</p><div class="api">POST <code>peersurvey/submit</code> (review)</div></div>
+          <div class="uc-card"><div class="who">MDO / SPV Admin</div><b class="t">UC-3 &middot; Configure a survey</b><p>Attach a survey to a live course: trigger window, lookback, up to two custom questions.</p><div class="api">POST <code>mdo/peersurvey/create</code></div></div>
+          <div class="uc-card"><div class="who">MDO / SPV Admin</div><b class="t">UC-4 &middot; Pull a completion report</b><p>Generate a CSV of submissions and outcomes &mdash; async, the admin checks back rather than being notified.</p><div class="api">GET <code>peerValidation/v1/report/initiate/:formId</code></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/peer-validation/apis.md"></article><div class="md-src">source: docs/learning-hub/peer-validation/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/peer-validation/hld.md"></article><div class="md-src">source: docs/learning-hub/peer-validation/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/peer-validation/lld.md"></article><div class="md-src">source: docs/learning-hub/peer-validation/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/peer-validation/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/peer-validation/operations-manual.md</div></div>
+    </div><!-- /fdoc peervalidation -->
+
     <!-- ═══ EXPLORE CONTENT (main-page feature) ═══ -->
     <div class="fdoc" data-fdoc="explore" hidden>
     <div class="fp-hero">
@@ -1061,7 +1111,7 @@
   try { store = JSON.parse(document.getElementById('md-store').textContent); } catch (e) {}
   var hasMarked = typeof window.marked !== 'undefined';
   var hasMermaid = typeof window.mermaid !== 'undefined';
-  if (hasMermaid) { try { window.mermaid.initialize({ startOnLoad: false, theme: 'neutral' }); } catch (e) { hasMermaid = false; } }
+  if (hasMermaid) { try { window.mermaid.initialize({ startOnLoad: false, theme: 'neutral', themeVariables: { fontSize: '17px' }, flowchart: { rankSpacing: 130, nodeSpacing: 60 } }); } catch (e) { hasMermaid = false; } }
 
   document.querySelectorAll('.mdwrap[data-md]').forEach(function (el) {
     var key = el.dataset.md, md = store[key];

@@ -76,3 +76,10 @@ nav:
           - HLD: learning-hub/learning-pathway/hld.md
           - LLD: learning-hub/learning-pathway/lld.md
           - Operations Manual: learning-hub/learning-pathway/operations-manual.md
+      - Peer Validation:
+          - learning-hub/peer-validation/index.md
+          - Use Cases: learning-hub/peer-validation/use-cases.md
+          - APIs: learning-hub/peer-validation/apis.md
+          - HLD: learning-hub/peer-validation/hld.md
+          - LLD: learning-hub/peer-validation/lld.md
+          - Operations Manual: learning-hub/peer-validation/operations-manual.md
