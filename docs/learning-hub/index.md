@@ -13,3 +13,5 @@ enrolments in the LMS, per-node progress state — and each type adds one twist:
 | [Standalone Assessment](standalone-assessment/index.md) | assessment engine replaces the player | ✅ |
 | [Comprehensive Assessment Program](comprehensive-assessment-program/index.md) | mandated assessment over shared rails | ⚠️ thin |
 | [Learning Pathway](learning-pathway/index.md) | milestones gate each other — sequential unlock, not one flat list | ⚠️ thin backend |
+| [Peer Validation](peer-validation/index.md) | a named colleague, not a machine, has to approve completion | ✅ |
+| [Bharat Kalp](bharat-kalp/index.md) | cohort-gated microsite, not a content type on the shared rails | ⚠️ no backend of its own |

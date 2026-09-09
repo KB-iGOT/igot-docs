@@ -84,3 +84,10 @@ nav:
           - LLD: learning-hub/bharat-kalp/lld.md
           - Operations Manual: learning-hub/bharat-kalp/operations-manual.md
           - As-Built Requirements: learning-hub/bharat-kalp/as-built-requirements.md
+      - Peer Validation:
+          - learning-hub/peer-validation/index.md
+          - Use Cases: learning-hub/peer-validation/use-cases.md
+          - APIs: learning-hub/peer-validation/apis.md
+          - HLD: learning-hub/peer-validation/hld.md
+          - LLD: learning-hub/peer-validation/lld.md
+          - Operations Manual: learning-hub/peer-validation/operations-manual.md
