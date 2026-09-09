@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="UTF-8">
 <title>Karmayogi Docs Explorer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -279,7 +282,8 @@
 .md-missing { border: 1.5px dashed #D12E2E66; border-radius: 12px; padding: 20px; color: #D12E2E; font-size: 13px; font-weight: 700; }
 .md-src { margin-top: 20px; font-family: Menlo, Consolas, monospace; font-size: 10.5px; color: #767E8C; border-top: 1px dashed #00000014; padding-top: 9px; }
 </style>
-
+</head>
+<body>
 
 <div id="stagewrap">
 <div id="stage">
@@ -1051,7 +1055,8 @@
 })();
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<!-- deferred: a blocking load here stalls the parser (and every script below it) when the CDN is unreachable -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
 <script>/**
  * marked v12.0.2 - a markdown parser
  * Copyright (c) 2011-2024, Christopher Jeffrey. (MIT Licensed)
@@ -1066,8 +1071,16 @@
   var store = {};
   try { store = JSON.parse(document.getElementById('md-store').textContent); } catch (e) {}
   var hasMarked = typeof window.marked !== 'undefined';
-  var hasMermaid = typeof window.mermaid !== 'undefined';
-  if (hasMermaid) { try { window.mermaid.initialize({ startOnLoad: false, theme: 'neutral' }); } catch (e) { hasMermaid = false; } }
+  /* mermaid arrives late (deferred), so check for it when a diagram is actually rendered, not now */
+  var mermaidReady = false;
+  function hasMermaid() {
+    if (typeof window.mermaid === 'undefined') return false;
+    if (!mermaidReady) {
+      try { window.mermaid.initialize({ startOnLoad: false, theme: 'neutral' }); mermaidReady = true; }
+      catch (e) { return false; }
+    }
+    return true;
+  }
 
   document.querySelectorAll('.mdwrap[data-md]').forEach(function (el) {
     var key = el.dataset.md, md = store[key];
@@ -1142,7 +1155,7 @@
     });
     window.addEventListener('mouseup', function () { drag = null; view.classList.remove('dragging'); });
     /* fresh render at full resolution inside the popup */
-    if (hasMermaid) {
+    if (hasMermaid()) {
       try {
         window.mermaid.render('mpop-' + (++seq), src).then(function (r) {
           sc.innerHTML = r.svg; apply(); setTimeout(computeFit, 30);
@@ -1158,7 +1171,7 @@
     if (!scope) return;
     var nodes = [].slice.call(scope.querySelectorAll('.mermaid')).filter(function (n) { return !n.dataset.done; });
     if (!nodes.length) return;
-    if (!hasMermaid) { nodes.forEach(function (n) { var p = document.createElement('pre'); var c = document.createElement('code'); c.textContent = n.dataset.src; p.appendChild(c); p.className = 'mermaid-fallback'; n.replaceWith(p); }); return; }
+    if (!hasMermaid()) { nodes.forEach(function (n) { var p = document.createElement('pre'); var c = document.createElement('code'); c.textContent = n.dataset.src; p.appendChild(c); p.className = 'mermaid-fallback'; n.replaceWith(p); }); return; }
     nodes.forEach(function (n) {
       n.dataset.done = '1';
       var id = 'mmd-' + (++seq);
@@ -1184,3 +1197,6 @@
   };
 })();
 </script>
+
+</body>
+</html>
