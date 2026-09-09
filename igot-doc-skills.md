@@ -149,11 +149,36 @@ convention) rather than inventing procedures.
   page exists in the template with `data-md` placeholders pointing at the new
   paths.
 - A brand-new feature also needs, in `karmayogi-docs-explorer.template.html`:
-  a bubble on the right hub ring (`onclick="openFeature('<id>')"`), and an
-  `fdoc` block (hero + authored-HTML Overview and Use Cases panels + four
-  `mdwrap` tech panels: APIs, HLD, LLD, Operations Manual). Copy an existing
-  `fdoc` as the pattern; keep the hero chips factual (Category / Route /
-  verification status).
+  a bubble on the hub ring (`onclick="openFeature('<id>')"`), and an `fdoc`
+  block (hero + authored-HTML Overview and Use Cases panels + four `mdwrap`
+  tech panels: APIs, HLD, LLD, Operations Manual). Copy an existing `fdoc` as
+  the pattern; keep the hero chips factual (Category / Route / verification
+  status).
+- **Placing the new bubble** (a hub with N existing spokes gains an N+1th —
+  the ring is never redrawn from scratch, each addition just adds one more
+  spoke): the hub center for Learning Hub is `(720, 505)`; existing spokes
+  sit on a radius of ~310px, 60° apart. Pick the empty gap between two
+  adjacent spokes closest to where the new feature conceptually belongs,
+  and bisect their angle rather than guessing pixels:
+  1. Find the two neighbouring spokes' centers (`left+width/2`,
+     `top+height/2`).
+  2. Compute the new center as their angular midpoint at the same ~310px
+     radius from the hub center (e.g. Learning Pathway sits between Course
+     `(720,195)` and Comprehensive Assessment Program `(452,350)`, both 310px
+     out at 60° apart, so it landed at `(565,237)` — the 30°-bisector at the
+     same radius).
+  3. Convert to `left`/`top` by subtracting half the bubble's width/height
+     (128px bubbles → subtract 64).
+  4. Add one dashed connector `<line x1="720" y1="505" x2="<center-x>"
+     y2="<center-y>" stroke="#1B4CA138" stroke-width="1.5"
+     stroke-dasharray="4 6"/>` inside `.orbitbg` — every spoke has exactly
+     one connector line back to the hub center, no exceptions.
+  5. Bump the hub's `<div class="sub">N features</div>` count.
+  Never place a bubble by eyeballing free space — it will overlap or drift
+  off-center the way the first Learning Pathway placement did (caught and
+  fixed 2026-09-09). If a hub is gaining several features at once, prefer
+  recomputing all spokes as an evenly-spaced N-gon over serially bisecting
+  gaps, since repeated bisection crowds one side of the ring.
 - Rebuild with `tools/build_docs_explorer.py` and update `mkdocs.yml` nav.
 
 ### 4 · Verify before delivering
@@ -196,6 +221,13 @@ is how the whole team's output stays consistent. When in doubt whether a
 one-off request is a new convention, ask: "should this become the standard?"
 
 ### Changelog
+
+- **2026-09-09** · Hub-ring bubble placement convention: new spokes are
+  placed by bisecting the angle between the two nearest existing spokes at
+  the hub's existing radius (not eyeballed), with exactly one dashed
+  connector line per spoke and the hub's feature count bumped. Triggered by
+  the Learning Pathway bubble initially overlapping Course and needing a
+  manual reposition.
 
 - **2026-09-08 (2)** · Added Learning Pathway (`docs/learning-hub/learning-pathway/`)
   as the first feature sourced from the team's own Confluence
