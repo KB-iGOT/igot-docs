@@ -76,3 +76,11 @@ nav:
           - HLD: learning-hub/learning-pathway/hld.md
           - LLD: learning-hub/learning-pathway/lld.md
           - Operations Manual: learning-hub/learning-pathway/operations-manual.md
+      - Bharat Kalp:
+          - learning-hub/bharat-kalp/index.md
+          - Use Cases: learning-hub/bharat-kalp/use-cases.md
+          - APIs: learning-hub/bharat-kalp/apis.md
+          - HLD: learning-hub/bharat-kalp/hld.md
+          - LLD: learning-hub/bharat-kalp/lld.md
+          - Operations Manual: learning-hub/bharat-kalp/operations-manual.md
+          - As-Built Requirements: learning-hub/bharat-kalp/as-built-requirements.md

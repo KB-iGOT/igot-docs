@@ -324,7 +324,7 @@
     </div>
 
     <button class="bub hub" id="learn-hub" style="left:646px; top:121px; width:148px; height:148px;" onclick="openHub(this)">
-      Learning Hub<span class="sub">6 features</span>
+      Learning Hub<span class="sub">8 features</span>
     </button>
     <button class="bub hub" style="left:941px; top:335px; width:148px; height:148px;" onclick="notWired()">
       Discussion Hub<span class="sub">coming soon</span>
@@ -370,13 +370,14 @@
       <line x1="720" y1="505" x2="452" y2="660" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="452" y2="350" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="565" y2="237" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="1030" y2="505" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
     <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>
-      <div class="sub">7 features</div>
+      <div class="sub">8 features</div>
     </div>
 
     <button class="bub item" style="left:655px; top:130px; width:130px; height:130px; font-size:15px" onclick="openFeature('course')">Course</button>
@@ -386,6 +387,7 @@
     <button class="bub item assess" style="left:384px; top:592px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('standalone')">Standalone Assessment</button>
     <button class="bub item assess" style="left:380px; top:278px; width:144px; height:144px; font-size:13px" onclick="openFeature('cap')">Comprehensive Assessment Program</button>
     <button class="bub item" style="left:501px; top:173px; width:128px; height:128px; font-size:14px" onclick="openFeature('pathway')">Learning Pathway</button>
+    <button class="bub item" style="left:966px; top:441px; width:128px; height:128px; font-size:14px" onclick="openFeature('bharatkalp')">Bharat Kalp</button>
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
   </section>
@@ -874,6 +876,58 @@
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/learning-pathway/lld.md"></article><div class="md-src">source: docs/learning-hub/learning-pathway/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/learning-pathway/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/learning-pathway/operations-manual.md</div></div>
     </div><!-- /fdoc pathway -->
+
+    <div class="fdoc" data-fdoc="bharatkalp" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v18"/><path d="M6 4h11l-2.5 4L17 12H6"/></svg></div>
+        <div>
+          <div class="fp-title">Bharat Kalp</div>
+          <div class="fp-sub">A cohort-gated, week-by-week program with its own microsite &mdash; a progress hero, a community carousel, and a searchable library of each week's content.</div>
+          <div class="fp-chips"><span class="chip">Route&nbsp; <code>app/learn/bharat-kalp</code></span><span class="chip">Access&nbsp; profile flag only, no feature toggle</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+        <button class="fp-tab" role="tab" data-tab="asbuilt" onclick="setTab(this)">As-Built</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">Bharat Kalp is a program that only exists for the people invited into it. Members get their own landing page &mdash; progress at the top, a carousel of communities to join below &mdash; and a &ldquo;see all&rdquo; browser where each week's courses, programs, events and resources can be searched and filtered by how far along they are. Everyone else never sees it: the entry points are hidden and a direct link turns them away.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> Bharat Kalp has no backend of its own &mdash; it composes existing platform services (form config, search, enrolment, and the external CIOS content partner) into one portal module, and its landing hero and cards are rendered by externally-versioned library components this repo cannot see inside. Whether you can see it at all rides on a single profile attribute that is set by an out-of-band process no traced repo covers.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>One flag, four checks</b><p>Visibility hangs on a single profile attribute &mdash; but the route guard reads it more strictly than the three checks that show the entry points.</p></div>
+          <div class="fp-card"><b>Config-driven, no domain model</b><p>Weeks, tabs and content buckets are all shaped by CMS-authored JSON consumed untyped, so a malformed config degrades to an empty page rather than an error.</p></div>
+          <div class="fp-card"><b>Composed, not orchestrated</b><p>Four independent calls fan out from the browser &mdash; there is no single endpoint that assembles a week for you.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Land on the program home</b><p>Arrives by direct link, home spotlight card or notification, and sees the progress hero plus a carousel of communities to join.</p><div class="api">POST <code>v1/form/read</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 &middot; Open a community</b><p>A community card leads straight into that community's discussion thread.</p></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 &middot; Browse a week's content</b><p>Searches, picks a week, switches content-type tabs &mdash; a tab appears only if that week has something under it.</p><div class="api">POST <code>sunbirdigot/search</code> &middot; <code>cios/v1/search/content</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-4 &middot; See where they left off</b><p>Each card carries the member's own progress &mdash; batched for internal content, one call per item for external.</p><div class="api">POST <code>enrollment/details/:userId</code> &middot; GET <code>cios-enroll/&hellip;</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-5 &middot; Open a piece of content</b><p>Routes to the right place by content type: internal player for resources, external TOC for CIOS content, or the normal course/program overview.</p></div>
+          <div class="uc-card"><div class="who">Non-member</div><b class="t">UC-6 &middot; Turned away at the door</b><p>Entry points stay hidden and a deep link redirects to page-not-found &mdash; unless the flag is stored as a string, in which case they see the door but cannot open it.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/bharat-kalp/apis.md"></article><div class="md-src">source: docs/learning-hub/bharat-kalp/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/bharat-kalp/hld.md"></article><div class="md-src">source: docs/learning-hub/bharat-kalp/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/bharat-kalp/lld.md"></article><div class="md-src">source: docs/learning-hub/bharat-kalp/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/bharat-kalp/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/bharat-kalp/operations-manual.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/bharat-kalp/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/bharat-kalp/as-built-requirements.md</div></div>
+    </div><!-- /fdoc bharatkalp -->
 
     <!-- ═══ EXPLORE CONTENT (main-page feature) ═══ -->
     <div class="fdoc" data-fdoc="explore" hidden>
