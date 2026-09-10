@@ -222,6 +222,15 @@ one-off request is a new convention, ask: "should this become the standard?"
 
 ### Changelog
 
+- **2026-09-09 (4)** · Added Bharat Kalp (`docs/learning-hub/bharat-kalp/`) in
+  parallel with Peer Validation on a separate branch; merging both into the
+  hub landed two independent, non-adjacent bisections rather than one, so
+  they were kept as-is (Bharat Kalp bisects the Curated Program↔Blended
+  Program gap at 0°) instead of recomputing the ring as an evenly-spaced
+  N-gon — the resulting spacing (30°/60° gaps, no crowding on either side)
+  didn't warrant the disruption of repositioning the other seven spokes.
+  Hub count bumped to 9 features.
+
 - **2026-09-09 (3)** · Diagram legibility: global Mermaid config
   (`mermaid.initialize` in the template) sets `fontSize: 17px`,
   `flowchart.rankSpacing: 130`, `flowchart.nodeSpacing: 60` — applies to
