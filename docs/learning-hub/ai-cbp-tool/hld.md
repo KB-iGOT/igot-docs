@@ -71,7 +71,7 @@ flowchart TB
     BS --> PG
     BS -->|summarize/generate| Gemini
     BS -->|publish| CBExt
-    CBExt -.->|(external, not traced)| MDO
+    CBExt -.->|"external, not traced"| MDO
 ```
 
 Dashed arrows mark the boundary of what this repo actually implements: this
