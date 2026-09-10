@@ -91,6 +91,13 @@ nav:
           - HLD: learning-hub/peer-validation/hld.md
           - LLD: learning-hub/peer-validation/lld.md
           - Operations Manual: learning-hub/peer-validation/operations-manual.md
+      - CHS:
+          - learning-hub/chs/index.md
+          - Use Cases: learning-hub/chs/use-cases.md
+          - APIs: learning-hub/chs/apis.md
+          - HLD: learning-hub/chs/hld.md
+          - LLD: learning-hub/chs/lld.md
+          - Operations Manual: learning-hub/chs/operations-manual.md
       - AI CBP Tool:
           - learning-hub/ai-cbp-tool/index.md
           - Use Cases: learning-hub/ai-cbp-tool/use-cases.md

@@ -285,6 +285,7 @@
 </head>
 <body>
 
+
 <div id="stagewrap">
 <div id="stage">
 
@@ -324,7 +325,7 @@
     </div>
 
     <button class="bub hub" id="learn-hub" style="left:646px; top:121px; width:148px; height:148px;" onclick="openHub(this)">
-      Learning Hub<span class="sub">10 features</span>
+      Learning Hub<span class="sub">11 features</span>
     </button>
     <button class="bub hub" style="left:941px; top:335px; width:148px; height:148px;" onclick="notWired()">
       Discussion Hub<span class="sub">coming soon</span>
@@ -373,13 +374,14 @@
       <line x1="720" y1="505" x2="1030" y2="505" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="410" y2="505" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="875" y2="773" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="875" y2="237" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
     <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>
-      <div class="sub">10 features</div>
+      <div class="sub">11 features</div>
     </div>
 
     <button class="bub item" style="left:655px; top:130px; width:130px; height:130px; font-size:15px" onclick="openFeature('course')">Course</button>
@@ -391,7 +393,8 @@
     <button class="bub item" style="left:501px; top:173px; width:128px; height:128px; font-size:14px" onclick="openFeature('pathway')">Learning Pathway</button>
     <button class="bub item" style="left:966px; top:441px; width:128px; height:128px; font-size:14px" onclick="openFeature('bharatkalp')">Bharat Kalp</button>
     <button class="bub item" style="left:342px; top:437px; width:136px; height:136px; font-size:14px" onclick="openFeature('peervalidation')">Peer Validation</button>
-    <button class="bub item" style="left:807px; top:705px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('aicbp')">AI CBP Tool</button>
+    <button class="bub item" style="left:811px; top:709px; width:128px; height:128px; font-size:14px" onclick="openFeature('chs')">CHS</button>
+    <button class="bub item" style="left:807px; top:169px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('aicbp')">AI CBP Tool</button>
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
   </section>
@@ -980,6 +983,57 @@
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/peer-validation/lld.md"></article><div class="md-src">source: docs/learning-hub/peer-validation/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/peer-validation/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/peer-validation/operations-manual.md</div></div>
     </div><!-- /fdoc peervalidation -->
+
+    <!-- ═══ CHS ═══ -->
+    <div class="fdoc" data-fdoc="chs" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg></div>
+        <div>
+          <div class="fp-title">CHS</div>
+          <div class="fp-sub">A nightly batch pipeline &mdash; not a page or a button &mdash; that turns raw platform activity into karma points, badges, leaderboards, compliance reports and the BI warehouse.</div>
+          <div class="fp-chips"><span class="chip">Repo&nbsp; <code>cb-core-data</code></span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">CHS is the platform's batch analytics pipeline &mdash; the jobs that turn raw activity data into karma points, badges, leaderboards, compliance reports and the BI warehouse. It runs nightly, unattended, and shapes what MDO admins, BI/Looker consumers, the live dashboard, and downstream notification systems see.</p>
+        <div class="fp-cards">
+          <div class="fp-card"><b>No incremental sync, anywhere</b><p>Every warehouse write is a full truncate-and-reload on every run &mdash; simple to reason about, but a table is genuinely empty (not stale) during a failed or slow sync.</p></div>
+          <div class="fp-card"><b>Four very different consumers</b><p>MDO admins download ZIP reports, BI/Looker queries the warehouse, the live dashboard reads Redis directly, and downstream systems consume Kafka/Postgres outboxes &mdash; the same pipeline run serves all four differently.</p></div>
+          <div class="fp-card"><b>No orchestration DAG in-repo</b><p>Only 5 of ~46 jobs are chained by code; everything else's run order is enforced by an external, out-of-repo scheduler.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">MDO Administrator</div><b class="t">UC-1 &middot; Download a report bundle</b><p>Per-org CSVs are packaged into one password-protected ZIP per org and uploaded to cloud storage.</p><div class="api">zipUpload.py &middot; GCS</div></div>
+          <div class="uc-card"><div class="who">MDO Administrator</div><b class="t">UC-2 &middot; View org-scoped dashboard metrics</b><p>Counters and leaderboards keyed by ministry/org ID, read straight from Redis.</p><div class="api">ministryMetrics.py &middot; dashboardSync.py</div></div>
+          <div class="uc-card"><div class="who">BI / Looker Consumer</div><b class="t">UC-3 &middot; Query the BI warehouse</b><p>12 core Postgres tables, or their BigQuery mirror, rebuilt from scratch every run.</p><div class="api">dataWarehouse.py &middot; bq-scripts.sh</div></div>
+          <div class="uc-card"><div class="who">Platform Dashboard</div><b class="t">UC-4 &middot; Read near-real-time counters</b><p>50+ Redis keys computed via DuckDB, independent of the slower warehouse sync.</p><div class="api">dashboardSync.py</div></div>
+          <div class="uc-card"><div class="who">Pipeline Operator</div><b class="t">UC-5 &middot; Run the orchestrated core chain</b><p>One invocation chains Stage 1 and 4 Stage 2 jobs, logging per-stage duration.</p><div class="api">python jobs/main.py</div></div>
+          <div class="uc-card"><div class="who">Downstream System</div><b class="t">UC-6 &middot; Consume outbox notifications</b><p>Peer-validation and gamification notifications flow through a Postgres-table outbox, not Kafka, despite class names.</p><div class="api">peerValidationEligibleUsers.py &middot; peerValidationNotificationSender.py</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/chs/apis.md"></article><div class="md-src">source: docs/learning-hub/chs/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/chs/hld.md"></article><div class="md-src">source: docs/learning-hub/chs/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/chs/lld.md"></article><div class="md-src">source: docs/learning-hub/chs/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/chs/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/chs/operations-manual.md</div></div>
+    </div><!-- /fdoc chs -->
+
 
     <!-- ═══ AI CBP TOOL ═══ -->
     <div class="fdoc" data-fdoc="aicbp" hidden>
