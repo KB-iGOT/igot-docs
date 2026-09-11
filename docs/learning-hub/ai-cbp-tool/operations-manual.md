@@ -1,45 +1,72 @@
 # Operations Manual — AI CBP Tool
 
-How to operate, support, and troubleshoot `cbp-ai-service` as it exists
-today — a FastAPI monolith over Postgres/pgvector and Redis, calling
-Google Gemini/Vertex AI and several iGOT-side services, plus a separate
-directory of offline batch scripts for bulk onboarding.
+How to operate, support, and troubleshoot the AI CBP Tool as it exists
+today — two independent FastAPI services (`cbp-ai-service`,
+`ai-cbp-mdo-service`) that share one Postgres database and never call each
+other's API, plus `cbp-ai-ui`, a thin Angular shell around a private,
+unavailable feature library.
 
-**Operational implication:** most of the pipeline runs as in-process
-background tasks, not a task queue — there is no worker fleet to check, but
-also no retry/backoff infrastructure beyond what each endpoint implements
-itself. And the approval loop is genuinely open: this service cannot tell
-you whether a submitted CBP plan was approved, rejected, or published —
-that state lives in a system outside this repo.
+**Operational implication:** because the two backends never call each
+other, there is no single place to check "did this approval go through" —
+`cbp-ai-service` can only tell you a request exists and its last-known
+status; `ai-cbp-mdo-service` is what actually changes that status. A
+support engineer investigating a stuck approval needs **both** services'
+logs/DB access, not just the one the ticket happened to name.
 
 ## System overview
 
 | Area | As-built reality | Why it matters operationally |
 |---|---|---|
-| Background jobs | FastAPI `BackgroundTasks`, in-process | No separate worker process to restart; a job dies with the app process if it crashes mid-task |
-| Primary storage | Postgres + pgvector, schema via `create_all` (no Alembic) | No migration history to roll back — only the current model files describe the schema |
-| Course search tables | `course_metadata_weightage` (primary) / `course_metadata_v3` (legacy fallback) | Neither has an ORM model — populated/maintained only by `scripts/course_embedding_pipeline.py`, run separately from the app |
-| Designation embeddings | `designation_embeddings`, populated **offline only** | If designation matching seems to be missing recent iGOT designations, the ingestion script needs a re-run, not an app restart |
-| Email notifications | Outbound only, gated by `ENABLE_EMAIL_NOTIFICATION` | If notifications silently stop, check this flag before assuming the notification service is down |
-| Approval loop | Create + email only; approve/reject/publish is external | Never search this repo for a "why wasn't this approved" bug — check with the MDO-portal team instead |
-| Container | Runs as root (no `USER` in `Dockerfile` on this branch) | Flag for security review — a later `main`-branch change adds a non-root user but is not present here |
+| Inter-service integration | No API call between `cbp-ai-service` and `ai-cbp-mdo-service` — both point at the same `approval_requests`/`approval_request_items`/`users` tables | A schema change to these tables in one repo's models must be manually kept in sync with the other's mirror — there is no shared migration or contract test |
+| Background jobs (`cbp-ai-service`) | FastAPI `BackgroundTasks`, in-process | No separate worker process to restart; a job dies with the app process if it crashes mid-task |
+| Background jobs (`ai-cbp-mdo-service`) | None for the core publish/approve logic — the iGOT round-trip happens synchronously inside the request; only the outcome email is backgrounded | A slow/unresponsive iGOT `cbplan/v2/create` or `publish` call blocks the MDO admin's own request, not a worker |
+| Primary storage (both) | Postgres, schema via `create_all` (no Alembic in either repo) | No migration history to roll back on either side — only the current model files describe the schema |
+| Course search tables (`cbp-ai-service`) | `course_metadata_weightage` (primary) / `course_metadata_v3` (legacy fallback) | Neither has an ORM model — populated/maintained only by `scripts/course_embedding_pipeline.py`, run separately from the app |
+| Designation embeddings (`cbp-ai-service`) | `designation_embeddings`, populated **offline only** | If designation matching seems to be missing recent iGOT designations, the ingestion script needs a re-run, not an app restart |
+| Email notifications (both) | Outbound only, each independently gated by its own `ENABLE_EMAIL_NOTIFICATION` flag | The two services can have notifications enabled/disabled independently of each other — check the right one |
+| Approval loop | Closed, but **per item, not per request** — `ai-cbp-mdo-service`'s publish can leave a request `APPROVED` with some items still `FAILED` | Never assume "request shows APPROVED" means every designation actually published — check item-level status |
+| Health checks | `cbp-ai-service` has `GET /api/v1/health`; `ai-cbp-mdo-service` has **no health/liveness endpoint at all** | Liveness probes for `ai-cbp-mdo-service` cannot use an HTTP health check the way `cbp-ai-service`'s can |
+| Auth model | `cbp-ai-service` issues and validates its own JWTs (DB-backed sessions); `ai-cbp-mdo-service` instead verifies externally-issued RS256 JWTs against iGOT/Sunbird's realm certs, via a custom `x-authenticated-user-token` header | A token valid against one service is not automatically meaningful to the other — they are not interchangeable, and `ai-cbp-mdo-service`'s `REQUIRED_ROLES` setting is defined but unused (roles are hardcoded per route) |
+| Container (`cbp-ai-service`) | Runs as root (no `USER` in `Dockerfile` on this branch) | Flag for security review — `ai-cbp-mdo-service`'s own `Dockerfile` does create a non-root `appuser`, so the two sibling services differ here |
+| `cbp-ai-ui` deployment | Built with `ng build` (not `--configuration production`) inside its `Dockerfile`, served via Apache HTTPD (`httpd:alpine`) from `dist/cbp-ai-ui`, expected under a `/training-pla-ai/` sub-path | The Docker image as written does not apply Angular's `production` build configuration/environment file unless CI overrides the build command — worth confirming per environment |
+| `cbp-ai-ui` backend URL | Read at runtime from a static JSON asset (`assets/jsonfiles/configurations.json`'s `portalURL`), not from an Angular environment file | Switching `cbp-ai-ui` to point at a different backend means replacing this JSON asset in the deployed build, not rebuilding with a different `--configuration` |
 
-## Important configuration
+## Important configuration — `cbp-ai-service`
 
 | Setting | Meaning | Why it matters |
 |---|---|---|
-| `DATABASE_URL` | Postgres connection string (`asyncpg` driver) | Required, no default — app fails to start without it |
+| `DATABASE_URL` | Postgres connection string (`asyncpg` driver) | Required, no default — app fails to start without it. **Same physical database `ai-cbp-mdo-service` must also be pointed at** for the two services to actually share rows |
 | `GOOGLE_API_KEY` / `GOOGLE_PROJECT_ID` / `GOOGLE_APPLICATION_CREDENTIALS` | Gemini/Vertex AI credentials | Two auth modes coexist: Vertex (project/location) for generation, plain API-key mode for some embeddings — both must be valid |
 | `GEMINI_PRO_MODEL_NAME` / `GEMINI_FLASH_MODEL_NAME` | Model names for generation | **Not** honored by `meta_summary_routes.py`, which hardcodes `"gemini-2.5-pro"` — a model-name change here silently won't affect meta-summaries |
 | `GOOGLE_EMBEDDING_MODEL` / `EMBEDDING_OUTPUT_DIMENSIONALITY` | Embedding model + vector size | Must match the dimensionality of whatever populated `designation_embeddings` / `course_metadata_weightage`, or similarity search breaks silently (dimension mismatch errors) |
 | `DESIGNATION_SIMILARITY_THRESHOLD` | Semantic-match acceptance cutoff | Config default (`0.93`) disagrees with the documented value (`0.92`, in `.env.example` and the matcher's own docstrings) — confirm the actual deployed value per environment before tuning match rates |
-| `COURSE_RECOMMENDATION_MIN_RELEVANCY` (80) / `DEFAULT_RELEVANCY_SCORE` (90) | Recommendation cutoff / fixed score for non-AI-sourced plan courses | If recommendations look sparse, check this floor before assuming the search itself is broken |
+| `COURSE_RECOMMENDATION_MIN_RELEVANCY` (80) / `DEFAULT_RELEVANCY_SCORE` (90) | Recommendation cutoff / fixed score for non-AI-sourced plan courses | If recommendations look sparse, check this floor before assuming the search itself is broken. `ai-cbp-mdo-service` has its **own**, independently-configured `DEFAULT_RELEVANCY_SCORE` (also default 90) for courses it adds during MDO review — the two settings are not shared |
 | `ENABLE_EMAIL_NOTIFICATION`, `NOTIFICATION_BASE_URL`, `SPV_PORTAL_URL`, `MDO_PORTAL_URL` | Email gate + outbound targets | All default to empty/`False` — must be set per environment or approval/designation emails silently never send |
 | `DOCUMENT_STORAGE_TYPE` | `local` or `gcp` | Determines whether uploaded PDFs live on local disk (`DOCUMENT_STORAGE_ROOT`) or GCS (`GCP_STORAGE_BUCKET`) |
 | `ENABLE_TOKEN_BLACKLIST` | Session-backed JWT validation | If `True` (default), logout/session-cleanup actually invalidates tokens server-side; if disabled, a "logged out" JWT stays valid until expiry |
-| `CB_EXT_COURSE_SERVICE_URL` | External publish-API base URL | Not part of the app's `Settings` — read directly from the environment only by `bulk_scripts/bulk_training_plan_approval.py`; irrelevant to the running API service |
+| `CB_EXT_COURSE_SERVICE_URL` | External publish-API base URL | Not part of the app's `Settings` — read directly from the environment only by `bulk_scripts/bulk_training_plan_approval.py`; irrelevant to the running API service; **not confirmed** to be the same downstream target as `ai-cbp-mdo-service`'s `KB_BASE_URL` |
 
-## Operational workflows
+## Important configuration — `ai-cbp-mdo-service`
+
+| Setting | Meaning | Why it matters |
+|---|---|---|
+| `DATABASE_URL` | Postgres connection string, required, no default | **Must point at the same physical database as `cbp-ai-service`** — if it doesn't, MDO admins will simply see no requests, with no error to indicate why |
+| `KB_BASE_URL` (default `https://portal.dev.karmayogibharat.net`) | Base URL for every outbound iGOT call: CBP-plan create/publish, designation create, content/designation search, and the JWKS certs endpoint used for auth | A wrong value here breaks both the publish flow *and* login (both hit this host) |
+| `KB_AUTH_TOKEN` | Static token sent as `Authorization` to iGOT | Inconsistently prefixed across call sites — most calls send it raw, one CRUD call site prepends `Bearer ` (`crud/mdo_approval_request.py:437`) — worth checking if iGOT-side auth failures cluster around that one call path |
+| `SUNBIRD_SSO_REALM` / `SUNBIRD_SSO_URL` | Used to build the issuer-check URL for JWT validation | **Not** used to build the JWKS certs URL, which is hardcoded to the `sunbird` realm regardless of this setting (`core/auth.py:12`) — a non-default realm would only affect issuer validation, not key fetching |
+| `REQUIRED_ROLES` (default `["MDO_ADMIN","MDO_LEADER"]`) | Declared setting | **Unused** — every route's actual required roles are hardcoded literals at the call site; changing this setting has no effect anywhere |
+| `ENABLE_EMAIL_NOTIFICATION`, `NOTIFICATION_BASE_URL` | Email gate + target, independent of `cbp-ai-service`'s own equivalents | Must be set per environment or MDO/SPV outcome emails silently never send, even if `cbp-ai-service`'s own flag is on |
+| `DEFAULT_RELEVANCY_SCORE` (90) | Score stamped on a course added during MDO review via `course/add` | Independent of `cbp-ai-service`'s same-named, same-default setting |
+
+## Important configuration — `cbp-ai-ui`
+
+| Setting | Meaning | Why it matters |
+|---|---|---|
+| `assets/jsonfiles/configurations.json` → `portalURL` | Runtime backend base URL, fetched at app-init | The actual environment switch — not `environment.ts`/`environment.prod.ts`, which carry no API URL at all |
+| `assets/jsonfiles/configurations.json` → `isMaintenancePage` | Intended maintenance-mode flag | Not actually wired to anything in the code reviewed — the maintenance check inspects the URL for `/maintenance` directly, ignoring this field |
+| `localStorage['loginData']` | Bearer token storage | Kept in `localStorage`, not an httpOnly cookie — an XSS on this app is a full session-takeover vector; flag for security review alongside `cbp-ai-service`'s own open-CORS note |
+
+## Operational workflows — `cbp-ai-service` (author side)
 
 **Document intake**: upload (`POST /files`) → explicitly trigger summary
 (`POST /files/{id}/summary`, idempotent) → optionally build a meta-summary
@@ -53,14 +80,15 @@ diagnosing a meta-summary failure as anything else.
 
 **Role-mapping generation**: pick the right version before troubleshooting
 — v1/v2/v3 are different code paths, not different API versions of the
-same logic. v1 and v2 auto-retry a prior `FAILED` state and swallow the
-real Gemini error into a generic message; v3 does neither (it surfaces the
-real error and requires a fresh `/generate` call to actually attempt a
-retry — simply calling `/generate` again on a `FAILED` v3 mapping returns
-the same `FAILED` state without retrying). Only v3 auto-runs iGOT
-designation matching; v1 requires a separate manual call
-(`POST /v1/role-mapping/match-designations`), and v2 has no matching
-endpoint at all.
+same logic. `cbp-ai-ui`'s shipped client calls **v3** for generation, so
+production generation failures should be triaged as v3 issues first. v1
+and v2 auto-retry a prior `FAILED` state and swallow the real Gemini error
+into a generic message; v3 does neither (it surfaces the real error and
+requires a fresh `/generate` call to actually attempt a retry — simply
+calling `/generate` again on a `FAILED` v3 mapping returns the same
+`FAILED` state without retrying). Only v3 auto-runs iGOT designation
+matching; `cbp-ai-ui` additionally exposes a manual re-match call (v1's
+`match-designations`) from its own UI.
 
 **Designation matching troubleshooting**: check strategy order — exact
 match hits iGOT's live designation-search API (so a designation that
@@ -78,31 +106,67 @@ carries the real exception text. There is no partial-progress
 indicator — a job is either `IN_PROGRESS`, `COMPLETED`, or `FAILED`
 wholesale.
 
-**CBP Plan support**: remember a plan has no lifecycle status of its own —
-"is this plan finalized" is not a question this table can answer; the only
-lifecycle state lives one level up, on whatever `ApprovalRequest` (if any)
-later snapshotted it. A course showing relevancy 90 in a plan does not mean
-the AI scored it — it means it was added via iGOT search or a suggestion,
-not the recommendation engine.
+**CBP Plan support**: remember a plan has no lifecycle status of its own on
+the `cbp-ai-service` side — the real lifecycle question ("was this
+approved, rejected, or published") is answered by
+`ai-cbp-mdo-service`'s copy of the data, not this table. A course showing
+relevancy 90 in a plan does not mean the AI scored it — it means it was
+added via iGOT search or a suggestion, not the recommendation engine.
 
-**Approval-request support**: this repo can confirm a request was created,
-who it's assigned to (`mdo_id`), and whether it's still `PENDING`/`DRAFT` —
-it cannot tell you whether the assigned MDO admin has reviewed it, approved
-it, or published it to iGOT. For that, escalate to whoever owns the MDO
-portal. The one place in this repo that actually performs that
-approve+publish action is the offline `bulk_training_plan_approval.py`
-script — used for bulk onboarding, not for resolving individual stuck
-requests.
+**Approval-request support (author side)**: `cbp-ai-service` can confirm a
+request was created, who it's assigned to (`mdo_id`), and its
+last-known `status`/`DRAFT` state — for the actual review/approve/reject/
+publish history, escalate to whoever operates `ai-cbp-mdo-service` (see
+below), since that's the service actually driving those transitions.
 
-**Designation-approval support**: same caveat as above, one level down —
-there is no approve/reject action anywhere in this repo's code for
-`designation_approvals`. If a requester reports "my designation name was
-never approved," the only things to check here are whether the request was
-actually created and whether the SPV-admin notification email actually
-sent (`ENABLE_EMAIL_NOTIFICATION`) — the resolution itself is out of scope
-for this service.
+## Operational workflows — `ai-cbp-mdo-service` (MDO / SPV side)
 
-## Offline bulk-onboarding pipeline (`bulk_scripts/`)
+**Publish troubleshooting**: a "publish" call is per-item, not
+all-or-nothing.
+- If the whole call returns `400`: no item in the request was still
+  `PENDING` — likely a duplicate publish attempt on an already-processed
+  request.
+- If it returns `502`: **every** eligible item failed its iGOT round-trip —
+  the request itself is left `PENDING`, unchanged; check `KB_BASE_URL`
+  reachability and `KB_AUTH_TOKEN` validity first.
+- If it returns success but the response shows `items_failed > 0`: the
+  request is now `APPROVED` regardless, with the failed items sitting
+  `FAILED` — use `/publish/retry` per item rather than re-running the whole
+  publish (which will no-op for already-non-`PENDING` items).
+- An item with `error = "No CBP Plan found for this item."` never reached
+  iGOT at all — the problem is upstream, in what `cbp-ai-service` snapshotted
+  into `cbp_plan_data`, not in `ai-cbp-mdo-service` or iGOT.
+
+**Reject troubleshooting**: rejecting the whole request requires a 1–500
+character comment (empty/whitespace-only is rejected by validation);
+rejecting a single item recomputes the parent request's status from
+whatever items remain — if a requester reports "my request shows APPROVED
+but I only rejected some items," that's expected: it means at least one
+other item in the same request is `APPROVED`.
+
+**Item edit / course add-remove troubleshooting**: `items/update` requires
+the *target item* to still be `PENDING`; `course/add`/`course/remove`
+check only the *parent request's* status, so they can technically still
+succeed against an already-`APPROVED`/`REJECTED`/`FAILED` item as long as
+the request itself is `PENDING` (e.g., other items in the same request
+still pending review) — this is an as-built asymmetry, not a bug to "fix"
+without checking with the doc owner first. A course added via `course/add`
+always lands on the **first** record in `cbp_plan_data` — if a request's
+item has multiple plan records (not the common case), later records are
+never targeted by this endpoint.
+
+**SPV designation-approval troubleshooting**: approval calls iGOT *before*
+touching the database — if a requester reports "my designation was
+approved but doesn't show up in iGOT," check for an "Already Present"
+response first (which is treated as success but adds no new designation);
+if approval fails outright, the database record stays `PENDING` and is
+safe to retry. Reject never calls iGOT.
+
+**No health endpoint**: `ai-cbp-mdo-service` has no `/health` or equivalent
+route — liveness/readiness checks against this service must rely on a TCP
+check or an actual authenticated API call, not an HTTP health probe.
+
+## Offline bulk-onboarding pipeline (`bulk_scripts/`, in `cbp-ai-service`)
 
 Run manually from a jumphost, in strict order, one stage at a time:
 
@@ -111,7 +175,7 @@ Run manually from a jumphost, in strict order, one stage at a time:
 3. `batch_rolemapping_generate.py` — generate v3 role mappings (a reduced, two-pass version of the live pipeline).
 4. `batch_generate_and_save_cbp_plan.py` — recommend courses and save CBP plans.
 5. `batch_send_approval_requests.py` — submit for MDO approval. ⚠️ **Not safe to re-run** — no dedup check; re-running duplicates requests and emails.
-6. `bulk_training_plan_approval.py` — publish approved plans to iGOT via the external CB-ext-course-service. Requires a live SSO token fetch and, if run outside the cluster, a `kubectl port-forward` to reach `CB_EXT_COURSE_SERVICE_URL`.
+6. `bulk_training_plan_approval.py` — publish approved plans to iGOT via `CB_EXT_COURSE_SERVICE_URL`, a **separate, independently-configured target from `ai-cbp-mdo-service`'s own `KB_BASE_URL`** used for the same conceptual action online. Requires a live SSO token fetch and, if run outside the cluster, a `kubectl port-forward`.
 
 All scripts: dry-run by default (require an explicit `--execute` flag to
 write anything), write one outcome CSV + one timestamped log per run, and
@@ -121,7 +185,11 @@ or retry as appropriate). To check a long-running job: `ps aux | grep
 <script>.py`; to stop one: `kill <PID>`, escalating to `kill -9` if needed
 — safe mid-run, since the outcome CSV/log are flushed incrementally.
 Diagnose a failed run from its outcome CSV's `status`/`error` columns
-first, then the matching timestamped log for the full traceback.
+first, then the matching timestamped log for the full traceback. **This
+stage bypasses `ai-cbp-mdo-service` entirely** — it writes `APPROVED`
+directly to the shared database and calls a different downstream publish
+target, so a bulk-published plan will never appear in `ai-cbp-mdo-service`'s
+own audit table (`mdo_approval`).
 
 ## Publishing / go-live checklist (per state/ministry onboarding)
 
@@ -132,45 +200,56 @@ first, then the matching timestamped log for the full traceback.
 - [ ] Course recommendations generated (`status = COMPLETED`) for every completed role mapping
 - [ ] CBP plans saved for every role mapping intended for approval
 - [ ] Approval request sent, assigned MDO admin confirmed correct
-- [ ] (Bulk onboarding only) publish stage run and outcome CSV shows `APPROVED`/published for every expected item
+- [ ] MDO admin has reviewed/published in `ai-cbp-mdo-service` (or, for bulk onboarding, the publish stage ran and its outcome CSV shows a successful publish for every expected item)
 
 ## Known operational constraints
 
-- No task queue — background jobs run in-process; a crashed app instance can leave a job stuck `IN_PROGRESS` with no automatic recovery.
-- No migration tool — schema changes require reviewing model file diffs directly, not a migration log.
-- No admin endpoint to force-approve, force-reject, or repair a stuck `ApprovalRequest`/`DesignationApproval` — those transitions don't exist in this repo at all.
+- No task queue on the `cbp-ai-service` side — background jobs run in-process; a crashed app instance can leave a job stuck `IN_PROGRESS` with no automatic recovery.
+- No migration tool on either backend — schema changes require reviewing model file diffs directly, not a migration log, and the two services' mirrored tables have no shared source of truth.
+- No admin endpoint anywhere (either repo) to force-approve, force-reject, or repair a stuck `ApprovalRequest`/`DesignationApproval` beyond `ai-cbp-mdo-service`'s own approve/reject/retry endpoints.
 - No dedup safeguard in `batch_send_approval_requests.py` — re-running it duplicates requests and emails.
-- Container runs as root on this branch — no non-root user configured in `Dockerfile`.
-- CORS is configured with `allow_origins=["*"]` and `allow_credentials=True` together (`src/main.py:48-54`) — a combination most browsers/spec guidance treat as unsafe; flag for security review rather than treating as an operational non-issue.
+- `cbp-ai-service` container runs as root on this branch — no non-root user configured in its `Dockerfile`; `ai-cbp-mdo-service`'s `Dockerfile` does create one.
+- `cbp-ai-service` CORS is configured with `allow_origins=["*"]` and `allow_credentials=True` together (`src/main.py:48-54`) — a combination most browsers/spec guidance treat as unsafe; flag for security review. `ai-cbp-mdo-service`'s CORS is also `allow_origins=["*"]` but with `allow_credentials=False`, which is internally consistent given its header-based (not cookie-based) auth.
+- `ai-cbp-mdo-service` has no test suite and no health endpoint at all (confirmed absent, not just unlisted).
+- `cbp-ai-ui`'s token lives in `localStorage`, and no request interceptor globally attaches it — some `SharedService` methods reuse a header captured once at construction, which can go stale after a token refresh.
+- `cbp-ai-ui`'s own unit/E2E test suite is largely unmodified Angular-CLI boilerplate asserting text (`'sunbird-cb-staticweb app is running!'`) that doesn't exist in the current app — it does not exercise this feature at all, and some specs cannot pass as written.
 
 ## Escalation
 
 | Issue type | Owner | Escalate when |
 |---|---|---|
-| Document upload/summary/meta-summary failures | Backend team (this repo) | `summary_status`/meta-summary `status` is `FAILED` and the error is inside this codebase |
-| Role-mapping generation failures | Backend team (this repo) | `role_mappings.status = FAILED` with an error message from Gemini or this codebase |
-| Designation matching accuracy | Backend team (this repo) + iGOT designation-master owner | Confirm which side is at fault: iGOT search unreachable (exact-match side) vs. stale/incorrect embeddings (semantic side) |
-| Course recommendation quality/failures | Backend team (this repo) | `recommended_courses.status = FAILED`, or relevancy floor tuning |
-| Approval request stuck / not reviewed | MDO portal team (external) | Request is `PENDING` in this repo and the assigned MDO admin hasn't acted — not this repo's responsibility to resolve |
-| Designation-naming request stuck | SPV portal team (external) / product owner | Same caveat — no resolution mechanism exists in this repo |
-| Publish-to-iGOT failures (bulk pipeline) | Backend team (this repo) + CB-ext-course-service owner | `bulk_training_plan_approval.py`'s outcome CSV shows a failed `create`/`publish` call |
+| Document upload/summary/meta-summary failures | `cbp-ai-service` team | `summary_status`/meta-summary `status` is `FAILED` and the error is inside that codebase |
+| Role-mapping generation failures | `cbp-ai-service` team | `role_mappings.status = FAILED` with an error message from Gemini or that codebase |
+| Designation matching accuracy | `cbp-ai-service` team + iGOT designation-master owner | Confirm which side is at fault: iGOT search unreachable (exact-match side) vs. stale/incorrect embeddings (semantic side) |
+| Course recommendation quality/failures | `cbp-ai-service` team | `recommended_courses.status = FAILED`, or relevancy floor tuning |
+| Approval request stuck as `PENDING`, MDO admin hasn't acted | MDO admin / `ai-cbp-mdo-service` operations team | Confirm in `ai-cbp-mdo-service`'s own data whether the request was ever opened, before assuming it's lost |
+| Approval request `APPROVED` but some items `FAILED` | `ai-cbp-mdo-service` team | Check `mdo_approval` rows with `igot_cbp_plan_id IS NULL` for that request; retry via `/publish/retry` |
+| Designation-naming request stuck | SPV admin / `ai-cbp-mdo-service` operations team | Confirm the request is genuinely still `PENDING` in the shared table, not just unreflected in whatever frontend the SPV admin uses (not part of this trace) |
+| Publish-to-iGOT failures (bulk pipeline) | `cbp-ai-service` team + CB-ext-course-service owner | `bulk_training_plan_approval.py`'s outcome CSV shows a failed `create`/`publish` call — remember this is a **different** downstream target from `ai-cbp-mdo-service`'s own publish calls |
+| `cbp-ai-ui` shell issues (login, routing, session expiry) | `cbp-ai-ui` team | Bug is in `app.component.*`, `shared.service.ts`, or the auth interceptor |
+| CBP author's actual wizard screens (upload UI, role-mapping editor, course selection) | Owner of the `@sunbird-cb/cbp-ai` library (not this repo) | Bug is in a screen this trace cannot see the source of |
 
 ## FAQ
 
-**Why does a CBP plan show no status?** Because there isn't one — lifecycle
-tracking for a submitted plan lives on whatever `ApprovalRequest` later
-referenced it, not on the plan row itself.
+**Why does a CBP plan show no status?** Because there isn't one on the
+`cbp-ai-service` side — lifecycle tracking for a submitted plan lives in
+`ai-cbp-mdo-service`'s copy of the data, not on the `cbp_plans` row itself.
 
-**Why can't support approve or reject a pending request from here?**
-Because that action isn't implemented in this codebase. It happens in the
-external MDO portal (for CBP approval requests) or wherever the SPV
-process lives (for designation-naming requests) — neither of which is part
-of this repo.
+**Why can't `cbp-ai-service` support tell me if a request was approved or
+rejected?** Because that transition doesn't happen in that codebase — it
+happens in `ai-cbp-mdo-service`, reading and writing the same database
+rows. Check there (or its own escalation path) for the actual decision
+history.
 
 **Why did my meta-summary fail even though all my documents look fine?**
 Check each input document's individual `summary_status` first — if any
 weren't already `COMPLETED`, the meta-summary's own attempt to regenerate
 them silently no-ops (a missing-`await` bug), and the whole batch fails.
+
+**An MDO admin says a request shows `APPROVED` but one designation never
+got published — is that a bug?** No — publish is per-item. Check that
+item's own status; if it's `FAILED`, use `/publish/retry` for that one
+item rather than re-running the whole publish.
 
 **Why does the AI recommendation for a designation include so few courses
 under a certain competency?** Check whether the designation-group-based mix
@@ -178,8 +257,10 @@ ratio matters here — it's computed in code but the classification call
 feeding it is currently disabled, so results always reflect the
 undifferentiated hybrid-search + LLM-rerank path, not a group-tuned mix.
 
-> **Verification boundary:** this manual is sourced entirely from
-> `cbp-ai-service` at `origin/cbrelease-4.8.39`, commit `119a42b`. Deeper
-> runbook detail for the MDO portal, the SPV portal, and the CB-ext-course
-> service would need those systems' own operations documentation attached —
-> none of the three is present in this repo.
+> **Verification boundary:** this manual is sourced from `cbp-ai-service`
+> (`origin/cbrelease-4.8.39`, `70d7175`), `ai-cbp-mdo-service`
+> (`origin/cbrelease-4.8.39`, `88040de`), and `cbp-ai-ui`
+> (`origin/cbrelease-4.8.39`, `15a3b9a`). Deeper runbook detail for the
+> MDO/SPV admin's own frontend, and for the private `@sunbird-cb/cbp-ai`
+> library, would need those systems' own source or operations
+> documentation attached — neither is present in any of the three repos.

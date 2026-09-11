@@ -1043,8 +1043,8 @@
         <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="6" width="14" height="15" rx="2"/><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><path d="M9 12h6M9 16h4"/></svg></div>
         <div>
           <div class="fp-title">AI CBP Tool</div>
-          <div class="fp-sub">Turns a department's own Work Allocation Order and other source documents into a designation-by-designation Capacity Building Plan &mdash; role profile, competencies, and a course list &mdash; ready for MDO approval.</div>
-          <div class="fp-chips"><span class="chip">Repo&nbsp; <code>cbp-ai-service</code></span><span class="chip">Self-described as&nbsp; <code>AI-Driven CBP Training Plan Creation System</code></span><span class="chip ok">&#10003; Verified from repo &middot; Sept 2026</span></div>
+          <div class="fp-sub">Turns a department's own Work Allocation Order and other source documents into a designation-by-designation Capacity Building Plan &mdash; role profile, competencies, and a course list &mdash; reviewed, approved and published by an MDO admin.</div>
+          <div class="fp-chips"><span class="chip">Repos&nbsp; <code>cbp-ai-service</code> &middot; <code>ai-cbp-mdo-service</code> &middot; <code>cbp-ai-ui</code></span><span class="chip">Self-described as&nbsp; <code>AI-Driven CBP Training Plan Creation System</code></span><span class="chip ok">&#10003; Verified from 3 repos &middot; Sept 2026</span></div>
         </div>
       </div>
       <div class="fp-tabs" role="tablist">
@@ -1060,12 +1060,12 @@
     <div class="fp-body one-col tabpanel" data-panel="overview">
       <div>
         <h2 class="fp-h2">What it is</h2>
-        <p class="fp-p">A CBP author uploads a Work Allocation Order (and other supporting PDFs); the service summarizes each with Gemini, then generates a designation-by-designation role mapping &mdash; role responsibilities, activities, and a Behavioral/Functional/Domain competency list. Each designation is reconciled against iGOT's own designation master, courses are recommended per designation by a hybrid vector-search-plus-LLM pipeline, and the whole thing converges into one CBP Plan per designation, ready to bundle up and send for approval.</p>
-        <div class="note-banner"><strong>Honest gap:</strong> this repo can create and email an approval request, but nothing in its live API ever marks one <code>APPROVED</code> or <code>REJECTED</code> &mdash; that decision, and the actual publish-to-iGOT call, belong to a separate MDO-facing system this repo does not contain. The only place that logic exists here is an offline operator script that mirrors it directly against an external service.</div>
+        <p class="fp-p">A CBP author uploads a Work Allocation Order (and other supporting PDFs); the service summarizes each with Gemini, then generates a designation-by-designation role mapping &mdash; role responsibilities, activities, and a Behavioral/Functional/Domain competency list. Each designation is reconciled against iGOT's own designation master, courses are recommended per designation by a hybrid vector-search-plus-LLM pipeline, and the whole thing converges into one CBP Plan per designation, ready to bundle up and send for approval. From there, a separate service takes over: an MDO admin reviews, edits, approves or rejects each designation, and on approval the plan is published straight to iGOT.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> the approve/reject/publish step is fully implemented &mdash; in a second backend, <code>ai-cbp-mdo-service</code>, which shares this one's database but never calls its API. What's still outside this trace is narrower: the screens the MDO/SPV admin actually see, and the CBP author's own step-by-step wizard, which ships as a private library this trace can't read.</div>
         <div class="fp-cards">
-          <div class="fp-card"><b>Five separate steps, no orchestrator</b><p>Document summarization, role-mapping generation, designation matching, course recommendation, and CBP-plan creation each have their own status field, chained only by precondition checks in the API layer.</p></div>
+          <div class="fp-card"><b>Two services, one shared database</b><p><code>cbp-ai-service</code> and <code>ai-cbp-mdo-service</code> never call each other's API &mdash; they coordinate purely by reading and writing the same approval-request rows.</p></div>
           <div class="fp-card"><b>Three role-mapping engines, one name</b><p>v1, v2 and v3 differ in document source, Gemini call shape, competency schema, and which CRUD routes even exist &mdash; there's no fallback between versions.</p></div>
-          <div class="fp-card"><b>Three course pools, one plan</b><p>AI-recommended, iGOT-searched, and fully manual courses live in three separate tables and only merge when a CBP Plan is saved.</p></div>
+          <div class="fp-card"><b>Approval is per-item, not per-request</b><p>An MDO admin's single publish action can leave one request approved with some designations published and others individually failed, retryable on their own.</p></div>
         </div>
         <h2 class="fp-h2">How a CBP author experiences it</h2>
         <div class="fp-steps">
@@ -1073,6 +1073,7 @@
           <div class="fp-step"><b>2 &middot; GENERATE</b><p>Role mappings with competencies, per designation</p></div>
           <div class="fp-step"><b>3 &middot; MATCH &amp; RECOMMEND</b><p>Reconcile against iGOT, then AI-recommend courses</p></div>
           <div class="fp-step"><b>4 &middot; PLAN &amp; SUBMIT</b><p>Build the CBP Plan, send it for MDO approval</p></div>
+          <div class="fp-step"><b>5 &middot; MDO REVIEW</b><p>A separate service, not this one, approves/rejects and publishes to iGOT</p></div>
         </div>
       </div>
       <div class="fp-side">
@@ -1105,8 +1106,11 @@
           <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-10 &middot; Generate AI course recommendations</b><p>A background job hybrid-searches a pgvector course table, reranks with Gemini, and keeps only courses above an 80-relevancy floor.</p><div class="api">POST <code>v1/course-recommendations/generate</code></div></div>
           <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-13 &middot; Build the CBP Plan</b><p>Merges AI-recommended, iGOT-searched, and manually-added courses into one saved plan per role mapping &mdash; requires a recommendation to already exist.</p><div class="api">POST <code>v1/cbp-plan/save</code></div></div>
           <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-14 &middot; Send for approval</b><p>Bundles completed role mappings (with saved plans) into one request, snapshots them, and emails the assigned MDO admin a review link.</p><div class="api">POST <code>v1/approval-requests/send</code></div></div>
-          <div class="uc-card"><div class="who">MDO Admin (external)</div><b class="t">UC-16 &middot; Approve, reject, and publish</b><p>Happens entirely outside this repo &mdash; the only code here that reaches that step is an offline script mirroring the publish call directly.</p></div>
-          <div class="uc-card"><div class="who">Operator</div><b class="t">UC-19 &middot; Bulk-onboard a state/ministry</b><p>A fixed six-stage offline pipeline &mdash; copy documents, summarize, generate, recommend &amp; save, submit for approval, publish &mdash; run stage by stage from a jumphost.</p></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-17 &middot; Approve and publish a CBP plan</b><p>Per designation, calls iGOT's create-then-publish API on the admin's behalf; the request is approved as soon as one item succeeds, even if others fail and need an individual retry.</p><div class="api">POST <code>ai-cbp-mdo-service v1/mdo/approval-requests/publish</code></div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-19 &middot; Reject a request, or one item</b><p>Rejects an entire pending request with a required comment, or a single item &mdash; recomputing the parent request's status from whatever remains.</p><div class="api">POST <code>ai-cbp-mdo-service v1/mdo/approval-requests/reject</code></div></div>
+          <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-22 &middot; Approve a designation name</b><p>Creates the designation in iGOT's master list first; only marks the request approved once that succeeds (an "already present" response still counts as approved).</p><div class="api">POST <code>ai-cbp-mdo-service v1/designation/approval-requests/approve</code></div></div>
+          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-24 &middot; The step-by-step wizard (unverified)</b><p>Document management, role-mapping review, course selection and CBP export ship inside a private library not present in any of the three traced repos.</p></div>
+          <div class="uc-card"><div class="who">Operator</div><b class="t">UC-25 &middot; Bulk-onboard a state/ministry</b><p>A fixed six-stage offline pipeline &mdash; copy documents, summarize, generate, recommend &amp; save, submit for approval, publish &mdash; run stage by stage from a jumphost, bypassing ai-cbp-mdo-service entirely.</p></div>
         </div>
       </div>
     </div>
