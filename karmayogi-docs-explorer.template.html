@@ -325,7 +325,7 @@
     </div>
 
     <button class="bub hub" id="learn-hub" style="left:646px; top:121px; width:148px; height:148px;" onclick="openHub(this)">
-      Learning Hub<span class="sub">10 features</span>
+      Learning Hub<span class="sub">11 features</span>
     </button>
     <button class="bub hub" style="left:941px; top:335px; width:148px; height:148px;" onclick="notWired()">
       Discussion Hub<span class="sub">coming soon</span>
@@ -374,13 +374,14 @@
       <line x1="720" y1="505" x2="1030" y2="505" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="410" y2="505" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="875" y2="773" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="875" y2="237" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
     <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>
-      <div class="sub">10 features</div>
+      <div class="sub">11 features</div>
     </div>
 
     <button class="bub item" style="left:655px; top:130px; width:130px; height:130px; font-size:15px" onclick="openFeature('course')">Course</button>
@@ -393,6 +394,7 @@
     <button class="bub item" style="left:966px; top:441px; width:128px; height:128px; font-size:14px" onclick="openFeature('bharatkalp')">Bharat Kalp</button>
     <button class="bub item" style="left:342px; top:437px; width:136px; height:136px; font-size:14px" onclick="openFeature('peervalidation')">Peer Validation</button>
     <button class="bub item" style="left:811px; top:709px; width:128px; height:128px; font-size:14px" onclick="openFeature('chs')">CHS</button>
+    <button class="bub item" style="left:807px; top:169px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('aicbp')">AI CBP Tool</button>
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
   </section>
@@ -1031,6 +1033,93 @@
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/chs/lld.md"></article><div class="md-src">source: docs/learning-hub/chs/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/chs/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/chs/operations-manual.md</div></div>
     </div><!-- /fdoc chs -->
+
+
+    <!-- ═══ AI CBP TOOL ═══ -->
+    <div class="fdoc" data-fdoc="aicbp" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="6" width="14" height="15" rx="2"/><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><path d="M9 12h6M9 16h4"/></svg></div>
+        <div>
+          <div class="fp-title">AI CBP Tool</div>
+          <div class="fp-sub">Turns a department's own Work Allocation Order and other source documents into a designation-by-designation Capacity Building Plan &mdash; role profile, competencies, and a course list &mdash; reviewed, approved and published by an MDO admin.</div>
+          <div class="fp-chips"><span class="chip">Repos&nbsp; <code>cbp-ai-service</code> &middot; <code>ai-cbp-mdo-service</code> &middot; <code>cbp-ai-ui</code></span><span class="chip">Self-described as&nbsp; <code>AI-Driven CBP Training Plan Creation System</code></span><span class="chip ok">&#10003; Verified from 3 repos &middot; Sept 2026</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+        <button class="fp-tab" role="tab" data-tab="asbuilt" onclick="setTab(this)">As-Built</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A CBP author uploads a Work Allocation Order (and other supporting PDFs); the service summarizes each with Gemini, then generates a designation-by-designation role mapping &mdash; role responsibilities, activities, and a Behavioral/Functional/Domain competency list. Each designation is reconciled against iGOT's own designation master, courses are recommended per designation by a hybrid vector-search-plus-LLM pipeline, and the whole thing converges into one CBP Plan per designation, ready to bundle up and send for approval. From there, a separate service takes over: an MDO admin reviews, edits, approves or rejects each designation, and on approval the plan is published straight to iGOT.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> the approve/reject/publish step is fully implemented &mdash; in a second backend, <code>ai-cbp-mdo-service</code>, which shares this one's database but never calls its API. What's still outside this trace is narrower: the screens the MDO/SPV admin actually see, and the CBP author's own step-by-step wizard, which ships as a private library this trace can't read.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Two services, one shared database</b><p><code>cbp-ai-service</code> and <code>ai-cbp-mdo-service</code> never call each other's API &mdash; they coordinate purely by reading and writing the same approval-request rows.</p></div>
+          <div class="fp-card"><b>Three role-mapping engines, one name</b><p>v1, v2 and v3 differ in document source, Gemini call shape, competency schema, and which CRUD routes even exist &mdash; there's no fallback between versions.</p></div>
+          <div class="fp-card"><b>Approval is per-item, not per-request</b><p>An MDO admin's single publish action can leave one request approved with some designations published and others individually failed, retryable on their own.</p></div>
+        </div>
+        <h2 class="fp-h2">How a CBP author experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 &middot; UPLOAD</b><p>Work Allocation Order + supporting PDFs, then trigger AI summaries</p></div>
+          <div class="fp-step"><b>2 &middot; GENERATE</b><p>Role mappings with competencies, per designation</p></div>
+          <div class="fp-step"><b>3 &middot; MATCH &amp; RECOMMEND</b><p>Reconcile against iGOT, then AI-recommend courses</p></div>
+          <div class="fp-step"><b>4 &middot; PLAN &amp; SUBMIT</b><p>Build the CBP Plan, send it for MDO approval</p></div>
+          <div class="fp-step"><b>5 &middot; MDO REVIEW</b><p>A separate service, not this one, approves/rejects and publishes to iGOT</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How a CBP author experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab shows the topology across Gemini, Postgres/pgvector, Redis and the external iGOT/MDO services; <b style="color:#1B4CA1">LLD</b> covers storage, sequences and state machines.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">Course</span>
+            <span class="side-pill">Comprehensive Assessment Program</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-1 &middot; Upload &amp; summarize source documents</b><p>Uploads up to 10 typed PDFs (Work Allocation Order, Annual Reports, Other), then triggers a background Gemini summary per document.</p><div class="api">POST <code>v1/files</code> &middot; POST <code>v1/files/{id}/summary</code></div></div>
+          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-4 &middot; Generate role mappings</b><p>One call kicks off a background job producing a full designation hierarchy with role/competency data &mdash; v1, v2 and v3 differ materially in source data, call shape, and retry behaviour.</p><div class="api">POST <code>v{1,2,3}/role-mapping/generate</code></div></div>
+          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-5 &middot; Reconcile against iGOT</b><p>Exact match via iGOT's designation search, falling back to a Gemini-embedding + pgvector semantic match &mdash; automatic in v3, manual in v1, absent in v2.</p><div class="api">POST <code>v1/role-mapping/match-designations</code></div></div>
+          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-10 &middot; Generate AI course recommendations</b><p>A background job hybrid-searches a pgvector course table, reranks with Gemini, and keeps only courses above an 80-relevancy floor.</p><div class="api">POST <code>v1/course-recommendations/generate</code></div></div>
+          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-13 &middot; Build the CBP Plan</b><p>Merges AI-recommended, iGOT-searched, and manually-added courses into one saved plan per role mapping &mdash; requires a recommendation to already exist.</p><div class="api">POST <code>v1/cbp-plan/save</code></div></div>
+          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-14 &middot; Send for approval</b><p>Bundles completed role mappings (with saved plans) into one request, snapshots them, and emails the assigned MDO admin a review link.</p><div class="api">POST <code>v1/approval-requests/send</code></div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-17 &middot; Approve and publish a CBP plan</b><p>Per designation, calls iGOT's create-then-publish API on the admin's behalf; the request is approved as soon as one item succeeds, even if others fail and need an individual retry.</p><div class="api">POST <code>ai-cbp-mdo-service v1/mdo/approval-requests/publish</code></div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-19 &middot; Reject a request, or one item</b><p>Rejects an entire pending request with a required comment, or a single item &mdash; recomputing the parent request's status from whatever remains.</p><div class="api">POST <code>ai-cbp-mdo-service v1/mdo/approval-requests/reject</code></div></div>
+          <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-22 &middot; Approve a designation name</b><p>Creates the designation in iGOT's master list first; only marks the request approved once that succeeds (an "already present" response still counts as approved).</p><div class="api">POST <code>ai-cbp-mdo-service v1/designation/approval-requests/approve</code></div></div>
+          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-24 &middot; The step-by-step wizard (unverified)</b><p>Document management, role-mapping review, course selection and CBP export ship inside a private library not present in any of the three traced repos.</p></div>
+          <div class="uc-card"><div class="who">Operator</div><b class="t">UC-25 &middot; Bulk-onboard a state/ministry</b><p>A fixed six-stage offline pipeline &mdash; copy documents, summarize, generate, recommend &amp; save, submit for approval, publish &mdash; run stage by stage from a jumphost, bypassing ai-cbp-mdo-service entirely.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/ai-cbp-tool/apis.md"></article><div class="md-src">source: docs/learning-hub/ai-cbp-tool/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/ai-cbp-tool/hld.md"></article><div class="md-src">source: docs/learning-hub/ai-cbp-tool/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/ai-cbp-tool/lld.md"></article><div class="md-src">source: docs/learning-hub/ai-cbp-tool/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/ai-cbp-tool/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/ai-cbp-tool/operations-manual.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/ai-cbp-tool/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/ai-cbp-tool/as-built-requirements.md</div></div>
+    </div><!-- /fdoc aicbp -->
 
     <!-- ═══ EXPLORE CONTENT (main-page feature) ═══ -->
     <div class="fdoc" data-fdoc="explore" hidden>
