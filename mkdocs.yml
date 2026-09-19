@@ -106,3 +106,11 @@ nav:
           - LLD: learning-hub/ai-cbp-tool/lld.md
           - Operations Manual: learning-hub/ai-cbp-tool/operations-manual.md
           - As-Built Requirements: learning-hub/ai-cbp-tool/as-built-requirements.md
+      - Events Hub:
+          - learning-hub/events-hub/index.md
+          - Use Cases: learning-hub/events-hub/use-cases.md
+          - APIs: learning-hub/events-hub/apis.md
+          - HLD: learning-hub/events-hub/hld.md
+          - LLD: learning-hub/events-hub/lld.md
+          - Operations Manual: learning-hub/events-hub/operations-manual.md
+          - As-Built Requirements: learning-hub/events-hub/as-built-requirements.md

@@ -325,7 +325,7 @@
     </div>
 
     <button class="bub hub" id="learn-hub" style="left:646px; top:121px; width:148px; height:148px;" onclick="openHub(this)">
-      Learning Hub<span class="sub">11 features</span>
+      Learning Hub<span class="sub">12 features</span>
     </button>
     <button class="bub hub" style="left:941px; top:335px; width:148px; height:148px;" onclick="notWired()">
       Discussion Hub<span class="sub">coming soon</span>
@@ -375,13 +375,14 @@
       <line x1="720" y1="505" x2="410" y2="505" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="875" y2="773" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="875" y2="237" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="565" y2="773" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
     <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>
-      <div class="sub">11 features</div>
+      <div class="sub">12 features</div>
     </div>
 
     <button class="bub item" style="left:655px; top:130px; width:130px; height:130px; font-size:15px" onclick="openFeature('course')">Course</button>
@@ -395,6 +396,7 @@
     <button class="bub item" style="left:342px; top:437px; width:136px; height:136px; font-size:14px" onclick="openFeature('peervalidation')">Peer Validation</button>
     <button class="bub item" style="left:811px; top:709px; width:128px; height:128px; font-size:14px" onclick="openFeature('chs')">CHS</button>
     <button class="bub item" style="left:807px; top:169px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('aicbp')">AI CBP Tool</button>
+    <button class="bub item" style="left:501px; top:709px; width:128px; height:128px; font-size:14px" onclick="openFeature('eventshub')">Events Hub</button>
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
   </section>
@@ -1120,6 +1122,87 @@
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/ai-cbp-tool/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/ai-cbp-tool/operations-manual.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/ai-cbp-tool/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/ai-cbp-tool/as-built-requirements.md</div></div>
     </div><!-- /fdoc aicbp -->
+
+    <!-- ═══ EVENTS HUB ═══ -->
+    <div class="fdoc" data-fdoc="eventshub" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/><circle cx="12" cy="15" r="2"/></svg></div>
+        <div>
+          <div class="fp-title">Events Hub</div>
+          <div class="fp-sub">A live/virtual-event content type (webinars, talks, multi-session series) that reuses the platform's Course infrastructure end to end &mdash; Event and EventSet are graph content nodes like Course, and enrollment/certification/karma-points reuse Course-style pipelines through several parallel, independently-written code paths.</div>
+          <div class="fp-chips"><span class="chip">Route&nbsp; <code>app/event-hub</code></span><span class="chip">Content types&nbsp; <code>Event</code> &middot; <code>EventSet</code></span><span class="chip ok">&#10003; Verified from 8 repos &middot; Sept 2026</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+        <button class="fp-tab" role="tab" data-tab="asbuilt" onclick="setTab(this)">As-Built</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A Karmayogi discovers an event through search, a home-page card, or the Event Hub's own browsing pages, opens its detail page, and enrolls with a single call. Authoring is split by role across two portals with two independent implementations: Org Portal admins create and auto-publish events, while the Creation Portal runs a parallel review queue keyed on a status value the Org Portal's own create flow never appears to set. Certification and karma-point awarding are triggered from at least four different places, with duplicated, non-shared logic in more than one of them.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> the Creation Portal's review dashboard filters for events with status <code>SentToPublish</code>, but no traced code path in the Org Portal's create flow (which publishes directly to <code>Live</code>) ever sets that status &mdash; either a server-side transition exists outside these repos, or the review queue is effectively unreachable from this create flow.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Three enrollment paths, one button</b><p>"Enroll" can mean <code>/v1/event/enroll</code> (generic Course actor), <code>/v2/event/enroll</code> (Event-specific), or <code>/v1/eventset/enroll</code> (fans out to child events) &mdash; three different tables, three different rule sets.</p></div>
+          <div class="fp-card"><b>EventSet children are full content nodes</b><p>An EventSet's occurrences aren't a lightweight schedule table &mdash; each one is a complete Event graph node, created and torn down synchronously on every EventSet write.</p></div>
+          <div class="fp-card"><b>Certification never checks completion</b><p>All four certificate-issuance trigger points hard-code 100% completion; none of them queries actual attendance/consumption data first.</p></div>
+        </div>
+        <h2 class="fp-h2">How a Karmayogi experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 &middot; DISCOVER</b><p>Search, a home-page widget, or the Event Hub's browse pages</p></div>
+          <div class="fp-step"><b>2 &middot; VIEW</b><p>Detail page, incl. any linked course's progress</p></div>
+          <div class="fp-step"><b>3 &middot; ENROLL</b><p>One of three independent enrollment code paths</p></div>
+          <div class="fp-step"><b>4 &middot; ATTEND</b><p>Consumption recorded in the shared Course consumption table</p></div>
+          <div class="fp-step"><b>5 &middot; CERTIFY</b><p>Certificate + karma points, always assuming 100% completion</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How a Karmayogi experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab covers the topology across all 8 repos and the three-enrollment-path split in full; <b style="color:#1B4CA1">LLD</b> covers storage, schemas, sequence flows and state machines.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">Course</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Discover an event</b><p>Global search, a home-page "today's/live events" widget, or the Event Hub's own see-all/view-all/my-events pages.</p><div class="api">POST <code>sunbirdigot/search</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 &middot; Enroll in an event</b><p>One of three independent enrollment code paths &mdash; which one runs depends on which endpoint the calling client uses, not on any choice the learner makes.</p><div class="api">POST <code>event/batch/enroll</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-5 &middot; Attend/consume the event</b><p>Attendance is written to the same Cassandra table used for course content consumption &mdash; there is no event-specific consumption table on the write path.</p><div class="api">POST <code>v1/user/event/state/update</code></div></div>
+          <div class="uc-card"><div class="who">Org Admin</div><b class="t">UC-7 &middot; Create and publish an event</b><p>A single-page form that immediately publishes on submit &mdash; only "Webinar" is enabled as an event type; other types exist in code but are disabled.</p><div class="api">POST <code>event/v4/create</code> &rarr; POST <code>event/v4/publish</code></div></div>
+          <div class="uc-card"><div class="who">CBP Admin</div><b class="t">UC-9 &middot; Review new event submissions</b><p>A queue split into "New Requests" (status SentToPublish) and "Past Requests" (status Live) &mdash; see the Overview tab's honest gap.</p><div class="api">POST <code>sunbirdigot/search</code></div></div>
+          <div class="uc-card"><div class="who">Platform Ops</div><b class="t">UC-11 &middot; Bulk-onboard a CSV of attendees</b><p>Resolves emails to user IDs, enrolls/completes them, and (unless publicCert) awards karma points and issues a certificate per row &mdash; no idempotency check before re-awarding points.</p><div class="api">POST <code>user/event/bulkOnboard</code></div></div>
+          <div class="uc-card"><div class="who">Platform Ops</div><b class="t">UC-13 &middot; Reconcile post-event completion (ops tool)</b><p>A manual, on-demand CSV upload that recomputes true completion from the batch's end time and always re-pushes a karma-point event &mdash; a second, independently-written copy of the same Kafka-publish logic used elsewhere.</p><div class="api">POST <code>user/event/postConsumption</code></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/events-hub/apis.md"></article><div class="md-src">source: docs/learning-hub/events-hub/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/events-hub/hld.md"></article><div class="md-src">source: docs/learning-hub/events-hub/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/events-hub/lld.md"></article><div class="md-src">source: docs/learning-hub/events-hub/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/events-hub/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/events-hub/operations-manual.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/events-hub/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/events-hub/as-built-requirements.md</div></div>
+    </div><!-- /fdoc eventshub -->
 
     <!-- ═══ EXPLORE CONTENT (main-page feature) ═══ -->
     <div class="fdoc" data-fdoc="explore" hidden>
