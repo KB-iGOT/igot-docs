@@ -114,3 +114,11 @@ nav:
           - LLD: learning-hub/events-hub/lld.md
           - Operations Manual: learning-hub/events-hub/operations-manual.md
           - As-Built Requirements: learning-hub/events-hub/as-built-requirements.md
+      - AI Assessment Tool:
+          - learning-hub/ai-assessment-tool/index.md
+          - Use Cases: learning-hub/ai-assessment-tool/use-cases.md
+          - APIs: learning-hub/ai-assessment-tool/apis.md
+          - HLD: learning-hub/ai-assessment-tool/hld.md
+          - LLD: learning-hub/ai-assessment-tool/lld.md
+          - Operations Manual: learning-hub/ai-assessment-tool/operations-manual.md
+          - As-Built Requirements: learning-hub/ai-assessment-tool/as-built-requirements.md
