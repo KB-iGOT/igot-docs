@@ -2,167 +2,176 @@
 
 ## `nlp-search` — keyword extraction mechanics
 
-- **Prompt construction** (`llm_service.py:61`): final prompt =
-  `NLP_SEARCH_INSTRUCTION_PROMPT + query + NPL_SEARCH_EXAMPLE_PROMPT` — the
-  user's raw text is interpolated unsanitized between two configured prompt
-  halves (both required env vars, no default, `config.py:24-25`). If
-  `synonyms=true`, the code string-replaces the first `]` in the composed
-  prompt with an instruction to add synonyms (`llm_service.py:63-64`) —
-  fragile string surgery, not a templated field.
+```mermaid
+flowchart TD
+    Start(["POST /nlp/search {query, synonyms}"]) --> Val1["Pydantic SearchModel validator: reject empty or >400 chars - src/search/request_model.py:7-14"]
+    Val1 -->|invalid| P422["FastAPI 422 (real status code)"]
+    Val1 -->|valid| Val2["search_request(): re-check empty/whitespace and length>MAX_SEARCH_LEN - llm_service.py:41-45"]
+    Val2 -->|fails| Bug1["return HTTPException(400,...) - NOT raised: FastAPI serializes the exception object as a 200 body instead"]
+    Val2 -->|passes| Prompt["Build prompt = INSTRUCTION_PROMPT + raw query + EXAMPLE_PROMPT - llm_service.py:61"]
+    Prompt -->|synonyms=true| Splice["String-splice a synonym instruction into the prompt at the first ']' - llm_service.py:63-64"]
+    Prompt -->|synonyms=false| Gemini
+    Splice --> Gemini["Vertex AI GenerativeModel.generate_content(stream=True) - temperature=0, top_p=0.95, top_k=1"]
+    Gemini --> Parse["Strip code fences + literal 'json', json.loads() the concatenated text - llm_service.py:73-80"]
+    Parse -->|JSONDecodeError / Exception| Bug2["return HTTPException(500,...) - same non-raise bug as Val2"]
+    Parse -->|ok| Wrap["Wrap as {data: {keywords: [{keyword, priority}]}} - llm_service.py:52"]
+    Wrap --> P200["200 OK, real status"]
+    Gemini -->|unexpected exception e.g. auth/quota/network| Outer["Outer try/except: log + traceback, RAISE HTTPException(500,...) - llm_service.py:53-56"]
+    Outer --> P500["500 (this is the one path that returns the status it claims)"]
+```
+
+No `response_model` is declared on the route, so FastAPI does not enforce
+the documented response shape on any path — a caller checking only HTTP
+status will treat `Bug1`/`Bug2` as success.
+
+- **Prompt construction** (`llm_service.py:61`): the user's raw text is
+  interpolated unsanitized between two configured prompt halves (both
+  required env vars, no default, `config.py:24-25`).
 - **Model call**: `GenerativeModel(settings.MODEL_NAME, system_instruction=[
   "You are a helpful language expert.", "Your mission is to extract search
   keywords from queries."])` (`llm_service.py:23-35`), default model
-  `gemini-2.0-flash-lite` (`config.py:17`), `temperature=0`, `top_p=0.95`,
-  `top_k=1`, `max_output_tokens=8192` — all env-overridable, all deterministic
-  defaults (temperature 0).
-- **Response parsing**: streams `generate_content(..., stream=True)`,
-  concatenates `.text` chunks, strips markdown code fences and the literal
-  string `"json"`, then `json.loads`s the result (`llm_service.py:68-80`).
-  No schema validation beyond what `json.loads` itself enforces — a
-  malformed-but-valid-JSON response (e.g. missing `keywords` key) would
-  propagate as a `KeyError` wherever the caller indexes into it, not caught
-  here.
-- **A real defect**: both validation-failure branches
-  (`llm_service.py:41-42,44-45`) and the LLM-JSON-failure branch
-  (`llm_service.py:79-89`) `return HTTPException(...)` instead of `raise
-  HTTPException(...)`. FastAPI does not special-case a *returned*
-  `HTTPException` object — it JSON-serializes the exception instance as a
-  200-OK body rather than emitting the intended 400/500 status. Only the
-  outer `try/except`'s catch-all (`llm_service.py:53-56`) correctly `raise`s,
-  so genuinely unexpected errors do return real 500s; validation and
-  LLM-parse failures do not return the status their own code implies.
+  `gemini-2.0-flash-lite` (`config.py:17`).
 - **Auth to Google**: Vertex AI service-account JSON via
-  `GOOGLE_APPLICATION_CREDENTIALS` (`config.py:15`); the credentials file is
-  excluded from both git and the Docker build context (`.gitignore`,
-  `.dockerignore`), so it must be mounted/injected at deploy time — confirmed
-  in `sunbird-devops` as a Kubernetes ConfigMap (`gcpnlpsearchcredentialsjson`)
-  mounted at `/app/gcp_nlp_search_credentials.json`.
-- **No timeout, no retry**: `model.generate_content(...)` is called with no
-  `timeout=` kwarg and no retry wrapper anywhere in the repo — a hung Vertex
-  AI call hangs the request indefinitely (bounded only by whatever
-  ASGI-server-level timeout the deployment sets, which is not configured in
-  this repo's `Dockerfile`/`CMD`).
+  `GOOGLE_APPLICATION_CREDENTIALS` (`config.py:15`); excluded from git and
+  the Docker build context, mounted at deploy time (confirmed in
+  `sunbird-devops` as a Kubernetes ConfigMap).
+- **No timeout, no retry**: `model.generate_content(...)` has no `timeout=`
+  kwarg and no retry wrapper anywhere in the repo — a hung Vertex AI call
+  hangs the request indefinitely.
 
 ## `search-service` — query DSL construction
 
-- **Request → `SearchDTO`**: `SearchActor.getSearchDTO()`
-  (`SearchActor.java:99-333`) walks the wire-level request and produces a
-  list of `properties`, each `{operation, propertyName, values}`. Operator
-  mapping (`getSearchFilterProperties`, `SearchActor.java:438-612`): plain
-  value → `EQ`; `{startsWith}` → `SW`; `{endsWith}` → `EW`; `{ne|!=}` →
-  `NT_EQ`; `{notIn}` → `NT_IN`; `{gt,gte,lt,lte}` → passthrough range;
-  `{contains|value}` → `CONTAINS`; `{and}` → `AND`; `any: [...]` → grouped
-  `should`-clause.
-- **Implicit defaults injected unless overridden**: `status=Live`
-  (`SearchActor.java:602-605`), `visibility=Default`
-  (`SearchActor.java:607-609,625-633`, gated by config
-  `object.withVisibility`) — a caller who doesn't explicitly ask for
-  non-Live or non-Default content silently only sees the common case.
-- **ES query assembly**: `SearchProcessor.processSearchQuery()`
-  (`SearchProcessor.java:233-329`) builds a `SearchSourceBuilder`: field
-  projection, `size`/`from` from `limit`/`offset`, boolean query from
-  `formQueryImpl()` (`SearchProcessor.java:394-600` — one `QueryBuilder` per
-  `SearchConstants.SEARCH_OPERATION_*`: `matchQuery`, `regexpQuery` for
-  LIKE/CONTAINS/STARTS/ENDS, `rangeQuery`, `termsQuery` for `NOT_IN`,
-  `existsQuery`), sort (default `name asc, lastUpdatedOn desc` when
-  unspecified or in fuzzy-relevance mode), facets as terms aggregations,
-  and an arbitrary nested `l1/l2/...` aggregation tree
-  (`SearchProcessor.java:926-951`).
-- **Free-text query**: a `multiMatchQuery` across the field list in
-  `search.fields.query` config, with per-field boosts parsed from
-  `field^boost` syntax, `Type.CROSS_FIELDS`; fuzzy matching
-  (`fuzziness("AUTO")`) only when `fuzzySearch=true` on the request
-  (`SearchProcessor.getAllFieldsPropertyQuery`, lines 647-669).
-- **Secure-settings / eligibility filtering**: `/v3`/`/v3/private` apply a
-  nested `secureSettings` query by default; `/v4`/`/v5` instead wrap the
-  main query in a `post_filter` (`getPostFilterQuery`,
-  `SearchProcessor.java:1005-1038`). Org- and coordinator-eligibility use
-  `TermsLookup`-based filters against separate indices
-  (`org_eligibility_alias`, `user_program_lookup_v1`), built via reflective
-  `TermsQueryBuilder` construction (`SearchProcessor.java:1075-1109`) —
-  fragile to any ES client library version bump that changes that
-  constructor's signature.
-- **Result shaping**: `ElasticSearchUtil.getDocumentsFromSearchResult(...)`
-  extracts `_source`; a second, self-addressed actor round trip
-  (`GROUP_SEARCH_RESULT_BY_OBJECTTYPE`, `SearchManager.java:275-285`)
-  buckets raw hits into typed keys (content/domains/concepts/etc) for the
-  composite-search response shape.
+```mermaid
+flowchart TD
+    Req(["POST /v3|v4|v5/search {query, filters, sort_by, facets, limit, offset, ...}"]) --> Actor["SearchActor.getSearchDTO() - SearchActor.java:99-333"]
+    Actor --> Ops["Map each filter to an operator: EQ/SW/EW/NT_EQ/NT_IN/CONTAINS/AND/range/ANY-should - getSearchFilterProperties, lines 438-612"]
+    Ops --> Defaults{"status / visibility explicit in request?"}
+    Defaults -->|no| Inject["Inject status=Live, visibility=Default - lines 602-609,625-633"]
+    Defaults -->|yes| DTO
+    Inject --> DTO["SearchDTO: properties, facets, sortBy, limit/offset, fuzzySearch, softConstraints, aggregations"]
+    DTO --> Proc["SearchProcessor.processSearchQuery() - SearchProcessor.java:233-329"]
+    Proc --> Bool["formQueryImpl(): one QueryBuilder per operation - matchQuery / regexpQuery (LIKE,CONTAINS,SW,EW) / rangeQuery / termsQuery(NOT_IN) / existsQuery"]
+    Proc --> FreeText{"Free-text query present?"}
+    FreeText -->|yes| MM["multiMatchQuery across search.fields.query, field^boost parsed, CROSS_FIELDS - fuzziness(AUTO) only if fuzzySearch=true"]
+    Proc --> Secure{"Route is /v4 or /v5?"}
+    Secure -->|yes| PostFilter["Wrap query in post_filter (getPostFilterQuery) instead of the default nested secureSettings query"]
+    Secure -->|no /v3| Nested["Apply nested secureSettings query by default"]
+    Proc --> Facets["Facets -> terms aggregations; optional nested l1/l2/... aggregation tree"]
+    Bool --> Build["Build SearchSourceBuilder: fetchSource, size/from, sort (default name asc + lastUpdatedOn desc)"]
+    MM --> Build
+    PostFilter --> Build
+    Nested --> Build
+    Facets --> Build
+    Build --> ES[("Elasticsearch - compositesearch index")]
+    ES --> Shape["ElasticSearchUtil.getDocumentsFromSearchResult() - extract _source"]
+    Shape --> Group{"Composite-search response needed?"}
+    Group -->|yes| RoundTrip["Second, self-addressed actor round trip: GROUP_SEARCH_RESULT_BY_OBJECTTYPE - SearchManager.java:275-285"]
+    Group -->|no| Resp
+    RoundTrip --> Resp["Typed response: content/domains/concepts/... buckets"]
+```
+
+- **Secure-settings / eligibility filtering**: org- and
+  coordinator-eligibility use `TermsLookup`-based filters against separate
+  indices (`org_eligibility_alias`, `user_program_lookup_v1`), built via
+  reflective `TermsQueryBuilder` construction
+  (`SearchProcessor.java:1075-1109`) — fragile to any ES client library
+  version bump that changes that constructor's signature.
+- **Result shaping**: the `GROUP_SEARCH_RESULT_BY_OBJECTTYPE` round trip is
+  a second actor `ask()` call issued by `SearchManager` after the first
+  search completes — not a single-pass operation.
 
 ## `search-indexer` (jobs) — indexing mechanics
 
-- **Dispatch**: `TransactionEventRouter` routes a graph-transaction Kafka
-  event by `nodeType` — `SET`/`DATA_NODE` → composite-search path,
-  `EXTERNAL` → dialcode path, `DIALCODE_METRICS` → metrics path
-  (`TransactionEventRouter.scala:27-43`).
-- **CREATE/UPDATE/DELETE** (`CompositeSearchIndexerHelper.upsertDocument`,
-  lines 97-130):
-    - `CREATE`: builds the full document via `getIndexDocument()` and
-      indexes it.
-    - `UPDATE`: **fetches the existing document from ES first**
-      (`esUtil.getDocumentAsString`), merges only the transaction's
-      property diff (`ov`/`nv` pairs) into it, then re-indexes the merged
-      whole — this is a read-modify-write against ES per update, not a
-      partial-update API call.
-    - `DELETE`: fetches the existing doc, checks `visibility == "Parent"`
-      and **skips the delete** if so (a "Parent" doc is presumably still
-      referenced), else deletes.
+```mermaid
+flowchart TD
+    Kafka(["Kafka: *.learning.graph.events"]) --> Router["TransactionEventRouter.processElement() - validates event, routes by nodeType"]
+    Router -->|SET / DATA_NODE| CSFunc["CompositeSearchIndexerFunction.processElement()"]
+    Router -->|EXTERNAL| Dialcode["dialcode path (not composite search)"]
+    Router -->|DIALCODE_METRICS| Metrics["metrics path (not composite search)"]
+    CSFunc --> Op{"operationType?"}
+    Op -->|CREATE| Full["getIndexDocument(): build full doc from transaction properties + relation-label resolution + nested-field parsing"]
+    Op -->|UPDATE| Fetch["esUtil.getDocumentAsString(): fetch existing doc from ES"]
+    Fetch --> Merge["Merge transaction's ov/nv property diff into the fetched doc"]
+    Op -->|DELETE| FetchD["esUtil.getDocumentAsString(): fetch existing doc"]
+    FetchD --> Vis{"visibility == 'Parent'?"}
+    Vis -->|yes| Skip["Skip delete - Parent doc presumed still referenced"]
+    Vis -->|no| Del["esUtil.deleteDocument(identifier)"]
+    Full --> Write["upsertDocument(): ElasticSearchUtil.addDocument - index=compositesearch, type=cs"]
+    Merge --> Write
+    Write --> ES[("Elasticsearch - compositesearch index")]
+    Del --> ES
+    CSFunc -->|exception| DLQ["FailedEventHelper.getFailedEvent(): wrap event + jobName + truncated stack trace"]
+    DLQ --> KafkaErr(["Kafka DLQ: *.learning.events.failed"])
+    CSFunc -->|InvalidEventException specifically| Rethrow["re-thrown after DLQ emit"]
+    Rethrow --> Restart["Flink restart-strategy: 3 attempts, 30s delay - checkpoint-based reprocessing"]
+```
+
+This is retry-via-infrastructure (Flink checkpoint/restart), not
+application-level retry logic. A parallel, independent write path exists:
+content-publish's `CollectionPublisher.syncNodes()` bulk-indexes a
+collection's child/unit nodes into the same index at publish time — it has
+**no DLQ**, failures are only logged.
+
 - **Enrichment before write**: nested-field re-parsing for a configured
-  field list (`badgeAssertions`, `targets`, `batches`, `competencies_v3`,
-  `taxonomyPaths_v2`, ...) so ES indexes them as `nested` rather than flat
-  text; relation-label denormalization (walks `addedRelations`/
-  `removedRelations`, resolves each to a human-readable field name via
-  `ObjectDefinition.relationLabel()`); external-property exclusion (fields
-  owned by Cassandra content-store, not the graph, are dropped); a 32,000-char
-  string-length guard per field (`ElasticSearchUtil.checkDocStringLength`).
+  field list (so ES indexes them as `nested` rather than flat text);
+  relation-label denormalization (walks `addedRelations`/`removedRelations`,
+  resolves each to a human-readable field name); external-property exclusion
+  (fields owned by Cassandra content-store are dropped); a 32,000-char
+  string-length guard per field.
 - **Custom analysis**: `cs_index_analyzer`/`cs_search_analyzer` with an
   ngram filter (`mynGram`, min 1 / max 30 grams) plus a `copy_to: all_fields`
   catch-all field for partial-match full-text search — created once at job
-  startup if the index doesn't already exist
-  (`CompositeSearchIndexerHelper.createCompositeSearchIndex()`).
-- **Failure handling**: on exception, the event is wrapped with job name +
-  a truncated (21-frame) stack trace and emitted to a Kafka DLQ topic
-  (`FailedEventHelper.getFailedEvent`); `InvalidEventException` is
-  additionally re-thrown, which — combined with Flink's
-  `restart-strategy.attempts=3`/`delay=30000` — triggers a job restart and
-  checkpoint-based reprocessing. This is retry-via-infrastructure, not
-  application-level retry logic. The parallel bulk-publish path
-  (`CollectionPublisher.syncNodes`) has no DLQ — a failure there is only
-  logged.
+  startup if the index doesn't already exist.
 
-## Frontend keyword-to-search wiring (web portal, the fullest-traced client)
+## Frontend keyword-to-search sequence (web portal, the fullest-traced client)
 
-- `SearchInputHomeV4Component.updateQuery()` (web) sequences two calls on
-  submit: `searchInNLP(query)` first, then `processSearchText(query)`,
-  which builds `queryParams = {q, search: nlpKeyword, category, p, f, tab,
-  filtersPanel}` and navigates to `/app/globalsearch`
-  (`search-input-home-v4.component.ts:279-586`). The `q` param preserves
-  what the user typed; the `search` param is what's actually queried against
-  — both are visible in the URL, so a shared/bookmarked search link
-  reproduces the *keyword-based* result, not necessarily what re-running
-  the user's exact original phrase through NLP again would produce (the LLM
-  call is not deterministic-by-identity across time, only
-  deterministic-by-temperature=0 for a given prompt+model version).
-- `GlobalSearchComponent` decodes `f` as JSON
-  (`global-search.component.ts:75-85`) into
-  `{mainType: 'course', subType: sfilters.primaryCategory}` and passes it
-  down to `LearnSearchComponent`, which is what actually assembles the
-  per-category `SearchV4Request` objects and fires the parallel category
-  searches (courses/events/people/resources/communities).
+```mermaid
+flowchart TD
+    Type["User types query, hits submit - SearchInputHomeV4Component"] --> NLP["searchInNLP(query): POST /apis/proxies/v8/nlp/search - search-input-home-v4.component.ts:778-795"]
+    NLP --> Extract["Response: {data:{keywords:[{keyword,priority}]}} - pick top-priority keyword"]
+    Extract --> Process["processSearchText(): build queryParams {q: rawQuery, search: nlpKeyword, category, p, f, tab, filtersPanel}"]
+    Process --> Nav["router.navigate(['/app/globalsearch'], {queryParams}) - q preserved for the URL, search is what's actually queried"]
+    Nav --> GSC["GlobalSearchComponent.ngOnInit(): read q/search/category/f from queryParamMap - decode f as JSON filters"]
+    GSC --> LSC["LearnSearchComponent: build per-category SearchV4Request objects from search + f"]
+    LSC --> Parallel{"Fire parallel category searches"}
+    Parallel --> Courses["searchCoursesv5() -> POST composite/v5/search"]
+    Parallel --> People["searchConnections() -> POST user/v5/public/search"]
+    Parallel --> Community["searchCommunity() -> POST community/v1/search"]
+    Parallel --> External["searchExternalContent() -> POST cios/v1/search/content"]
+    Courses --> Render["Render result cards, bind fields from the search-time 'fields' projection"]
+    People --> Render
+    Community --> Render
+    External --> Render
+    Extract --> Recent["createRecent(): POST search/v1/recent/create {searchQuery, nlpSearchQuery, searchCategory}"]
+```
+
+The mobile app follows the identical two-hop shape (`nlpSearch()` →
+top-priority keyword → parallel category searches), confirmed in
+`igot_karmayogi_mobile:lib/features/search/presentation/widgets/search_result_page.dart:313-324`.
+The three admin-facing portals (`orgportal`, `creationportal`,
+`adminportal`) skip the `NLP` step entirely — their equivalent flow starts
+directly at `Process`, with the user's raw text substituted for `nlpKeyword`.
+
 - **Facet round-trip**: `SearchFiltersComponent` emits selections via
   `appliedFilter`/`constructQueryParam`; these update the `f` query param,
   which `GlobalSearchComponent` re-parses on next navigation — filter state
   lives entirely in the URL, not a service-level store, so a full page
   reload with the same URL reproduces the same filtered search.
+- **Non-identical repeat searches**: because `search` (not `q`) is what's
+  actually queried, and `nlp-search`'s output is only deterministic-by-
+  temperature for a fixed prompt+model version, a bookmarked search URL
+  reproduces the *keyword-based* result at the time it was generated — it
+  does not re-run NLP extraction on load.
 
 ## Verification boundary
 
-- `nlp-search`'s response-shape non-enforcement (no `response_model`) was
-  confirmed by static reading only — the described 200-with-serialized-
-  exception behavior was not observed by actually running the service
-  (no live Vertex AI credentials in this environment).
+- `nlp-search`'s response-shape non-enforcement (no `response_model`) and
+  the two `return`-not-`raise` branches were confirmed by static reading
+  only — not observed by running the live service (no Vertex AI
+  credentials in this environment).
 - The reflective `TermsQueryBuilder` construction in `SearchProcessor`
   (`SearchProcessor.java:1075-1109`) was read as written; whether it
-  actually succeeds against the specific Elasticsearch client library
-  version pinned in this repo's build was not exercised at runtime.
+  actually succeeds against the pinned Elasticsearch client library version
+  was not exercised at runtime.
 - Kong's actual routing behavior for `/proxies/v8/nlp/*` and
   `/proxies/v8/search/*` remains unconfirmed (see [HLD](hld.md)).

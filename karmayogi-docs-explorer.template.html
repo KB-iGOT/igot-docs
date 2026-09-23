@@ -20,7 +20,7 @@
   /* ── scalable stage ─────────────────────────────── */
   #stagewrap { width: 100%; display: flex; justify-content: center; overflow: hidden; }
   #stage {
-    position: relative; width: 1440px; height: 900px; flex: none;
+    position: relative; width: 1440px; height: 960px; flex: none;
     transform-origin: top center;
   }
 
@@ -1355,14 +1355,14 @@
     var w = window.innerWidth - 8, h = window.innerHeight, s;
     if (window.innerWidth >= 1024) {
       /* desktop: fit BOTH dimensions so home/hub views fill the screen with no scroll */
-      s = Math.min(w / 1440, h / 900);
+      s = Math.min(w / 1440, h / 960);
       document.body.style.overflowY = 'hidden';
     } else {
       s = Math.min(1, w / 1440);
       document.body.style.overflowY = '';
     }
     stage.style.transform = 'scale(' + s + ')';
-    wrap.style.height = Math.floor(900 * s) + 'px';
+    wrap.style.height = Math.floor(960 * s) + 'px';
   }
   window.addEventListener('resize', fit);
   fit();
