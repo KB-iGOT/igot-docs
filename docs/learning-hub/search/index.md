@@ -43,11 +43,12 @@ normalized keyword.
       every content/people/community/event/resource search, same pattern as
       the web portal.
 - **Self-description in code**: `nlp-search`'s README calls itself "NLP
-  Search Service"; `search-service` has no self-identifying app-name string
-  anywhere in its source — no `build.sbt` exists in the repo at all, and
-  `application.conf` names only the Akka actors it binds (`SearchModule.scala:9-17`
-  → `"SearchActor"`/`"healthActor"`), never the service itself. None of the
-  five frontends name a unified "Search" feature in code either — each
+  Search Service"; `search-service` self-identifies as `"search-service"` via
+  `TelemetryGenerator.setComponent("search-service")` and a matching startup
+  log line, both in `SearchModule.scala:15-16` — not in `application.conf`
+  (no `build.sbt` exists in this repo at all, so there's no package-level
+  name either). None of the five frontends name a unified "Search" feature
+  in code — each
   treats it as its own `search`/`search-v2`/`search-v3` route module.
 - **Shape**: two independent backends that never call each other —
   `nlp-search` (LLM keyword extraction) and `knowledge-platform`'s
