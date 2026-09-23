@@ -114,3 +114,11 @@ nav:
           - LLD: learning-hub/events-hub/lld.md
           - Operations Manual: learning-hub/events-hub/operations-manual.md
           - As-Built Requirements: learning-hub/events-hub/as-built-requirements.md
+      - Search:
+          - learning-hub/search/index.md
+          - Use Cases: learning-hub/search/use-cases.md
+          - APIs: learning-hub/search/apis.md
+          - HLD: learning-hub/search/hld.md
+          - LLD: learning-hub/search/lld.md
+          - Operations Manual: learning-hub/search/operations-manual.md
+          - As-Built Requirements: learning-hub/search/as-built-requirements.md
