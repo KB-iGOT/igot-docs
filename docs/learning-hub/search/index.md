@@ -42,11 +42,13 @@ normalized keyword.
       `iGotApp-v5.0.5-S40`) — the Flutter app; calls `nlp-search` before
       every content/people/community/event/resource search, same pattern as
       the web portal.
-- **Self-description in code**: `search-service` self-identifies only by its
-  Play app name in `application.conf`; `nlp-search`'s README calls itself
-  "NLP Search Service"; none of the five frontends name a unified "Search"
-  feature in code — each treats it as its own `search`/`search-v2`/`search-v3`
-  route module.
+- **Self-description in code**: `nlp-search`'s README calls itself "NLP
+  Search Service"; `search-service` has no self-identifying app-name string
+  anywhere in its source — no `build.sbt` exists in the repo at all, and
+  `application.conf` names only the Akka actors it binds (`SearchModule.scala:9-17`
+  → `"SearchActor"`/`"healthActor"`), never the service itself. None of the
+  five frontends name a unified "Search" feature in code either — each
+  treats it as its own `search`/`search-v2`/`search-v3` route module.
 - **Shape**: two independent backends that never call each other —
   `nlp-search` (LLM keyword extraction) and `knowledge-platform`'s
   `search-service` (Elasticsearch query execution) — stitched together only

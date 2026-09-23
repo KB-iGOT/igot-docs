@@ -71,8 +71,8 @@ Requirement IDs: `FR-0xx` (`nlp-search`), `FR-1xx` (`search-service`),
 | FR-401 | `sunbird-cb-orgportal`, `sunbird-cb-creationportal`, and `sunbird-cb-adminportal` SHALL NOT call `nlp-search` — search executes on the raw typed query. | Confirmed by absence — zero `nlp` matches in a repo-wide grep of each |
 | FR-402 | Recent searches SHALL be persisted server-side (`/search/v1/recent/*`) on every client that implements the feature; no client SHALL cache recent-search history in local/on-device storage. | Confirmed by absence of `localStorage`/Hive/SharedPreferences usage tied to search history on web and mobile |
 | FR-403 | `sunbird-cb-creationportal` SHALL provide tag/keyword suggestion during content authoring via a competency-taxonomy search (`competency/v4/search`), independent of `nlp-search`. | `competence.service.ts:44`, `edit-meta.component.ts:555` |
-| FR-404 | Each admin-facing portal (`orgportal`, `adminportal`) SHALL provide a separate admin user-search feature (`user/v1/search` or `v3/search`) distinct from content search, filtering the platform's user directory rather than the `compositesearch` index. | `all-users.component.ts`, `list-user.component.ts` (adminportal) |
-| FR-405 | `sunbird-cb-orgportal`'s Training Plan wizard SHALL provide independent search calls for candidate courses (`sunbirdigot/search`) and candidate assignees (`user/v1/search`), reusing the admin user-search endpoint for the latter. | `training-plan/components/search/search.component.ts:127-235` |
+| FR-404 | Each admin-facing portal (`orgportal`, `adminportal`) SHALL provide a separate admin user-search feature (`user/v1/search` or `v3/search`) distinct from content search, filtering the platform's user directory rather than the `compositesearch` index. | `sunbird-cb-orgportal:.../home/routes/users-view/all-users/all-users.component.ts`; `sunbird-cb-adminportal:.../routes/users/list-user/list-user.component.ts` |
+| FR-405 | `sunbird-cb-orgportal`'s Training Plan wizard SHALL provide independent search calls for candidate courses (`sunbirdigot/search`) and candidate assignees (`user/v1/search`), reusing the admin user-search endpoint for the latter. | `sunbird-cb-orgportal:project/ws/app/src/lib/routes/training-plan/components/search/search.component.ts:127-235` |
 
 ## Non-functional requirements
 
@@ -90,6 +90,47 @@ Requirement IDs: `FR-0xx` (`nlp-search`), `FR-1xx` (`search-service`),
 | CON-002 | `search-service`'s `/v5`/`/v4/bp` JWT-claim extraction assumes token signature verification happens upstream — this service performs none itself. | `ExtendedSearchController.scala:76-90`; no signature-verification code found in this repo |
 | CON-003 | The `compositesearch` index name is a string literal independently duplicated in three repos (`knowledge-platform`'s default constant, `content-api`'s conf, `knowledge-platform-jobs`' indexer conf) with no shared source of truth. | `SearchConstants.java:6`; `content-api/content-service/conf/application.conf:552`; `search-indexer.conf:19` |
 | CON-004 | Kong's routing configuration — the actual mapping from `/proxies/v8/nlp/*` and `/proxies/v8/search/*` to a downstream host — is assumed to exist but lives entirely outside the ten repos traced for this feature. | See [HLD](hld.md) Verification boundary |
+
+## Known deviations (inconsistent by accident, not by design)
+
+These are behaviors present in the as-built system that appear to be
+unintended inconsistencies rather than deliberate requirements. Listed here
+so they are not mistaken for intended behavior when used as a QA/test
+baseline.
+
+| ID | Deviation | Requirements in tension | Source |
+|---|---|---|---|
+| DEV-001 | Both of `nlp-search`'s error branches (`query` validation failure, LLM/JSON-parse failure) `return` an `HTTPException` object instead of `raise`-ing it — FastAPI serializes the exception as a 200-OK body rather than emitting the 400/500 the code's own logic implies. Only the outer catch-all correctly `raise`s. | Sits underneath FR-001, FR-002 | `src/search/llm_service.py:41-42,44-45,79-89` |
+| DEV-002 | `nlp-search`'s second prompt-config variable is named `NPL_SEARCH_EXAMPLE_PROMPT` — a letter-swap typo versus its sibling `NLP_SEARCH_INSTRUCTION_PROMPT` — baked into both the app's `Settings` field name and the deployed env var name in `sunbird-devops`. | FR-004 | `src/core/configs.py:25` |
+| DEV-003 | `WEB_CONCURRENCY` is documented in `nlp-search`'s `.env_sample` and templated in `sunbird-devops`' env config, but is not a field on the app's `Settings` class and is never passed to the `uvicorn` CMD in the Dockerfile (no `--workers` flag) — it currently has no effect in this repo as shipped. | — | `nlp-search:.env_sample:8`, `Dockerfile:29`; `sunbird-devops:files/nlp_search-env.j2` |
+| DEV-004 | The deployed env var name for `nlp-search`'s model setting (`nlp_search_gemini_model_pro`, per `sunbird-devops`) implies a "Pro" model, while the code-level default for that same setting is `gemini-2.0-flash-lite` — name and default disagree; the actual deployed value could not be confirmed either way from these repos. | Sits underneath FR-004 | `nlp-search:config.py:17` vs. `sunbird-devops:files/nlp_search-env.j2` |
+| DEV-005 | `sunbird-cb-uiproxy`'s four content-search endpoints (`searchV5`, `searchV6`, `searchAutoComplete`, `searchRegionRecommendation`) are absent from the service's own RBAC whitelist (`API_LIST.URL`), even though whitelist enforcement defaults to enabled and structurally similar routes (e.g. community topic search) *are* individually whitelisted — an apparent gap rather than a documented exception. | Sits underneath FR-300, FR-304 | `sunbird-cb-uiproxy:src/utils/whitelistApis.ts` (no `searchV5\|searchV6\|searchAutoComplete\|searchRegionRecommendation` entries found by grep) |
+| DEV-006 | The web/org/admin portals each ship two parallel implementations of the same-named `SearchApiService`/`SearchServService` classes (`head/_services/*` vs `routes/search/{apis,services}/*`) with *different* endpoint values behind identical constant names (e.g. `SEARCH_AUTO_COMPLETE` resolves to two different paths depending on which copy is imported). Only the `routes/search` copy has a confirmed production caller in each repo; the `head/_services` copy's real-world usage could not be confirmed. | Sits underneath FR-401 (learner clients), and the equivalent UC-4 content-search flow | e.g. `sunbird-cb-orgportal:project/ws/app/src/lib/head/_services/search-api.service.ts:11-12` vs. `routes/search/apis/search-api.service.ts:11-12,35` |
+| DEV-007 | `SearchServService.raiseSearchEvent()`/`raiseSearchResponseEvent()` telemetry methods are defined (in the `head/_services` copy) but no call site was found anywhere in `sunbird-cb-orgportal` or `sunbird-cb-adminportal` — either dead code, or fired only by a downstream host application not present in either repo. | — | `head/_services/search-serv.service.ts:371-408` (orgportal); no confirmed caller |
+| DEV-008 | `nlp-search-service`'s Helm chart declares `autoscaling` and `serviceMonitor` configuration blocks in `values.j2`, but the chart's `templates/` directory contains no corresponding `hpa.yaml`/`servicemonitor.yaml` — these settings currently appear to have no effect on the deployed service. | — | `sunbird-devops:kubernetes/helm_charts/igot-deploy/nlp-search-service/values.j2:36-47` vs. its `templates/` listing (only `deployment.yaml`, `configMap.yaml`) |
+| DEV-009 | `nlp-search-service`'s Kubernetes deployment has no `livenessProbe`/`readinessProbe` at all, unlike its sibling charts (`core/search`, `cb-search-service`), which both wire probes conditionally. A `health_check_endpoint` variable exists in a legacy `ansible_vars.yaml` for the old docker-compose/swarm deploy path, but is not wired into the current Helm deployment. | — | `sunbird-devops:kubernetes/helm_charts/igot-deploy/nlp-search-service/templates/deployment.yaml` (no probe block) vs. `files/ansible_vars.yaml:26` |
+
+## Out of scope (not reconstructible from any of the ten repos)
+
+- **Kong's declarative routing config** — the actual mapping from
+  `/proxies/v8/nlp/*` and `/proxies/v8/search/*` (and `SEARCH_API_BASE`'s
+  deployed value) to a downstream host. `sunbird-devops` shows Kong
+  *upstream target* definitions (`nlp_search_service_url`, `search_url` in
+  Ansible defaults) but not the live route bindings.
+- **The platform user-directory search service** — the implementation
+  behind `/user/v1/search` and `/v3/search`, used by every admin portal's
+  user search, collaborator pickers, and the training-plan assignee search.
+- **`@sunbird-cb/search-listing`** — an external npm package mounted at
+  route `app/globalsearch` in `sunbird-cb-orgportal` (and referenced
+  similarly elsewhere); its source is not vendored in any of the ten repos,
+  so its internal search behavior is untraceable from here.
+- **What populates the `searchautocomplete_${lang}` Elasticsearch index** —
+  only `sunbird-cb-uiproxy`'s read path was found; no write path exists in
+  any of the ten repos.
+- **The MDO/SPV admin's and system admin's exact production identity** —
+  `sunbird-cb-adminportal`'s persona (system/platform admin vs. org admin)
+  was inferred from route semantics (`list-user`, `create-mdo`), not stated
+  explicitly anywhere in its own README.
 
 ## Verification boundary
 

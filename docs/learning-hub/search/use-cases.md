@@ -68,13 +68,18 @@ The learner's primary content search, run per-category in parallel by
   /api/composite/v5/search` (`api_endpoints.dart:163`), with a
   remote-config override read from `searchConfig?.apiEndpoints.compositeSearch`
   — `search_service.dart:421-495`.
-- Backend: both land (via uiproxy/Kong or directly) on
-  `knowledge-platform`'s `search-service`, route `POST /v4/search` or `POST
-  /v5/search` — `SearchController.searchV4()` /
-  `ExtendedSearchController.searchV5()`
-  (`knowledge-platform:search-api/search-service/conf/routes:4-16`). `/v4`
-  disables the "secure settings" default filter; `/v5` adds JWT-derived
-  `user_roles`/`org` context and response field-filtering.
+- Backend: **inferred, not directly confirmed** — `knowledge-platform`'s
+  `search-service` exposes matching routes `POST /v4/search` and `POST
+  /v5/search`
+  (`SearchController.searchV4()`/`ExtendedSearchController.searchV5()`,
+  `knowledge-platform:search-api/search-service/conf/routes:4-16`), and the
+  client-side path suffixes (`v4/search`, `v5/search`) line up with them.
+  But the actual Kong routing config that would prove
+  `composite/v5/search`/`sunbirdigot/v4/search` resolve to *this* service
+  (rather than some other backend behind the same gateway) is not present
+  in any of the ten repos — see the Verification boundary in [HLD](hld.md).
+  `/v4` disables the "secure settings" default filter; `/v5` adds
+  JWT-derived `user_roles`/`org` context and response field-filtering.
 - Query construction: `SearchActor.getSearchDTO()` maps the wire-level
   `filters`/`query`/`sort_by`/`facets` into ES query terms
   (`SearchActor.java:99-333`); `SearchProcessor.processSearchQuery()` builds
@@ -95,8 +100,12 @@ The learner's primary content search, run per-category in parallel by
   `sunbird-cb-orgportal:project/ws/app/src/lib/routes/search/apis/search-api.service.ts:35`
   and `sunbird-cb-adminportal`'s equivalent file.
 - Backend: `sunbird-cb-uiproxy:src/protectedApi_v8/content.ts:473-501`
-  (`searchV6()`) POSTs to `CONSTANTS.SEARCH_API_BASE + '/v6/search'`,
-  injecting `rootOrg` and `uuid` into the request body before forwarding.
+  (`searchV6()`) POSTs directly to `CONSTANTS.SEARCH_API_BASE + '/v6/search'`
+  — no Kong hop for this one, but `SEARCH_API_BASE` is a generic env var
+  (`src/utils/env.ts:109,118`); nothing in `uiproxy`'s own config names it
+  "knowledge-platform" explicitly, though the `/v6/search` suffix matches
+  `search-service`'s own route name exactly. Injects `rootOrg` and `uuid`
+  into the request body before forwarding.
 - No NLP step precedes this call in either portal (confirmed absent by
   repo-wide grep).
 
