@@ -1,17 +1,19 @@
 # Competency Hub — HLD
 
-Reverse-engineered from `sunbird-cb-portal`, `sunbird-cb-orgportal`,
-`sunbird-cb-uiproxy`, `sunbird-cb-ext`, `cb-ext-course-service`,
-`igot_karmayogi_mobile`, `knowledge-platform-jobs`, `knowledge-platform`,
-`sunbird-course-service`, and `sunbird-devops`.
+Reverse-engineered from `frac-backend`, `frac-dictionary`,
+`sunbird-cb-portal`, `sunbird-cb-orgportal`, `sunbird-cb-uiproxy`,
+`sunbird-cb-ext`, `cb-ext-course-service`, `igot_karmayogi_mobile`,
+`knowledge-platform-jobs`, `knowledge-platform`, `sunbird-course-service`,
+and `sunbird-devops`.
 
 ## Topology
 
-There is no "Competency Service" box in this diagram because none exists.
-What ties the picture together is a taxonomy owned entirely outside these
-ten repos (`fracentity-service`, confirmed only by `sunbird-devops`' Kong
-config) and one shared Cassandra table that two independent pipelines write
-into without coordinating.
+There *is* a real competency-taxonomy service now — `frac-backend` — closing
+what was originally documented as an external gap. But closing that gap
+revealed a bigger one: most of the platform doesn't talk to it. Read
+traffic for `kcmfinal_fw` goes to a same-shaped-but-separate taxonomy inside
+`knowledge-platform`'s generic Framework API, and the two are never
+reconciled anywhere in these 13 repos.
 
 ```mermaid
 flowchart TB
@@ -39,7 +41,7 @@ flowchart TB
     subgraph CbExt["sunbird-cb-ext"]
         SearchBy["SearchByService - browse/search directory"]
         ODCSWorker["OrgDesignationCompetencyMappingServiceImpl + Kafka consumer"]
-        WATVerify["AllocationService/V2 - competency<->FRAC verification"]
+        WATVerify["AllocationService/V2 - competency verification"]
     end
 
     subgraph CbCourse["cb-ext-course-service"]
@@ -53,9 +55,24 @@ flowchart TB
 
     subgraph KP["knowledge-platform"]
         Schema["content schema - competencies..v6 fields, unvalidated"]
+        KMFramework["Generic Framework/Category/Term API - hosts kcmfinal_fw"]
     end
 
-    Frac[("fracentity-service / FRAC framework - kcmfinal_fw - OUTSIDE this trace")]
+    subgraph FB["frac-backend - THE real taxonomy system of record"]
+        FRACCtrl["FRACController - /frac/*"]
+        ConfigPanel["ConfigurationPanel - in-memory node+mapping cache"]
+        Verify["VerificationServiceImpl - L1/L2 review workflow"]
+    end
+
+    MySQL[("MySQL frac_tool - data_node, additional_properties, node_mapping_parent/child")]
+    FracES[("Elasticsearch - frac-commentrating, frac-collection-logs, frac-dictionary, frac-verifiedmapping")]
+    FracKafka(["Kafka dev.telemetry.raw - producer-only audit events"])
+
+    subgraph FD["frac-dictionary - public read mirror, bypasses frac-backend's REST API"]
+        Gatsby["Gatsby static site - build-time ES pull"]
+        DictProxy["Express/Apollo proxy - runtime ES re-query for facet filters"]
+    end
+
     Cass[("Cassandra user_competency_mapping")]
     Redis[("Redis - passbook cache")]
     Kafka(["Kafka - COMPETENCY_ACQUIRED - competency.designation.bulk.upload"])
@@ -72,17 +89,29 @@ flowchart TB
     WAT --> GW
     TagWidget --> GW
 
-    GW -->|"FRAC direct"| Frac
+    GW -->|"FRAC direct: searchNodes, getAllNodes"| FRACCtrl
+    GW -->|"Kong pass-through /competency/*"| FRACCtrl
+    GW -->|"framework/v1/read/kcmfinal_fw"| KMFramework
     GW -->|"Kong pass-through"| SearchBy
     GW -->|"Kong pass-through"| LearnerComp
-    GW -->|"Kong pass-through: /competency/*"| Frac
 
-    SearchBy -->|reads| Frac
-    ODCSWorker -->|"creates/updates terms, publishes"| Frac
-    WATVerify -->|"verify/create"| Frac
+    SearchBy -->|"reads"| FRACCtrl
+    SearchBy -.->|"also reads"| KMFramework
+    ODCSWorker -->|"createFrameworkTerm/publishFramework - NOT frac-backend"| KMFramework
+    WATVerify -->|"verify/create nodes"| FRACCtrl
 
     ODCS -->|"upload"| ODCSWorker
     ODCSWorker <-.->|Kafka| Kafka
+
+    FRACCtrl --> ConfigPanel
+    FRACCtrl --> Verify
+    ConfigPanel -->|"boot-time load, primary read path"| MySQL
+    FRACCtrl -->|"search/feedback/ratings/logs"| FracES
+    FRACCtrl -.->|"every mutation"| FracKafka
+    FRACCtrl -.->|"on verify/update: push + webhook"| Gatsby
+
+    Gatsby -->|"build-time bulk pull"| FracES
+    DictProxy -->|"runtime _search"| FracES
 
     LearnerComp -->|"read/write"| Cass
     LearnerComp -->|"cache"| Redis
@@ -93,17 +122,26 @@ flowchart TB
     UCU -->|"upsert"| Cass
     UCU -->|"resolve tag"| ContentSvc
     ContentSvc -->|reads| Schema
+
+    NoLink["No code anywhere reconciles frac-backend's MySQL/ES data with the kcmfinal_fw mirror"]
+    FRACCtrl -.- NoLink
+    KMFramework -.- NoLink
 ```
 
 ## Responsibilities
 
 | Component | Owns | Repo |
 |---|---|---|
-| `competency.ts` / `frac.ts` | The only two hand-written (non-pass-through) competency routers — call FRAC directly | `sunbird-cb-uiproxy` |
+| `FRACController` (`/frac/*`) | The **real** competency-taxonomy CRUD/search API — one generic `DataNode` model for Competency, CompetencyArea, Role, Activity, Position, KnowledgeResource, Sector, ... | `frac-backend` |
+| `VerificationServiceImpl` | The two-tier (L1 technical review, L2 review board) approval workflow every new/edited node goes through | `frac-backend` |
+| `ConfigurationPanel` | Loads every node + every parent/child mapping into an in-memory cache at boot; almost all reads go through this, not the DB directly | `frac-backend` |
+| Gatsby build (`gatsby-source-elasticsearch`) + Express/Apollo proxy | Public, unauthenticated mirror of `frac-backend`'s Elasticsearch data — never calls `frac-backend`'s own REST API | `frac-dictionary` |
+| Generic Framework/Category/Term API | Hosts the `kcmfinal_fw` framework — a **second**, separately-maintained competency taxonomy that most read traffic and the ODCS write path actually use | `knowledge-platform` |
+| `competency.ts` / `frac.ts` | The only two hand-written (non-pass-through) competency routers — call `frac-backend` directly | `sunbird-cb-uiproxy` |
 | `whitelistApis.ts` | Per-path role gating for every competency route, ~30 entries | `sunbird-cb-uiproxy` |
-| `SearchByService` | Browse/search-by-competency directory, Redis-cached facets pulled from Composite Search + FRAC | `sunbird-cb-ext` |
-| `OrgDesignationCompetencyMappingServiceImpl` + Kafka consumer | ODCS bulk-upload processing — the only code in this trace that *writes new nodes* into the FRAC taxonomy | `sunbird-cb-ext` |
-| `AllocationService`/`AllocationServiceV2` | Work Allocation competency-to-role mapping, FRAC verify/create | `sunbird-cb-ext` |
+| `SearchByService` | Browse/search-by-competency directory, Redis-cached facets pulled from Composite Search + `frac-backend` | `sunbird-cb-ext` |
+| `OrgDesignationCompetencyMappingServiceImpl` + Kafka consumer | ODCS bulk-upload processing — writes new terms into the `kcmfinal_fw` mirror, **not** `frac-backend` | `sunbird-cb-ext` |
+| `AllocationService`/`AllocationServiceV2` | Work Allocation competency-to-role mapping, verify/create against the real `frac-backend` | `sunbird-cb-ext` |
 | `LearnerCompetencyController` + `CompetencyServiceImpl` | The learner's own competency read API — Cassandra + Redis + first-time-user Kafka trigger | `cb-ext-course-service` |
 | Three certificate-generator jobs | Fire `COMPETENCY_ACQUIRED` on certificate/achievement issuance | `knowledge-platform-jobs` |
 | `user-competency-updater` | The **only** consumer that actually resolves a competency tag and upserts the learner's Cassandra record | `knowledge-platform-jobs` |
@@ -111,22 +149,41 @@ flowchart TB
 | Competency Passbook feature module | Full independent client implementation — screens, widgets, models, repository, service | `sunbird-cb-portal`, `igot_karmayogi_mobile` (two separate implementations, no shared code) |
 | `competency-add` shared widget | Reused, independently wired, across community/event/content-request tagging | `sunbird-cb-orgportal` |
 
-**Not found in any of the ten repos traced** (external, out of scope): the
-FRAC/`fracentity-service` competency-CRUD implementation itself, and the
+**Not found in any of the 13 repos traced** (external, out of scope): the
 content-service component that actually populates `competencies_v6` when
-content is tagged.
+content is tagged, `knowledge-platform`'s Framework/Term implementation in
+full depth (only its role as ODCS's write target was confirmed here), and —
+searched for specifically, found nowhere — any code that keeps
+`frac-backend` and the `kcmfinal_fw` mirror in sync.
 
 ## Key design decisions
 
-- **The taxonomy is entirely external, by construction.** Every repo that
-  needs Competency Area/Theme/Sub-Theme data reads it live from FRAC
-  (`kcmfinal_fw`) or from `fracentity-service` via Kong — none of the ten
-  repos in this trace stores or validates the taxonomy itself. This keeps
-  every client thin, but means there is no local cache-invalidation
-  contract: `sunbird-cb-portal`, `sunbird-cb-orgportal`, and
-  `igot_karmayogi_mobile` each independently call the same read endpoint
-  with their own ad hoc caching (Redis on the backend side, in-memory with
-  a TTL on mobile), and no shared library exists between them.
+- **Two taxonomies, not one, with no reconciliation between them.** This is
+  the central finding of this pass. `frac-backend` is a real, purpose-built
+  CRUD+review service for Competency/Role/Activity/Position data. Separately,
+  `knowledge-platform`'s generic, content-agnostic Framework/Category/Term
+  API — the same mechanism behind course subject/board/medium taxonomies —
+  also hosts a competency framework, `kcmfinal_fw`. Most read traffic
+  (`framework/v1/read/kcmfinal_fw`) and the ODCS admin write path hit the
+  *second* one; only `sunbird-cb-uiproxy`'s dedicated FRAC routers and
+  `sunbird-cb-ext`'s Work Allocation verification hit the *first*. Neither
+  service's code references the other. Whether they're kept in sync by a
+  process outside these 13 repos, or have simply diverged over time, isn't
+  answerable from source.
+- **`frac-backend` is a real system of record with a genuine review
+  workflow — invisible to every other repo.** New or edited nodes go
+  through an L1 "technical review" then an L2 "review board" before
+  counting as verified (tracked via parallel `status`/`secondaryStatus`
+  columns); an L2 rejection sends a node *back* to L1 rather than killing
+  it. None of the 11 repos that call into FRAC/`kcmfinal_fw` for reads show
+  any awareness that written data might sit in an unverified state.
+- **`frac-dictionary` bypasses `frac-backend`'s API on principle, not by
+  accident.** It reads Elasticsearch directly — at build time via a bulk
+  index pull, at runtime via its own proxy re-querying the same ES
+  `_search` endpoint — and is wired to rebuild only via a webhook
+  `frac-backend` fires on verify/update. This makes it a fourth read path
+  into competency data, alongside the two taxonomies and the learner's own
+  Cassandra record.
 - **Content tagging is a metadata field, not a relationship.** A content
   item's competencies live in one opaque JSON array
   (`competencies_v6`) on the content node itself — not a join table, not a
@@ -135,19 +192,16 @@ content is tagged.
   any of them, and no migration path that retires the older versions
   (`competencies`, `competencies_v3`, `test_competencies_v4`,
   `competencies_v5` all still exist alongside `competencies_v6`).
-- **Two independent write paths converge on one table, uncoordinated.**
-  `cb-ext-course-service` writes a learner's first competency record
-  synchronously, in-request; `user-competency-updater` writes every
-  subsequent one asynchronously, off a Kafka event chain three jobs deep.
-  Neither pipeline calls the other or shares code — they coordinate purely
-  by writing to the same Cassandra table and by `cb-ext-course-service`
-  publishing the same event type the Flink job already consumes.
-- **ODCS is the one place code writes *to* the taxonomy, not just from
-  it.** Every other repo treats FRAC as read-only. `sunbird-cb-ext`'s
-  bulk-upload worker is the sole exception: it creates and publishes new
-  FRAC framework terms as a side effect of mapping an org's designations,
-  meaning a single Excel upload can permanently add nodes to the shared,
-  platform-wide competency taxonomy.
+- **Two independent write paths converge on one Cassandra table,
+  uncoordinated.** `cb-ext-course-service` writes a learner's first
+  competency record synchronously, in-request; `user-competency-updater`
+  writes every subsequent one asynchronously, off a Kafka event chain three
+  jobs deep. Neither pipeline calls the other or shares code — they
+  coordinate purely by writing to the same table and by
+  `cb-ext-course-service` publishing the same event type the Flink job
+  already consumes. This is a third, distinct data store from either
+  taxonomy above — a learner's *acquired* competencies, not the taxonomy
+  itself.
 - **No competency self-assessment or gap-scoring engine exists in this
   trace.** Everything described as "assessment" here is either opt-in
   self-attestation (current/desired, no scoring) or a disabled/unreachable
@@ -155,8 +209,9 @@ content is tagged.
   engine, if one exists, is out of scope — see
   [AI CBP Tool](../learning-hub/ai-cbp-tool/index.md) for the closest analogue, a
   gap-analysis dashboard that compares a role's *required* competencies
-  (AI-generated) against its recommended courses, which is a distinct
-  mechanism from anything in this trace.
+  (AI-generated, from a fourth static copy of the taxonomy bundled into
+  that service) against its recommended courses — a distinct mechanism
+  from anything in this trace.
 
 See [LLD](lld.md) for the storage reality, state machines, and sequence
 flows, and the [Operations Manual](operations-manual.md) for how these

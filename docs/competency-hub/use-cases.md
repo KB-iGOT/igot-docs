@@ -118,10 +118,13 @@ capped at 1000 rows.
 ### UC-11 · Processing happens asynchronously, off the request
 
 The upload only queues a Kafka event and returns; a background consumer in
-`sunbird-cb-ext` does the real work — validating every row against the
-master competency framework, then creating or updating FRAC "term" nodes
-for any new Competency Theme/Sub-Theme the mapping introduces, associating
-them with the Designation term, and publishing the framework.
+`sunbird-cb-ext` does the real work — validating every row against
+`kcmfinal_fw`, then creating or updating Term nodes for any new Competency
+Theme/Sub-Theme the mapping introduces, in `knowledge-platform`'s generic
+Framework API (**not** `frac-backend` — confirmed by an exhaustive search
+of `frac-backend`'s code, which has no "framework"/"term"/"publish" concept
+at all), associating them with the Designation term, and publishing the
+framework.
 
 - Kafka topic: `{env}.competency.designation.bulk.upload` →
   `OrgDesignationCompetencyBulkUploadConsumer`
@@ -137,7 +140,8 @@ Separately from ODCS, an admin building a Work Allocation/Work Order
 document can attach specific competencies — each with a proficiency
 `level` — to a role or activity, via drag-and-drop (Work Allocation v2) or
 a search-and-select flow (v1). Every attached competency is verified/
-created against FRAC before the document saves.
+created against `frac-backend` (the real one) before the document saves —
+unlike ODCS, this path does hit the actual taxonomy service.
 
 - APIs: `GET apis/protected/v8/frac/COMPETENCY/{search}` (v1 and v2, same
   endpoint) · `GET apis/protected/v8/workallocation/getUserCompetencies/{userId}`
@@ -166,6 +170,57 @@ master taxonomy.
 - APIs: `POST apis/protected/v8/competency/searchCompetency` ·
   `POST apis/protected/v8/competency/addCompetency`
 
+## Reviewer/admin journeys (`frac-backend` — new in this pass)
+
+### UC-16 · Review a newly-created or edited node
+
+Every new/edited Competency, CompetencyArea, Role, Position, or Activity
+node starts `UNVERIFIED`. An `FRAC_REVIEWER_L1` user sees it in their
+inbox, scoped by department/type, and approves (promotes it into the L2
+queue) or rejects (terminal — never reaches L2).
+
+- APIs: `GET /frac/getVerificationList` · `POST /frac/verifyDataNode`
+
+### UC-17 · Final approval by the review board
+
+An `FRAC_REVIEWER_L2` or `FRAC_ADMIN` user gives the final sign-off on an
+L1-approved node (fully verified — only L2/Admin can edit it further from
+this point), or rejects it — which, distinctly from an L1 rejection, sends
+it back to the L1 queue instead of killing it.
+
+- API: `POST /frac/verifyDataNode` (same endpoint as UC-16; branch behaviour
+  is decided by the caller's role, downstream in `VerificationServiceImpl`)
+
+### UC-18 · Bulk-import nodes from a spreadsheet
+
+An admin uploads an `.xlsx` with node rows on sheet 1 and optional
+competency-level rows on sheet 2; parsed rows feed into the same
+create/update path as a single `addDataNode` call.
+
+- API: `POST /frac/uploadDataNode` (multipart)
+
+### UC-19 · Leave feedback/rating on a node
+
+Any user can rate and comment on a node; an Elasticsearch aggregation
+computes its average rating.
+
+- APIs: `POST /frac/nodeFeedback` · `GET /frac/getNodeFeedback` ·
+  `GET /frac/getNodeRatingAverage`
+
+## Public journey (`frac-dictionary`)
+
+### UC-20 · Browse the FRAC taxonomy without logging in
+
+Anyone — no authentication anywhere in this codebase — can browse
+Competencies, Roles, Activities, and Positions ("Designations") on a public
+static site, with faceted filtering (Competency Area/Type/Sector,
+Department/Sector for Positions) and a cross-entity keyword search. A
+per-competency detail page cross-links which Roles/Positions reference it.
+
+- Data path: Elasticsearch directly (build-time bulk pull, runtime
+  re-query via a bundled proxy) — **never** `frac-backend`'s REST API; see
+  APIs/HLD for why this is worth knowing operationally.
+
 ## Edge cases
 
 | Situation | Behaviour |
@@ -178,3 +233,9 @@ master taxonomy.
 | `knowledge-platform-jobs`' "karma-points" modules | Confirmed unrelated despite sitting next to `user-competency-updater` in the same repo and era of commits — karma points/coins are a separate currency system, zero code ties them to the competency taxonomy |
 | Competency schema-version switching (`competencies_v5` vs `competencies_v6`) | Handled independently, ad hoc, in at least four places (`ICompentencyKeys` + `environment.compentencyVersionKey` in `sunbird-cb-orgportal`, `competency.selected.version` in `sunbird-cb-ext`, `competencyVersionKey` in mobile's `app_global_config.dart`, hardcoded `competencies_v6` in `knowledge-platform-jobs`) — no shared constant or config source across repos |
 | Org-wide config misspelling | `sunbird-cb-orgportal`'s global config key is `compentency` (transposed), not `competency` — `publicConfig.compentency \|\| publicConfig.competency` is a fallback for the correct spelling, suggesting the typo shipped first and the fix was added defensively rather than corrected at the source |
+| `FRAC_COMPETENCY_REVIEWER` and `FRAC_ACCESS_COMPENTENCY` roles | Declared in both `sunbird-cb-uiproxy` and `frac-backend`, but confirmed unenforced by *either* — the former is a dead constant in both repos, the latter doesn't exist in `frac-backend`'s code at all. This is now confirmed platform-wide, not just a gateway-repo quirk |
+| `frac-backend`'s `POST /frac/appendMapNodes` | The entire method body is commented out — it always returns `true` and does nothing, despite being a live, callable endpoint |
+| `frac-backend`'s `POST /frac/verifyAllDataNode` (bulk-verify) | Has no role check in the controller, unlike the single-node `verifyDataNode` — a possible authorization gap, not confirmed exploitable from source alone (Kong/uiproxy don't gate it either) |
+| `frac-backend`'s dead `PathRoutes` constants | `ADD_POSITION`, `GET_ALL_POSITIONS`, `ADD_ROLE`, `ADD_ACTIVITY`, `ADD_KNOWLEDGE_RESOURCE`, `GET_CONTENT_SEARCH` are declared but never mapped to any controller method — leftovers from an earlier per-type-endpoint design |
+| `frac-backend`'s standalone `Role`/`Position`/`Activity`/`KnowledgeResource` model classes | Defined but never instantiated anywhere — superseded by the generic `DataNode` model, never deleted |
+| `frac-backend`'s config | Three disagreeing port numbers (`server.port=8091`, Kong routes to `:8083`, Dockerfile `EXPOSE`s `8090`); an unresolved git merge-conflict marker checked into `application.properties` (lines 48-55); `KeycloakValidation.isExpired()` reads as logically inverted — none confirmed as active incidents, all worth a deliberate look before relying on this service in a new environment |
