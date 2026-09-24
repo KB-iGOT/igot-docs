@@ -72,16 +72,18 @@ FEATURES = [
 ]
 
 # ─── Geometry constants ──────────────────────────────────────────────
-CX, CY = 720, 505          # hub center -- the original design's exact value.
-                            # NOTE for whoever adds Learning Hub feature #13:
-                            # the 1440x900 canvas gives the hub far less room
-                            # below it (900-505=395px) than above it (505px)
-                            # at this center, so growing the ring past 12
-                            # bubbles will hit the bottom edge almost
-                            # immediately (check_geometry() below will catch
-                            # it and refuse to write a broken layout). Try
-                            # nudging CY to ~480 first -- that split gives
-                            # comparable headroom on both sides.
+CX, CY = 720, 468          # hub center. The original design used 505, but
+                            # that left the ring's bottom-most bubble
+                            # ("My Assigned Courses," bottom edge at y=883)
+                            # overlapping the "Every feature is
+                            # documented..." hint text, whose band is
+                            # roughly y=856-876 (`.hint { bottom: 24px }` on
+                            # the 900px-tall canvas). 468 clears both that
+                            # hint band below and the topbar/back-pill
+                            # above, with a small safety margin on each
+                            # side -- see SAFE_Y, which now encodes the
+                            # hint band explicitly so this can't silently
+                            # regress as more features are added.
 HUB_R = 102                 # hub bubble radius (204px width / 2)
 HUB_TOP = CY - 102          # .bub.center's "top" style (its own 204px height / 2)
 BASE_COUNT = 12             # the original design's bubble count
@@ -90,9 +92,12 @@ START_ANGLE_DEG = 0         # matches the original design's first bubble (bharat
 
 # The template's own JS (`fit()`) CSS-scales the 1440x900 "#stage" box to
 # fit the viewport on BOTH axes and disables scrolling on desktop -- so
-# every bubble must land inside these margins.
+# every bubble must land inside these margins. The bottom bound is set to
+# clear the ".hint" text band (bottom:24px, ~18-20px tall -> occupies
+# roughly y=856-876), not just the raw 900px canvas edge -- a bubble can
+# be "on canvas" and still visually collide with that text.
 SAFE_X = (55, 1410)
-SAFE_Y = (65, 895)
+SAFE_Y = (65, 848)
 
 
 def ring_radius(n):
