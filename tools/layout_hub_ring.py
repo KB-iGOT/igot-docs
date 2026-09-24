@@ -1,30 +1,31 @@
 #!/usr/bin/env python3
 """
 Generates the Learning Hub's hub-ring bubble layout (connector lines,
-bubble positions, feature count) as a set of concentric, evenly-spaced
-rings, and writes it into karmayogi-docs-explorer.template.html.
+bubble positions, feature count) as ONE ring whose radius grows with the
+feature count, and writes it into karmayogi-docs-explorer.template.html.
 
-Why rings instead of one fixed ring: the original layout hardcoded
-exactly 12 bubbles evenly spaced 30 degrees apart on one ring at radius
-310. That's a wheel with a fixed number of spokes -- a 13th bubble has
-nowhere to go at that radius without overlapping a neighbor.
+Why: the original layout hardcoded exactly 12 bubbles evenly spaced 30
+degrees apart at a fixed radius (310px) -- a 13th bubble had nowhere to
+go without overlapping a neighbor. Two other approaches were tried and
+both looked wrong once rendered: a golden-angle spiral (mathematically
+non-overlapping, but at only 13 points it just reads as scattered, not
+elegant -- that pattern only looks intentional with dozens of points),
+and pinning the original 12 in place with new features orbiting on a
+second, much larger ring (technically correct, but the 13th bubble read
+as a bolted-on appendage rather than a real spoke of the same wheel).
 
-This script keeps that first ring exactly as it was (all 12 legacy
-bubbles are pinned to their original angle, so their pixel position is
-unchanged) and adds new features to a second ring further out, evenly
-spaced among whatever's on that ring. Each ring's capacity is computed
-from its own circumference (bigger ring = more room), so when a ring
-fills up the next feature automatically opens ring 3, then 4, and so on
--- nobody has to redesign the wheel by hand again.
-
-Trade-off, stated plainly: bubbles on a *partially filled* outer ring can
-shift a few degrees when a sibling joins that same ring (spacing =
-360/count changes). A ring that's already full, and every inner ring,
-never moves. This is different from a true phyllotaxis spiral (which
-never moves *any* existing bubble) -- rings were chosen instead because
-they look like the original, intentional wheel; a spiral only reads as
-elegant once you have dozens of points, and at ~13-20 it just looks
-scattered.
+The fix that actually looks right: keep it ONE ring, and let its radius
+scale proportionally with however many features there are --
+    radius(N) = BASE_RADIUS * N / BASE_COUNT
+-- anchored so that N = BASE_COUNT (the original 12) reproduces the
+original 310px radius exactly. All N bubbles are evenly spaced around
+that one ring (360/N degrees apart), so the wheel stays symmetric at any
+size; it just grows a little with each feature, the same way the
+original design already implied it should. The trade-off, stated
+plainly: existing bubbles DO nudge a few degrees (and the ring grows a
+little) every time a feature is added or removed, because 360/N changes.
+That's judged an acceptable, minor cost for staying visually a single,
+always-symmetric wheel -- which is what actually reads as "right" here.
 
 Usage:
     python3 tools/layout_hub_ring.py            # rewrite the template
@@ -41,7 +42,7 @@ from pathlib import Path
 TEMPLATE = Path(__file__).resolve().parent.parent / "karmayogi-docs-explorer.template.html"
 
 # ─── The feature list ────────────────────────────────────────────────
-# (id, label, size_px, font_size_px_or_None, extra, angle_deg_or_None)
+# (id, label, size_px, font_size_px_or_None, extra)
 #   id        -- must match the fdoc's data-fdoc="..." and openFeature('...')
 #   label     -- visible text
 #   size_px   -- bubble diameter; tune per label length (existing values
@@ -50,112 +51,69 @@ TEMPLATE = Path(__file__).resolve().parent.parent / "karmayogi-docs-explorer.tem
 #   extra     -- "" | "assess" (adds the amber "assessment" styling) |
 #                an attribute string like 'id="blended"' if some other
 #                script needs to target this bubble by id
-#   angle_deg -- the 12 original (pre-Sept-2026) features are PINNED at
-#                their original angle on ring 1, so their pixel position
-#                never changes. Leave this None for every new feature --
-#                the script assigns it a ring and an angle automatically.
 #
-# To add a feature: append one tuple at the end with angle_deg=None, then
-# run this script. That's the whole procedure.
+# To add a feature: append one tuple at the end, then run this script.
+# Order determines position around the ring (item i sits at
+# i/N * 360 degrees) -- appending at the end keeps the *relative* order
+# of everything else the same, even though the ring itself regrows.
 FEATURES = [
-    ("bharatkalp",     "Bharat Kalp",                       128, 14,   "",              0),
-    ("blended",        "Blended Program",                   136, None, 'id="blended"',  30),
-    ("chs",            "CHS",                               128, 14,   "",              60),
-    ("assigned",       "My Assigned Courses",               136, 13.5, "",              90),
-    ("eventshub",      "Events Hub",                        128, 14,   "",              120),
-    ("standalone",     "Standalone Assessment",             136, 13.5, "assess",        150),
-    ("peervalidation", "Peer Validation",                   136, 14,   "",              180),
-    ("cap",            "Comprehensive Assessment Program",  144, 13,   "assess",        210),
-    ("pathway",        "Learning Pathway",                  128, 14,   "",              240),
-    ("course",         "Course",                            130, 15,   "",              270),
-    ("aicbp",          "AI CBP Tool",                        136, 13.5, "",              300),
-    ("curated",        "Curated Program",                   136, None, "",              330),
-    ("competencyhub",  "Competency Hub",                    136, 13.5, "",              None),
+    ("bharatkalp",     "Bharat Kalp",                       128, 14,   ""),
+    ("blended",        "Blended Program",                   136, None, 'id="blended"'),
+    ("chs",            "CHS",                               128, 14,   ""),
+    ("assigned",       "My Assigned Courses",               136, 13.5, ""),
+    ("eventshub",      "Events Hub",                        128, 14,   ""),
+    ("standalone",     "Standalone Assessment",             136, 13.5, "assess"),
+    ("peervalidation", "Peer Validation",                   136, 14,   ""),
+    ("cap",            "Comprehensive Assessment Program",  144, 13,   "assess"),
+    ("pathway",        "Learning Pathway",                  128, 14,   ""),
+    ("course",         "Course",                            130, 15,   ""),
+    ("aicbp",          "AI CBP Tool",                        136, 13.5, ""),
+    ("curated",        "Curated Program",                   136, None, ""),
+    ("competencyhub",  "Competency Hub",                    136, 13.5, ""),
 ]
 
 # ─── Geometry constants ──────────────────────────────────────────────
-CX, CY = 720, 505       # hub center -- matches .bub.center's box in the template
-HUB_R = 102              # hub bubble radius (204px width / 2)
-RING1_RADIUS = 310       # unchanged from the original design
-RING_STEP = 170          # radius added per additional ring
-SLOT = 160               # nominal (bubble diameter + gap) used to compute
-                          # how many bubbles fit around a ring's circumference
-RING2_START_OFFSET = 15  # rotate ring 2+ by half a ring-1 slot so a new
-                          # bubble doesn't sit directly behind a ring-1 one
+CX, CY = 720, 480          # hub center. CY is nudged up from the original
+                            # design's 505: the 1440x900 canvas gives the
+                            # hub far less room below it (900-505=395px)
+                            # than above it (505px) at the original center,
+                            # so growing the ring at CY=505 hits the bottom
+                            # edge almost immediately. CY=480 balances that
+                            # (roughly 415px on both sides) while staying
+                            # clear of the top search bar/back button.
+HUB_R = 102                 # hub bubble radius (204px width / 2)
+HUB_TOP = CY - 102          # .bub.center's "top" style (its own 204px height / 2)
+BASE_COUNT = 12             # the original design's bubble count
+BASE_RADIUS = 310           # ...and its radius, at BASE_COUNT bubbles
+START_ANGLE_DEG = 0         # matches the original design's first bubble (bharatkalp, due right of center)
 
 # The template's own JS (`fit()`) CSS-scales the 1440x900 "#stage" box to
 # fit the viewport on BOTH axes and disables scrolling on desktop -- so
 # every bubble must land inside these margins.
 SAFE_X = (55, 1410)
-SAFE_Y = (65, 885)
+SAFE_Y = (65, 895)
 
 
-def ring_radius(ring_num):
-    if ring_num == 1:
-        return RING1_RADIUS
-    return RING1_RADIUS + RING_STEP * (ring_num - 1)
+def ring_radius(n):
+    """Radius for a ring of n evenly-spaced bubbles. Grows with sqrt(n)
+    rather than linearly -- gentler growth buys noticeably more headroom
+    before the ring reaches the canvas edge (see the module docstring's
+    reasoning for CY) -- anchored so BASE_COUNT bubbles reproduce the
+    original design's 310px radius exactly."""
+    return BASE_RADIUS * math.sqrt(n / BASE_COUNT)
 
 
-def ring_capacity(ring_num):
-    r = ring_radius(ring_num)
-    return max(1, math.floor(2 * math.pi * r / SLOT))
-
-
-def assign_rings():
-    """Pinned (ring-1, explicit-angle) features go straight to their
-    fixed spot. Every other feature, in FEATURES order, fills the first
-    ring with spare capacity; once a ring is full the next feature opens
-    the next ring."""
-    pinned = [f for f in FEATURES if f[5] is not None]
-    auto = [f for f in FEATURES if f[5] is None]
-
-    ring1_capacity = ring_capacity(1)
-    if len(pinned) > ring1_capacity:
-        raise SystemExit(
-            f"{len(pinned)} features are pinned to ring 1 but it only holds "
-            f"{ring1_capacity} at SLOT={SLOT} -- widen SLOT or unpin some."
-        )
-
-    placed = {f[0]: dict(id=f[0], label=f[1], size=f[2], fs=f[3], extra=f[4],
-                          ring=1, angle=f[5]) for f in pinned}
-
-    ring_members = {1: list(pinned)}
-    ring = 2
-    for f in auto:
-        while True:
-            cap = ring_capacity(ring)
-            cur = ring_members.get(ring, [])
-            if len(cur) < cap:
-                cur.append(f)
-                ring_members[ring] = cur
-                placed[f[0]] = dict(id=f[0], label=f[1], size=f[2], fs=f[3],
-                                     extra=f[4], ring=ring, angle=None)
-                break
-            ring += 1
-
-    # evenly space every ring's auto-angle members among themselves
-    for ring_num, members in ring_members.items():
-        if ring_num == 1:
-            continue
-        auto_members = [m for m in members if m[5] is None]
-        n = len(auto_members)
-        for idx, m in enumerate(auto_members):
-            angle = RING2_START_OFFSET + (idx / n) * 360 if n else RING2_START_OFFSET
-            placed[m[0]]["angle"] = angle
-
-    # return in original FEATURES order
-    return [placed[f[0]] for f in FEATURES]
-
-
-def compute_positions(items):
+def compute_positions():
+    n = len(FEATURES)
+    r = ring_radius(n)
     pts = []
-    for it in items:
-        r = ring_radius(it["ring"])
-        theta = math.radians(it["angle"])
+    for i, (fid, label, size, fs, extra) in enumerate(FEATURES):
+        theta = math.radians(START_ANGLE_DEG + i * 360 / n)
         bx = CX + r * math.cos(theta)
         by = CY + r * math.sin(theta)
-        pts.append(dict(it, bx=bx, by=by, rad=it["size"] / 2, r=r))
-    return pts
+        pts.append(dict(id=fid, label=label, size=size, fs=fs, extra=extra,
+                         bx=bx, by=by, rad=size / 2))
+    return r, pts
 
 
 def check_geometry(pts):
@@ -177,9 +135,18 @@ def check_geometry(pts):
     return problems
 
 
-def render_block(pts):
+def worst_clearance(pts):
+    worst = min(math.hypot(p["bx"] - CX, p["by"] - CY) - (HUB_R + p["rad"]) for p in pts)
+    for i in range(len(pts)):
+        for j in range(i + 1, len(pts)):
+            a, b = pts[i], pts[j]
+            d = math.hypot(a["bx"] - b["bx"], a["by"] - b["by"]) - (a["rad"] + b["rad"])
+            worst = min(worst, d)
+    return worst
+
+
+def render_block(radius, pts):
     lines, buttons = [], []
-    rings_in_use = sorted(set(p["ring"] for p in pts))
     for p in pts:
         bx, by = round(p["bx"]), round(p["by"])
         left, top = round(p["bx"] - p["size"] / 2), round(p["by"] - p["size"] / 2)
@@ -196,12 +163,6 @@ def render_block(pts):
             f"onclick=\"openFeature('{p['id']}')\">{p['label']}</button>"
         )
 
-    guide_circles = [
-        f'      <circle cx="{CX}" cy="{CY}" r="{ring_radius(r)}" stroke="#1B4CA126" '
-        f'stroke-width="1.5" stroke-dasharray="5 7"/>'
-        for r in rings_in_use
-    ]
-
     n = len(pts)
     parts = [
         "    <!-- HUB-RING:BEGIN — generated by tools/layout_hub_ring.py, do not hand-edit.",
@@ -209,10 +170,10 @@ def render_block(pts):
         "         it rewrites everything between these two markers (lines + buttons + count). -->",
         '    <svg class="orbitbg" width="1440" height="900" fill="none">',
         *lines,
-        *guide_circles,
+        f'      <circle cx="{CX}" cy="{CY}" r="{round(radius)}" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>',
         "    </svg>",
         "",
-        '    <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">',
+        f'    <div class="bub center" style="left:618px; top:{HUB_TOP}px; width:204px; height:204px;">',
         '      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>',
         '      <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>',
         f'      <div class="sub">{n} features</div>',
@@ -233,13 +194,14 @@ LANDING_COUNT_RE = re.compile(
 def main():
     check_only = "--check" in sys.argv
 
-    items = assign_rings()
-    pts = compute_positions(items)
+    radius, pts = compute_positions()
     problems = check_geometry(pts)
     if problems:
-        raise SystemExit("Layout has problems, fix FEATURES/constants and re-run:\n  " + "\n  ".join(problems))
+        raise SystemExit(
+            "Layout has problems, fix FEATURES/constants and re-run:\n  " + "\n  ".join(problems)
+        )
 
-    new_block = render_block(pts)
+    new_block = render_block(radius, pts)
 
     html = TEMPLATE.read_text()
     if not MARKER_RE.search(html):
@@ -250,11 +212,8 @@ def main():
         raise SystemExit("Landing page's Learning Hub feature-count span not found.")
     updated = LANDING_COUNT_RE.sub(rf"\g<1>{len(pts)}\g<2>", updated, count=1)
 
-    ring_counts = {}
-    for p in pts:
-        ring_counts[p["ring"]] = ring_counts.get(p["ring"], 0) + 1
-    summary = ", ".join(f"ring {r}: {c}/{ring_capacity(r)}" for r, c in sorted(ring_counts.items()))
-    print(f"laid out {len(pts)} features -- {summary}")
+    print(f"laid out {len(pts)} features on one ring, radius={radius:.1f}px, "
+          f"worst clearance={worst_clearance(pts):.1f}px")
 
     if check_only:
         if updated != html:
