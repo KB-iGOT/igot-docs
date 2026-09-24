@@ -69,18 +69,19 @@ FEATURES = [
     ("course",         "Course",                            130, 15,   ""),
     ("aicbp",          "AI CBP Tool",                        136, 13.5, ""),
     ("curated",        "Curated Program",                   136, None, ""),
-    ("competencyhub",  "Competency Hub",                    136, 13.5, ""),
 ]
 
 # ─── Geometry constants ──────────────────────────────────────────────
-CX, CY = 720, 480          # hub center. CY is nudged up from the original
-                            # design's 505: the 1440x900 canvas gives the
-                            # hub far less room below it (900-505=395px)
-                            # than above it (505px) at the original center,
-                            # so growing the ring at CY=505 hits the bottom
-                            # edge almost immediately. CY=480 balances that
-                            # (roughly 415px on both sides) while staying
-                            # clear of the top search bar/back button.
+CX, CY = 720, 505          # hub center -- the original design's exact value.
+                            # NOTE for whoever adds Learning Hub feature #13:
+                            # the 1440x900 canvas gives the hub far less room
+                            # below it (900-505=395px) than above it (505px)
+                            # at this center, so growing the ring past 12
+                            # bubbles will hit the bottom edge almost
+                            # immediately (check_geometry() below will catch
+                            # it and refuse to write a broken layout). Try
+                            # nudging CY to ~480 first -- that split gives
+                            # comparable headroom on both sides.
 HUB_R = 102                 # hub bubble radius (204px width / 2)
 HUB_TOP = CY - 102          # .bub.center's "top" style (its own 204px height / 2)
 BASE_COUNT = 12             # the original design's bubble count

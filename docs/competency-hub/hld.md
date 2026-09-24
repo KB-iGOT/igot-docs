@@ -153,7 +153,7 @@ content is tagged.
   self-attestation (current/desired, no scoring) or a disabled/unreachable
   module (`app/competencies` on web). A real competency quiz/gap-analysis
   engine, if one exists, is out of scope — see
-  [AI CBP Tool](../ai-cbp-tool/index.md) for the closest analogue, a
+  [AI CBP Tool](../learning-hub/ai-cbp-tool/index.md) for the closest analogue, a
   gap-analysis dashboard that compares a role's *required* competencies
   (AI-generated) against its recommended courses, which is a distinct
   mechanism from anything in this trace.

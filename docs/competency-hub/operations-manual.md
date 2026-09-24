@@ -171,7 +171,7 @@ Passbook, and org designation/role mapping. AI CBP Tool is a separate,
 already-documented feature that uses the same Behavioural/Functional/
 Domain vocabulary (from a bundled dataset, not the live FRAC API) to
 AI-generate and approve Capacity Building Plans — see its own
-[Operations Manual](../ai-cbp-tool/operations-manual.md) for that side.
+[Operations Manual](../learning-hub/ai-cbp-tool/operations-manual.md) for that side.
 
 > **Verification boundary:** this manual is sourced from the ten repos
 > listed in the HLD/LLD. `fracentity-service`'s own operations behaviour,

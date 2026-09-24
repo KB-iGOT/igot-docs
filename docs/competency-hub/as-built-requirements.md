@@ -149,7 +149,7 @@ does today (as-built), not what was originally intended. Requirement IDs:
 - The exact status-value enum and any retry/resume behaviour for a
   partially-failed ODCS bulk-upload batch.
 - `cbp-ai-service`, `ai-cbp-mdo-service`, and `cbp-ai-ui` — deliberately not
-  re-documented here; see [AI CBP Tool](../ai-cbp-tool/as-built-requirements.md)
+  re-documented here; see [AI CBP Tool](../learning-hub/ai-cbp-tool/as-built-requirements.md)
   for their own, already-traced requirement set. Those three repos use the
   same Behavioural/Functional/Domain vocabulary from a bundled KCM dataset,
   not the live FRAC API this feature reads from — the relationship between

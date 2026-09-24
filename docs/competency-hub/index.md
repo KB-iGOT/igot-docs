@@ -49,7 +49,7 @@ into one shared Cassandra table.
     - `sunbird-cb-workflow` (`cbrelease-4.8.39.2`, `8ae07a0`) — checked and
       confirmed to have **zero** competency involvement; listed here only
       because it was in scope and ruled out (see the honest gap below).
-- **Not documented here — see [AI CBP Tool](../ai-cbp-tool/index.md)
+- **Not documented here — see [AI CBP Tool](../learning-hub/ai-cbp-tool/index.md)
   instead**: `cbp-ai-service`, `ai-cbp-mdo-service`, `cbp-ai-ui`. These
   three consume the same Behavioural/Functional/Domain taxonomy (sourced
   from a bundled KCM dataset, not the live FRAC API) to AI-generate and
