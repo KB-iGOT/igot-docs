@@ -325,7 +325,7 @@
     </div>
 
     <button class="bub hub" id="learn-hub" style="left:646px; top:121px; width:148px; height:148px;" onclick="openHub(this)">
-      Learning Hub<span class="sub">12 features</span>
+      Learning Hub<span class="sub">13 features</span>
     </button>
     <button class="bub hub" style="left:941px; top:335px; width:148px; height:148px;" onclick="notWired()">
       Discussion Hub<span class="sub">coming soon</span>
@@ -376,13 +376,14 @@
       <line x1="720" y1="505" x2="875" y2="773" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="875" y2="237" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="565" y2="773" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="1029" y2="196" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
     <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>
-      <div class="sub">12 features</div>
+      <div class="sub">13 features</div>
     </div>
 
     <button class="bub item" style="left:655px; top:130px; width:130px; height:130px; font-size:15px" onclick="openFeature('course')">Course</button>
@@ -397,6 +398,7 @@
     <button class="bub item" style="left:811px; top:709px; width:128px; height:128px; font-size:14px" onclick="openFeature('chs')">CHS</button>
     <button class="bub item" style="left:807px; top:169px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('aicbp')">AI CBP Tool</button>
     <button class="bub item" style="left:501px; top:709px; width:128px; height:128px; font-size:14px" onclick="openFeature('eventshub')">Events Hub</button>
+    <button class="bub item" style="left:961px; top:128px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('competencyhub')">Competency Hub</button>
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
   </section>
@@ -1203,6 +1205,89 @@
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/events-hub/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/events-hub/operations-manual.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/events-hub/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/events-hub/as-built-requirements.md</div></div>
     </div><!-- /fdoc eventshub -->
+
+    <!-- ═══ COMPETENCY HUB ═══ -->
+    <div class="fdoc" data-fdoc="competencyhub" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M8.5 12.5 6 21l6-3 6 3-2.5-8.5"/></svg></div>
+        <div>
+          <div class="fp-title">Competency Hub</div>
+          <div class="fp-sub">The Behavioural/Functional/Domain competency taxonomy every client tags itself against, plus the Passbook, browse/search and org-designation-mapping surfaces built on it &mdash; no owning service, just readers and writers around one external framework and one shared Cassandra table.</div>
+          <div class="fp-chips"><span class="chip">Repos&nbsp; <code>sunbird-cb-portal</code> &middot; <code>sunbird-cb-orgportal</code> &middot; <code>sunbird-cb-uiproxy</code> &middot; <code>sunbird-cb-ext</code> &middot; <code>cb-ext-course-service</code> &middot; <code>igot_karmayogi_mobile</code> &middot; +5 more</span><span class="chip">Taxonomy&nbsp; <code>kcmfinal_fw</code> via external <code>fracentity-service</code></span><span class="chip ok">&#10003; Verified from 11 repos &middot; Sept 2026</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+        <button class="fp-tab" role="tab" data-tab="asbuilt" onclick="setTab(this)">As-Built</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">Every competency a Karmayogi sees traces back to one external taxonomy &mdash; a FRAC framework named <code>kcmfinal_fw</code> ("Karmayogi Competency Model"), read over HTTP by nearly every repo here but implemented by none of them. Content gets tagged against it through an unvalidated <code>competencies_v6</code> metadata field; a learner's own <em>acquired</em> competencies live in one Cassandra table written from two uncoordinated directions &mdash; synchronously on a learner's first Passbook read, and asynchronously whenever a certificate-generator job fires a <code>COMPETENCY_ACQUIRED</code> Kafka event. Learners browse and self-assess through a Competency Passbook (independently built on both web and mobile); MDO admins map their organisation's designations to competencies through an Excel bulk-upload that &mdash; uniquely in this feature &mdash; writes new nodes back into the shared taxonomy itself.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> the real competency taxonomy CRUD API is <code>fracentity-service</code>, confirmed to exist by <code>sunbird-devops</code>'s Kong routing but entirely outside these eleven repos. Three closely-related repos &mdash; <code>cbp-ai-service</code>, <code>ai-cbp-mdo-service</code>, <code>cbp-ai-ui</code> &mdash; are deliberately not re-documented here; they're already covered by <a href="#" onclick="openFeature('aicbp'); return false;">AI CBP Tool</a>, which uses the same competency vocabulary from a bundled dataset to AI-generate Capacity Building Plans.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>No Competency Service, by construction</b><p>Every repo either tags content with an opaque array, proxies straight through to an external framework, or upserts into one shared Cassandra table &mdash; there's no owning backend for the feature as a whole.</p></div>
+          <div class="fp-card"><b>Two uncoordinated writers, one table</b><p><code>cb-ext-course-service</code>'s first-read write and <code>knowledge-platform-jobs</code>' certificate-triggered write never call each other &mdash; they just happen to write the same Cassandra table.</p></div>
+          <div class="fp-card"><b>ODCS writes to the taxonomy, everything else reads</b><p>An MDO admin's designation-mapping bulk upload is the one path that creates new nodes in the shared FRAC framework, not just reads from it.</p></div>
+        </div>
+        <h2 class="fp-h2">How a Karmayogi experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 &middot; SEE</b><p>Competency tags on course/content cards, read straight off <code>competencies_v6</code></p></div>
+          <div class="fp-step"><b>2 &middot; PASSBOOK</b><p>Open a Behavioural/Functional/Domain breakdown of every competency earned</p></div>
+          <div class="fp-step"><b>3 &middot; BROWSE</b><p>Find content by competency, not just by course</p></div>
+          <div class="fp-step"><b>4 &middot; SELF-ATTEST</b><p>Declare current vs. desired competencies during profile setup</p></div>
+          <div class="fp-step"><b>5 &middot; EARN PASSIVELY</b><p>A certificate quietly upserts the tagged competency into the Passbook</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How a Karmayogi experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab shows the full topology across the taxonomy, content schema, and the two competency-write pipelines; <b style="color:#1B4CA1">LLD</b> covers the Cassandra/Elasticsearch storage reality and the ODCS write sequence.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">AI CBP Tool</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Discover content by competency</b><p>Two generations of a Browse-by-Competency directory on web, "Explore by Competency" on mobile &mdash; no shared code between the platforms.</p><div class="api">GET <code>searchBy/v2/competency</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 &middot; Open the Competency Passbook</b><p>A personal record of every competency acquired, grouped Area&nbsp;&rarr;&nbsp;Theme&nbsp;&rarr;&nbsp;Sub-Theme, tagged by source &mdash; independently built in full on both web and mobile.</p><div class="api">GET <code>learner/v1/competency/read</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-5 &middot; Self-attest current vs. desired competencies</b><p>Opt-in self-reporting during profile-v3 setup, each at a self-assessed proficiency level &mdash; not a scored test; no competency quiz engine exists anywhere in this trace.</p><div class="api">POST <code>user/v1/extPatch</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-6 &middot; Earn a competency passively via certificate</b><p>The load-bearing background mechanism: a certificate fires a Kafka event that a Flink job resolves into an upsert &mdash; the learner does nothing beyond completing the content.</p><div class="api">Kafka <code>COMPETENCY_ACQUIRED</code></div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-10 &middot; Bulk-upload an ODCS designation&harr;competency mapping</b><p>Uploads an Excel mapping capped at 1000 rows; processing is entirely asynchronous, off a Kafka event, not inline with the upload call.</p><div class="api">POST <code>organisation/v1/competencyDesignationMappings/bulkUpload/{frameworkId}</code></div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-11 &middot; Processing writes new terms into FRAC</b><p>The async worker validates every row, then creates or updates FRAC framework terms and publishes the framework &mdash; the one path in this feature that mutates the shared taxonomy.</p><div class="api">Kafka <code>competency.designation.bulk.upload</code></div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-13 &middot; Map competencies onto a Work Allocation role</b><p>Attaches competencies (with a proficiency level) to a role/activity, verified/created against FRAC before the document saves.</p><div class="api">GET <code>frac/COMPETENCY/{query}</code></div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-14 &middot; Tag a community, event, or content request</b><p>One shared competency-picker widget, independently reused across three unrelated features in the org portal.</p><div class="api">POST <code>framework/v1/read/kcmfinal_fw</code></div></div>
+          <div class="uc-card"><div class="who">Author</div><b class="t">UC-15 &middot; Tag content with a competency while authoring</b><p>Autocomplete search against the taxonomy; a "Submit Competency" dialog lets an author request a new one be added to the master.</p><div class="api">POST <code>competency/searchCompetency</code></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/competency-hub/apis.md"></article><div class="md-src">source: docs/learning-hub/competency-hub/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/competency-hub/hld.md"></article><div class="md-src">source: docs/learning-hub/competency-hub/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/competency-hub/lld.md"></article><div class="md-src">source: docs/learning-hub/competency-hub/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/competency-hub/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/competency-hub/operations-manual.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/competency-hub/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/competency-hub/as-built-requirements.md</div></div>
+    </div><!-- /fdoc competencyhub -->
 
     <!-- ═══ EXPLORE CONTENT (main-page feature) ═══ -->
     <div class="fdoc" data-fdoc="explore" hidden>

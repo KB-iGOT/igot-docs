@@ -114,3 +114,11 @@ nav:
           - LLD: learning-hub/events-hub/lld.md
           - Operations Manual: learning-hub/events-hub/operations-manual.md
           - As-Built Requirements: learning-hub/events-hub/as-built-requirements.md
+      - Competency Hub:
+          - learning-hub/competency-hub/index.md
+          - Use Cases: learning-hub/competency-hub/use-cases.md
+          - APIs: learning-hub/competency-hub/apis.md
+          - HLD: learning-hub/competency-hub/hld.md
+          - LLD: learning-hub/competency-hub/lld.md
+          - Operations Manual: learning-hub/competency-hub/operations-manual.md
+          - As-Built Requirements: learning-hub/competency-hub/as-built-requirements.md
