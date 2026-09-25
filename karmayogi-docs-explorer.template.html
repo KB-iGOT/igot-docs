@@ -325,7 +325,7 @@
     </div>
 
     <button class="bub hub" id="learn-hub" style="left:646px; top:121px; width:148px; height:148px;" onclick="openHub(this)">
-      Learning Hub<span class="sub">12 features</span>
+      Learning Hub<span class="sub">13 features</span>
     </button>
     <button class="bub hub" style="left:941px; top:335px; width:148px; height:148px;" onclick="notWired()">
       Discussion Hub<span class="sub">coming soon</span>
@@ -376,13 +376,14 @@
       <line x1="720" y1="505" x2="875" y2="773" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="875" y2="237" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="565" y2="773" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="1138" y2="617" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
     <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>
-      <div class="sub">12 features</div>
+      <div class="sub">13 features</div>
     </div>
 
     <button class="bub item" style="left:655px; top:130px; width:130px; height:130px; font-size:15px" onclick="openFeature('course')">Course</button>
@@ -397,6 +398,7 @@
     <button class="bub item" style="left:811px; top:709px; width:128px; height:128px; font-size:14px" onclick="openFeature('chs')">CHS</button>
     <button class="bub item" style="left:807px; top:169px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('aicbp')">AI CBP Tool</button>
     <button class="bub item" style="left:501px; top:709px; width:128px; height:128px; font-size:14px" onclick="openFeature('eventshub')">Events Hub</button>
+    <button class="bub item" style="left:1074px; top:553px; width:128px; height:128px; font-size:13px" onclick="openFeature('agk')">Amrit Gyaan Kosh</button>
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
   </section>
@@ -1203,6 +1205,87 @@
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/events-hub/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/events-hub/operations-manual.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/events-hub/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/events-hub/as-built-requirements.md</div></div>
     </div><!-- /fdoc eventshub -->
+
+    <!-- ═══ AMRIT GYAAN KOSH ═══ -->
+    <div class="fdoc" data-fdoc="agk" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg></div>
+        <div>
+          <div class="fp-title">Amrit Gyaan Kosh</div>
+          <div class="fp-sub">A knowledge-resource discovery hub &mdash; PDFs, videos, audio and links tagged by sector, sub-sector, resource category, SDGs, state/UT and year &mdash; shipped as two independent client implementations, web and mobile, with no dedicated backend of its own.</div>
+          <div class="fp-chips"><span class="chip">Route&nbsp; <code>app/amrit-gyaan-kosh</code> (web) &middot; <code>/knowledgeResourcesPage</code> (mobile)</span><span class="chip">Backend&nbsp; none &mdash; generic content search + a sector-taxonomy API</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+        <button class="fp-tab" role="tab" data-tab="asbuilt" onclick="setTab(this)">As-Built</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A user opens Amrit Gyaan Kosh (code name &ldquo;Gyaan Karmayogi&rdquo;) from a hub tile (mobile) or a direct route (web), and lands on a page split into &ldquo;Case Studies&rdquo; (content authored by the Capacity Building Commission) and &ldquo;Other Resources&rdquo;, filterable by sector, sub-sector, resource category, SDG, state/UT and year. Opening a resource routes into a mime-type-dispatching player &mdash; PDF, audio, YouTube or video &mdash; that wraps a shared platform viewer library. The web portal and mobile app each built this independently, in parallel.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> there is no &ldquo;Amrit Gyaan Kosh service&rdquo; anywhere in the eight repos traced for this feature. Both clients call a generic content-search endpoint that is not implemented in any repo analyzed, and the Case-Studies/Other-Resources split is just a content filter (an org-id match) configured twice, independently, once per platform &mdash; with no shared source of truth between them.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>No dedicated backend</b><p>The entire server-side footprint is a handful of unconstrained schema fields in <code>knowledge-platform</code> and a sector-taxonomy CRUD API in <code>sunbird-cb-ext</code>.</p></div>
+          <div class="fp-card"><b>Two clients, no shared contract</b><p>Web and mobile each declare their own field-name constants and request-building logic for the same metadata &mdash; they agree today by convention, not by a shared library.</p></div>
+          <div class="fp-card"><b>Authoring is generic</b><p>Resource content is created through the platform's ordinary content-creation flow; no dedicated AGK authoring screen exists anywhere.</p></div>
+        </div>
+        <h2 class="fp-h2">How a Karmayogi experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 &middot; FIND</b><p>Hub tile (mobile) or direct route/deep link (web, incl. from global search and the AI assistant)</p></div>
+          <div class="fp-step"><b>2 &middot; LAND</b><p>Facet chips, a content-strip carousel, Case Studies vs Other Resources tabs</p></div>
+          <div class="fp-step"><b>3 &middot; FILTER</b><p>Sector, sub-sector, resource category, SDG, state/UT, year</p></div>
+          <div class="fp-step"><b>4 &middot; VIEW ALL</b><p>Paginated / infinite-scroll grid of matching content</p></div>
+          <div class="fp-step"><b>5 &middot; OPEN</b><p>Mime-type player: PDF, audio, YouTube or video</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How a Karmayogi experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab covers the topology across all eight repos traced, incl. the missing search-service gap; <b style="color:#1B4CA1">LLD</b> covers file inventories, routing tables and the content schema fields.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">Bharat Kalp</span>
+            <span class="side-pill">Course</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi (web)</div><b class="t">UC-1 &middot; Land on the AGK home page</b><p>Facet counts and the sector taxonomy load in parallel, then render Case Studies and Other Resources strips.</p><div class="api">POST <code>sunbirdigot/v4/search</code> &middot; GET <code>catalog/v1/sector</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi (web)</div><b class="t">UC-3 &middot; Open &ldquo;view all&rdquo;</b><p>A richer filter set with pagination and infinite scroll.</p><div class="api">POST <code>sunbirdigot/search</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi (web)</div><b class="t">UC-5 &middot; Open a resource</b><p>Routes into a mime-type-dispatching player; global search and the AI assistants deep-link straight in from outside the module.</p></div>
+          <div class="uc-card"><div class="who">Karmayogi (mobile)</div><b class="t">UC-7 &middot; Enter from the explore hub</b><p>A remote-config-driven &ldquo;AGK&rdquo; tile opens the landing screen and fires an impression telemetry event.</p></div>
+          <div class="uc-card"><div class="who">Karmayogi (mobile)</div><b class="t">UC-9 &middot; Filter and view all</b><p>Sector/sub-sector/category/SDG/state filters plus a year slider, paginated results.</p></div>
+          <div class="uc-card"><div class="who">Karmayogi (mobile)</div><b class="t">UC-10 &middot; Open a resource</b><p>Player plus sector/sub-sector display and a share action.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/amrit-gyaan-kosh/apis.md"></article><div class="md-src">source: docs/learning-hub/amrit-gyaan-kosh/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/amrit-gyaan-kosh/hld.md"></article><div class="md-src">source: docs/learning-hub/amrit-gyaan-kosh/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/amrit-gyaan-kosh/lld.md"></article><div class="md-src">source: docs/learning-hub/amrit-gyaan-kosh/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/amrit-gyaan-kosh/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/amrit-gyaan-kosh/operations-manual.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/amrit-gyaan-kosh/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/amrit-gyaan-kosh/as-built-requirements.md</div></div>
+    </div><!-- /fdoc agk -->
 
     <!-- ═══ EXPLORE CONTENT (main-page feature) ═══ -->
     <div class="fdoc" data-fdoc="explore" hidden>
