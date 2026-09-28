@@ -115,16 +115,18 @@ sequenceDiagram
         Px->>Px: role check (PUBLIC/VOLUNTEER)
         Px->>K: forward (ignorePath) to KONG_API_BASE/insights
         K->>Ext: rewritten to POST /user/v2/insights (not confirmed in any repo)
-        Ext->>R: GET user_insights_<userId>
+        Ext->>R: GET user_insights_ + userId
         alt cache hit
             R-->>Ext: cached claps (dates refreshed)
         else cache miss
             Ext->>PG: findById(userId)
             PG-->>Ext: row, or nothing
-            Ext->>R: SET user_insights_<userId> (TTL 24h) — even if empty
+            Ext->>R: SET user_insights_ + userId, TTL 24h — even if empty
         end
         Ext-->>K: { weekly-claps, nudges }
-        K-->>Px-->>Svc-->>ISB: response
+        K-->>Px: response
+        Px-->>Svc: response
+        Svc-->>ISB: response
         ISB->>ISB: alias weekly-claps -> weeklyClaps
         ISB-->>U: render WeeklyClapsComponent
     else gate fails
