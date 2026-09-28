@@ -114,3 +114,11 @@ nav:
           - LLD: learning-hub/events-hub/lld.md
           - Operations Manual: learning-hub/events-hub/operations-manual.md
           - As-Built Requirements: learning-hub/events-hub/as-built-requirements.md
+      - Weekly Claps:
+          - learning-hub/weekly-claps/index.md
+          - Use Cases: learning-hub/weekly-claps/use-cases.md
+          - APIs: learning-hub/weekly-claps/apis.md
+          - HLD: learning-hub/weekly-claps/hld.md
+          - LLD: learning-hub/weekly-claps/lld.md
+          - Operations Manual: learning-hub/weekly-claps/operations-manual.md
+          - As-Built Requirements: learning-hub/weekly-claps/as-built-requirements.md
