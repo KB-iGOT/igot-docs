@@ -5,6 +5,20 @@ code-verified technical documentation for the iGOT Karmayogi platform,
 maintained as Markdown (docs-as-code) and paired with a visual, interactive
 **Docs Explorer**.
 
+## Published site
+
+The **Docs Explorer** is published at **https://kb-igot.github.io/igot-docs/**
+by `.github/workflows/docs.yml`: on every push to `main` that touches `docs/`,
+`tools/` or the explorer template, it runs `tools/build_docs_explorer.py` and
+deploys the result as the site's `index.html` (so the published copy always
+reflects `docs/`, whether or not the committed `karmayogi-docs-explorer.html`
+was rebuilt).
+
+One-time setup: repo **Settings → Pages → Source: GitHub Actions**. Because this
+repo is private, Pages needs a GitHub Pro / Team / Enterprise plan; on Enterprise
+the site can be restricted to org members under the same Pages setting,
+otherwise it is publicly readable once enabled.
+
 ## What's in this repo
 
 | Path | What it is |
