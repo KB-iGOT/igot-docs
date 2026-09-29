@@ -74,6 +74,7 @@ FEATURES = [
     ("weeklyclaps",    "Weekly Claps",                     112, 13,   ""),
     ("trainingplan",   "Training Plan",                    132, 14,   ""),
     ("agk",             "Amrit Gyaan Kosh",                   90,  10.5, ""),
+    ("aiassessment",   "AI Assessment Tool",                 128, 13,   ""),
 ]
 
 # ─── Geometry constants ──────────────────────────────────────────────
