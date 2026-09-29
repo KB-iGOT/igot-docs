@@ -194,3 +194,11 @@ nav:
           - LLD: learning-hub/amrit-gyaan-kosh/lld.md
           - Operations Manual: learning-hub/amrit-gyaan-kosh/operations-manual.md
           - As-Built Requirements: learning-hub/amrit-gyaan-kosh/as-built-requirements.md
+      - Moderated Content:
+          - learning-hub/moderated-content/index.md
+          - Use Cases: learning-hub/moderated-content/use-cases.md
+          - APIs: learning-hub/moderated-content/apis.md
+          - HLD: learning-hub/moderated-content/hld.md
+          - LLD: learning-hub/moderated-content/lld.md
+          - Operations Manual: learning-hub/moderated-content/operations-manual.md
+          - As-Built Requirements: learning-hub/moderated-content/as-built-requirements.md

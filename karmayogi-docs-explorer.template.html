@@ -325,7 +325,7 @@
     </div>
 
     <button class="bub hub" id="learn-hub" style="left:646px; top:121px; width:148px; height:148px;" onclick="openHub(this)">
-      Learning Hub<span class="sub">20 features</span>
+      Learning Hub<span class="sub">21 features</span>
     </button>
     <button class="bub hub" style="left:941px; top:335px; width:148px; height:148px;" onclick="openFeature('discussionhub')">
       Discussion Hub<span class="sub">1 feature</span>
@@ -387,13 +387,14 @@
       <line x1="720" y1="456" x2="911" y2="193" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="456" x2="982" y2="265" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="456" x2="1028" y2="355" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="456" x2="356" y2="641" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <circle cx="720" cy="456" r="324" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
     <div class="bub center" style="left:618px; top:354px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>
-      <div class="sub">20 features</div>
+      <div class="sub">21 features</div>
     </div>
 
     <button class="bub item" style="left:997px; top:408px; width:95px; height:95px; font-size:14px" onclick="openFeature('bharatkalp')">Bharat Kalp</button>
@@ -416,6 +417,7 @@
     <button class="bub item" style="left:863px; top:146px; width:95px; height:95px; font-size:13px" onclick="openFeature('aiassessment')">AI Assessment Tool</button>
     <button class="bub item" style="left:935px; top:217px; width:95px; height:95px; font-size:14px" onclick="openFeature('marketplace')">Marketplace</button>
     <button class="bub item" style="left:979px; top:306px; width:99px; height:99px; font-size:12px" onclick="openFeature('unenroll')">Unenrollment of Courses</button>
+    <button class="bub item" style="left:308px; top:593px; width:95px; height:95px; font-size:13px" onclick="openFeature('moderatedcontent')">Moderated Content</button>
     <!-- HUB-RING:END -->
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
@@ -1373,6 +1375,86 @@
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/unenrollment-of-courses/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/unenrollment-of-courses/operations-manual.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/unenrollment-of-courses/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/unenrollment-of-courses/as-built-requirements.md</div></div>
     </div><!-- /fdoc unenroll -->
+    <!-- ═══ MODERATED CONTENT ═══ -->
+    <div class="fdoc" data-fdoc="moderatedcontent" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6z"/><path d="M9 12l2 2 4-4.5"/></svg></div>
+        <div>
+          <div class="fp-title">Moderated Content</div>
+          <div class="fp-sub">Two unrelated systems sharing one name: an MDO-restricted <code>courseCategory</code>/<code>secureSettings</code> visibility scheme for Moderated Course/Program/Assessment riding on the generic Sunbird review workflow, and an independent ML text-profanity check on discussion posts.</div>
+          <div class="fp-chips"><span class="chip">Categories&nbsp; <code>Moderated Course/Program/Assessment</code></span><span class="chip">Scoping&nbsp; <code>secureSettings.organisation</code> + <code>isVerifiedKarmayogi</code></span><span class="chip ok">&#10003; Verified from 13 repos &middot; Sept 2026</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+        <button class="fp-tab" role="tab" data-tab="asbuilt" onclick="setTab(this)">As-Built</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">"Moderated" is a <code>courseCategory</code> value (<code>Moderated Course</code>/<code>Moderated Program</code>/<code>Moderated Assessment</code>) on ordinary Sunbird course content, restricted to specific MDOs via a <code>secureSettings.organisation</code> array and optionally a <code>secureSettings.isVerifiedKarmayogi</code> toggle &mdash; enforced as an Elasticsearch nested-query filter inside <code>knowledge-platform</code>'s search actor, not just a client-side hide. Authoring rides the same generic Draft&rarr;Review&rarr;Live workflow every other content type uses, gated by the <code>CONTENT_REVIEWER</code> role. A structurally unrelated feature also called "moderation" &mdash; automatic text-profanity screening of discussion posts &mdash; runs through a separate transformer-based service, called asynchronously from <code>cb-discussion-service</code>; a flagged post is soft-hidden from listings, not deleted.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> of the moderation-notification types the platform's own <code>NotificationSubCategory</code> taxonomy is clearly built to support &mdash; course/program submitted-for-review, approved, rejected &mdash; only the discussion-profanity alert (<code>PROFANITY_CHECK</code>) has a locatable producer across all 13 repos traced, and even that one has a payload-shape mismatch with the endpoint it calls that was never confirmed to work at runtime.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>No dedicated moderated-content service</b><p>It's a <code>courseCategory</code> value plus a <code>secureSettings</code> field on the generic content schema &mdash; no separate table, schema, or approval API exists beyond that.</p></div>
+          <div class="fp-card"><b>Enforced at the search engine, not just the UI</b><p><code>SearchProcessor</code>'s nested Elasticsearch query on <code>secureSettings.organisation</code> means a client skipping the filter still can't retrieve out-of-org content.</p></div>
+          <div class="fp-card"><b>Two "moderation" systems, zero shared code</b><p>MDO-restricted course/program visibility and ML discussion-post profanity checking live in different repos, different data models, different notification paths.</p></div>
+        </div>
+        <h2 class="fp-h2">How MDO-scoping is built</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 &middot; AUTHOR</b><p>Sets <code>courseCategory</code> + org list/verified-toggle via the moderated-course widget</p></div>
+          <div class="fp-step"><b>2 &middot; REVIEW</b><p>Generic <code>sendToReview</code>/publish calls &mdash; same as any other content</p></div>
+          <div class="fp-step"><b>3 &middot; LIVE</b><p>Content indexed into <code>knowledge-platform</code>'s search with <code>secureSettings</code> intact</p></div>
+          <div class="fp-step"><b>4 &middot; QUERY</b><p><code>SearchActor</code> auto-injects the caller's org if none was passed</p></div>
+          <div class="fp-step"><b>5 &middot; RESULT</b><p>Elasticsearch nested query restricts results to the matching org (and verified-status, if unverified)</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How MDO-scoping is built</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab covers both subsystems' topology and the notification gaps in full; <b style="color:#1B4CA1">LLD</b> covers storage, the review state machine, and the async profanity-check sequence.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">Course</span>
+            <span class="side-pill">Peer Validation</span>
+            <span class="side-pill">Comprehensive Assessment Program</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Author</div><b class="t">UC-1/2 &middot; Create + scope a Moderated Course/Program/Assessment</b><p>Picks a <code>Moderated*</code> <code>courseCategory</code>, sets an org checklist and an "Only Verified Karmayogis" toggle &mdash; writes to <code>secureSettings.organisation</code>/<code>isVerifiedKarmayogi</code>.</p><div class="api">n/a &mdash; content metadata, generic workflow underneath</div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-8 &middot; See a "Moderated contents" tab scoped to your org</b><p>Only shown if the org has matching <code>Live</code> results; unverified learners get an extra <code>isVerifiedKarmayogi=No</code> filter, verified learners don't.</p><div class="api">Search filter: <code>courseCategory</code> + <code>secureSettings.organisation</code> + <code>status=Live</code></div></div>
+          <div class="uc-card"><div class="who">Platform</div><b class="t">UC-12 &middot; Search-engine-level MDO enforcement</b><p><code>SearchActor</code> auto-injects the caller's org from the <code>x-user-channel-id</code> header if no filter was passed &mdash; a real access boundary, not cosmetic hiding.</p><div class="api">knowledge-platform search-api, ES nested query</div></div>
+          <div class="uc-card"><div class="who">Discussion author</div><b class="t">UC-13/15 &middot; Post created, checked async, soft-hidden on a hit</b><p>Post is live immediately; an async Kafka pipeline classifies it (toxic-bert/MuRIL); on a hit it stays in storage but is filtered out of every listing query &mdash; not deleted.</p><div class="api">POST <code>/api/v1/moderation/text</code> (content-moderation-service)</div></div>
+          <div class="uc-card"><div class="who">Platform</div><b class="t">UC-19 &middot; Course/program approval notifications &mdash; not found</b><p><code>cb-notification-service</code> defines <code>CONTENT_REVIEW_REQUEST</code>/<code>CONTENT_PUBLISHED</code>/<code>CONTENT_REJECTED</code>, but no producer for any of them exists in the 13 repos traced &mdash; only a separate uiproxy email path is confirmed.</p><div class="api">n/a &mdash; receiving-side taxonomy only</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/moderated-content/apis.md"></article><div class="md-src">source: docs/learning-hub/moderated-content/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/moderated-content/hld.md"></article><div class="md-src">source: docs/learning-hub/moderated-content/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/moderated-content/lld.md"></article><div class="md-src">source: docs/learning-hub/moderated-content/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/moderated-content/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/moderated-content/operations-manual.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/moderated-content/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/moderated-content/as-built-requirements.md</div></div>
+    </div><!-- /fdoc moderatedcontent -->
     <!-- ═══ MARKETPLACE ═══ -->
     <div class="fdoc" data-fdoc="marketplace" hidden>
     <div class="fp-hero">
