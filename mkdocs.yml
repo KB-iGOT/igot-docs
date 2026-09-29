@@ -114,6 +114,14 @@ nav:
           - LLD: learning-hub/events-hub/lld.md
           - Operations Manual: learning-hub/events-hub/operations-manual.md
           - As-Built Requirements: learning-hub/events-hub/as-built-requirements.md
+      - Discussion Hub:
+          - learning-hub/discussion-hub/index.md
+          - Use Cases: learning-hub/discussion-hub/use-cases.md
+          - APIs: learning-hub/discussion-hub/apis.md
+          - HLD: learning-hub/discussion-hub/hld.md
+          - LLD: learning-hub/discussion-hub/lld.md
+          - Operations Manual: learning-hub/discussion-hub/operations-manual.md
+          - As-Built Requirements: learning-hub/discussion-hub/as-built-requirements.md
       - Bulk Registration:
           - learning-hub/bulk-registration/index.md
           - Use Cases: learning-hub/bulk-registration/use-cases.md
