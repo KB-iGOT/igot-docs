@@ -377,13 +377,14 @@
       <line x1="720" y1="505" x2="875" y2="237" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="565" y2="773" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="1116" y2="399" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="311" y2="397" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
     <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>
-      <div class="sub">13 features</div>
+      <div class="sub">14 features</div>
     </div>
 
     <button class="bub item" style="left:655px; top:130px; width:130px; height:130px; font-size:15px" onclick="openFeature('course')">Course</button>
@@ -399,6 +400,7 @@
     <button class="bub item" style="left:807px; top:169px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('aicbp')">AI CBP Tool</button>
     <button class="bub item" style="left:501px; top:709px; width:128px; height:128px; font-size:14px" onclick="openFeature('eventshub')">Events Hub</button>
     <button class="bub item" style="left:1060px; top:343px; width:112px; height:112px; font-size:13px" onclick="openFeature('weeklyclaps')">Weekly Claps</button>
+    <button class="bub item" style="left:245px; top:331px; width:132px; height:132px; font-size:14px" onclick="openFeature('trainingplan')">Training Plan</button>
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
   </section>
@@ -1256,6 +1258,91 @@
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/weekly-claps/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/weekly-claps/operations-manual.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/weekly-claps/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/weekly-claps/as-built-requirements.md</div></div>
     </div><!-- /fdoc weeklyclaps -->
+
+    <!-- ═══ TRAINING PLAN ═══ -->
+    <div class="fdoc" data-fdoc="trainingplan" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 3v4h8V3M9 12h6M9 16h4"/></svg></div>
+        <div>
+          <div class="fp-title">Training Plan</div>
+          <div class="fp-sub">An MDO-authored, targeted assignment of content to a group of Karmayogis &mdash; internally called <code>CbPlan</code> everywhere in code. Not a generic Content node like Learning Pathway: a first-class Cassandra entity, rebuilt as a new API/table generation three times over (v1 &rarr; v2 &rarr; v3/v4) without ever retiring the one before it.</div>
+          <div class="fp-chips"><span class="chip">Internal name&nbsp; <code>CbPlan</code></span><span class="chip">Generations&nbsp; <code>v1</code> &middot; <code>v2</code> &middot; <code>v3</code> &middot; <code>v4</code></span><span class="chip ok">&#10003; Verified from 9 repos &middot; Sept 2026</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+        <button class="fp-tab" role="tab" data-tab="asbuilt" onclick="setTab(this)">As-Built</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">An MDO Admin or MDO Leader builds a plan in the Org Portal: a title, a set of courses (optionally flagged APAR &mdash; mandatory, performance-linked &mdash; and, within that, a "gating" subset required before a linked Comprehensive Assessment unlocks), a target audience picked through Reusable User Groups, and an end date. Publishing fans the plan out into per-assignee lookup rows so a Karmayogi's dashboard can find "plans that apply to me" without scanning every plan in the org. Underneath all of this, four independently-tabled generations of the same feature are simultaneously live today.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> v1 (<code>sunbird-cb-ext</code>, table <code>cb_plan</code>), v2 (<code>cb_plan_v2</code>), and v3/v4 (<code>cb_plan_v3</code>, shared by both API versions) all still respond behind the same <code>cbplan/*</code> proxy path family &mdash; there is no migration path between them, and the Org Portal's own authoring service calls all four side by side.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Bespoke storage, repeated three times</b><p>Unlike Learning Pathway's generic-Content reuse, a Training Plan is its own Cassandra row &mdash; a decision made independently on v1, v2, and v3, each with its own table family, none retired.</p></div>
+          <div class="fp-card"><b>A plan can gate a different feature entirely</b><p>The <code>isApar</code> flag and a Kafka-mirrored <code>calinkedid</code> turn an ordinary plan into an unlock gate for a Comprehensive Assessment &mdash; a real cross-feature dependency, not a metaphor.</p></div>
+          <div class="fp-card"><b>A whole separate pipeline bypasses the UI</b><p><code>cbp-ai-service</code> bulk-generates and bulk-publishes "AICBP" designation plans by calling the backend directly with a human's bearer token &mdash; no Org Portal, no uiproxy, no RBAC whitelist in the loop.</p></div>
+        </div>
+        <h2 class="fp-h2">How a Karmayogi experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 &middot; AUTHORED</b><p>MDO Admin/Leader builds the plan: content, APAR/gating, audience, timeline</p></div>
+          <div class="fp-step"><b>2 &middot; PUBLISHED</b><p>Fans out into per-assignee lookup rows</p></div>
+          <div class="fp-step"><b>3 &middot; ASSIGNED</b><p>Karmayogi sees it in the <code>cbp</code> portal, bucketed Upcoming/Overdue/APAR/Completed</p></div>
+          <div class="fp-step"><b>4 &middot; GATES (optional)</b><p>Mandatory content can gate a linked Comprehensive Assessment</p></div>
+          <div class="fp-step"><b>5 &middot; OR BULK-GENERATED</b><p>An AI pipeline drafts and bulk-publishes designation-wide plans, independent of the above</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How a Karmayogi experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab covers the topology across all 9 repos and the four-generation split in full; <b style="color:#1B4CA1">LLD</b> covers storage, schemas, sequence flows and state machines.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">Comprehensive Assessment Program</span>
+            <span class="side-pill">My Assigned Courses</span>
+            <span class="side-pill">AI CBP Tool</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-1 &middot; Create the plan shell</b><p>A single required field &mdash; Plan Title, &le;70 chars &mdash; is all step 1 of the 4-step stepper collects.</p><div class="api">POST <code>cbplan/v4/create</code></div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-2 &middot; Add content, optionally mark it APAR/gating</b><p>Toggling APAR reveals a "gating courses" panel to mark which selected courses must be finished before a linked Comprehensive Assessment unlocks.</p><div class="api">POST <code>sunbirdigot/search</code></div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-3 &middot; Request content that doesn't exist yet</b><p>Fires an email, via Kafka, to every CBP Admin in the named provider org(s) &mdash; the only endpoint on the legacy v1 API the current UI still actively calls.</p><div class="api">POST <code>cbplan/v1/admin/requestcontent</code></div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-4 &middot; Target an audience via Reusable User Groups</b><p>The Access Control step creates/updates a Reusable User Group scoped <code>context.type: 'training-plan'</code> rather than picking users inline.</p></div>
+          <div class="uc-card"><div class="who">MDO Admin/Leader</div><b class="t">UC-6 &middot; Publish, edit, or retire from the dashboard</b><p>Live/Drafts/Retire tabs; edit and publish are restricted to the plan's creator or an MDO Leader, and disabled once retired.</p><div class="api">POST <code>cbplan/v4/search</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-7 &middot; View assigned plans</b><p>Bucketed client-side into Upcoming, Overdue, APAR, and Completed, from a server-enriched, already-filtered list.</p><div class="api">POST <code>cbplan/v3/search</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-8 &middot; Cross-reference personal progress</b><p>Each plan card is stamped with the learner's own enrolment state, read from an IndexedDB cache rather than the plan-list response.</p></div>
+          <div class="uc-card"><div class="who">Provider CBP Admin</div><b class="t">UC-11 &middot; Receive and action a content request</b><p>Reviews/publishes/rejects requested content in the Admin Portal's request screens, gated behind a reusable confirmation dialog.</p></div>
+          <div class="uc-card"><div class="who">Platform Ops</div><b class="t">UC-12 &middot; Generate and bulk-publish AI-drafted plans</b><p>A 7-stage offline pipeline bulk-publishes already-approved "AICBP" plans directly against the backend &mdash; idempotent per row on failure.</p><div class="api">POST <code>{course-service}/cbplan/v3/aicbp/publish</code></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/training-plan/apis.md"></article><div class="md-src">source: docs/learning-hub/training-plan/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/training-plan/hld.md"></article><div class="md-src">source: docs/learning-hub/training-plan/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/training-plan/lld.md"></article><div class="md-src">source: docs/learning-hub/training-plan/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/training-plan/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/training-plan/operations-manual.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/training-plan/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/training-plan/as-built-requirements.md</div></div>
+    </div><!-- /fdoc trainingplan -->
 
     <!-- ═══ EXPLORE CONTENT (main-page feature) ═══ -->
     <div class="fdoc" data-fdoc="explore" hidden>
