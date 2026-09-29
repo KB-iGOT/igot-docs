@@ -63,29 +63,22 @@ FEATURES = [
     ("assigned",       "My Assigned Courses",               136, 13.5, ""),
     ("eventshub",      "Events Hub",                        128, 14,   ""),
     ("standalone",     "Standalone Assessment",             136, 13.5, "assess"),
-    ("peervalidation", "Peer Validation",                   136, 14,   ""),
-    ("cap",            "Comprehensive Assessment Program",  144, 13,   "assess"),
+    ("peervalidation", "Peer Validation",                   132, 14,   ""),
+    ("cap",            "Comprehensive Assessment Program",  136, 13,   "assess"),
     ("pathway",        "Learning Pathway",                  128, 14,   ""),
     ("course",         "Course",                            130, 15,   ""),
     ("aicbp",          "AI CBP Tool",                        136, 13.5, ""),
-    ("curated",        "Curated Program",                   136, None, ""),
+    ("curated",        "Curated Program",                   132, None, ""),
+    ("bulkregistration", "Bulk Registration",              124, 13,   ""),
+    ("weeklyclaps",    "Weekly Claps",                     112, 13,   ""),
+    ("trainingplan",   "Training Plan",                    132, 14,   ""),
 ]
 
 # ─── Geometry constants ──────────────────────────────────────────────
-CX, CY = 720, 468          # hub center. The original design used 505, but
-                            # that left the ring's bottom-most bubble
-                            # ("My Assigned Courses," bottom edge at y=883)
-                            # overlapping the "Every feature is
-                            # documented..." hint text, whose band is
-                            # roughly y=856-876 (`.hint { bottom: 24px }` on
-                            # the 900px-tall canvas). 468 clears both that
-                            # hint band below and the topbar/back-pill
-                            # above, with a small safety margin on each
-                            # side -- see SAFE_Y, which now encodes the
-                            # hint band explicitly so this can't silently
-                            # regress as more features are added.
+CX = 720                    # hub center x. Fixed -- the ring is symmetric
+                            # left/right and SAFE_X has plenty of headroom
+                            # at every feature count tried so far.
 HUB_R = 102                 # hub bubble radius (204px width / 2)
-HUB_TOP = CY - 102          # .bub.center's "top" style (its own 204px height / 2)
 BASE_COUNT = 12             # the original design's bubble count
 BASE_RADIUS = 310           # ...and its radius, at BASE_COUNT bubbles
 START_ANGLE_DEG = 0         # matches the original design's first bubble (bharatkalp, due right of center)
@@ -103,26 +96,53 @@ SAFE_Y = (65, 848)
 def ring_radius(n):
     """Radius for a ring of n evenly-spaced bubbles. Grows with sqrt(n)
     rather than linearly -- gentler growth buys noticeably more headroom
-    before the ring reaches the canvas edge (see the module docstring's
-    reasoning for CY) -- anchored so BASE_COUNT bubbles reproduce the
-    original design's 310px radius exactly."""
+    before the ring reaches the canvas edge -- anchored so BASE_COUNT
+    bubbles reproduce the original design's 310px radius exactly."""
     return BASE_RADIUS * math.sqrt(n / BASE_COUNT)
 
 
+def _feasible_cy_range(r, n):
+    """Range of hub-center y values (CY) for which every bubble on a ring
+    of the given radius clears SAFE_Y, given the current FEATURES sizes
+    and the (fixed) angular spacing. Returns (lo, hi); infeasible iff
+    lo > hi."""
+    lo, hi = -math.inf, math.inf
+    for i, (fid, label, size, fs, extra) in enumerate(FEATURES):
+        theta = math.radians(START_ANGLE_DEG + i * 360 / n)
+        rel_by = r * math.sin(theta)
+        rad = size / 2
+        lo = max(lo, SAFE_Y[0] - rel_by + rad)
+        hi = min(hi, SAFE_Y[1] - rel_by - rad)
+    return lo, hi
+
+
 def compute_positions():
+    """Picks the largest radius (up to the sqrt-growth target) for which
+    some hub-center y still clears every bubble's SAFE_Y margin, then
+    centers the ring in that feasible band. The hub center is NOT a fixed
+    constant: at BASE_COUNT bubbles it lands at the original design's 468
+    (verified below), but it has to shift as bubbles are added/resized,
+    since a fixed center can't stay centered in a shrinking feasible
+    range forever."""
     n = len(FEATURES)
     r = ring_radius(n)
+    lo, hi = _feasible_cy_range(r, n)
+    while lo > hi:
+        r -= 1
+        lo, hi = _feasible_cy_range(r, n)
+    cy = (lo + hi) / 2
+
     pts = []
     for i, (fid, label, size, fs, extra) in enumerate(FEATURES):
         theta = math.radians(START_ANGLE_DEG + i * 360 / n)
         bx = CX + r * math.cos(theta)
-        by = CY + r * math.sin(theta)
+        by = cy + r * math.sin(theta)
         pts.append(dict(id=fid, label=label, size=size, fs=fs, extra=extra,
                          bx=bx, by=by, rad=size / 2))
-    return r, pts
+    return r, cy, pts
 
 
-def check_geometry(pts):
+def check_geometry(pts, cy):
     problems = []
     for p in pts:
         if not (SAFE_X[0] <= p["bx"] - p["rad"] and p["bx"] + p["rad"] <= SAFE_X[1]
@@ -135,14 +155,14 @@ def check_geometry(pts):
             if d < 0:
                 problems.append(f'{a["id"]} overlaps {b["id"]} by {-d:.1f}px')
     for p in pts:
-        d = math.hypot(p["bx"] - CX, p["by"] - CY) - (HUB_R + p["rad"])
+        d = math.hypot(p["bx"] - CX, p["by"] - cy) - (HUB_R + p["rad"])
         if d < 0:
             problems.append(f'{p["id"]} overlaps the center hub by {-d:.1f}px')
     return problems
 
 
-def worst_clearance(pts):
-    worst = min(math.hypot(p["bx"] - CX, p["by"] - CY) - (HUB_R + p["rad"]) for p in pts)
+def worst_clearance(pts, cy):
+    worst = min(math.hypot(p["bx"] - CX, p["by"] - cy) - (HUB_R + p["rad"]) for p in pts)
     for i in range(len(pts)):
         for j in range(i + 1, len(pts)):
             a, b = pts[i], pts[j]
@@ -151,13 +171,13 @@ def worst_clearance(pts):
     return worst
 
 
-def render_block(radius, pts):
+def render_block(radius, cy, pts):
     lines, buttons = [], []
     for p in pts:
         bx, by = round(p["bx"]), round(p["by"])
         left, top = round(p["bx"] - p["size"] / 2), round(p["by"] - p["size"] / 2)
         lines.append(
-            f'      <line x1="{CX}" y1="{CY}" x2="{bx}" y2="{by}" '
+            f'      <line x1="{CX}" y1="{round(cy)}" x2="{bx}" y2="{by}" '
             f'stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>'
         )
         cls = "bub item assess" if p["extra"] == "assess" else "bub item"
@@ -170,16 +190,17 @@ def render_block(radius, pts):
         )
 
     n = len(pts)
+    hub_top = round(cy) - HUB_R
     parts = [
         "    <!-- HUB-RING:BEGIN — generated by tools/layout_hub_ring.py, do not hand-edit.",
         "         To add/remove a feature, edit the FEATURES list in that script and re-run it;",
         "         it rewrites everything between these two markers (lines + buttons + count). -->",
         '    <svg class="orbitbg" width="1440" height="900" fill="none">',
         *lines,
-        f'      <circle cx="{CX}" cy="{CY}" r="{round(radius)}" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>',
+        f'      <circle cx="{CX}" cy="{round(cy)}" r="{round(radius)}" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>',
         "    </svg>",
         "",
-        f'    <div class="bub center" style="left:618px; top:{HUB_TOP}px; width:204px; height:204px;">',
+        f'    <div class="bub center" style="left:618px; top:{hub_top}px; width:204px; height:204px;">',
         '      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>',
         '      <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>',
         f'      <div class="sub">{n} features</div>',
@@ -200,14 +221,14 @@ LANDING_COUNT_RE = re.compile(
 def main():
     check_only = "--check" in sys.argv
 
-    radius, pts = compute_positions()
-    problems = check_geometry(pts)
+    radius, cy, pts = compute_positions()
+    problems = check_geometry(pts, cy)
     if problems:
         raise SystemExit(
             "Layout has problems, fix FEATURES/constants and re-run:\n  " + "\n  ".join(problems)
         )
 
-    new_block = render_block(radius, pts)
+    new_block = render_block(radius, cy, pts)
 
     html = TEMPLATE.read_text()
     if not MARKER_RE.search(html):
@@ -218,8 +239,8 @@ def main():
         raise SystemExit("Landing page's Learning Hub feature-count span not found.")
     updated = LANDING_COUNT_RE.sub(rf"\g<1>{len(pts)}\g<2>", updated, count=1)
 
-    print(f"laid out {len(pts)} features on one ring, radius={radius:.1f}px, "
-          f"worst clearance={worst_clearance(pts):.1f}px")
+    print(f"laid out {len(pts)} features on one ring, radius={radius:.1f}px, cy={cy:.1f}, "
+          f"worst clearance={worst_clearance(pts, cy):.1f}px")
 
     if check_only:
         if updated != html:
