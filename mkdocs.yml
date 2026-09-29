@@ -154,3 +154,11 @@ nav:
           - LLD: learning-hub/training-plan/lld.md
           - Operations Manual: learning-hub/training-plan/operations-manual.md
           - As-Built Requirements: learning-hub/training-plan/as-built-requirements.md
+      - Amrit Gyaan Kosh:
+          - learning-hub/amrit-gyaan-kosh/index.md
+          - Use Cases: learning-hub/amrit-gyaan-kosh/use-cases.md
+          - APIs: learning-hub/amrit-gyaan-kosh/apis.md
+          - HLD: learning-hub/amrit-gyaan-kosh/hld.md
+          - LLD: learning-hub/amrit-gyaan-kosh/lld.md
+          - Operations Manual: learning-hub/amrit-gyaan-kosh/operations-manual.md
+          - As-Built Requirements: learning-hub/amrit-gyaan-kosh/as-built-requirements.md

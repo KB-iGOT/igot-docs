@@ -72,6 +72,7 @@ FEATURES = [
     ("bulkregistration", "Bulk Registration",              124, 13,   ""),
     ("weeklyclaps",    "Weekly Claps",                     112, 13,   ""),
     ("trainingplan",   "Training Plan",                    132, 14,   ""),
+    ("agk",             "Amrit Gyaan Kosh",                   90,  10.5, ""),
 ]
 
 # ─── Geometry constants ──────────────────────────────────────────────
@@ -116,6 +117,19 @@ def _feasible_cy_range(r, n):
     return lo, hi
 
 
+def _worst_gap(r, shrink, n):
+    """Smallest clearance between any two adjacent bubbles on the ring,
+    after subtracting `shrink` px from every bubble's diameter."""
+    worst = math.inf
+    for i in range(n):
+        j = (i + 1) % n
+        size_i = FEATURES[i][2] - shrink
+        size_j = FEATURES[j][2] - shrink
+        d = 2 * r * math.sin(math.pi / n) - (size_i / 2 + size_j / 2)
+        worst = min(worst, d)
+    return worst
+
+
 def compute_positions():
     """Picks the largest radius (up to the sqrt-growth target) for which
     some hub-center y still clears every bubble's SAFE_Y margin, then
@@ -123,7 +137,16 @@ def compute_positions():
     constant: at BASE_COUNT bubbles it lands at the original design's 468
     (verified below), but it has to shift as bubbles are added/resized,
     since a fixed center can't stay centered in a shrinking feasible
-    range forever."""
+    range forever.
+
+    That Y-fit radius is sometimes too small for all bubbles to keep their
+    full FEATURES size without touching a neighbor (this starts happening
+    once there are enough bubbles that the safe vertical band, not the
+    overlap check, is the binding constraint). Rather than hand-shrinking
+    individual entries every time this happens, every bubble's diameter is
+    uniformly trimmed by the smallest amount that clears all overlaps --
+    a few px is imperceptible per bubble and keeps FEATURES as the single
+    source of truth for "ideal" sizes."""
     n = len(FEATURES)
     r = ring_radius(n)
     lo, hi = _feasible_cy_range(r, n)
@@ -132,8 +155,17 @@ def compute_positions():
         lo, hi = _feasible_cy_range(r, n)
     cy = (lo + hi) / 2
 
+    shrink = 0
+    while _worst_gap(r, shrink, n) < 0:
+        shrink += 1
+        if shrink > 60:
+            raise SystemExit("Can't fit these bubbles on one ring even after "
+                              "shrinking -- add fewer features per pass, or "
+                              "shrink some FEATURES sizes by hand first.")
+
     pts = []
     for i, (fid, label, size, fs, extra) in enumerate(FEATURES):
+        size -= shrink
         theta = math.radians(START_ANGLE_DEG + i * 360 / n)
         bx = CX + r * math.cos(theta)
         by = cy + r * math.sin(theta)
