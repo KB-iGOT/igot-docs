@@ -122,6 +122,14 @@ nav:
           - LLD: learning-hub/events-hub/lld.md
           - Operations Manual: learning-hub/events-hub/operations-manual.md
           - As-Built Requirements: learning-hub/events-hub/as-built-requirements.md
+      - Marketplace:
+          - learning-hub/marketplace/index.md
+          - Use Cases: learning-hub/marketplace/use-cases.md
+          - APIs: learning-hub/marketplace/apis.md
+          - HLD: learning-hub/marketplace/hld.md
+          - LLD: learning-hub/marketplace/lld.md
+          - Operations Manual: learning-hub/marketplace/operations-manual.md
+          - As-Built Requirements: learning-hub/marketplace/as-built-requirements.md
       - AI Assessment Tool:
           - learning-hub/ai-assessment-tool/index.md
           - Use Cases: learning-hub/ai-assessment-tool/use-cases.md
