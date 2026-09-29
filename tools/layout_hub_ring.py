@@ -67,6 +67,7 @@ FEATURES = [
     ("cap",            "Comprehensive Assessment Program",  136, 13,   "assess"),
     ("pathway",        "Learning Pathway",                  128, 14,   ""),
     ("course",         "Course",                            130, 15,   ""),
+    ("search",         "Search",                             128, 15,   ""),
     ("aicbp",          "AI CBP Tool",                        136, 13.5, ""),
     ("curated",        "Curated Program",                   132, None, ""),
     ("bulkregistration", "Bulk Registration",              124, 13,   ""),
