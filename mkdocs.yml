@@ -122,6 +122,14 @@ nav:
           - LLD: learning-hub/events-hub/lld.md
           - Operations Manual: learning-hub/events-hub/operations-manual.md
           - As-Built Requirements: learning-hub/events-hub/as-built-requirements.md
+      - Unenrollment of Courses:
+          - learning-hub/unenrollment-of-courses/index.md
+          - Use Cases: learning-hub/unenrollment-of-courses/use-cases.md
+          - APIs: learning-hub/unenrollment-of-courses/apis.md
+          - HLD: learning-hub/unenrollment-of-courses/hld.md
+          - LLD: learning-hub/unenrollment-of-courses/lld.md
+          - Operations Manual: learning-hub/unenrollment-of-courses/operations-manual.md
+          - As-Built Requirements: learning-hub/unenrollment-of-courses/as-built-requirements.md
       - Marketplace:
           - learning-hub/marketplace/index.md
           - Use Cases: learning-hub/marketplace/use-cases.md

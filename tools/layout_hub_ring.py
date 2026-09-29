@@ -76,6 +76,7 @@ FEATURES = [
     ("agk",             "Amrit Gyaan Kosh",                   90,  10.5, ""),
     ("aiassessment",   "AI Assessment Tool",                 128, 13,   ""),
     ("marketplace",    "Marketplace",                        128, 14,   ""),
+    ("unenroll",       "Unenrollment of Courses",            132, 12,   ""),
 ]
 
 # ─── Geometry constants ──────────────────────────────────────────────
