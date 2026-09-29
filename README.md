@@ -14,6 +14,7 @@ maintained as Markdown (docs-as-code) and paired with a visual, interactive
 | `karmayogi-docs-explorer.template.html` | Source template for the explorer (authored HTML for Overview/Use Cases panels; APIs/HLD/LLD/Operations Manual tabs render the Markdown files directly). Edit this, not the built HTML. |
 | `mkdocs.yml` | Site nav/config for rendering `docs/` as a static site with MkDocs Material. |
 | `tools/build_docs_explorer.py` | Rebuilds `karmayogi-docs-explorer.html` from the template after any Markdown change. |
+| `tools/layout_hub_ring.py` | Auto-lays-out the Learning Hub's hub-ring bubbles (one ring, radius grows with feature count) and rewrites the `HUB-RING:BEGIN/END` block in the template. Run this after adding/removing a Learning Hub feature, then rebuild the explorer. |
 | `igot-doc-skills.md` | The house style guide / working convention for generating and updating this documentation (research discipline, six-file feature structure, verification-boundary rules, explorer wiring). |
 | `_to_delete/` | Staged for removal — not part of the active documentation set. |
 
@@ -39,6 +40,7 @@ same six files:
 ### Main-page features
 
 - [Explore Content](docs/explore-content/index.md) — global search & discovery
+- [Competency Hub](docs/competency-hub/index.md) — two parallel competency taxonomies (`frac-backend` and a Knowledge Platform mirror), the Passbook, browse/search and org-designation mapping
 
 ### Learning Hub
 
@@ -60,10 +62,19 @@ with content-type-specific twists:
 | [CHS](docs/learning-hub/chs/index.md) | backend batch pipeline feeding karma points, leaderboards, BI warehouse |
 | [AI CBP Tool](docs/learning-hub/ai-cbp-tool/index.md) | AI-assisted competency-based program authoring |
 | [Events Hub](docs/learning-hub/events-hub/index.md) | live/virtual event scheduling and participation |
+| [Discussion Hub](docs/learning-hub/discussion-hub/index.md) | community-scoped Q&A/forum — Questions, Answer Posts and nested Answer Post Replies |
+| [Search](docs/learning-hub/search/index.md) | global content discovery across the composite search APIs |
+| [Bulk Registration](docs/learning-hub/bulk-registration/index.md) | three independent, largely disconnected CSV-upload pipelines for onboarding users |
+| [Weekly Claps](docs/learning-hub/weekly-claps/index.md) | a rolling engagement counter — five separate widget implementations, one backend endpoint |
+| [Training Plan](docs/learning-hub/training-plan/index.md) | MDO-authored targeted assignment (`CbPlan`) — four live table generations at once |
+| [Amrit Gyaan Kosh](docs/learning-hub/amrit-gyaan-kosh/index.md) | a knowledge-resource discovery hub (PDFs, videos, case studies) with no backend service of its own |
+| [AI Assessment Tool](docs/learning-hub/ai-assessment-tool/index.md) | Gemini-generated assessments from a course's PDFs/captions or KCM competency selections alone |
+| [Marketplace](docs/learning-hub/marketplace/index.md) | partner/external content ecosystem — separate storage, enrollment and entitlement stack from native Course |
+| [Unenrollment of Courses](docs/learning-hub/unenrollment-of-courses/index.md) | learner-initiated withdrawal — one flag flip, wired up differently per client |
 
 ### Other hubs
 
-- Discussion Hub, Event Hub (platform-wide), Competency Hub — *not yet documented*
+- Event Hub (platform-wide) — *not yet documented*
 
 ## Viewing the docs
 
@@ -96,9 +107,11 @@ This repo follows a strict, code-verified documentation discipline — see
    python3 tools/build_docs_explorer.py
    ```
 
-4. New features need both a Markdown folder under `docs/` **and** wiring into
-   `karmayogi-docs-explorer.template.html` (hub-ring bubble + feature tabs) —
-   see `igot-doc-skills.md` for the placement convention.
+4. New Learning Hub features need a Markdown folder under `docs/learning-hub/`,
+   an entry in `mkdocs.yml`'s nav, a feature-tab block in
+   `karmayogi-docs-explorer.template.html`, and an entry in
+   `tools/layout_hub_ring.py`'s `FEATURES` list (then re-run that script to
+   place the new hub-ring bubble before rebuilding the explorer).
 
 Do not remove Verification boundary notes when editing — tighten them by
 attaching the missing repo and re-verifying instead.
