@@ -25,6 +25,14 @@ nav:
       - HLD: explore-content/hld.md
       - LLD: explore-content/lld.md
       - Operations Manual: explore-content/operations-manual.md
+  - Competency Hub:
+      - competency-hub/index.md
+      - Use Cases: competency-hub/use-cases.md
+      - APIs: competency-hub/apis.md
+      - HLD: competency-hub/hld.md
+      - LLD: competency-hub/lld.md
+      - Operations Manual: competency-hub/operations-manual.md
+      - As-Built Requirements: competency-hub/as-built-requirements.md
   - Learning Hub:
       - learning-hub/index.md
       - Blended Program:
