@@ -15,4 +15,16 @@ enrolments in the LMS, per-node progress state — and each type adds one twist:
 | [Learning Pathway](learning-pathway/index.md) | milestones gate each other — sequential unlock, not one flat list | ⚠️ thin backend |
 | [Peer Validation](peer-validation/index.md) | a named colleague, not a machine, has to approve completion | ✅ |
 | [Bharat Kalp](bharat-kalp/index.md) | cohort-gated microsite, not a content type on the shared rails | ⚠️ no backend of its own |
-| [CHS](chs/index.md) | a backend batch pipeline, not a content type consumed directly — feeds karma points, leaderboards, and the BI warehouse | ✅ |
+| [AI CBP Tool](ai-cbp-tool/index.md) | AI-assisted competency-based program authoring | ✅ |
+| [Events Hub](events-hub/index.md) | live/virtual event scheduling and participation | ✅ |
+| [Search](search/index.md) | global content discovery across the composite search APIs | ✅ |
+| [AI Assessment Tool](ai-assessment-tool/index.md) | Gemini-generated assessments from a course's PDFs/captions or KCM competency selections alone | ✅ |
+| [Marketplace](marketplace/index.md) | partner/external content ecosystem — separate storage, enrollment and entitlement stack from native Course | ✅ |
+| [Unenrollment of Courses](unenrollment-of-courses/index.md) | learner-initiated withdrawal — one flag flip, wired up differently per client | ✅ |
+| [Moderated Content](moderated-content/index.md) | org-scoped visibility via `courseCategory` + `secureSettings`, riding the generic review workflow — plus an unrelated ML profanity check on discussion posts | ✅ |
+
+Some folders under `learning-hub/` are no longer part of the Learning Hub and
+are listed elsewhere: [Bulk Registration](bulk-registration/index.md),
+[Weekly Claps](weekly-claps/index.md), [Training Plan](training-plan/index.md)
+and [CHS](chs/index.md) are **Features**; [Discussion Hub](discussion-hub/index.md)
+and [Amrit Gyaan Kosh](amrit-gyaan-kosh/index.md) are hubs of their own.

@@ -35,7 +35,7 @@ otherwise it is publicly readable once enabled.
 ## Documentation structure
 
 Each documented feature lives in its own folder under `docs/` and carries the
-same six files:
+same six files (newer features also add an `as-built-requirements.md`):
 
 | File | Audience | Content |
 |---|---|---|
@@ -54,7 +54,20 @@ same six files:
 ### Main-page features
 
 - [Explore Content](docs/explore-content/index.md) — global search & discovery
+- [Bulk Registration](docs/learning-hub/bulk-registration/index.md) — three independent, largely disconnected CSV-upload pipelines for onboarding users
+- [Weekly Claps](docs/learning-hub/weekly-claps/index.md) — a rolling engagement counter — five separate widget implementations, one backend endpoint
+- [Training Plan](docs/learning-hub/training-plan/index.md) — MDO-authored targeted assignment (`CbPlan`) — four live table generations at once
+- [CHS](docs/learning-hub/chs/index.md) — backend batch pipeline feeding karma points, leaderboards, BI warehouse
+
+These five sit under the explorer's **Features** bubble. Their Markdown folders
+still live under `docs/learning-hub/` for historical reasons.
+
+### Hubs
+
 - [Competency Hub](docs/competency-hub/index.md) — two parallel competency taxonomies (`frac-backend` and a Knowledge Platform mirror), the Passbook, browse/search and org-designation mapping
+- [Discussion Hub](docs/learning-hub/discussion-hub/index.md) — community-scoped Q&A/forum — Questions, Answer Posts and nested Answer Post Replies
+- [Amrit Gyaan Kosh](docs/learning-hub/amrit-gyaan-kosh/index.md) — a knowledge-resource discovery hub (PDFs, videos, case studies) with no backend service of its own
+- Event Hub (platform-wide) — *not yet documented*
 
 ### Learning Hub
 
@@ -73,22 +86,13 @@ with content-type-specific twists:
 | [Learning Pathway](docs/learning-hub/learning-pathway/index.md) | milestones gate each other — sequential unlock |
 | [Peer Validation](docs/learning-hub/peer-validation/index.md) | a named colleague, not a machine, approves completion |
 | [Bharat Kalp](docs/learning-hub/bharat-kalp/index.md) | cohort-gated microsite, not a content type on the shared rails |
-| [CHS](docs/learning-hub/chs/index.md) | backend batch pipeline feeding karma points, leaderboards, BI warehouse |
 | [AI CBP Tool](docs/learning-hub/ai-cbp-tool/index.md) | AI-assisted competency-based program authoring |
 | [Events Hub](docs/learning-hub/events-hub/index.md) | live/virtual event scheduling and participation |
-| [Discussion Hub](docs/learning-hub/discussion-hub/index.md) | community-scoped Q&A/forum — Questions, Answer Posts and nested Answer Post Replies |
 | [Search](docs/learning-hub/search/index.md) | global content discovery across the composite search APIs |
-| [Bulk Registration](docs/learning-hub/bulk-registration/index.md) | three independent, largely disconnected CSV-upload pipelines for onboarding users |
-| [Weekly Claps](docs/learning-hub/weekly-claps/index.md) | a rolling engagement counter — five separate widget implementations, one backend endpoint |
-| [Training Plan](docs/learning-hub/training-plan/index.md) | MDO-authored targeted assignment (`CbPlan`) — four live table generations at once |
-| [Amrit Gyaan Kosh](docs/learning-hub/amrit-gyaan-kosh/index.md) | a knowledge-resource discovery hub (PDFs, videos, case studies) with no backend service of its own |
 | [AI Assessment Tool](docs/learning-hub/ai-assessment-tool/index.md) | Gemini-generated assessments from a course's PDFs/captions or KCM competency selections alone |
 | [Marketplace](docs/learning-hub/marketplace/index.md) | partner/external content ecosystem — separate storage, enrollment and entitlement stack from native Course |
 | [Unenrollment of Courses](docs/learning-hub/unenrollment-of-courses/index.md) | learner-initiated withdrawal — one flag flip, wired up differently per client |
-
-### Other hubs
-
-- Event Hub (platform-wide) — *not yet documented*
+| [Moderated Content](docs/learning-hub/moderated-content/index.md) | org-scoped visibility via `courseCategory` + `secureSettings`, riding the generic review workflow — plus an unrelated ML profanity check on discussion posts |
 
 ## Viewing the docs
 

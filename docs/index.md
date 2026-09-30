@@ -7,7 +7,8 @@ the source of truth for the technical content behind it.
 
 ## Structure
 
-Each feature folder carries the same five files:
+Each feature folder carries the same six files (newer features also add an
+`as-built-requirements.md`):
 
 | File | Audience | Content |
 |---|---|---|
@@ -16,6 +17,7 @@ Each feature folder carries the same five files:
 | `apis.md` | engineers, integrators | Endpoints as called by the portals |
 | `hld.md` | engineers, architects | Services, datastores, design decisions |
 | `lld.md` | engineers | Data models, state machines, sequences |
+| `operations-manual.md` | ops/support | Common issues, config, monitoring, escalation |
 
 ## Platform
 
@@ -24,14 +26,19 @@ Each feature folder carries the same five files:
 
 ## Main-page features
 
-- [Explore Content](explore-content/index.md) — global search & discovery ✅
+- [Explore Content](explore-content/index.md) — global search & discovery
+- [Bulk Registration](learning-hub/bulk-registration/index.md) — CSV-upload pipelines for onboarding users
+- [Weekly Claps](learning-hub/weekly-claps/index.md) — a rolling engagement counter
+- [Training Plan](learning-hub/training-plan/index.md) — MDO-authored targeted assignment (`CbPlan`)
+- [CHS](learning-hub/chs/index.md) — backend batch pipeline feeding karma points, leaderboards, BI warehouse
 
 ## Hubs
 
-- [Learning Hub](learning-hub/index.md) — 6 content types documented
-- Discussion Hub — *to be documented*
-- Event Hub — *to be documented*
-- Competency Hub — *to be documented*
+- [Learning Hub](learning-hub/index.md) — 16 features documented
+- [Competency Hub](competency-hub/index.md) — competency taxonomies, the Passbook, org-designation mapping
+- [Discussion Hub](learning-hub/discussion-hub/index.md) — community-scoped Q&A/forum
+- [Amrit Gyaan Kosh](learning-hub/amrit-gyaan-kosh/index.md) — knowledge-resource discovery hub
+- Event Hub (platform-wide) — *to be documented*
 
 ## Verification policy
 

@@ -179,14 +179,6 @@ nav:
           - LLD: learning-hub/search/lld.md
           - Operations Manual: learning-hub/search/operations-manual.md
           - As-Built Requirements: learning-hub/search/as-built-requirements.md
-      - Discussion Hub:
-          - learning-hub/discussion-hub/index.md
-          - Use Cases: learning-hub/discussion-hub/use-cases.md
-          - APIs: learning-hub/discussion-hub/apis.md
-          - HLD: learning-hub/discussion-hub/hld.md
-          - LLD: learning-hub/discussion-hub/lld.md
-          - Operations Manual: learning-hub/discussion-hub/operations-manual.md
-          - As-Built Requirements: learning-hub/discussion-hub/as-built-requirements.md
       - Moderated Content:
           - learning-hub/moderated-content/index.md
           - Use Cases: learning-hub/moderated-content/use-cases.md
@@ -195,6 +187,14 @@ nav:
           - LLD: learning-hub/moderated-content/lld.md
           - Operations Manual: learning-hub/moderated-content/operations-manual.md
           - As-Built Requirements: learning-hub/moderated-content/as-built-requirements.md
+  - Discussion Hub:
+      - learning-hub/discussion-hub/index.md
+      - Use Cases: learning-hub/discussion-hub/use-cases.md
+      - APIs: learning-hub/discussion-hub/apis.md
+      - HLD: learning-hub/discussion-hub/hld.md
+      - LLD: learning-hub/discussion-hub/lld.md
+      - Operations Manual: learning-hub/discussion-hub/operations-manual.md
+      - As-Built Requirements: learning-hub/discussion-hub/as-built-requirements.md
   - Amrit Gyaan Kosh:
       - learning-hub/amrit-gyaan-kosh/index.md
       - Use Cases: learning-hub/amrit-gyaan-kosh/use-cases.md
