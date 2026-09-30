@@ -18,13 +18,6 @@ nav:
   - Platform:
       - API Gateway: platform/api-gateway.md
       - Content Lifecycle: platform/content-lifecycle.md
-  - Explore Content:
-      - explore-content/index.md
-      - Use Cases: explore-content/use-cases.md
-      - APIs: explore-content/apis.md
-      - HLD: explore-content/hld.md
-      - LLD: explore-content/lld.md
-      - Operations Manual: explore-content/operations-manual.md
   - Competency Hub:
       - competency-hub/index.md
       - Use Cases: competency-hub/use-cases.md
@@ -33,6 +26,45 @@ nav:
       - LLD: competency-hub/lld.md
       - Operations Manual: competency-hub/operations-manual.md
       - As-Built Requirements: competency-hub/as-built-requirements.md
+  - Features:
+      - Explore Content:
+          - explore-content/index.md
+          - Use Cases: explore-content/use-cases.md
+          - APIs: explore-content/apis.md
+          - HLD: explore-content/hld.md
+          - LLD: explore-content/lld.md
+          - Operations Manual: explore-content/operations-manual.md
+      - Bulk Registration:
+          - learning-hub/bulk-registration/index.md
+          - Use Cases: learning-hub/bulk-registration/use-cases.md
+          - APIs: learning-hub/bulk-registration/apis.md
+          - HLD: learning-hub/bulk-registration/hld.md
+          - LLD: learning-hub/bulk-registration/lld.md
+          - Operations Manual: learning-hub/bulk-registration/operations-manual.md
+          - As-Built Requirements: learning-hub/bulk-registration/as-built-requirements.md
+      - Weekly Claps:
+          - learning-hub/weekly-claps/index.md
+          - Use Cases: learning-hub/weekly-claps/use-cases.md
+          - APIs: learning-hub/weekly-claps/apis.md
+          - HLD: learning-hub/weekly-claps/hld.md
+          - LLD: learning-hub/weekly-claps/lld.md
+          - Operations Manual: learning-hub/weekly-claps/operations-manual.md
+          - As-Built Requirements: learning-hub/weekly-claps/as-built-requirements.md
+      - Training Plan:
+          - learning-hub/training-plan/index.md
+          - Use Cases: learning-hub/training-plan/use-cases.md
+          - APIs: learning-hub/training-plan/apis.md
+          - HLD: learning-hub/training-plan/hld.md
+          - LLD: learning-hub/training-plan/lld.md
+          - Operations Manual: learning-hub/training-plan/operations-manual.md
+          - As-Built Requirements: learning-hub/training-plan/as-built-requirements.md
+      - CHS:
+          - learning-hub/chs/index.md
+          - Use Cases: learning-hub/chs/use-cases.md
+          - APIs: learning-hub/chs/apis.md
+          - HLD: learning-hub/chs/hld.md
+          - LLD: learning-hub/chs/lld.md
+          - Operations Manual: learning-hub/chs/operations-manual.md
   - Learning Hub:
       - learning-hub/index.md
       - Blended Program:
@@ -99,13 +131,6 @@ nav:
           - HLD: learning-hub/peer-validation/hld.md
           - LLD: learning-hub/peer-validation/lld.md
           - Operations Manual: learning-hub/peer-validation/operations-manual.md
-      - CHS:
-          - learning-hub/chs/index.md
-          - Use Cases: learning-hub/chs/use-cases.md
-          - APIs: learning-hub/chs/apis.md
-          - HLD: learning-hub/chs/hld.md
-          - LLD: learning-hub/chs/lld.md
-          - Operations Manual: learning-hub/chs/operations-manual.md
       - AI CBP Tool:
           - learning-hub/ai-cbp-tool/index.md
           - Use Cases: learning-hub/ai-cbp-tool/use-cases.md
@@ -162,38 +187,6 @@ nav:
           - LLD: learning-hub/discussion-hub/lld.md
           - Operations Manual: learning-hub/discussion-hub/operations-manual.md
           - As-Built Requirements: learning-hub/discussion-hub/as-built-requirements.md
-      - Bulk Registration:
-          - learning-hub/bulk-registration/index.md
-          - Use Cases: learning-hub/bulk-registration/use-cases.md
-          - APIs: learning-hub/bulk-registration/apis.md
-          - HLD: learning-hub/bulk-registration/hld.md
-          - LLD: learning-hub/bulk-registration/lld.md
-          - Operations Manual: learning-hub/bulk-registration/operations-manual.md
-          - As-Built Requirements: learning-hub/bulk-registration/as-built-requirements.md
-      - Weekly Claps:
-          - learning-hub/weekly-claps/index.md
-          - Use Cases: learning-hub/weekly-claps/use-cases.md
-          - APIs: learning-hub/weekly-claps/apis.md
-          - HLD: learning-hub/weekly-claps/hld.md
-          - LLD: learning-hub/weekly-claps/lld.md
-          - Operations Manual: learning-hub/weekly-claps/operations-manual.md
-          - As-Built Requirements: learning-hub/weekly-claps/as-built-requirements.md
-      - Training Plan:
-          - learning-hub/training-plan/index.md
-          - Use Cases: learning-hub/training-plan/use-cases.md
-          - APIs: learning-hub/training-plan/apis.md
-          - HLD: learning-hub/training-plan/hld.md
-          - LLD: learning-hub/training-plan/lld.md
-          - Operations Manual: learning-hub/training-plan/operations-manual.md
-          - As-Built Requirements: learning-hub/training-plan/as-built-requirements.md
-      - Amrit Gyaan Kosh:
-          - learning-hub/amrit-gyaan-kosh/index.md
-          - Use Cases: learning-hub/amrit-gyaan-kosh/use-cases.md
-          - APIs: learning-hub/amrit-gyaan-kosh/apis.md
-          - HLD: learning-hub/amrit-gyaan-kosh/hld.md
-          - LLD: learning-hub/amrit-gyaan-kosh/lld.md
-          - Operations Manual: learning-hub/amrit-gyaan-kosh/operations-manual.md
-          - As-Built Requirements: learning-hub/amrit-gyaan-kosh/as-built-requirements.md
       - Moderated Content:
           - learning-hub/moderated-content/index.md
           - Use Cases: learning-hub/moderated-content/use-cases.md
@@ -202,3 +195,11 @@ nav:
           - LLD: learning-hub/moderated-content/lld.md
           - Operations Manual: learning-hub/moderated-content/operations-manual.md
           - As-Built Requirements: learning-hub/moderated-content/as-built-requirements.md
+  - Amrit Gyaan Kosh:
+      - learning-hub/amrit-gyaan-kosh/index.md
+      - Use Cases: learning-hub/amrit-gyaan-kosh/use-cases.md
+      - APIs: learning-hub/amrit-gyaan-kosh/apis.md
+      - HLD: learning-hub/amrit-gyaan-kosh/hld.md
+      - LLD: learning-hub/amrit-gyaan-kosh/lld.md
+      - Operations Manual: learning-hub/amrit-gyaan-kosh/operations-manual.md
+      - As-Built Requirements: learning-hub/amrit-gyaan-kosh/as-built-requirements.md

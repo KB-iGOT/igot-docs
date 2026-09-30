@@ -59,7 +59,6 @@ TEMPLATE = Path(__file__).resolve().parent.parent / "karmayogi-docs-explorer.tem
 FEATURES = [
     ("bharatkalp",     "Bharat Kalp",                       128, 14,   ""),
     ("blended",        "Blended Program",                   136, None, 'id="blended"'),
-    ("chs",            "CHS",                               128, 14,   ""),
     ("assigned",       "My Assigned Courses",               136, 13.5, ""),
     ("eventshub",      "Events Hub",                        128, 14,   ""),
     ("standalone",     "Standalone Assessment",             136, 13.5, "assess"),
@@ -70,13 +69,10 @@ FEATURES = [
     ("search",         "Search",                             128, 15,   ""),
     ("aicbp",          "AI CBP Tool",                        136, 13.5, ""),
     ("curated",        "Curated Program",                   132, None, ""),
-    ("bulkregistration", "Bulk Registration",              124, 13,   ""),
-    ("weeklyclaps",    "Weekly Claps",                     112, 13,   ""),
-    ("trainingplan",   "Training Plan",                    132, 14,   ""),
-    ("agk",             "Amrit Gyaan Kosh",                   90,  10.5, ""),
     ("aiassessment",   "AI Assessment Tool",                 128, 13,   ""),
     ("marketplace",    "Marketplace",                        128, 14,   ""),
     ("unenroll",       "Unenrollment of Courses",            132, 12,   ""),
+    ("moderatedcontent", "Moderated Content",                 95, 13,   ""),
 ]
 
 # ─── Geometry constants ──────────────────────────────────────────────
