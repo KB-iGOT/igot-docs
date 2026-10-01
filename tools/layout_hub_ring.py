@@ -73,6 +73,7 @@ FEATURES = [
     ("marketplace",    "Marketplace",                        128, 14,   ""),
     ("unenroll",       "Unenrollment of Courses",            132, 12,   ""),
     ("moderatedcontent", "Moderated Content",                 95, 13,   ""),
+    ("useronboarding", "User Onboarding",                     128, 14,   ""),
 ]
 
 # ─── Geometry constants ──────────────────────────────────────────────

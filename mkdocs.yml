@@ -187,6 +187,14 @@ nav:
           - LLD: learning-hub/moderated-content/lld.md
           - Operations Manual: learning-hub/moderated-content/operations-manual.md
           - As-Built Requirements: learning-hub/moderated-content/as-built-requirements.md
+      - User Onboarding:
+          - learning-hub/user-onboarding/index.md
+          - Use Cases: learning-hub/user-onboarding/use-cases.md
+          - APIs: learning-hub/user-onboarding/apis.md
+          - HLD: learning-hub/user-onboarding/hld.md
+          - LLD: learning-hub/user-onboarding/lld.md
+          - Operations Manual: learning-hub/user-onboarding/operations-manual.md
+          - As-Built Requirements: learning-hub/user-onboarding/as-built-requirements.md
   - Discussion Hub:
       - learning-hub/discussion-hub/index.md
       - Use Cases: learning-hub/discussion-hub/use-cases.md
