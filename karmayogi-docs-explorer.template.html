@@ -487,12 +487,12 @@
         </div>
         <div>
           <div class="fp-title">Blended Program</div>
-          <div class="fp-sub">Instructor-led learning that mixes online modules with classroom sessions &mdash; batches, seat limits, attendance and offline session tracking.</div>
+          <div class="fp-sub">Instructor-led learning that mixes self-paced online content with scheduled classroom sessions &mdash; batches with seat limits, an approval step, session attendance and assignments.</div>
           <div class="fp-chips">
             <span class="chip">Category&nbsp; <code>Blended Program</code></span>
             <span class="chip">Route&nbsp; <code>/app/toc/:programId</code></span>
             <span class="chip">Workflow&nbsp; <code>blendedprogram</code></span>
-            <span class="chip ok">&#10003; Verified from repos &middot; Aug 2026</span>
+            <span class="chip ok">&#10003; Verified from repos &middot; 4.8.41 releases &middot; boundaries noted</span>
           </div>
         </div>
       </div>
@@ -503,6 +503,7 @@
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+        <button class="fp-tab" role="tab" data-tab="asbuilt" onclick="setTab(this)">As-Built</button>
       </div>
     </div>
 
@@ -510,18 +511,19 @@
     <div class="fp-body tabpanel" data-panel="overview">
       <div>
         <h2 class="fp-h2">What it is</h2>
-        <p class="fp-p">A Blended Program pairs self-paced online content with scheduled instructor-led sessions. An MDO creates a program, opens batches with seat limits, and Karmayogis apply or are nominated. Completion requires both the online modules and attendance at the offline sessions.</p>
+        <p class="fp-p">A Blended Program pairs self-paced online content with classroom sessions, run in <strong>batches</strong>. A Karmayogi picks a batch that still accepts enrolments and has room, completes any entry steps the batch asks for, and requests a seat. A Program Coordinator, an MDO admin, or both in a fixed order approve the request &mdash; or a coordinator nominates the learner directly, or the learner scans a self-enrolment QR in the room. Once the batch is running the learner works through the online content, attends the sessions, hands in assignments and earns the batch certificate.</p>
         <div class="fp-cards">
-          <div class="fp-card"><b>Batches &amp; seats</b><p>Enrolment windows, capacity caps and waitlists per batch.</p></div>
-          <div class="fp-card"><b>Attendance</b><p>Offline session check-in that counts toward completion.</p></div>
-          <div class="fp-card"><b>Approvals</b><p>Nomination and MDO-admin approval before a seat is confirmed.</p></div>
+          <div class="fp-card"><b>Batches &amp; seats</b><p>Each batch has its own dates, enrolment window and seat limit. The page warns when seats are running low and when a batch or every batch is full.</p></div>
+          <div class="fp-card"><b>Approval or direct entry</b><p>A seat is a request until an approver says yes. Coordinators can nominate learners straight into a batch, and a QR code can let people in the room enrol themselves.</p></div>
+          <div class="fp-card"><b>Sessions, attendance &amp; assignments</b><p>Classroom sessions show date, time, handouts and links. Attendance is marked by the coordinator, or by the learner scanning the session QR on the mobile app at the venue. Assignments are handed in as PDFs and evaluated with marks and feedback.</p></div>
         </div>
         <h2 class="fp-h2">How a Karmayogi experiences it</h2>
         <div class="fp-steps">
-          <div class="fp-step"><b>1 &middot; DISCOVER</b><p>Finds the program in the Learning Hub</p></div>
-          <div class="fp-step"><b>2 &middot; APPLY</b><p>Requests a seat in an open batch</p></div>
-          <div class="fp-step"><b>3 &middot; LEARN</b><p>Online modules plus classroom sessions</p></div>
-          <div class="fp-step"><b>4 &middot; CERTIFY</b><p>Certificate on full completion</p></div>
+          <div class="fp-step"><b>1 &middot; PICK A BATCH</b><p>Opens the program and chooses a batch that is open and has seats</p></div>
+          <div class="fp-step"><b>2 &middot; ENTRY STEPS</b><p>Pre-requisites, a profile form and a short survey, if the batch asks for them</p></div>
+          <div class="fp-step"><b>3 &middot; REQUEST</b><p>Confirms the batch dates; a schedule clash with another batch is refused</p></div>
+          <div class="fp-step"><b>4 &middot; APPROVAL</b><p>Waits for the coordinator and/or MDO admin; can withdraw while pending</p></div>
+          <div class="fp-step"><b>5 &middot; LEARN &amp; ATTEND</b><p>Self-paced content, sessions, assignments, then the certificate</p></div>
         </div>
       </div>
       <div class="fp-side">
@@ -530,13 +532,11 @@
           <div class="side-links">
             <div style="color:#1B4CA1">What it is</div>
             <div>How a Karmayogi experiences it</div>
-            <div>Roles involved</div>
-            <div>Glossary</div>
           </div>
         </div>
         <div class="side-box blue">
           <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
-          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab shows the services behind this feature; <b style="color:#1B4CA1">LLD</b> covers the data model and sequence flows.</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab shows the services behind this feature; <b style="color:#1B4CA1">LLD</b> covers the state machine and rules; <b style="color:#1B4CA1">As-Built</b> lists every requirement with its source and the known defects.</div>
         </div>
         <div class="side-box">
           <div class="lbl">Related bubbles</div>
@@ -553,87 +553,122 @@
     <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
       <div>
         <h2 class="fp-h2">Actors</h2>
-        <p class="fp-p"><strong>Karmayogi</strong> (the learner), <strong>MDO Admin</strong> (the learner's ministry/department administrator, an approver), <strong>Program Coordinator (PC)</strong> (owns the program, an approver, works the Creation Portal console), <strong>Author</strong> (creates the program content), <strong>Batch Creator</strong> (opens and maintains batches), and <strong>Instructor</strong> (assigned per batch, runs sessions and marks attendance). Which approvers are involved depends on the batch's approval type &mdash; see the four modes in LLD.</p>
+        <p class="fp-p"><strong>Karmayogi</strong> (the learner), <strong>MDO Admin</strong> (an approver for their organisation), <strong>Program Coordinator (PC)</strong> (owns the program&rsquo;s batches, approves, marks attendance, nominates), <strong>Lead trainer / co-trainer</strong> (<code>bp_program_trainer</code>, coordinator-level, scoped to chosen batches), <strong>Instructor</strong> (<code>program_instructor</code>, named on a batch), <strong>Author / reviewer / publisher</strong>.</p>
 
         <h2 class="fp-h2">Learner journeys</h2>
         <div class="uc-grid">
           <div class="uc-card">
-            <div class="who">Karmayogi</div><b class="t">UC-1 &middot; Request enrolment into a batch</b>
-            <p>From the program's TOC page the learner picks an open batch and requests a seat. Before the request goes out, the portal checks for a <strong>conflict</strong> (an active enrolment in another Blended Program blocks the request) and, if the batch demands it, collects a <strong>profile survey / questionnaire</strong> first (driven by <code>batchAttributes.userProfileFileds</code> or the program's <code>wfSurveyLink</code>). The request creates a workflow application in state <code>INITIATE</code>, then moves to the first approval step.</p>
+            <div class="who">Karmayogi</div><b class="t">UC-1 &middot; Find a program and pick a batch</b>
+            <p>Batches whose enrolment end date has passed are not offered (and on web a batch with no end date is never enrollable). Seat state comes from a per-batch status count: <em>enrolled</em> = approved requests, <em>applied</em> = everything except withdrawn. The page warns at 80% full and when every batch is full.</p>
+            <div class="api">POST <code>learner/course/v1/batch/list</code> &middot; <code>workflow/blendedprogram/enrol/status/count</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Karmayogi</div><b class="t">UC-2 &middot; Clear the entry steps</b>
+            <p>Mandatory pre-requisite resources first; then (web) a client-side clash check; then a profile form if the batch sets <code>userProfileFileds</code> (with a cadre eligibility check when <code>cadreList</code> is set); then the program survey (<code>wfSurveyLink</code>). Answers are saved <strong>before</strong> the final confirmation, so cancelling leaves them submitted.</p>
+            <div class="api">GET <code>forms/v2/getFormById</code> &middot; POST <code>forms/v2/saveFormSubmit</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Karmayogi</div><b class="t">UC-3 &middot; Request a seat</b>
+            <p>The server re-checks volunteer eligibility, seat room (with a 20% request-time buffer) and schedule clash, writes a request at <code>ENROLL_IS_IN_PROGRESS</code> and returns; a Kafka consumer then moves it into the first approval state.</p>
             <div class="api">POST <code>workflow/blendedprogram/enrol</code></div>
           </div>
           <div class="uc-card">
-            <div class="who">Karmayogi</div><b class="t">UC-2 &middot; Withdraw an enrolment request</b>
-            <p>Until approved (and, depending on program rules, after), the learner can withdraw. The workflow moves to <code>WITHDRAWN</code>; the seat is released. The UI shows the request state on the batch card throughout (&ldquo;sent for MDO approval&rdquo;, &ldquo;approved&rdquo;, &hellip;) via the status-message mapping.</p>
+            <div class="who">Karmayogi</div><b class="t">UC-4 &middot; Withdraw a pending request</b>
+            <p>No reason is captured. Web disables it once the first approver of a two-step route has acted; neither web nor mobile offers it after approval. A withdrawal never un-enrols; only a removal does.</p>
             <div class="api">POST <code>workflow/blendedprogram/unenrol</code> (action <code>WITHDRAW</code>)</div>
           </div>
           <div class="uc-card">
-            <div class="who">Karmayogi</div><b class="t">UC-3 &middot; Learn: online modules + sessions</b>
-            <p>Once <code>APPROVED</code>, the learner is enrolled in the batch and the program appears in My Learning. Online content progress is written per node; classroom/offline sessions come from <code>batchAttributes.sessionDetails_v2</code>, and session completion contributes to the overall completion percentage.</p>
-            <div class="api">POST <code>content/v2/state/read</code> &middot; GET <code>learner/course/v4/user/enrollment/details/:userId</code></div>
+            <div class="who">Karmayogi (mobile)</div><b class="t">UC-5 &middot; Self-enrol by scanning a QR</b>
+            <p>For programs with <code>selfEnrollment = Yes</code>. The app checks the QR matches the program and a batch, the enrolment end date, the seat state and &mdash; if the batch has a <code>latlong</code> &mdash; a 1000 m radius. The server approves on the spot, with no approver.</p>
+            <div class="api">POST <code>workflow/blendedprogram/qr/enrolments</code></div>
           </div>
           <div class="uc-card">
-            <div class="who">Karmayogi</div><b class="t">UC-4 &middot; Submit a program assignment</b>
-            <p>Blended programs can carry assignments: the learner uploads an answer file, submits a draft, then submits final; the coordinator side is notified and can evaluate. Files live in the BP assignment store.</p>
-            <div class="api">POST <code>assignment/v1/submitDraft</code> &middot; <code>assignment/v1/submit</code> &middot; <code>storage/v1/bp/assignment/answer</code> &middot; <code>v1/notifyAssignment/submit</code></div>
+            <div class="who">Karmayogi</div><b class="t">UC-6 &middot; Learn: self-paced content and sessions</b>
+            <p>Start needs an <code>APPROVED</code> request and a batch in progress; a countdown shows until then. Sessions come from the batch&rsquo;s <code>sessionDetails_v2</code>; web shows attendance (status 2 = marked) but cannot mark it.</p>
+            <div class="api">POST <code>learner/course/v4/user/enrollment/details</code> &middot; <code>read/content-progres/:courseId</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Karmayogi (mobile)</div><b class="t">UC-7 &middot; Mark attendance by QR</b>
+            <p>Session must be live (start to start + whole hours + 1 h), the phone within 1000 m of the batch <code>latlong</code>, and the QR must match the tapped session and batch. It is a plain progress write on the session node; a batch without <code>latlong</code> cannot mark attendance on mobile.</p>
+            <div class="api">PATCH <code>course/v5/content/state/update</code> (status 2, 100%)</div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Karmayogi</div><b class="t">UC-8 &middot; Submit an assignment</b>
+            <p>PDF only; web checks the integer MB &gt; 5, mobile 5 MB, the store 5000 KB. Draft then submit; the web preview&rsquo;s &ldquo;Discard&rdquo; actually saves a draft. No due date exists in the learner code.</p>
+            <div class="api">POST <code>assignment/v1/search</code> &middot; <code>storage/v1/bp/assignment/answer/&hellip;</code> &middot; PUT <code>assignment/v1/submitDraft</code> &middot; POST <code>assignment/v1/submit</code></div>
           </div>
         </div>
 
-        <h2 class="fp-h2">Approver &amp; admin journeys</h2>
+        <h2 class="fp-h2">Approver &amp; coordinator journeys</h2>
         <div class="uc-grid">
           <div class="uc-card">
-            <div class="who">MDO Admin / PC</div><b class="t">UC-5 &middot; Approve or reject a request</b>
-            <p>Approvers see pending applications in their console and act on each. A one-step batch needs only MDO <em>or</em> PC; a two-step batch chains both in the configured order. Approval moves the workflow to the next state (<code>SEND_FOR_PC_APPROVAL</code> or <code>APPROVED</code>); rejection ends it at <code>REJECTED</code>.</p>
-            <div class="api">POST <code>workflowhandler/transition</code> &middot; <code>workflow/v2/userWFApplicationFieldsSearch</code> &middot; <code>workflowhandler/applicationsSearch</code></div>
+            <div class="who">Program Coordinator</div><b class="t">UC-9 &middot; Work the request queue</b>
+            <p>The batch page&rsquo;s New requests tab lists <code>SEND_FOR_PC_APPROVAL</code> items oldest first. Approve asks for confirmation; Reject requires a reason (&le; 500 chars). The console acts on the PC step only.</p>
+            <div class="api">POST <code>workflow/blendedprogram/searchV2/pc</code> &middot; <code>update/pc</code></div>
           </div>
           <div class="uc-card">
-            <div class="who">MDO Admin / PC</div><b class="t">UC-6 &middot; Remove an enrolled learner</b>
-            <p>After approval, an admin can remove a learner from the batch; the workflow records <code>REMOVED</code> and the seat frees up. The learner sees the removal message on the program page.</p>
-            <div class="api">POST <code>workflowhandler/transition</code></div>
+            <div class="who">Program Coordinator</div><b class="t">UC-10 &middot; Approve or reject in bulk by CSV</b>
+            <p>Export the pending queue, fill the <code>action</code> column and upload (UI &le; 30 rows). The server validates every row first &mdash; any bad row rejects the file &mdash; then applies each with the normal seat, start-date and clash rules.</p>
+            <div class="api">POST <code>workflow/blendedprogram/getUserApprovalDataInCsv</code> &middot; <code>bulkApprovalDataFromCsv/:contentId</code></div>
           </div>
           <div class="uc-card">
-            <div class="who">Batch Creator</div><b class="t">UC-7 &middot; Create and configure a batch</b>
-            <p>From the Creation Portal, a batch is opened as <code>enrollmentType: "invite-only"</code> with name, start/end/enrolment-end dates, seat cap, venue address and lat-long, QR attendance on/off, instructors, cadre list and profile-field requirements. If custom profile fields are chosen, the portal <strong>auto-creates a survey form</strong> and stamps its link into the batch; a <strong>default certificate template is auto-attached</strong> on creation.</p>
-            <div class="api">POST <code>learner/course/v1/batch/create</code> &middot; <code>forms/v2/createForm</code> &middot; <code>course/batch/cert/v1/template/add</code></div>
+            <div class="who">MDO Admin</div><b class="t">UC-11 &middot; Act as MDO admin</b>
+            <p>The workflow endpoints and the gateway role list for MDO exist (<code>update/mdo</code>, <code>searchV2/mdo</code>, <code>admin/enrol</code>, <code>remove/mdo</code>), but no screen in the attached UI repos calls them. <strong>Verification boundary:</strong> the MDO-side UI, if any, is outside the attached repos.</p>
+            <div class="api">POST <code>workflow/blendedprogram/update/mdo</code> &middot; <code>admin/enrol</code></div>
           </div>
           <div class="uc-card">
-            <div class="who">MDO Admin / PC</div><b class="t">UC-8 &middot; Generate the batch enrolment report</b>
-            <p>Requester role is validated (MDO/PC roles only), then the report is generated <strong>asynchronously</strong>: a request row goes to <code>IN_PROGRESS</code>, a Kafka consumer joins workflow state with enrolment data, and the finished file is downloaded per org/course/batch.</p>
-            <div class="api">POST <code>bp/v2/generate/report</code> &middot; <code>bp/v2/bpreport/status</code> &middot; GET <code>bp/v1/bpreport/download/:orgId/:courseId/:batchId/:file</code></div>
+            <div class="who">Coordinator / MDO Admin</div><b class="t">UC-12 &middot; Nominate learners</b>
+            <p>Writes the request straight to <code>APPROVED</code>: &le; 200 users per call, PC overrides an earlier MDO or self request, MDO overrides only self, hard seat cap, clash check; per-user results come back. Hidden from instructors.</p>
+            <div class="api">POST <code>workflow/blendedprogram/nominate</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Coordinator / MDO Admin</div><b class="t">UC-13 &middot; Remove an enrolled learner</b>
+            <p>Before the batch starts. The request becomes <code>REMOVED</code> and an un-enrol goes to the course service.</p>
+            <div class="api">POST <code>workflow/blendedprogram/remove/approved/user</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Program Coordinator</div><b class="t">UC-14 &middot; Mark attendance</b>
+            <p>Enabled from the session&rsquo;s start date until batch end + 7 days (a Creation Portal rule). Present writes 2 / 100%, absent 0 / 0%; the learner is emailed. The server itself checks no role, owner or date.</p>
+            <div class="api">POST <code>blendedprogram/v1/update/progress</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Coordinator / Instructor</div><b class="t">UC-15 &middot; Evaluate assignments</b>
+            <p>Marks 1&ndash;99&thinsp;999 (not above the maximum) and feedback &le; 500 chars. Deleting an assignment in the UI removes it from the list only.</p>
+            <div class="api">POST <code>assignment/v1/feedback</code> &middot; <code>v1/notifyAssignment/evaluate</code></div>
+          </div>
+          <div class="uc-card">
+            <div class="who">Program Coordinator</div><b class="t">UC-16 &middot; Generate reports</b>
+            <p>Enrollment (v1) and Consumption (v2) reports, asynchronous via Kafka; the v2 report has no session or attendance columns &mdash; those exist only in the nightly Spark CSV.</p>
+            <div class="api">POST <code>bp/v1/generate/report</code> &middot; <code>bp/v2/generate/report</code> &middot; <code>bp/v2/bpreport/list</code></div>
           </div>
         </div>
 
         <h2 class="fp-h2">Authoring &amp; batch management (Creation Portal)</h2>
         <div class="uc-grid">
           <div class="uc-card">
-            <div class="who">Author / Content Creator</div><b class="t">UC-9 &middot; Create and publish the program itself</b>
-            <p>A Blended Program is authored in <code>sunbird-cb-creationportal</code> like any collection: create &rarr; build hierarchy &rarr; send to review &rarr; publish (with reject and retire paths). Assessments attach as question sets with their own review/publish cycle.</p>
-            <div class="api">POST <code>action/content/create</code> &middot; <code>content/hierarchy/update</code> &middot; <code>content/v3/review/:id</code> &middot; <code>content/v3/publish/:id</code></div>
+            <div class="who">Author / Reviewer / Publisher</div><b class="t">UC-17 &middot; Author and publish the program</b>
+            <p>Create with the Blended Program radio; hierarchy holds Modules, Resources, Session Templates, optional Pre / Final assessments (Course children are stripped on save); program fields include duration, approval type, self-enrolment, batch settings and &le; 5 coordinators; review, publish (children first). Retire only via the generic retire call.</p>
+            <div class="api">POST <code>action/content/v3/create</code> &middot; PATCH <code>&hellip;/hierarchy/update</code> &middot; DELETE <code>v1/content/retire</code></div>
           </div>
           <div class="uc-card">
-            <div class="who">Program Coordinator / Admin</div><b class="t">UC-10 &middot; Nominate &amp; bulk-enrol learners</b>
-            <p>Beyond self-enrolment, admins can <strong>nominate</strong> learners into a batch (select or bulk-upload &mdash; the workflow is created on the learner's behalf) or bulk-enrol directly. Users can also be added to or removed from a batch individually.</p>
-            <div class="api">POST <code>workflow/blendedprogram/nominate</code> &middot; <code>program/v2/admin/bulkEnroll</code> &middot; <code>authApi/batch/addUser</code> / <code>removeUser</code></div>
+            <div class="who">Program Coordinator</div><b class="t">UC-18 &middot; Staff the program</b>
+            <p>Add coordinators and National / State lead trainers (&le; 5 each) from the types in the program&rsquo;s batch settings; removal is blocked while they own or co-train an active batch.</p>
+            <div class="api">POST <code>program/coordinator/list/:doId</code> &middot; PUT <code>program/coordinator/:doId</code></div>
           </div>
           <div class="uc-card">
-            <div class="who">Program Coordinator / MDO</div><b class="t">UC-11 &middot; Work the request queue in the Creation Portal</b>
-            <p>The program's detail page has a &ldquo;New requests&rdquo; console: approve (with the next-step message when a second approval is pending) or reject <strong>with a mandatory reason</strong>. The pending queue can be exported as CSV for offline processing.</p>
-            <div class="api">POST <code>v1/blendedprogram/workflow/update</code> &middot; GET <code>workflow/blendedprogram/getUserApprovalDataInCsv</code></div>
+            <div class="who">Coordinator / Trainer</div><b class="t">UC-19 &middot; Create a batch with sessions</b>
+            <p>Size 1&ndash;200 (stored as a string), dates, enrolment end, venue + <code>latlong</code> (needed for QR attendance), instructors, cadre list, profile-field mode; one session card per Session Template. Side effects: profile survey form, co-trainers, default certificate template.</p>
+            <div class="api">POST <code>authApi/batch/create</code> &middot; <code>forms/v2/createForm</code> &middot; PATCH <code>course/batch/cert/v1/template/add</code></div>
           </div>
           <div class="uc-card">
-            <div class="who">Instructor / Coordinator</div><b class="t">UC-12 &middot; Run sessions and mark attendance</b>
-            <p>Sessions (offline or online) live in the batch's session plan. Attendance is taken either by <strong>QR code</strong> (per batch, downloadable, with scan status) or manually in the attendance dialog &mdash; and marking attendance is literally a <strong>progress write</strong>: attended = status 2 / 100% on the session node, which is why sessions count toward completion. Marking is time-boxed after the session date.</p>
-            <div class="api">POST <code>blendedprogram/v1/update/progress</code> &middot; GET <code>batch/v1/enrollment/qrcode/download</code> / <code>status</code></div>
+            <div class="who">Coordinator / Trainer</div><b class="t">UC-20 &middot; Maintain a batch</b>
+            <p>Name and size locked on edit. Delete only before the start date &mdash; and it un-enrols every learner and emails them. Archived batches accept only new instructors.</p>
+            <div class="api">PATCH <code>authApi/batch/update</code> &middot; POST <code>learner/course/v1/batch/delete</code></div>
           </div>
           <div class="uc-card">
-            <div class="who">Coordinator</div><b class="t">UC-13 &middot; Track learners and certify</b>
-            <p>Per-batch learner progress is read in bulk (v2 endpoint), certificates ride the batch template attached at creation, and can be re-issued for corrections.</p>
-            <div class="api">POST <code>authApi/batch/getUserProgressV2</code> &middot; <code>course/batch/cert/v1/issue?reIssue=true</code></div>
-          </div>
-          <div class="uc-card">
-            <div class="who">Batch Creator</div><b class="t">UC-14 &middot; Maintain the batch over its life</b>
-            <p>Batch details and attributes are editable after creation (same payload shape via update); an unused batch can be deleted. Mandatory-profile-field options, cadre lists and the default certificate template all come from system settings, so they are configuration rather than code.</p>
-            <div class="api">PATCH <code>authApi/batch/update</code> &middot; POST <code>learner/course/v1/batch/delete</code> &middot; <code>data/v2/system/settings/get/&hellip;</code></div>
+            <div class="who">Program Coordinator</div><b class="t">UC-21 &middot; Print the QR codes</b>
+            <p>Two different PDFs: the self-enrolment QR (needs <code>selfEnrollment = Yes</code>) and one attendance QR per offline session.</p>
+            <div class="api">GET <code>batch/v1/enrollment/qrcode/&hellip;</code> &middot; <code>batchsesion/qrcode/:courseId/:batchId</code></div>
           </div>
         </div>
 
@@ -641,13 +676,14 @@
         <div class="tw"><table>
           <thead><tr><th>Situation</th><th>Behaviour</th></tr></thead>
           <tbody>
-            <tr><td>Learner already in another Blended Program</td><td>Enrolment request is blocked client-side with a conflict message before any workflow is created.</td></tr>
-            <tr><td>Batch full</td><td>Enrolled/approved count is checked via the status-count API against <code>currentBatchSize</code>; the request CTA is disabled.</td></tr>
-            <tr><td>Enrolment window closed</td><td><code>enrollmentEndDate</code> on the batch gates the request button.</td></tr>
-            <tr><td>Survey required but not submitted</td><td>The enrol call is not made until the form (via <code>forms/v2/getFormById</code> / <code>saveFormSubmit</code>) is completed.</td></tr>
-            <tr><td>Duplicate request</td><td>The user's existing workflow application is fetched on page load (<code>blendedprogram/user/search</code>); the UI renders the current state instead of offering enrol again.</td></tr>
-            <tr><td>Attendance marked late</td><td>The attendance dialog is disabled once the allowed window after the session date has passed (date check in <code>content-sessions</code>).</td></tr>
-            <tr><td>Rejection without a reason</td><td>Not possible from the Creation Portal console &mdash; the reject dialog requires a reason, which travels with the workflow update.</td></tr>
+            <tr><td>Learner in another Blended Program with overlapping dates</td><td>The web client check only sees the program being viewed, so it never fires. The server rejects at enrol, and runs the same check on every approve / withdraw, where a hit silently becomes a <strong>REJECT</strong>. An existing batch that fully encloses the new one is not detected.</td></tr>
+            <tr><td>Batch full</td><td>Requests are allowed up to size + 20%; approval and nomination are hard-capped at size. <code>currentBatchSize</code> of 0, missing or a JSON number reads as full.</td></tr>
+            <tr><td>Enrolment window</td><td>Clients hide batches after <code>enrollmentEndDate</code>; the course service&rsquo;s single-user enrol ignores it and closes at the end of the batch start date (IST).</td></tr>
+            <tr><td>Batch already started</td><td>Approvals are refused ("This batch is already in progress") except <code>REJECT</code>/<code>WITHDRAW</code>; removal is refused too.</td></tr>
+            <tr><td>Withdrawal after approval</td><td>Not offered by web or mobile. A withdrawn or rejected row never un-enrols.</td></tr>
+            <tr><td>Duplicate request</td><td>The workflow service has no duplicate guard on the ordinary learner enrol (admin enrol and QR do).</td></tr>
+            <tr><td>Reject without a reason</td><td>Blocked in the Creation Portal; the server does not require one.</td></tr>
+            <tr><td>Attendance</td><td>No server-side role, owner or time check. Mobile adds a live-session window and a 1 km fence; a batch with no <code>latlong</code> cannot mark attendance on mobile.</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -662,6 +698,7 @@
     <!-- LLD -->
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/blended-program/lld.md"></article><div class="md-src">source: docs/learning-hub/blended-program/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/blended-program/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/blended-program/operations-manual.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/blended-program/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/blended-program/as-built-requirements.md</div></div>
     </div><!-- /fdoc blended -->
 
     <!-- ═══ COURSE ═══ -->

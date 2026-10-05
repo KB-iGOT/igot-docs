@@ -74,6 +74,7 @@ nav:
           - HLD: learning-hub/blended-program/hld.md
           - LLD: learning-hub/blended-program/lld.md
           - Operations Manual: learning-hub/blended-program/operations-manual.md
+          - As-Built Requirements: learning-hub/blended-program/as-built-requirements.md
       - Course:
           - learning-hub/course/index.md
           - Use Cases: learning-hub/course/use-cases.md
