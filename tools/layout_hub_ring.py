@@ -27,6 +27,13 @@ little) every time a feature is added or removed, because 360/N changes.
 That's judged an acceptable, minor cost for staying visually a single,
 always-symmetric wheel -- which is what actually reads as "right" here.
 
+The same script also lays out the two smaller, fixed-radius hub views that
+sit one level above or below the Learning Hub -- Features, and the
+Registration sub-hub nested inside it (see SIMPLE_RINGS). Those use a plain
+evenly-spaced ring at the original 310px radius, which is ample for the
+handful of bubbles they hold. Their blocks are delimited by
+<!-- RING:<key>:BEGIN --> ... <!-- RING:<key>:END --> markers.
+
 Usage:
     python3 tools/layout_hub_ring.py            # rewrite the template
     python3 tools/layout_hub_ring.py --check     # verify only, exit 1 on drift
@@ -60,21 +67,16 @@ FEATURES = [
     ("bharatkalp",     "Bharat Kalp",                       128, 14,   ""),
     ("blended",        "Blended Program",                   136, None, 'id="blended"'),
     ("assigned",       "My Assigned Courses",               136, 13.5, ""),
-    ("eventshub",      "Events Hub",                        128, 14,   ""),
     ("standalone",     "Standalone Assessment",             136, 13.5, "assess"),
     ("peervalidation", "Peer Validation",                   132, 14,   ""),
     ("cap",            "Comprehensive Assessment Program",  136, 13,   "assess"),
     ("pathway",        "Learning Pathway",                  128, 14,   ""),
     ("course",         "Course",                            130, 15,   ""),
     ("search",         "Search",                             128, 15,   ""),
-    ("aicbp",          "AI CBP Tool",                        136, 13.5, ""),
     ("curated",        "Curated Program",                   132, None, ""),
-    ("aiassessment",   "AI Assessment Tool",                 128, 13,   ""),
     ("marketplace",    "Marketplace",                        128, 14,   ""),
     ("unenroll",       "Unenrollment of Courses",            132, 12,   ""),
     ("moderatedcontent", "Moderated Content",                 95, 13,   ""),
-    ("useronboarding", "User Onboarding",                     128, 14,   ""),
-    ("spvregistration", "SPV &amp; Admin Registration",       128, 13,   ""),
 ]
 
 # ─── Geometry constants ──────────────────────────────────────────────
@@ -246,6 +248,106 @@ def render_block(radius, cy, pts):
     return "\n".join(parts)
 
 
+# ─── Simple (fixed-radius) rings: Features, and Registration inside it ───
+BOOK_ICON = ('<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" '
+             'stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/>'
+             '<path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>')
+USER_PLUS_ICON = ('<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" '
+                  'stroke-linecap="round" stroke-linejoin="round"><circle cx="9.5" cy="8" r="3.5"/>'
+                  '<path d="M3 20c0-3.3 2.9-6 6.5-6s6.5 2.7 6.5 6"/><path d="M19 8v6M16 11h6"/></svg>')
+SIMPLE_CX, SIMPLE_CY, SIMPLE_START = 720, 505, -90   # first bubble straight up
+SIMPLE_DEFAULT_R = 310                                  # the original pentagon's radius
+
+# item = (kind, id, label, size_px, font_size_px, leaf_count)
+#   kind "feature" -> opens a feature page; kind "subhub" -> opens the nested hub view `id`
+#   (leaf_count is shown as the sub-hub bubble's "N features" caption)
+SIMPLE_RINGS = {
+    "features": dict(
+        title="Features", icon=BOOK_ICON, r=300,   # 7 bubbles: 310 would push the bottom pair past SAFE_Y
+        landing_re=re.compile(r'(Features<span class="sub">)\d+( features</span>)'),
+        items=[
+            ("feature", "explore",          "Explore Content",         132, 15,   1),
+            ("subhub",  "v-registration",   "Registration",            138, None, 3),
+            ("feature", "weeklyclaps",      "Weekly Claps",            132, 13,   1),
+            ("feature", "trainingplan",     "Training Plan",           132, 14,   1),
+            ("feature", "chs",              "CHS",                     132, 14,   1),
+            ("feature", "aicbp",            "AI CBP Tool",             132, 14,   1),
+            ("feature", "aiassessment",     "AI Assessment Tool",      132, 13,   1),
+        ]),
+    "registration": dict(
+        title="Registration", icon=USER_PLUS_ICON, landing_re=None,
+        items=[
+            ("feature", "useronboarding",   "User Registration",       140, 14,   1),
+            ("feature", "spvregistration",  "SPV &amp; Admin Registration", 140, 13, 1),
+            ("feature", "bulkregistration", "Bulk Registration",       140, 13,   1),
+        ]),
+}
+
+
+def simple_points(n, r=SIMPLE_DEFAULT_R):
+    pts = []
+    for i in range(n):
+        th = math.radians(SIMPLE_START + i * 360 / n)
+        pts.append((SIMPLE_CX + r * math.cos(th), SIMPLE_CY + r * math.sin(th)))
+    return pts
+
+
+def render_simple(key):
+    cfg = SIMPLE_RINGS[key]
+    items = cfg["items"]
+    r = cfg.get('r', SIMPLE_DEFAULT_R)
+    pts = simple_points(len(items), r)
+    leaf_total = sum(it[5] for it in items)
+    lines, buttons = [], []
+    for (kind, iid, label, size, fs, leaves), (bx, by) in zip(items, pts):
+        lines.append(f'      <line x1="{SIMPLE_CX}" y1="{SIMPLE_CY}" x2="{round(bx)}" y2="{round(by)}" '
+                     f'stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>')
+        left, top = round(bx - size / 2), round(by - size / 2)
+        fsz = f' font-size:{fs}px;' if fs else ''
+        if kind == "feature":
+            buttons.append(f'    <button class="bub item" style="left:{left}px; top:{top}px; width:{size}px; '
+                           f'height:{size}px;{fsz}" onclick="openFeature(\'{iid}\')">{label}</button>')
+        else:
+            buttons.append(f'    <button class="bub hub" style="left:{left}px; top:{top}px; width:{size}px; '
+                           f'height:{size}px; font-size:15px; flex-direction:column; gap:3px" '
+                           f'onclick="openSubHub(\'{iid}\')">{label}<span class="sub">{leaves} features</span></button>')
+    return "\n".join([
+        f"    <!-- RING:{key}:BEGIN -- generated by tools/layout_hub_ring.py, do not hand-edit. Edit SIMPLE_RINGS and re-run. -->",
+        '    <svg class="orbitbg" width="1440" height="900" fill="none">',
+        *lines,
+        f'      <circle cx="{SIMPLE_CX}" cy="{SIMPLE_CY}" r="{r}" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>',
+        "    </svg>",
+        "",
+        f'    <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">',
+        f"      {cfg['icon']}",
+        f'      <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">{cfg["title"]}</div>',
+        f'      <div class="sub">{leaf_total} features</div>',
+        "    </div>",
+        "",
+        *buttons,
+        f"    <!-- RING:{key}:END -->",
+    ])
+
+
+def check_simple(key):
+    items = SIMPLE_RINGS[key]["items"]
+    pts = simple_points(len(items), SIMPLE_RINGS[key].get('r', SIMPLE_DEFAULT_R))
+    problems = []
+    for i in range(len(items)):
+        for j in range(i + 1, len(items)):
+            d = math.hypot(pts[i][0] - pts[j][0], pts[i][1] - pts[j][1]) - (items[i][3] + items[j][3]) / 2
+            if d < 0:
+                problems.append(f"{key}: {items[i][1]} overlaps {items[j][1]} by {-d:.1f}px")
+    for (kind, iid, label, size, fs, leaves), (bx, by) in zip(items, pts):
+        if not (SAFE_X[0] <= bx - size / 2 and bx + size / 2 <= SAFE_X[1]
+                and SAFE_Y[0] <= by - size / 2 and by + size / 2 <= SAFE_Y[1]):
+            problems.append(f"{key}: {iid} outside safe canvas margins")
+        d = math.hypot(bx - SIMPLE_CX, by - SIMPLE_CY) - (HUB_R + size / 2)
+        if d < 0:
+            problems.append(f"{key}: {iid} overlaps the centre hub by {-d:.1f}px")
+    return problems
+
+
 MARKER_RE = re.compile(r"    <!-- HUB-RING:BEGIN.*?HUB-RING:END -->", re.S)
 LANDING_COUNT_RE = re.compile(
     r'(<button class="bub hub" id="learn-hub"[^>]*>\s*Learning Hub<span class="sub">)\d+( features</span>)'
@@ -272,6 +374,21 @@ def main():
     if not LANDING_COUNT_RE.search(updated):
         raise SystemExit("Landing page's Learning Hub feature-count span not found.")
     updated = LANDING_COUNT_RE.sub(rf"\g<1>{len(pts)}\g<2>", updated, count=1)
+
+    for key, cfg in SIMPLE_RINGS.items():
+        probs = check_simple(key)
+        if probs:
+            raise SystemExit("Layout has problems:\n  " + "\n  ".join(probs))
+        pat = re.compile(rf"    <!-- RING:{key}:BEGIN.*?RING:{key}:END -->", re.S)
+        if not pat.search(updated):
+            raise SystemExit(f"RING:{key}:BEGIN/END markers not found in the template.")
+        updated = pat.sub(lambda _: render_simple(key), updated, count=1)
+        if cfg["landing_re"] is not None:
+            if not cfg["landing_re"].search(updated):
+                raise SystemExit(f"Landing page count span for {key} not found.")
+            total = sum(it[5] for it in cfg["items"])
+            updated = cfg["landing_re"].sub(rf"\g<1>{total}\g<2>", updated, count=1)
+        print(f"laid out {key}: {len(cfg['items'])} bubbles, {sum(it[5] for it in cfg['items'])} features")
 
     print(f"laid out {len(pts)} features on one ring, radius={radius:.1f}px, cy={cy:.1f}, "
           f"worst clearance={worst_clearance(pts, cy):.1f}px")

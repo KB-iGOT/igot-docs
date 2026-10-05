@@ -28,7 +28,7 @@ otherwise it is publicly readable once enabled.
 | `karmayogi-docs-explorer.template.html` | Source template for the explorer (authored HTML for Overview/Use Cases panels; APIs/HLD/LLD/Operations Manual tabs render the Markdown files directly). Edit this, not the built HTML. |
 | `mkdocs.yml` | Site nav/config for rendering `docs/` as a static site with MkDocs Material. |
 | `tools/build_docs_explorer.py` | Rebuilds `karmayogi-docs-explorer.html` from the template after any Markdown change. |
-| `tools/layout_hub_ring.py` | Auto-lays-out the Learning Hub's hub-ring bubbles (one ring, radius grows with feature count) and rewrites the `HUB-RING:BEGIN/END` block in the template. Run this after adding/removing a Learning Hub feature, then rebuild the explorer. |
+| `tools/layout_hub_ring.py` | Auto-lays-out the hub-ring bubbles: the Learning Hub's (one ring, radius grows with feature count, `HUB-RING:BEGIN/END`) and the smaller Features and Registration rings (`SIMPLE_RINGS`, `RING:<key>:BEGIN/END`). Run this after adding/removing a feature in any of them, then rebuild the explorer. |
 | `igot-doc-skills.md` | The house style guide / working convention for generating and updating this documentation (research discipline, six-file feature structure, verification-boundary rules, explorer wiring). |
 | `_to_delete/` | Staged for removal — not part of the active documentation set. |
 
@@ -51,23 +51,29 @@ same six files (newer features also add an `as-built-requirements.md`):
 - [API Gateway & Routing](docs/platform/api-gateway.md) — `/apis` → uiproxy, `/api` → Kong; how to trace any API to its service
 - [Content Lifecycle](docs/platform/content-lifecycle.md) — the create→review→publish→retire spine
 
-### Main-page features
+### Features
 
 - [Explore Content](docs/explore-content/index.md) — global search & discovery
-- [Bulk Registration](docs/learning-hub/bulk-registration/index.md) — three independent, largely disconnected CSV-upload pipelines for onboarding users
+- **Registration** — how users and organisations get onto the platform
+    - [User Registration](docs/learning-hub/user-onboarding/index.md) — public sign-up, department link/QR, admin-created users, SSO first login
+    - [SPV & Admin Registration](docs/learning-hub/spv-admin-registration/index.md) — the super-admin portal: organisations, first administrators, links, request review
+    - [Bulk Registration](docs/learning-hub/bulk-registration/index.md) — three independent, largely disconnected CSV-upload pipelines for onboarding users
 - [Weekly Claps](docs/learning-hub/weekly-claps/index.md) — a rolling engagement counter — five separate widget implementations, one backend endpoint
 - [Training Plan](docs/learning-hub/training-plan/index.md) — MDO-authored targeted assignment (`CbPlan`) — four live table generations at once
 - [CHS](docs/learning-hub/chs/index.md) — backend batch pipeline feeding karma points, leaderboards, BI warehouse
+- [AI CBP Tool](docs/learning-hub/ai-cbp-tool/index.md) — AI-assisted competency-based program authoring
+- [AI Assessment Tool](docs/learning-hub/ai-assessment-tool/index.md) — Gemini-generated assessments from a course's PDFs/captions or KCM competency selections alone
 
-These five sit under the explorer's **Features** bubble. Their Markdown folders
-still live under `docs/learning-hub/` for historical reasons.
+These sit under the explorer's **Features** bubble (Registration is a nested
+bubble holding its three children). Their Markdown folders still live under
+`docs/learning-hub/` for historical reasons.
 
 ### Hubs
 
 - [Competency Hub](docs/competency-hub/index.md) — two parallel competency taxonomies (`frac-backend` and a Knowledge Platform mirror), the Passbook, browse/search and org-designation mapping
 - [Discussion Hub](docs/learning-hub/discussion-hub/index.md) — community-scoped Q&A/forum — Questions, Answer Posts and nested Answer Post Replies
 - [Amrit Gyaan Kosh](docs/learning-hub/amrit-gyaan-kosh/index.md) — a knowledge-resource discovery hub (PDFs, videos, case studies) with no backend service of its own
-- Event Hub (platform-wide) — *not yet documented*
+- [Event Hub](docs/learning-hub/events-hub/index.md) — live/virtual event scheduling and participation
 
 ### Learning Hub
 
@@ -86,10 +92,7 @@ with content-type-specific twists:
 | [Learning Pathway](docs/learning-hub/learning-pathway/index.md) | milestones gate each other — sequential unlock |
 | [Peer Validation](docs/learning-hub/peer-validation/index.md) | a named colleague, not a machine, approves completion |
 | [Bharat Kalp](docs/learning-hub/bharat-kalp/index.md) | cohort-gated microsite, not a content type on the shared rails |
-| [AI CBP Tool](docs/learning-hub/ai-cbp-tool/index.md) | AI-assisted competency-based program authoring |
-| [Events Hub](docs/learning-hub/events-hub/index.md) | live/virtual event scheduling and participation |
 | [Search](docs/learning-hub/search/index.md) | global content discovery across the composite search APIs |
-| [AI Assessment Tool](docs/learning-hub/ai-assessment-tool/index.md) | Gemini-generated assessments from a course's PDFs/captions or KCM competency selections alone |
 | [Marketplace](docs/learning-hub/marketplace/index.md) | partner/external content ecosystem — separate storage, enrollment and entitlement stack from native Course |
 | [Unenrollment of Courses](docs/learning-hub/unenrollment-of-courses/index.md) | learner-initiated withdrawal — one flag flip, wired up differently per client |
 | [Moderated Content](docs/learning-hub/moderated-content/index.md) | org-scoped visibility via `courseCategory` + `secureSettings`, riding the generic review workflow — plus an unrelated ML profanity check on discussion posts |
@@ -128,7 +131,7 @@ This repo follows a strict, code-verified documentation discipline — see
 4. New Learning Hub features need a Markdown folder under `docs/learning-hub/`,
    an entry in `mkdocs.yml`'s nav, a feature-tab block in
    `karmayogi-docs-explorer.template.html`, and an entry in
-   `tools/layout_hub_ring.py`'s `FEATURES` list (then re-run that script to
+   `tools/layout_hub_ring.py`'s `FEATURES` list (or `SIMPLE_RINGS` for a Features / Registration bubble) (then re-run that script to
    place the new hub-ring bubble before rebuilding the explorer).
 
 Do not remove Verification boundary notes when editing — tighten them by

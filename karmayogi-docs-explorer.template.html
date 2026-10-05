@@ -326,29 +326,29 @@
     </div>
 
     <button class="bub hub" id="learn-hub" style="left:646px; top:121px; width:148px; height:148px;" onclick="openHub(this)">
-      Learning Hub<span class="sub">18 features</span>
+      Learning Hub<span class="sub">13 features</span>
     </button>
     <button class="bub hub" style="left:941px; top:335px; width:148px; height:148px;" onclick="openFeature('discussionhub')">
       Discussion Hub<span class="sub">1 feature</span>
     </button>
-    <button class="bub hub" style="left:828px; top:682px; width:148px; height:148px;" onclick="notWired()">
-      Event Hub<span class="sub">coming soon</span>
+    <button class="bub hub" style="left:828px; top:682px; width:148px; height:148px;" onclick="openFeature('eventshub')">
+      Event Hub<span class="sub">1 feature</span>
     </button>
     <button class="bub item" style="left:464px; top:682px; width:148px; height:148px; font-size:15px; font-weight:900; flex-direction:column; gap:3px" onclick="openFeature('competencyhub')">
       Competency Hub<span class="sub">feature</span>
     </button>
     <button class="bub hub" style="left:355px; top:339px; width:140px; height:140px; font-size:15px; font-weight:900; flex-direction:column; gap:3px" onclick="openHub(this, 'v-features')">
-      Features<span class="sub">5 features</span>
+      Features<span class="sub">9 features</span>
     </button>
     <button class="bub item" style="left:945px; top:531px; width:140px; height:140px; font-size:14px; font-weight:900; flex-direction:column; gap:3px" onclick="openFeature('agk')">
       Amrit Gyaan Kosh<span class="sub">feature</span>
     </button>
 
-    <div class="hint">Click a hub to open its features &mdash; Competency Hub and Amrit Gyaan Kosh open directly</div>
+    <div class="hint">Click a hub to open its features &mdash; Competency Hub, Discussion Hub, Event Hub and Amrit Gyaan Kosh open directly</div>
   </section>
 
   <!-- ══════════ VIEW 2 · LEARNING HUB ══════════ -->
-  <section class="view hidden" data-gone id="v-hub">
+  <section class="view hidden" data-gone id="v-hub" data-hub-name="Learning Hub">
     <div class="topbar">
       <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
         <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#EF951E" stroke-width="2.2" stroke-linecap="round"/>
@@ -371,57 +371,47 @@
          To add/remove a feature, edit the FEATURES list in that script and re-run it;
          it rewrites everything between these two markers (lines + buttons + count). -->
     <svg class="orbitbg" width="1440" height="900" fill="none">
-      <line x1="720" y1="456" x2="1049" y2="456" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="1029" y2="568" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="972" y2="667" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="884" y2="740" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="777" y2="779" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="663" y2="779" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="556" y2="740" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="468" y2="667" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="411" y2="568" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="391" y2="456" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="411" y2="343" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="468" y2="244" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="556" y2="171" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="663" y2="132" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="777" y2="132" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="884" y2="171" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="972" y2="244" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="456" x2="1029" y2="343" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <circle cx="720" cy="456" r="329" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
+      <line x1="720" y1="454" x2="1043" y2="454" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="1006" y2="604" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="903" y2="720" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="759" y2="775" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="606" y2="756" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="478" y2="668" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="407" y2="532" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="407" y2="377" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="478" y2="241" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="606" y2="153" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="759" y2="134" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="903" y2="189" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="1006" y2="305" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <circle cx="720" cy="454" r="323" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
-    <div class="bub center" style="left:618px; top:354px; width:204px; height:204px;">
+    <div class="bub center" style="left:618px; top:352px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>
-      <div class="sub">18 features</div>
+      <div class="sub">13 features</div>
     </div>
 
-    <button class="bub item" style="left:996px; top:402px; width:106px; height:106px; font-size:14px" onclick="openFeature('bharatkalp')">Bharat Kalp</button>
-    <button class="bub item" id="blended" style="left:972px; top:511px; width:114px; height:114px;" onclick="openFeature('blended')">Blended Program</button>
-    <button class="bub item" style="left:915px; top:610px; width:114px; height:114px; font-size:13.5px" onclick="openFeature('assigned')">My Assigned Courses</button>
-    <button class="bub item" style="left:831px; top:687px; width:106px; height:106px; font-size:14px" onclick="openFeature('eventshub')">Events Hub</button>
-    <button class="bub item assess" style="left:720px; top:722px; width:114px; height:114px; font-size:13.5px" onclick="openFeature('standalone')">Standalone Assessment</button>
-    <button class="bub item" style="left:608px; top:724px; width:110px; height:110px; font-size:14px" onclick="openFeature('peervalidation')">Peer Validation</button>
-    <button class="bub item assess" style="left:499px; top:683px; width:114px; height:114px; font-size:13px" onclick="openFeature('cap')">Comprehensive Assessment Program</button>
-    <button class="bub item" style="left:415px; top:614px; width:106px; height:106px; font-size:14px" onclick="openFeature('pathway')">Learning Pathway</button>
-    <button class="bub item" style="left:357px; top:514px; width:108px; height:108px; font-size:15px" onclick="openFeature('course')">Course</button>
-    <button class="bub item" style="left:338px; top:403px; width:106px; height:106px; font-size:15px" onclick="openFeature('search')">Search</button>
-    <button class="bub item" style="left:354px; top:286px; width:114px; height:114px; font-size:13.5px" onclick="openFeature('aicbp')">AI CBP Tool</button>
-    <button class="bub item" style="left:413px; top:189px; width:110px; height:110px;" onclick="openFeature('curated')">Curated Program</button>
-    <button class="bub item" style="left:503px; top:118px; width:106px; height:106px; font-size:13px" onclick="openFeature('aiassessment')">AI Assessment Tool</button>
-    <button class="bub item" style="left:610px; top:79px; width:106px; height:106px; font-size:14px" onclick="openFeature('marketplace')">Marketplace</button>
-    <button class="bub item" style="left:722px; top:77px; width:110px; height:110px; font-size:12px" onclick="openFeature('unenroll')">Unenrollment of Courses</button>
-    <button class="bub item" style="left:848px; top:134px; width:73px; height:73px; font-size:13px" onclick="openFeature('moderatedcontent')">Moderated Content</button>
-    <button class="bub item" style="left:919px; top:191px; width:106px; height:106px; font-size:14px" onclick="openFeature('useronboarding')">User Onboarding</button>
-    <button class="bub item" style="left:976px; top:290px; width:106px; height:106px; font-size:13px" onclick="openFeature('spvregistration')">SPV &amp; Admin Registration</button>
+    <button class="bub item" style="left:979px; top:390px; width:128px; height:128px; font-size:14px" onclick="openFeature('bharatkalp')">Bharat Kalp</button>
+    <button class="bub item" id="blended" style="left:938px; top:536px; width:136px; height:136px;" onclick="openFeature('blended')">Blended Program</button>
+    <button class="bub item" style="left:835px; top:652px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('assigned')">My Assigned Courses</button>
+    <button class="bub item assess" style="left:691px; top:707px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('standalone')">Standalone Assessment</button>
+    <button class="bub item" style="left:540px; top:690px; width:132px; height:132px; font-size:14px" onclick="openFeature('peervalidation')">Peer Validation</button>
+    <button class="bub item assess" style="left:410px; top:600px; width:136px; height:136px; font-size:13px" onclick="openFeature('cap')">Comprehensive Assessment Program</button>
+    <button class="bub item" style="left:343px; top:468px; width:128px; height:128px; font-size:14px" onclick="openFeature('pathway')">Learning Pathway</button>
+    <button class="bub item" style="left:342px; top:312px; width:130px; height:130px; font-size:15px" onclick="openFeature('course')">Course</button>
+    <button class="bub item" style="left:414px; top:177px; width:128px; height:128px; font-size:15px" onclick="openFeature('search')">Search</button>
+    <button class="bub item" style="left:540px; top:87px; width:132px; height:132px;" onclick="openFeature('curated')">Curated Program</button>
+    <button class="bub item" style="left:695px; top:70px; width:128px; height:128px; font-size:14px" onclick="openFeature('marketplace')">Marketplace</button>
+    <button class="bub item" style="left:837px; top:123px; width:132px; height:132px; font-size:12px" onclick="openFeature('unenroll')">Unenrollment of Courses</button>
+    <button class="bub item" style="left:958px; top:257px; width:95px; height:95px; font-size:13px" onclick="openFeature('moderatedcontent')">Moderated Content</button>
     <!-- HUB-RING:END -->
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
   </section>
 
-  <section class="view hidden" data-gone id="v-features">
+  <section class="view hidden" data-gone id="v-features" data-hub-name="Features">
     <div class="topbar">
       <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
         <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#EF951E" stroke-width="2.2" stroke-linecap="round"/>
@@ -440,29 +430,78 @@
       iGOT Karmayogi
     </button>
 
+    <!-- RING:features:BEGIN -- generated by tools/layout_hub_ring.py, do not hand-edit. Edit SIMPLE_RINGS and re-run. -->
     <svg class="orbitbg" width="1440" height="900" fill="none">
-      <line x1="720" y1="505" x2="720" y2="195" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="1015" y2="409" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="902" y2="756" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="538" y2="756" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="425" y2="409" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
+      <line x1="720" y1="505" x2="720" y2="205" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="955" y2="318" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="1012" y2="572" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="850" y2="775" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="590" y2="775" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="428" y2="572" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="485" y2="318" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <circle cx="720" cy="505" r="300" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
     <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Features</div>
-      <div class="sub">5 features</div>
+      <div class="sub">9 features</div>
     </div>
 
-    <button class="bub item" style="left:650px; top:125px; width:140px; height:140px; font-size:15px" onclick="openFeature('explore')">Explore Content</button>
-    <button class="bub item" style="left:945px; top:339px; width:140px; height:140px; font-size:13px" onclick="openFeature('bulkregistration')">Bulk Registration</button>
-    <button class="bub item" style="left:832px; top:686px; width:140px; height:140px; font-size:13px" onclick="openFeature('weeklyclaps')">Weekly Claps</button>
-    <button class="bub item" style="left:468px; top:686px; width:140px; height:140px; font-size:14px" onclick="openFeature('trainingplan')">Training Plan</button>
-    <button class="bub item" style="left:355px; top:339px; width:140px; height:140px; font-size:14px" onclick="openFeature('chs')">CHS</button>
+    <button class="bub item" style="left:654px; top:139px; width:132px; height:132px; font-size:15px;" onclick="openFeature('explore')">Explore Content</button>
+    <button class="bub hub" style="left:886px; top:249px; width:138px; height:138px; font-size:15px; flex-direction:column; gap:3px" onclick="openSubHub('v-registration')">Registration<span class="sub">3 features</span></button>
+    <button class="bub item" style="left:946px; top:506px; width:132px; height:132px; font-size:13px;" onclick="openFeature('weeklyclaps')">Weekly Claps</button>
+    <button class="bub item" style="left:784px; top:709px; width:132px; height:132px; font-size:14px;" onclick="openFeature('trainingplan')">Training Plan</button>
+    <button class="bub item" style="left:524px; top:709px; width:132px; height:132px; font-size:14px;" onclick="openFeature('chs')">CHS</button>
+    <button class="bub item" style="left:362px; top:506px; width:132px; height:132px; font-size:14px;" onclick="openFeature('aicbp')">AI CBP Tool</button>
+    <button class="bub item" style="left:419px; top:252px; width:132px; height:132px; font-size:13px;" onclick="openFeature('aiassessment')">AI Assessment Tool</button>
+    <!-- RING:features:END -->
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
   </section>
+
+  <!-- ══════════ VIEW 2b · REGISTRATION (sub-hub of Features) ══════════ -->
+  <section class="view hidden" data-gone id="v-registration" data-hub-name="Registration">
+    <div class="topbar">
+      <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
+        <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#EF951E" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M8 20c2 8 7 12 12 12s10-4 12-12" stroke="#1B4CA1" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="20" cy="24" r="2.6" fill="#EF951E"/>
+      </svg>
+      <div class="wordmark"><b><em>Karmayogi</em> Bharat</b><span>Platform documentation</span></div>
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+        Search a feature&hellip;
+      </div>
+    </div>
+
+    <button class="backpill" onclick="goParentHub()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      Features
+    </button>
+
+    <!-- RING:registration:BEGIN -- generated by tools/layout_hub_ring.py, do not hand-edit. Edit SIMPLE_RINGS and re-run. -->
+    <svg class="orbitbg" width="1440" height="900" fill="none">
+      <line x1="720" y1="505" x2="720" y2="195" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="988" y2="660" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="452" y2="660" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
+    </svg>
+
+    <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.5" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.9-6 6.5-6s6.5 2.7 6.5 6"/><path d="M19 8v6M16 11h6"/></svg>
+      <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Registration</div>
+      <div class="sub">3 features</div>
+    </div>
+
+    <button class="bub item" style="left:650px; top:125px; width:140px; height:140px; font-size:14px;" onclick="openFeature('useronboarding')">User Registration</button>
+    <button class="bub item" style="left:918px; top:590px; width:140px; height:140px; font-size:13px;" onclick="openFeature('spvregistration')">SPV &amp; Admin Registration</button>
+    <button class="bub item" style="left:382px; top:590px; width:140px; height:140px; font-size:13px;" onclick="openFeature('bulkregistration')">Bulk Registration</button>
+    <!-- RING:registration:END -->
+
+    <div class="hint">Registration brings users onto the platform &mdash; click any bubble to open it</div>
+  </section>
+
 
   <!-- ══════════ VIEW 3 · FEATURE PAGE ══════════ -->
   <section class="view hidden" data-gone id="v-feat">
@@ -2413,6 +2452,7 @@
   var vHub = document.getElementById('v-hub');
   var vFeat = document.getElementById('v-feat');
   var vFeatures = document.getElementById('v-features');
+  var vRegistration = document.getElementById('v-registration');
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function swap(from, to) {
@@ -2459,6 +2499,19 @@
   };
 
   window.goLanding = function () { swap(currentHubView, vLand); };
+
+  /* hub → nested sub-hub (e.g. Features → Registration) and back. The sub-hub
+     becomes the current hub view, so a feature opened from it returns to it. */
+  window.openSubHub = function (targetId) {
+    var target = document.getElementById(targetId);
+    var from = currentHubView;
+    currentHubView = target;
+    swap(from, target);
+  };
+  window.goParentHub = function () {
+    currentHubView = vFeatures;
+    swap(vRegistration, vFeatures);
+  };
   var featBackTo = vHub; /* where the feature page's back button returns to */
   window.openFeature = function (id) {
     document.querySelectorAll('.fdoc').forEach(function (d) { d.hidden = (d.dataset.fdoc !== id); });
@@ -2473,6 +2526,15 @@
        hub-ring view is currently open */
     var from = !vLand.hasAttribute('data-gone') ? vLand : currentHubView;
     featBackTo = from;
+    /* name the hub the Back button returns to (landing-level features keep their own label) */
+    var hubName = from === vLand ? 'iGOT Karmayogi' : from.getAttribute('data-hub-name');
+    if (doc && hubName) {
+      doc.querySelectorAll('.fp-back').forEach(function (b) {
+        for (var i = b.childNodes.length - 1; i >= 0; i--) {
+          if (b.childNodes[i].nodeType === 3) { b.childNodes[i].nodeValue = ' Back to ' + hubName; break; }
+        }
+      });
+    }
     swap(from, vFeat); window.scrollTo({ top: 0 });
   };
   window.goHub = function () { swap(vFeat, featBackTo); };
