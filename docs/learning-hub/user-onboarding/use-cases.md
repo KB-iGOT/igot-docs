@@ -158,36 +158,16 @@ email, WhatsApp-share, or download the QR.
 
 ## Platform-admin journeys
 
-### UC-14 · Onboard an organisation (State Admin / SPV Admin)
+### UC-14 · Onboard organisations and review requests (SPV Admin / State Admin)
 
-From the admin portal the user creates an organisation — name, category
-(State / Ministry / autonomous), description, logo — or an NGO-typed
-"volunteer" organisation. The backend validates the type rules, creates the
-org in the core service, syncs the org-hierarchy table, and emits an event
-for the hierarchy framework.
+Creating organisations, the first administrators, and approving requests for
+new organisations, designations and email domains are done from the SPV /
+super-admin portal and documented in their own feature:
+[SPV & Admin Registration](../spv-admin-registration/use-cases.md). The one
+link back into this feature: approving an email domain makes everyone
+registering from that domain skip manual approval (UC-7).
 
-- API: `POST /apis/proxies/v8/org/ext/v1/create`
-
-### UC-15 · Review requests for new organisations and designations (SPV Admin)
-
-Pending, approved and rejected requests are listed by workflow service
-(`organisation`, `position`). The approver may edit the requested name before
-approving or must give a reason to reject.
-
-- APIs: `POST /apis/proxies/v8/workflow/{org,position}/search` ·
-  `POST /apis/proxies/v8/workflow/{org,position}/update`
-
-### UC-16 · Approve an email domain (SPV Admin)
-
-Approving a domain request inserts the domain into `sunbird.master_data`
-with context `userRegistrationPreApprovedDomain`. From then on, anyone
-registering with that domain skips manual approval and is auto-created
-(UC-7). Who raises a domain request is not located in these repositories.
-
-- APIs: `POST /apis/proxies/v8/workflow/domain/search` ·
-  `POST /apis/proxies/v8/workflow/domain/update`
-
-### UC-17 · Onboard public participants into an event (SPV Admin / MDO Admin)
+### UC-15 · Onboard public participants into an event (SPV Admin / MDO Admin)
 
 Not account creation: a CSV of **existing** users (matched by email) is
 enrolled into an event batch, marked completed, and issued a certificate.

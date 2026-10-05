@@ -10,8 +10,9 @@ domain).
 - **Live UIs**: learner web portal (`sunbird-cb-portal` — `/public/signup`,
   `/crp/:qrCodeId/:orgId`, `/public/welcome`), MDO admin portal
   (`sunbird-cb-orgportal` — `/app/home/onboarding`), super-admin portal
-  (`sunbird-cb-adminportal` — organisation, designation and email-domain
-  requests), and the mobile app (`igot_karmayogi_mobile` — intro screens,
+  (`sunbird-cb-adminportal` — documented separately as
+  [SPV & Admin Registration](../spv-admin-registration/index.md)), and the
+  mobile app (`igot_karmayogi_mobile` — intro screens,
   self-registration, register-via-link)
 - **Not covered here**: uploading a CSV of many users — see
   [Bulk Registration](../bulk-registration/index.md)

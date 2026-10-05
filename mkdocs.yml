@@ -195,6 +195,14 @@ nav:
           - LLD: learning-hub/user-onboarding/lld.md
           - Operations Manual: learning-hub/user-onboarding/operations-manual.md
           - As-Built Requirements: learning-hub/user-onboarding/as-built-requirements.md
+      - SPV & Admin Registration:
+          - learning-hub/spv-admin-registration/index.md
+          - Use Cases: learning-hub/spv-admin-registration/use-cases.md
+          - APIs: learning-hub/spv-admin-registration/apis.md
+          - HLD: learning-hub/spv-admin-registration/hld.md
+          - LLD: learning-hub/spv-admin-registration/lld.md
+          - Operations Manual: learning-hub/spv-admin-registration/operations-manual.md
+          - As-Built Requirements: learning-hub/spv-admin-registration/as-built-requirements.md
   - Discussion Hub:
       - learning-hub/discussion-hub/index.md
       - Use Cases: learning-hub/discussion-hub/use-cases.md

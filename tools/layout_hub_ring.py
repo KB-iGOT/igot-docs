@@ -74,6 +74,7 @@ FEATURES = [
     ("unenroll",       "Unenrollment of Courses",            132, 12,   ""),
     ("moderatedcontent", "Moderated Content",                 95, 13,   ""),
     ("useronboarding", "User Onboarding",                     128, 14,   ""),
+    ("spvregistration", "SPV &amp; Admin Registration",       128, 13,   ""),
 ]
 
 # ─── Geometry constants ──────────────────────────────────────────────

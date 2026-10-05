@@ -80,7 +80,7 @@ first. The org must have designations imported into its framework.
 | Mobile user "verified" without a real OTP | Mobile wrappers return success on any exception | Not fixable operationally; server does not re-check |
 | Parichay user bounced to logout with an error (web) | New SSO user without a mobile number | Mobile login does not require it |
 | Welcome page never appears for a user who needs it | What triggers `/public/welcome` is not in these repos; `profile-v3`'s own redirect is dead | Send the user to `/public/welcome` directly; `isUpdateRequired` is true only for custodian-org users with empty `profileDetails.userRoles` |
-| Admin portal request lists show nothing or the wrong page | Resolvers return `undefined` (setTimeout wrapper) and the offset sent is the page index | Refresh; page 2+ is unreliable until fixed |
+| Admin portal request lists look empty on first paint | The route resolvers return `undefined` (setTimeout wrapper), so the component falls back to its own fetch | Wait for the component's own load; pagination itself is correct (page-index offset matches the workflow service) |
 | Email-domain approval rejects a valid domain | Regex in the approval screen loses its backslash (the dot becomes a wildcard, `A-z` range is wider than intended) | Re-check the typed domain; the server enforces its own regex `^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$` |
 
 ## Configuration

@@ -114,7 +114,7 @@ deviation).
 | DEV-008 | Mobile OTP wrappers return success on any exception or missing `errmsg`. | FR-009 | `profile_repository.dart:652-777` |
 | DEV-009 | `isEmailRequired:false` is coerced to `true` in the admin create endpoint; welcome-mail failure returns 500 after the user is created. | FR-034 | `profile-details.ts` |
 | DEV-010 | The public role-assign route is unauthenticated and deletes all other roles of the user. | FR-030 | `UserRoleServiceImpl:45-61, 97-135`; `RequestInterceptor` |
-| DEV-011 | Admin-portal request resolvers return `undefined`; pagination offset is the page index; the domain pattern loses its backslash; one error branch can never match. | FR-050 | `onboarding-requests.component.ts:61-66, 357`; `requests-approval`; `create-user` |
+| DEV-011 | Admin-portal request resolvers return `undefined`; the domain pattern loses its backslash; one error branch can never match. Detail in [SPV & Admin Registration](../spv-admin-registration/as-built-requirements.md). | FR-050 | `onboarding-requests.component.ts:61-66`; `requests-approval`; `create-user` |
 | DEV-012 | The workflow `DOMAIN` case falls through to the BP workflow processor; `workflowTransition` may dereference a null `toValue` for registration. | FR-007, FR-051 | `ApplicationProcessingServiceImpl:54-56`; `WorkflowServiceImpl:113-122` |
 | DEV-013 | The Keycloak realm template enables native registration without email verification; only the UI hides it. | CON-006 | `keycloak-realm.j2` (`registrationAllowed: true`, `verifyEmail: false`) |
 | DEV-014 | Dead or unmounted code remains (`publicApi_v8/signup.ts`, `admin/userRegistration.ts`, `createUserV2*`, `app/signup`, profile-v3 welcome redirect, `isUserOnboarded`). | — | See [Operations Manual](operations-manual.md) |

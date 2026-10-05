@@ -132,23 +132,10 @@ are present.
 
 ## Approval requests (super admin)
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| POST | `workflow/org/search` · `workflow/position/search` · `workflow/domain/search` | List requests by `serviceName` (`organisation` / `position` / `domain`) and `applicationStatus` (`IN_PROGRESS` / `APPROVED` / `REJECTED`) |
-| POST | `workflow/org/update` · `workflow/position/update` · `workflow/domain/update` | Approve or reject (`action: APPROVE` or `REJECT`, `comment` for reject) |
-| POST | `masterData/v1/upsert` | Add a designation directly (`{contextType:'position', contextName, contextData}`) |
-
-```jsonc
-// POST workflow/{org|position|domain}/search — adminportal › onboarding-requests.service.ts
-{ "serviceName": "organisation", "applicationStatus": "IN_PROGRESS", "limit": 20, "offset": 0, "deptName": "iGOT" }
-// POST workflow/…/update — requests-approval.component.ts:100-163
-{ "state": "IN_PROGRESS", "action": "APPROVE", "serviceName": "domain", "wfId": "…", "applicationId": "…",
-  "userId": "…", "actorUserId": "…", "deptName": "iGOT",
-  "updateFieldValues": [ { "toValue": { "domain": "example.gov.in" }, "fieldKey": "domain",
-                           "description": "…", "firstName": "…", "email": "…", "mobile": "…" } ] }
-```
-
-Offset sent by the admin portal is the **page index**, not index × limit.
+Organisation, designation and email-domain request review
+(`workflow/{org,position,domain}/{search,update}`, `masterData/v1/upsert`) is
+the SPV / super-admin portal's work and is documented, with payloads and the
+role allow-list, in [SPV & Admin Registration APIs](../spv-admin-registration/apis.md).
 
 ## First login and SSO
 
