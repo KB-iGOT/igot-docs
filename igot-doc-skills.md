@@ -222,6 +222,21 @@ one-off request is a new convention, ask: "should this become the standard?"
 
 ### Changelog
 
+- **2026-10-05** · Hub restructure. AI CBP Tool and AI Assessment Tool moved
+  from the Learning Hub to **Features**; Events Hub moved out of the Learning
+  Hub to the landing-level **Event Hub** (a one-feature hub that opens its page
+  directly, like Discussion Hub). **Features** gained a nested **Registration**
+  bubble (a sub-hub view, `v-registration`) holding User Registration (docs
+  folder `user-onboarding/`), SPV & Admin Registration and Bulk Registration.
+  New convention: bubble placement for **all** ring views is now computed by
+  `tools/layout_hub_ring.py` -- the Learning Hub ring from `FEATURES`, the
+  Features and Registration rings from `SIMPLE_RINGS` (marker pairs
+  `RING:<key>:BEGIN/END`) -- instead of hand-bisecting spokes, which overlaps
+  once a ring has more than a dozen bubbles. Feature pages' Back button label
+  is now set at open time from the hub the user came from (`data-hub-name`),
+  so a moved feature never says "Back to Learning Hub". Markdown folders do
+  not move when a bubble moves; only `mkdocs.yml` nav and the template do.
+
 - **2026-09-09 (4)** · Added Bharat Kalp (`docs/learning-hub/bharat-kalp/`) in
   parallel with Peer Validation on a separate branch; merging both into the
   hub landed two independent, non-adjacent bisections rather than one, so

@@ -326,29 +326,29 @@
     </div>
 
     <button class="bub hub" id="learn-hub" style="left:646px; top:121px; width:148px; height:148px;" onclick="openHub(this)">
-      Learning Hub<span class="sub">16 features</span>
+      Learning Hub<span class="sub">13 features</span>
     </button>
     <button class="bub hub" style="left:941px; top:335px; width:148px; height:148px;" onclick="openFeature('discussionhub')">
       Discussion Hub<span class="sub">1 feature</span>
     </button>
-    <button class="bub hub" style="left:828px; top:682px; width:148px; height:148px;" onclick="notWired()">
-      Event Hub<span class="sub">coming soon</span>
+    <button class="bub hub" style="left:828px; top:682px; width:148px; height:148px;" onclick="openFeature('eventshub')">
+      Event Hub<span class="sub">1 feature</span>
     </button>
     <button class="bub item" style="left:464px; top:682px; width:148px; height:148px; font-size:15px; font-weight:900; flex-direction:column; gap:3px" onclick="openFeature('competencyhub')">
       Competency Hub<span class="sub">feature</span>
     </button>
     <button class="bub hub" style="left:355px; top:339px; width:140px; height:140px; font-size:15px; font-weight:900; flex-direction:column; gap:3px" onclick="openHub(this, 'v-features')">
-      Features<span class="sub">5 features</span>
+      Features<span class="sub">9 features</span>
     </button>
     <button class="bub item" style="left:945px; top:531px; width:140px; height:140px; font-size:14px; font-weight:900; flex-direction:column; gap:3px" onclick="openFeature('agk')">
       Amrit Gyaan Kosh<span class="sub">feature</span>
     </button>
 
-    <div class="hint">Click a hub to open its features &mdash; Competency Hub and Amrit Gyaan Kosh open directly</div>
+    <div class="hint">Click a hub to open its features &mdash; Competency Hub, Discussion Hub, Event Hub and Amrit Gyaan Kosh open directly</div>
   </section>
 
   <!-- ══════════ VIEW 2 · LEARNING HUB ══════════ -->
-  <section class="view hidden" data-gone id="v-hub">
+  <section class="view hidden" data-gone id="v-hub" data-hub-name="Learning Hub">
     <div class="topbar">
       <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
         <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#EF951E" stroke-width="2.2" stroke-linecap="round"/>
@@ -371,53 +371,47 @@
          To add/remove a feature, edit the FEATURES list in that script and re-run it;
          it rewrites everything between these two markers (lines + buttons + count). -->
     <svg class="orbitbg" width="1440" height="900" fill="none">
-      <line x1="720" y1="454" x2="1045" y2="454" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="1020" y2="579" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="950" y2="684" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="844" y2="755" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="720" y2="779" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="596" y2="755" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="490" y2="684" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="420" y2="579" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="395" y2="455" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="420" y2="330" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="490" y2="225" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="596" y2="154" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="720" y2="130" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="844" y2="154" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="950" y2="225" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="1020" y2="330" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <circle cx="720" cy="454" r="325" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
+      <line x1="720" y1="454" x2="1043" y2="454" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="1006" y2="604" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="903" y2="720" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="759" y2="775" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="606" y2="756" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="478" y2="668" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="407" y2="532" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="407" y2="377" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="478" y2="241" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="606" y2="153" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="759" y2="134" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="903" y2="189" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="454" x2="1006" y2="305" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <circle cx="720" cy="454" r="323" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
     <div class="bub center" style="left:618px; top:352px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>
-      <div class="sub">16 features</div>
+      <div class="sub">13 features</div>
     </div>
 
-    <button class="bub item" style="left:986px; top:396px; width:118px; height:118px; font-size:14px" onclick="openFeature('bharatkalp')">Bharat Kalp</button>
-    <button class="bub item" id="blended" style="left:957px; top:516px; width:126px; height:126px;" onclick="openFeature('blended')">Blended Program</button>
-    <button class="bub item" style="left:887px; top:621px; width:126px; height:126px; font-size:13.5px" onclick="openFeature('assigned')">My Assigned Courses</button>
-    <button class="bub item" style="left:785px; top:696px; width:118px; height:118px; font-size:14px" onclick="openFeature('eventshub')">Events Hub</button>
-    <button class="bub item assess" style="left:657px; top:716px; width:126px; height:126px; font-size:13.5px" onclick="openFeature('standalone')">Standalone Assessment</button>
-    <button class="bub item" style="left:535px; top:694px; width:122px; height:122px; font-size:14px" onclick="openFeature('peervalidation')">Peer Validation</button>
-    <button class="bub item assess" style="left:427px; top:621px; width:126px; height:126px; font-size:13px" onclick="openFeature('cap')">Comprehensive Assessment Program</button>
-    <button class="bub item" style="left:361px; top:520px; width:118px; height:118px; font-size:14px" onclick="openFeature('pathway')">Learning Pathway</button>
-    <button class="bub item" style="left:335px; top:395px; width:120px; height:120px; font-size:15px" onclick="openFeature('course')">Course</button>
-    <button class="bub item" style="left:361px; top:271px; width:118px; height:118px; font-size:15px" onclick="openFeature('search')">Search</button>
-    <button class="bub item" style="left:427px; top:162px; width:126px; height:126px; font-size:13.5px" onclick="openFeature('aicbp')">AI CBP Tool</button>
-    <button class="bub item" style="left:535px; top:93px; width:122px; height:122px;" onclick="openFeature('curated')">Curated Program</button>
-    <button class="bub item" style="left:661px; top:71px; width:118px; height:118px; font-size:13px" onclick="openFeature('aiassessment')">AI Assessment Tool</button>
-    <button class="bub item" style="left:785px; top:95px; width:118px; height:118px; font-size:14px" onclick="openFeature('marketplace')">Marketplace</button>
-    <button class="bub item" style="left:889px; top:164px; width:122px; height:122px; font-size:12px" onclick="openFeature('unenroll')">Unenrollment of Courses</button>
-    <button class="bub item" style="left:978px; top:288px; width:85px; height:85px; font-size:13px" onclick="openFeature('moderatedcontent')">Moderated Content</button>
+    <button class="bub item" style="left:979px; top:390px; width:128px; height:128px; font-size:14px" onclick="openFeature('bharatkalp')">Bharat Kalp</button>
+    <button class="bub item" id="blended" style="left:938px; top:536px; width:136px; height:136px;" onclick="openFeature('blended')">Blended Program</button>
+    <button class="bub item" style="left:835px; top:652px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('assigned')">My Assigned Courses</button>
+    <button class="bub item assess" style="left:691px; top:707px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('standalone')">Standalone Assessment</button>
+    <button class="bub item" style="left:540px; top:690px; width:132px; height:132px; font-size:14px" onclick="openFeature('peervalidation')">Peer Validation</button>
+    <button class="bub item assess" style="left:410px; top:600px; width:136px; height:136px; font-size:13px" onclick="openFeature('cap')">Comprehensive Assessment Program</button>
+    <button class="bub item" style="left:343px; top:468px; width:128px; height:128px; font-size:14px" onclick="openFeature('pathway')">Learning Pathway</button>
+    <button class="bub item" style="left:342px; top:312px; width:130px; height:130px; font-size:15px" onclick="openFeature('course')">Course</button>
+    <button class="bub item" style="left:414px; top:177px; width:128px; height:128px; font-size:15px" onclick="openFeature('search')">Search</button>
+    <button class="bub item" style="left:540px; top:87px; width:132px; height:132px;" onclick="openFeature('curated')">Curated Program</button>
+    <button class="bub item" style="left:695px; top:70px; width:128px; height:128px; font-size:14px" onclick="openFeature('marketplace')">Marketplace</button>
+    <button class="bub item" style="left:837px; top:123px; width:132px; height:132px; font-size:12px" onclick="openFeature('unenroll')">Unenrollment of Courses</button>
+    <button class="bub item" style="left:958px; top:257px; width:95px; height:95px; font-size:13px" onclick="openFeature('moderatedcontent')">Moderated Content</button>
     <!-- HUB-RING:END -->
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
   </section>
 
-  <section class="view hidden" data-gone id="v-features">
+  <section class="view hidden" data-gone id="v-features" data-hub-name="Features">
     <div class="topbar">
       <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
         <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#EF951E" stroke-width="2.2" stroke-linecap="round"/>
@@ -436,29 +430,78 @@
       iGOT Karmayogi
     </button>
 
+    <!-- RING:features:BEGIN -- generated by tools/layout_hub_ring.py, do not hand-edit. Edit SIMPLE_RINGS and re-run. -->
     <svg class="orbitbg" width="1440" height="900" fill="none">
-      <line x1="720" y1="505" x2="720" y2="195" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="1015" y2="409" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="902" y2="756" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="538" y2="756" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="425" y2="409" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
+      <line x1="720" y1="505" x2="720" y2="205" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="955" y2="318" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="1012" y2="572" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="850" y2="775" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="590" y2="775" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="428" y2="572" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="485" y2="318" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <circle cx="720" cy="505" r="300" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
     <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Features</div>
-      <div class="sub">5 features</div>
+      <div class="sub">9 features</div>
     </div>
 
-    <button class="bub item" style="left:650px; top:125px; width:140px; height:140px; font-size:15px" onclick="openFeature('explore')">Explore Content</button>
-    <button class="bub item" style="left:945px; top:339px; width:140px; height:140px; font-size:13px" onclick="openFeature('bulkregistration')">Bulk Registration</button>
-    <button class="bub item" style="left:832px; top:686px; width:140px; height:140px; font-size:13px" onclick="openFeature('weeklyclaps')">Weekly Claps</button>
-    <button class="bub item" style="left:468px; top:686px; width:140px; height:140px; font-size:14px" onclick="openFeature('trainingplan')">Training Plan</button>
-    <button class="bub item" style="left:355px; top:339px; width:140px; height:140px; font-size:14px" onclick="openFeature('chs')">CHS</button>
+    <button class="bub item" style="left:654px; top:139px; width:132px; height:132px; font-size:15px;" onclick="openFeature('explore')">Explore Content</button>
+    <button class="bub hub" style="left:886px; top:249px; width:138px; height:138px; font-size:15px; flex-direction:column; gap:3px" onclick="openSubHub('v-registration')">Registration<span class="sub">3 features</span></button>
+    <button class="bub item" style="left:946px; top:506px; width:132px; height:132px; font-size:13px;" onclick="openFeature('weeklyclaps')">Weekly Claps</button>
+    <button class="bub item" style="left:784px; top:709px; width:132px; height:132px; font-size:14px;" onclick="openFeature('trainingplan')">Training Plan</button>
+    <button class="bub item" style="left:524px; top:709px; width:132px; height:132px; font-size:14px;" onclick="openFeature('chs')">CHS</button>
+    <button class="bub item" style="left:362px; top:506px; width:132px; height:132px; font-size:14px;" onclick="openFeature('aicbp')">AI CBP Tool</button>
+    <button class="bub item" style="left:419px; top:252px; width:132px; height:132px; font-size:13px;" onclick="openFeature('aiassessment')">AI Assessment Tool</button>
+    <!-- RING:features:END -->
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
   </section>
+
+  <!-- ══════════ VIEW 2b · REGISTRATION (sub-hub of Features) ══════════ -->
+  <section class="view hidden" data-gone id="v-registration" data-hub-name="Registration">
+    <div class="topbar">
+      <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
+        <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#EF951E" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M8 20c2 8 7 12 12 12s10-4 12-12" stroke="#1B4CA1" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="20" cy="24" r="2.6" fill="#EF951E"/>
+      </svg>
+      <div class="wordmark"><b><em>Karmayogi</em> Bharat</b><span>Platform documentation</span></div>
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+        Search a feature&hellip;
+      </div>
+    </div>
+
+    <button class="backpill" onclick="goParentHub()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      Features
+    </button>
+
+    <!-- RING:registration:BEGIN -- generated by tools/layout_hub_ring.py, do not hand-edit. Edit SIMPLE_RINGS and re-run. -->
+    <svg class="orbitbg" width="1440" height="900" fill="none">
+      <line x1="720" y1="505" x2="720" y2="195" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="988" y2="660" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="452" y2="660" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
+    </svg>
+
+    <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.5" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.9-6 6.5-6s6.5 2.7 6.5 6"/><path d="M19 8v6M16 11h6"/></svg>
+      <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Registration</div>
+      <div class="sub">3 features</div>
+    </div>
+
+    <button class="bub item" style="left:650px; top:125px; width:140px; height:140px; font-size:14px;" onclick="openFeature('useronboarding')">User Registration</button>
+    <button class="bub item" style="left:918px; top:590px; width:140px; height:140px; font-size:13px;" onclick="openFeature('spvregistration')">SPV &amp; Admin Registration</button>
+    <button class="bub item" style="left:382px; top:590px; width:140px; height:140px; font-size:13px;" onclick="openFeature('bulkregistration')">Bulk Registration</button>
+    <!-- RING:registration:END -->
+
+    <div class="hint">Registration brings users onto the platform &mdash; click any bubble to open it</div>
+  </section>
+
 
   <!-- ══════════ VIEW 3 · FEATURE PAGE ══════════ -->
   <section class="view hidden" data-gone id="v-feat">
@@ -1529,6 +1572,169 @@
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/moderated-content/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/moderated-content/operations-manual.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/moderated-content/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/moderated-content/as-built-requirements.md</div></div>
     </div><!-- /fdoc moderatedcontent -->
+
+    <div class="fdoc" data-fdoc="useronboarding" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.5" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.9-6 6.5-6s6.5 2.7 6.5 6"/><path d="M19 8v6M16 11h6"/></svg></div>
+        <div>
+          <div class="fp-title">User Onboarding</div>
+          <div class="fp-sub">How a person gets an account &mdash; public sign-up, a department's registration link or QR code, an admin adding them, or government single sign-on &mdash; and the admin steps behind it. Registering submits a request; the account is created afterwards.</div>
+          <div class="fp-chips"><span class="chip">Routes&nbsp; <code>/public/signup</code> &middot; <code>/crp/:id/:orgId</code> &middot; <code>/public/welcome</code> &middot; <code>/app/home/onboarding</code></span><span class="chip">Bulk CSV&nbsp; see Bulk Registration</span><span class="chip ok">&#10003; Verified from 14 repos &middot; Oct 2026</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+        <button class="fp-tab" role="tab" data-tab="asbuilt" onclick="setTab(this)">As-Built</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A new Karmayogi starts at the sign-up page (or the app's intro screens), chooses their ministry or state, their organisation and their designation, proves they own their email address and mobile number with one-time codes, and submits. What they have sent is a <strong>request, not an account</strong>. If they came in through their department's registration link or QR code, or their email domain is already approved, the account is created straight away and an activation email follows; otherwise the request waits for approval first. Department admins can add a person directly, and people with a government single sign-on identity are created on their first login and sent to a short welcome form.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> the approval states that decide who approves a held registration are loaded from a platform setting at run time, so they cannot be read from the code. What sends a user to the welcome form after first login is also not in the repositories traced.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>A request first, an account later</b><p>Submitting the form answers "accepted" and stores a registration record; the account, organisation, role and activation email are produced afterwards in the background.</p></div>
+          <div class="fp-card"><b>A link is a pass</b><p>A department's registration link replaces both the email-domain check and the approval step &mdash; and each department has only one active link at a time.</p></div>
+          <div class="fp-card"><b>Verification is the app's job</b><p>The web page and the mobile app both insist on verified email and mobile codes, but the server does not re-check them when the registration arrives.</p></div>
+        </div>
+        <h2 class="fp-h2">How a Karmayogi experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 &middot; OPEN</b><p>Sign-up page, app intro, or a department link / QR code</p></div>
+          <div class="fp-step"><b>2 &middot; CHOOSE</b><p>Ministry or state, organisation, designation</p></div>
+          <div class="fp-step"><b>3 &middot; VERIFY</b><p>One-time code to the email, another to the mobile</p></div>
+          <div class="fp-step"><b>4 &middot; SUBMIT</b><p>Request accepted &mdash; a registration code is emailed if approval is needed</p></div>
+          <div class="fp-step"><b>5 &middot; ACTIVATE</b><p>Welcome email with a set-password link once the account exists</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How a Karmayogi experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">APIs</b> tab carries the gateway chain for every call; <b style="color:#1B4CA1">HLD</b> and <b style="color:#1B4CA1">LLD</b> cover the registration pipeline, account-creation order and OTP rules; <b style="color:#1B4CA1">As-Built</b> lists every known deviation.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">SPV &amp; Admin Registration</span>
+            <span class="side-pill">Bulk Registration</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Self-register on the public sign-up page</b><p>Two-step form with email and mobile OTPs; Register stays disabled until both are verified &mdash; a browser-side gate only.</p><div class="api">POST <code>/api/user/registration/v1/register</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 &middot; Verify the email (domain-checked)</b><p>Public sign-up and mobile direct registration use the domain-validated OTP generate; link flows use the plain one.</p><div class="api">POST <code>/api/otp/ext/v1/generate</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-5 &middot; Register through a department link or QR</b><p>The link is checked for activity, the organisation's designations are loaded, and the registration auto-creates the account.</p><div class="api">POST <code>/api/customselfregistration/isregistrationqractive</code></div></div>
+          <div class="uc-card"><div class="who">System</div><b class="t">UC-6/7 &middot; Wait for approval, or auto-create</b><p>Link or pre-approved domain &rarr; account created at once; otherwise a workflow holds the request. Either way a welcome email with a set-password link follows account creation.</p><div class="api">Kafka <code>user.register.event</code> / <code>user.register.createUser.event</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-8/9 &middot; Single sign-on first login and welcome form</b><p>Unknown SSO users are created with the PUBLIC role; users still in the default holding organisation are treated as first-time and finish a short form.</p><div class="api">POST <code>/apis/proxies/v8/user/basicProfileUpdate</code></div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-11 &middot; Add one user directly</b><p>Role choices depend on the admin's own role; profile statuses are VERIFIED when designation and group are both given.</p><div class="api">POST <code>apis/protected/v8/user/profileDetails/createUser</code></div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-13 &middot; Publish a registration link and QR</b><p>Needs imported designations; generating a new link expires the previous one.</p><div class="api">POST <code>apis/proxies/v8/customselfregistration</code></div></div>
+          <div class="uc-card"><div class="who">Super admin</div><b class="t">UC-14 &middot; Onboard organisations and review requests</b><p>Done from the SPV / admin portal and documented in its own bubble &mdash; approving a domain there is what lets everyone from that domain skip manual approval here.</p><div class="api">See <code>SPV &amp; Admin Registration</code></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/user-onboarding/apis.md"></article><div class="md-src">source: docs/learning-hub/user-onboarding/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/user-onboarding/hld.md"></article><div class="md-src">source: docs/learning-hub/user-onboarding/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/user-onboarding/lld.md"></article><div class="md-src">source: docs/learning-hub/user-onboarding/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/user-onboarding/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/user-onboarding/operations-manual.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/user-onboarding/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/user-onboarding/as-built-requirements.md</div></div>
+    </div><!-- /fdoc useronboarding -->
+
+    <div class="fdoc" data-fdoc="spvregistration" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6z"/><path d="M12 9v6M9 12h6"/></svg></div>
+        <div>
+          <div class="fp-title">SPV &amp; Admin Registration</div>
+          <div class="fp-sub">The platform-owner side of onboarding, done from the SPV / super-admin portal: creating organisations, putting their first administrators in place, publishing registration links, and approving requests for new organisations, designations and email domains.</div>
+          <div class="fp-chips"><span class="chip">Portal&nbsp; <code>sunbird-cb-adminportal</code></span><span class="chip">Entry&nbsp; Directory &middot; Create user &middot; Requests</span><span class="chip ok">&#10003; Verified from 7 repos &middot; Oct 2026</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+        <button class="fp-tab" role="tab" data-tab="asbuilt" onclick="setTab(this)">As-Built</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">An SPV admin opens the <strong>Directory</strong>, chooses <strong>Create new</strong>, and enters a name, a category (state, ministry or, for volunteer organisations, autonomous), a description and a logo. The organisation is created and recorded in the platform's hierarchy. Because it starts with no users, the admin then creates its first administrator from the <strong>Create user</strong> screen; from there the organisation's own admin takes over. The same directory publishes registration links and QR codes, switches volunteer organisations on and off, and the <strong>Requests</strong> screens let the admin approve or reject what others have asked for &mdash; a new organisation, a new designation, or an email domain to be trusted.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> the portal shows buttons by role from configuration the repositories don't contain, while the gateway applies its own role list &mdash; and the two disagree in several places (for example Dashboard Admin sees <em>Create new</em> but is refused). Several legacy screens also call routes that nothing serves.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>No role checks in the portal's routes</b><p>The only hard check is the gateway's allow-list, which looks at the URL path and ignores the HTTP method.</p></div>
+          <div class="fp-card"><b>A new organisation has no admin</b><p>The Add-admin picker only searches existing users of the organisation, so the first administrator has to be created, not picked.</p></div>
+          <div class="fp-card"><b>Approving a request creates nothing</b><p>Approving an organisation or designation request only changes its status; approving an email domain is the one that has an effect &mdash; it lets that domain skip manual approval.</p></div>
+        </div>
+        <h2 class="fp-h2">How an SPV admin experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 &middot; BROWSE</b><p>Directory tabs: organisations, CBP providers, volunteer, hierarchies</p></div>
+          <div class="fp-step"><b>2 &middot; CREATE</b><p>State, ministry or autonomous volunteer organisation</p></div>
+          <div class="fp-step"><b>3 &middot; FIRST ADMIN</b><p>Create user with an admin or leader role; activation email sent</p></div>
+          <div class="fp-step"><b>4 &middot; LINK</b><p>Publish a registration link and QR once designations are imported</p></div>
+          <div class="fp-step"><b>5 &middot; REVIEW</b><p>Approve or reject organisation, designation and domain requests</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How an SPV admin experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">APIs</b> tab has a role-by-role table of what the screen offers versus what the gateway allows; <b style="color:#1B4CA1">LLD</b> covers organisation creation, the status machine and the role validator.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">User Onboarding</span>
+            <span class="side-pill">Bulk Registration</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-2/3 &middot; Create a state, ministry or volunteer organisation</b><p>Name, category, description and logo; a State Admin's category and state are pre-set. The organisation, its hierarchy row and an event are created.</p><div class="api">POST <code>apis/proxies/v8/org/ext/v1/create</code></div></div>
+          <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-5 &middot; Activate or deactivate a volunteer organisation</b><p>Sets status 0 or 1; allowed for SPV Admin only at the gateway, though the button is shown to all.</p><div class="api">PATCH <code>apis/proxies/v8/org/v1/status/update</code></div></div>
+          <div class="uc-card"><div class="who">SPV / State Admin</div><b class="t">UC-7 &middot; Create the first administrator</b><p>Choose organisation, name, email, mobile and role; one MDO Leader per organisation; set-password link and welcome mail follow.</p><div class="api">POST <code>apis/protected/v8/user/profileDetails/createUser</code></div></div>
+          <div class="uc-card"><div class="who">SPV / State Admin</div><b class="t">UC-9 &middot; Make an existing person an administrator</b><p>Grants MDO Admin (or State Admin for a state organisation); blocks people who already hold either.</p><div class="api">POST <code>apis/proxies/v8/user/v1/role/assign</code></div></div>
+          <div class="uc-card"><div class="who">SPV / State Admin</div><b class="t">UC-10 &middot; Publish a registration link and QR</b><p>Needs imported designations; generating a new link expires the previous one first.</p><div class="api">POST <code>apis/proxies/v8/customselfregistration</code></div></div>
+          <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-11/12 &middot; Review organisation, designation and domain requests</b><p>Edit the name before approving; give a reason to reject. Only domain approval has an effect.</p><div class="api">POST <code>apis/proxies/v8/workflow/{org,position,domain}/update</code></div></div>
+          <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-14 &middot; Approve or reject an AI-generated designation</b><p>Reject needs a non-blank reviewer comment; served by the AI CBP designation service.</p><div class="api">POST <code>apis/proxies/v8/ai/cbp/v1/designation/approval-requests/approve</code></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/spv-admin-registration/apis.md"></article><div class="md-src">source: docs/learning-hub/spv-admin-registration/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/spv-admin-registration/hld.md"></article><div class="md-src">source: docs/learning-hub/spv-admin-registration/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/spv-admin-registration/lld.md"></article><div class="md-src">source: docs/learning-hub/spv-admin-registration/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/spv-admin-registration/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/spv-admin-registration/operations-manual.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/spv-admin-registration/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/spv-admin-registration/as-built-requirements.md</div></div>
+    </div><!-- /fdoc spvregistration -->
     <!-- ═══ MARKETPLACE ═══ -->
     <div class="fdoc" data-fdoc="marketplace" hidden>
     <div class="fp-hero">
@@ -2246,6 +2452,7 @@
   var vHub = document.getElementById('v-hub');
   var vFeat = document.getElementById('v-feat');
   var vFeatures = document.getElementById('v-features');
+  var vRegistration = document.getElementById('v-registration');
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function swap(from, to) {
@@ -2292,6 +2499,19 @@
   };
 
   window.goLanding = function () { swap(currentHubView, vLand); };
+
+  /* hub → nested sub-hub (e.g. Features → Registration) and back. The sub-hub
+     becomes the current hub view, so a feature opened from it returns to it. */
+  window.openSubHub = function (targetId) {
+    var target = document.getElementById(targetId);
+    var from = currentHubView;
+    currentHubView = target;
+    swap(from, target);
+  };
+  window.goParentHub = function () {
+    currentHubView = vFeatures;
+    swap(vRegistration, vFeatures);
+  };
   var featBackTo = vHub; /* where the feature page's back button returns to */
   window.openFeature = function (id) {
     document.querySelectorAll('.fdoc').forEach(function (d) { d.hidden = (d.dataset.fdoc !== id); });
@@ -2306,6 +2526,15 @@
        hub-ring view is currently open */
     var from = !vLand.hasAttribute('data-gone') ? vLand : currentHubView;
     featBackTo = from;
+    /* name the hub the Back button returns to (landing-level features keep their own label) */
+    var hubName = from === vLand ? 'iGOT Karmayogi' : from.getAttribute('data-hub-name');
+    if (doc && hubName) {
+      doc.querySelectorAll('.fp-back').forEach(function (b) {
+        for (var i = b.childNodes.length - 1; i >= 0; i--) {
+          if (b.childNodes[i].nodeType === 3) { b.childNodes[i].nodeValue = ' Back to ' + hubName; break; }
+        }
+      });
+    }
     swap(from, vFeat); window.scrollTo({ top: 0 });
   };
   window.goHub = function () { swap(vFeat, featBackTo); };

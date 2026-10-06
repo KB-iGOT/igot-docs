@@ -34,14 +34,31 @@ nav:
           - HLD: explore-content/hld.md
           - LLD: explore-content/lld.md
           - Operations Manual: explore-content/operations-manual.md
-      - Bulk Registration:
-          - learning-hub/bulk-registration/index.md
-          - Use Cases: learning-hub/bulk-registration/use-cases.md
-          - APIs: learning-hub/bulk-registration/apis.md
-          - HLD: learning-hub/bulk-registration/hld.md
-          - LLD: learning-hub/bulk-registration/lld.md
-          - Operations Manual: learning-hub/bulk-registration/operations-manual.md
-          - As-Built Requirements: learning-hub/bulk-registration/as-built-requirements.md
+      - Registration:
+          - User Registration:
+              - learning-hub/user-onboarding/index.md
+              - Use Cases: learning-hub/user-onboarding/use-cases.md
+              - APIs: learning-hub/user-onboarding/apis.md
+              - HLD: learning-hub/user-onboarding/hld.md
+              - LLD: learning-hub/user-onboarding/lld.md
+              - Operations Manual: learning-hub/user-onboarding/operations-manual.md
+              - As-Built Requirements: learning-hub/user-onboarding/as-built-requirements.md
+          - SPV & Admin Registration:
+              - learning-hub/spv-admin-registration/index.md
+              - Use Cases: learning-hub/spv-admin-registration/use-cases.md
+              - APIs: learning-hub/spv-admin-registration/apis.md
+              - HLD: learning-hub/spv-admin-registration/hld.md
+              - LLD: learning-hub/spv-admin-registration/lld.md
+              - Operations Manual: learning-hub/spv-admin-registration/operations-manual.md
+              - As-Built Requirements: learning-hub/spv-admin-registration/as-built-requirements.md
+          - Bulk Registration:
+              - learning-hub/bulk-registration/index.md
+              - Use Cases: learning-hub/bulk-registration/use-cases.md
+              - APIs: learning-hub/bulk-registration/apis.md
+              - HLD: learning-hub/bulk-registration/hld.md
+              - LLD: learning-hub/bulk-registration/lld.md
+              - Operations Manual: learning-hub/bulk-registration/operations-manual.md
+              - As-Built Requirements: learning-hub/bulk-registration/as-built-requirements.md
       - Weekly Claps:
           - learning-hub/weekly-claps/index.md
           - Use Cases: learning-hub/weekly-claps/use-cases.md
@@ -65,6 +82,22 @@ nav:
           - HLD: learning-hub/chs/hld.md
           - LLD: learning-hub/chs/lld.md
           - Operations Manual: learning-hub/chs/operations-manual.md
+      - AI CBP Tool:
+          - learning-hub/ai-cbp-tool/index.md
+          - Use Cases: learning-hub/ai-cbp-tool/use-cases.md
+          - APIs: learning-hub/ai-cbp-tool/apis.md
+          - HLD: learning-hub/ai-cbp-tool/hld.md
+          - LLD: learning-hub/ai-cbp-tool/lld.md
+          - Operations Manual: learning-hub/ai-cbp-tool/operations-manual.md
+          - As-Built Requirements: learning-hub/ai-cbp-tool/as-built-requirements.md
+      - AI Assessment Tool:
+          - learning-hub/ai-assessment-tool/index.md
+          - Use Cases: learning-hub/ai-assessment-tool/use-cases.md
+          - APIs: learning-hub/ai-assessment-tool/apis.md
+          - HLD: learning-hub/ai-assessment-tool/hld.md
+          - LLD: learning-hub/ai-assessment-tool/lld.md
+          - Operations Manual: learning-hub/ai-assessment-tool/operations-manual.md
+          - As-Built Requirements: learning-hub/ai-assessment-tool/as-built-requirements.md
   - Learning Hub:
       - learning-hub/index.md
       - Blended Program:
@@ -132,22 +165,6 @@ nav:
           - HLD: learning-hub/peer-validation/hld.md
           - LLD: learning-hub/peer-validation/lld.md
           - Operations Manual: learning-hub/peer-validation/operations-manual.md
-      - AI CBP Tool:
-          - learning-hub/ai-cbp-tool/index.md
-          - Use Cases: learning-hub/ai-cbp-tool/use-cases.md
-          - APIs: learning-hub/ai-cbp-tool/apis.md
-          - HLD: learning-hub/ai-cbp-tool/hld.md
-          - LLD: learning-hub/ai-cbp-tool/lld.md
-          - Operations Manual: learning-hub/ai-cbp-tool/operations-manual.md
-          - As-Built Requirements: learning-hub/ai-cbp-tool/as-built-requirements.md
-      - Events Hub:
-          - learning-hub/events-hub/index.md
-          - Use Cases: learning-hub/events-hub/use-cases.md
-          - APIs: learning-hub/events-hub/apis.md
-          - HLD: learning-hub/events-hub/hld.md
-          - LLD: learning-hub/events-hub/lld.md
-          - Operations Manual: learning-hub/events-hub/operations-manual.md
-          - As-Built Requirements: learning-hub/events-hub/as-built-requirements.md
       - Unenrollment of Courses:
           - learning-hub/unenrollment-of-courses/index.md
           - Use Cases: learning-hub/unenrollment-of-courses/use-cases.md
@@ -164,14 +181,6 @@ nav:
           - LLD: learning-hub/marketplace/lld.md
           - Operations Manual: learning-hub/marketplace/operations-manual.md
           - As-Built Requirements: learning-hub/marketplace/as-built-requirements.md
-      - AI Assessment Tool:
-          - learning-hub/ai-assessment-tool/index.md
-          - Use Cases: learning-hub/ai-assessment-tool/use-cases.md
-          - APIs: learning-hub/ai-assessment-tool/apis.md
-          - HLD: learning-hub/ai-assessment-tool/hld.md
-          - LLD: learning-hub/ai-assessment-tool/lld.md
-          - Operations Manual: learning-hub/ai-assessment-tool/operations-manual.md
-          - As-Built Requirements: learning-hub/ai-assessment-tool/as-built-requirements.md
       - Search:
           - learning-hub/search/index.md
           - Use Cases: learning-hub/search/use-cases.md
@@ -188,6 +197,14 @@ nav:
           - LLD: learning-hub/moderated-content/lld.md
           - Operations Manual: learning-hub/moderated-content/operations-manual.md
           - As-Built Requirements: learning-hub/moderated-content/as-built-requirements.md
+  - Event Hub:
+      - learning-hub/events-hub/index.md
+      - Use Cases: learning-hub/events-hub/use-cases.md
+      - APIs: learning-hub/events-hub/apis.md
+      - HLD: learning-hub/events-hub/hld.md
+      - LLD: learning-hub/events-hub/lld.md
+      - Operations Manual: learning-hub/events-hub/operations-manual.md
+      - As-Built Requirements: learning-hub/events-hub/as-built-requirements.md
   - Discussion Hub:
       - learning-hub/discussion-hub/index.md
       - Use Cases: learning-hub/discussion-hub/use-cases.md
