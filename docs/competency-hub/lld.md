@@ -55,7 +55,6 @@ dependency; no migration files of any kind):
 | `additional_properties` | node_id, prop_key, prop_name, prop_value — EAV side table backing `additionalProperties` |
 | `node_mapping_parent` / `node_mapping_child` | split parent/child tables, joined on `id`, representing one-parent-to-many-children |
 | `bookmarks` | node_id, type, user_id |
-| `storage_service` | id, provider, container, identity, credential, endpoint — cloud storage credentials, keyed by provider |
 | `node_keys` | id, type, prefix, count — the ID generator: each type mints new node IDs as `prefix + (count+1)`, in memory |
 
 **Elasticsearch** — four named indices: `frac-commentrating` (per-user

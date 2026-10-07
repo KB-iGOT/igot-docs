@@ -119,9 +119,7 @@ class CommentTree {
 ```
 
 `commentTreeId` is not a stored/verified token — it's recomputed fresh on
-every request purely as a deterministic key-derivation function, signed
-with the same checked-in secret (`jwt.secret.key=comment-hub`) in both
-repos. The "tree" is not a relational adjacency structure at all — nesting
+every request purely as a deterministic key-derivation function. The "tree" is not a relational adjacency structure at all — nesting
 is expressed entirely by a `children` array key inside one JSON document
 per thread, fetched as a single unbounded blob (no depth limit, no
 pagination) by `comment-tree-service`'s only real endpoint,

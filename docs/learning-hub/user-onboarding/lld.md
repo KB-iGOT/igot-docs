@@ -217,7 +217,7 @@ through the update branch, which **deletes every other role** and writes
 | Attempts | `sunbird_otp_allowed_attempt` = 2; exhausted → code 0076, expired / missing → 0075 |
 | Re-issue | An unexpired OTP is re-sent, not regenerated |
 | Delivery | Async tell; failure is swallowed — response is `SUCCESS` regardless |
-| v3 verify | Returns a JWT `contextToken` (HS256, secret `otpValidationSecretKey`, default `"secretKey"`, 300 s) and does **not** delete the OTP row |
+| v3 verify | Returns a signed `contextToken` (300 s) and does **not** delete the OTP row |
 | v4 verify | Inserts `otp_lookup` (TTL 3600 s) for a one-time `verifyFromLookup` |
 | Auth | v1 / v2 routes public; v3 / v4 / `verifyFromLookup` need a user token |
 
@@ -327,7 +327,6 @@ end **and** `status = ACTIVE`. `listAllQRCodes` overwrites every row's
 | `url.custom.self.registration` | `https://{{domain_name}}` | helm `:498` |
 | `qr.custom.self.registration.skip.validation` | `false` (injected, usage not found) | helm `:499-504` |
 | `X_CHANNEL_ID` | `0131397178949058560` | uiproxy `env.ts:169` |
-| `KC_NEW_USER_DEFAULT_PWD` | `User@123` (legacy route only) | uiproxy `env.ts:52` |
 | `PORTAL_API_WHITELIST_CHECK` | `true` | uiproxy / helm `:194` |
 | `PORTAL_CREATE_NODEBB_USER` | `false` | uiproxy |
 | Keycloak realm template | `registrationAllowed: true`, `verifyEmail: false`, password policy length + upper + lower + digit + special, `passwordHistory(1)` | `keycloak-realm.j2` |

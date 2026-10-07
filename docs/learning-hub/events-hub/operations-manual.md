@@ -111,9 +111,6 @@ bulk status-reset.
   certificate issuance, on any of the four trigger points.
 - EventSet hierarchy reads always hit Neo4j directly — no caching layer
   to consider when diagnosing read-path slowness, unlike Course.
-- A hardcoded API key exists in `sunbird-cb-uiproxy`'s
-  `event-external.ts` — flagged for the security/platform team, not an
-  operational workaround.
 
 ## Escalation
 

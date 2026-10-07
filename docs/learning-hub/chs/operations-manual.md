@@ -67,17 +67,6 @@
 - **Redis** (`dashboardSync.py`): independent of both syncs above; the fastest lever to
   refresh the live dashboard if the Postgres/BigQuery sync is delayed or failing.
 
-## Credentials & secrets
-
-- Ansible Vault (`--vault-password-file`) protects `secrets.yml` — DB credentials, the GCP
-  service-account key, and other sensitive template variables.
-- The GCP service account is written to `jobs/gcp_service_account.json` on the target host,
-  mode `0640` — verify ownership/permissions after any manual deploy.
-- **Known hardcoded-credential risk:** `org_hierarchy.py` still hardcodes a Postgres password
-  and ES/Postgres hostnames in source. If this job is the one actually scheduled in
-  production, treat its credential as compromised-by-exposure and prioritize migrating to
-  `orgHierarchyAll.py` or patching it directly.
-
 ## Housekeeping (`cleanup.sh`)
 
 Intended to run after each day's pipeline completes (not itself scheduled in-repo).
@@ -112,5 +101,5 @@ several failure modes are already documented.
 ## Escalation / ownership
 
 Not recorded in the source repository. At minimum, capture: who owns the external Airflow
-scheduler configuration, who holds Ansible Vault access per environment, and who to contact
+scheduler configuration, and who to contact
 to confirm which of the duplicate warehouse-sync / org-hierarchy jobs is production-scheduled.

@@ -29,7 +29,7 @@ known gap below, not to a new bug.
 | `communityId` | Foreign key by convention only (no DB constraint) | Cross-checking a discussion's community requires a live read against `cb-community-service`'s `communities` table — there is no cascade/consistency guarantee if a community is deleted |
 | `profanityCheckStatus` | One of `profanityCheckPassed` / `profanityCheckCallFailed` / `profanityCheckUpdateFailed` / `languageNotDetected` / `languageDetectionCallFailed` | A post stuck in a `...Failed` state has no automatic retry — it will stay that way until the moderation pipeline is re-triggered manually (no such trigger was found in any repo) |
 | `countOfPeopleJoined`/`countOfPostCreated`/`countOfAnswerPost`/`countOfPeopleLiked` | Denormalized counters on the community's `data` blob | Written only by `discussion-metaupdate-service`'s async consumer — **never** by `cb-community-service` or `cb-discussion-service` directly; a discrepancy check must compare against a live count, not re-derive from these fields |
-| `commentTreeId` | HMAC-signed JWT derived from `(entityType, entityId, workflow)` | Not a stored/verified auth token — purely a deterministic cache/DB key; the signing secret (`jwt.secret.key`) must match across `cb-comment-service` and `comment-tree-service` deployments or lookups will silently mismatch |
+| `commentTreeId` | HMAC-signed JWT derived from `(entityType, entityId, workflow)` | Not a stored/verified auth token — purely a deterministic cache/DB key |
 
 ## Operational workflows
 
@@ -78,7 +78,6 @@ multiple browser tabs).
 | `max.rate.*.by.user` (per feature) | discussion | 100 (200 for votes) | Rate-limit ceiling, Redis `INCR`+`EXPIRE` |
 | `spring.redis.cacheTtl` | community | `60000` | **Read as seconds, not ms** — ~16.7 hours, not 60 seconds, despite the name |
 | `redis.ttl` | comment-tree-service | `86400` | 1 day — a code comment incorrectly claims 14 days |
-| `jwt.secret.key` | comment / comment-tree | `comment-hub` (checked-in default) | Must match across both services or tree lookups mismatch |
 | `PORTAL_API_WHITELIST_CHECK` | uiproxy | `true` | Controls the *extra* role-check layer; the base allowlist 403 applies regardless of this flag |
 | `kafka.offset.reset.value` / `auto.offset.reset` | metaupdate | `latest` | A fresh deployment or consumer-group reset skips messages produced while offline — no backfill |
 

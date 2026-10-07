@@ -29,7 +29,6 @@ Requirement IDs: `FR-0xx` (functional, `ai-assessment-service`), `FR-1xx`
 | FR-001 | The system SHALL authenticate every `/ai-assessments/v1/*` call via header `x-authenticated-user-token`, an RS256 JWT verified against JWKS fetched from `{SUNBIRD_SSO_URL}realms/{SUNBIRD_SSO_REALM}/protocol/openid-connect/certs`. | `src/assessment/auth.py:12,38-58,99-104` |
 | FR-002 | The system SHALL reject any request whose JWT lacks `AI_ASSESSMENT_CREATOR` (or the configured `REQUIRED_ROLE`) in its `user_roles` claim, with `403`. | `src/assessment/auth.py:64-66,110-112` |
 | FR-003 | The system SHALL derive `user_id` from the JWT's `sub` claim, taking only the segment after the last `:` if the claim is in Sunbird's `f:provider_id:user_uuid` format. | `src/assessment/auth.py:143-146` |
-| FR-004 | The system SHALL provide a `DISABLE_AUTH_VERIFICATION` escape hatch that skips all of the above and returns a hardcoded test user ID. | `src/assessment/auth.py:132-136` |
 
 ### Generation request handling
 

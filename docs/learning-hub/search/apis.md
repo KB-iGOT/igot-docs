@@ -85,7 +85,7 @@ All paths mounted under `/protected/v8` (Keycloak-protected) or `/proxies/v8`
 | ALL | `/proxies/v8/search/*` | `proxies_v8.ts:1499-1501` | Passthrough to Kong | Keycloak session; only specific sub-paths (e.g. `/search/v1/recent/*`) are individually whitelisted |
 
 `proxyCreatorSunbird()` (`src/utils/proxyCreator.ts:300-341`) injects
-`x-channel-id`, a static `authorization: SB_API_KEY`, and
+`x-channel-id` and
 `x-authenticated-user-*` headers derived from the Express session before
 forwarding — this is the header-injection step both `/nlp/*` and
 `/search/*` share with every other proxied route; no search-specific

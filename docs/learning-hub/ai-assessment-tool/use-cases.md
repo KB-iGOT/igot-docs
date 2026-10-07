@@ -115,7 +115,6 @@ IDs/names, and generation parameters, for re-download or reference.
 
 | Situation | Behaviour |
 |---|---|
-| `DISABLE_AUTH_VERIFICATION=true` | Skips all JWT/role validation and hardcodes `user_id = "test_user_id_123"` for every caller — a real security footgun if ever left on in a live environment (`auth.py:132-136`) |
 | Requested `language` not in the API's own 12-value enum | Rejected at the API layer (Pydantic enum validation); note the prompt template's own "supported languages" text lists a *different* 10-value set (includes Urdu, omits Punjabi/Odia/Assamese) — a prompt/API mismatch, not a runtime bug, but confusing to a prompt maintainer |
 | `language=odia` requested for a PDF download | No Odia-specific font file exists among the bundled Noto fonts — PDF rendering fidelity for Odia script is unverified and may degrade |
 | Two identical requests in quick succession, different users | Second caller gets the first caller's result cloned to them, not a fresh generation — by design, not a race-condition bug |

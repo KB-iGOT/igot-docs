@@ -95,7 +95,7 @@ first. The org must have designations imported into its framework.
 | `user.registration.dept.exclude.list` | one org id (properties) / empty (helm) | Orgs hidden from the department list |
 | `url.custom.self.registration` | `https://{{domain_name}}` | Base of generated links; its trailing slash yields `//crp` |
 | `X_CHANNEL_ID` | `0131397178949058560` | Holding org; first-time-user detection |
-| `PORTAL_API_WHITELIST_CHECK` | `true` | Turning it off exposes the legacy `admin/userRegistration` routes (default password `User@123`) |
+| `PORTAL_API_WHITELIST_CHECK` | `true` | Enables the route allow-list check |
 | `PORTAL_CREATE_NODEBB_USER` | `false` | Optional forum-user creation after admin create |
 | Kong rate limits | register 1000/h; OTP and link check 5000/h; hierarchy 15000/h per IP | `policy: local` — per Kong node, not cluster-wide |
 | Keycloak realm | `registrationAllowed: true`, `verifyEmail: false` | Native Keycloak sign-up is enabled in the template; the UI only hides it |
@@ -135,8 +135,7 @@ repos read.
 - `sunbird-cb-uiproxy › publicApi_v8/signup.ts` — never mounted; builds CQL
   by string interpolation.
 - `sunbird-cb-uiproxy › protectedApi_v8/admin/userRegistration.ts` — not in
-  the allow-list (403 by default), default password `User@123`, raw CQL on
-  `wid`.
+  the allow-list (403 by default).
 - `createUserV2WithRegistry` / `createUserV2WithoutRegistry` — handlers exist,
   no allow-list entry.
 - `app/signup` and `app/auto-signup/:id` in all three portals — routes still

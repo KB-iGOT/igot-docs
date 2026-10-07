@@ -118,7 +118,6 @@ deviation).
 | DEV-012 | The workflow `DOMAIN` case falls through to the BP workflow processor; `workflowTransition` may dereference a null `toValue` for registration. | FR-007, FR-051 | `ApplicationProcessingServiceImpl:54-56`; `WorkflowServiceImpl:113-122` |
 | DEV-013 | The Keycloak realm template enables native registration without email verification; only the UI hides it. | CON-006 | `keycloak-realm.j2` (`registrationAllowed: true`, `verifyEmail: false`) |
 | DEV-014 | Dead or unmounted code remains (`publicApi_v8/signup.ts`, `admin/userRegistration.ts`, `createUserV2*`, `app/signup`, profile-v3 welcome redirect, `isUserOnboarded`). | — | See [Operations Manual](operations-manual.md) |
-| DEV-015 | Defaults of concern: `OTP secret "secretKey"`, `KC_NEW_USER_DEFAULT_PWD=User@123`, `SB_API_KEY="bearer apiKey"`, Parichay client secret compiled into the mobile app. | NFR-003 | `externalresource.properties:110`; `env.ts:52,167`; `login_service.dart:134-141` |
 | DEV-016 | The core service's `/v2/user/exists` returns `id` and full name to any token holder; the OTP TTL differs between the properties file (1800) and the learner-service env (900). | NFR-001 | `CheckUserExistActor`; `sunbird_learner-service.env:136` |
 
 ## Out of scope (not reconstructible from these repos)

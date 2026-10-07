@@ -91,8 +91,8 @@ never touches a Question/AnswerPost row.
 > the actual `comment-tree-service` microservice turns out to be a
 > **read-only cache facade over the very same Postgres `comment_tree` table
 > that `cb-comment-service` writes** — two independent implementations of
-> identical entity/JWT-key logic, coupled only by a shared table and a
-> shared HMAC secret, with no API or Kafka connection between the services
+> identical entity/JWT-key logic, coupled only by a shared table,
+> with no API or Kafka connection between the services
 > at all.
 
 See [Use Cases](use-cases.md), [APIs](apis.md), [HLD](hld.md) and

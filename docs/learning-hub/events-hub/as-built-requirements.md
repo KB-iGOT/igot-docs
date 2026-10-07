@@ -86,7 +86,6 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 | ID | Requirement (as-built) | Source |
 |---|---|---|
 | NFR-001 | Bulk-onboard processing SHALL run asynchronously off the Kafka consumer thread (fire-and-forget), so a processing failure surfaces only in logs, not to the original uploader. | `PublicUserEventBulkonboardConsumer.java:70-84` |
-| NFR-002 | The `event-external` uiproxy route SHALL authenticate to its upstream using a fixed API key embedded in source rather than environment/secret configuration. | `event-external.ts:11` |
 | NFR-003 | Event-related uiproxy routes not present in the role whitelist SHALL default-deny under the standard whitelist-check configuration. | `whitelistApis.ts`, `apiWhiteList.ts:335-382` |
 | NFR-004 | `EventBatchDaoImpl` SHALL apply an environment-configurable `+5:30` correction when merging batch start/end times, to compensate for an otherwise-unresolved timezone handling issue. | `EventBatchDaoImpl.processStartEndDate` |
 

@@ -100,8 +100,7 @@ tree-traversal logic, against the **same Postgres `comment_tree` table**
 `updateCommentTree`, `setCommentTreeStatusToResolved`); `comment-tree-service`
 only reads, through a Redis-first cache-aside path. There is no REST call,
 Feign client, or Kafka topic between the two — they are coupled solely by
-the shared table and a shared, weak, checked-in HMAC secret
-(`jwt.secret.key=comment-hub` in both repos). A schema/key-derivation change
+the shared table. A schema/key-derivation change
 in one repo that isn't mirrored in the other would fail silently (stale
 cache, or `findTargetNode` returning null with no error).
 

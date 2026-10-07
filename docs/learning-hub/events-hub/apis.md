@@ -104,7 +104,7 @@ in the role whitelist):
 | Method | Path | Proxies to |
 |---|---|---|
 | GET | `/protected/v8/events/` | `${CONTENT_API_BASE}/live-events` |
-| GET | `/protected/v8/event-external/` | Hardcoded `https://igot.in` with a **hardcoded API key** (see As-Built) |
+| GET | `/protected/v8/event-external/` | Proxied to a fixed external site (`<EXTERNAL_SITE>`) |
 
 Everything else rides the generic `/proxies/v8/*` catch-all
 (`proxyCreatorSunbird`), forwarding to `KONG_API_BASE` 1:1 with no body
