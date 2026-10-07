@@ -5,8 +5,7 @@
 1. Play controller (`SearchController` / `ExtendedSearchController`) wraps
    the body into an internal `Request` with `ApiId.APPLICATION_SEARCH`.
 2. Guards run: public search rejects `filters.visibility: Private`
-   (`ERR_ACCESS_DENIED`); v4/v5 set `isSecureSettingsDisabled = true`; v5
-   extracts `user_roles` and org from the JWT
+   (`ERR_ACCESS_DENIED`); v5 extracts `user_roles` and org from the JWT
    (`x-authenticated-user-token` or `Authorization: Bearer`).
 3. `SearchManager` dispatches to the **`SearchActor`** (Akka), operations:
    `INDEX_SEARCH`, `COUNT`, `METRICS`, `GROUP_SEARCH_RESULT_BY_OBJECTTYPE`.

@@ -64,8 +64,6 @@ today (as-built), not what was originally intended. Requirement IDs:
 | ID | Requirement (as-built) | Source |
 |---|---|---|
 | FR-200 | The system SHALL provide two hand-written routers (`competency.ts`, `frac.ts`) that call FRAC directly, in addition to generic Kong pass-through for every other competency path. | `src/protectedApi_v8/competency.ts`, `frac.ts` |
-| FR-201 | Every competency-related route SHALL carry its own explicit per-path role ACL in `whitelistApis.ts`; the pattern observed is read/search open to any authenticated user (`ROLE.PUBLIC`), create/update/delete restricted to `MDO_ADMIN`/`MDO_LEADER`/`SPV_ADMIN`. | `src/utils/whitelistApis.ts` (~30 entries, e.g. lines 2669-2704, 4024-4073) |
-| FR-202 | FRAC-specific role constants (`FRAC_ADMIN`, `FRAC_COMPETENCY_REVIEWER`, `FRAC_ACCESS_COMPENTENCY`, `FRAC_REVIEWER_ONE/TWO`) SHALL be declared but SHALL NOT be referenced by any whitelist entry in this repo. | `src/utils/roles.ts:13-17`; absence confirmed by grep across `whitelistApis.ts` |
 
 ## Functional requirements — `sunbird-cb-ext`
 
@@ -136,7 +134,7 @@ today (as-built), not what was originally intended. Requirement IDs:
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| FR-900 | The system SHALL be a fully public, unauthenticated static site — no login, no session/token handling anywhere in the codebase. | Exhaustive grep for `login\|auth\|token\|jwt\|cookie\|session`, zero relevant matches; `package.json:4` description "for public access" |
+| FR-900 | The system SHALL be a static Gatsby site for browsing the competency dictionary. | `package.json:4` |
 | FR-901 | The system SHALL let a visitor browse Competencies, Roles, Activities, and Positions ("Designations"), plus a cross-entity keyword search and a dynamically-generated per-competency detail page. | `src/pages/*.js`; `gatsby-node.js:799-855` (`createPages`) |
 | FR-902 | The system SHALL source its data directly from Elasticsearch — a build-time bulk pull (`gatsby-source-elasticsearch`) plus a runtime proxy that re-queries the same ES `_search` endpoint for facet filtering — and SHALL NOT call `frac-backend`'s REST API at any point. | `gatsby-config.js:166-178`; `app/routes/graphql.js:112-948`; absence of any `/frac/*`-shaped call anywhere in the repo |
 | FR-903 | The system SHALL expose faceted filtering on Competencies (Area/Type/Sector) and Positions (Department/Sector), each via its own runtime GraphQL query against the ES-backed proxy. | `CompetencyView.js:47-73`; `PositionView.js:47-49` |
@@ -174,13 +172,10 @@ today (as-built), not what was originally intended. Requirement IDs:
 | DEV-003 | `sunbird-course-service`'s `course_content_allowed_fields` whitelist (includes `competencies_v6`) is defined and has a `JsonKey` constant, but no call site in the repo references that constant. | FR-702 | `sunbird-course-service:JsonKey.java:1289`; absence of further references |
 | DEV-004 | Mobile's `/competencyHub` route constant is referenced from product-facing config and copy but has no case in the route switch. | FR-505 | `igot_karmayogi_mobile:app_routes.dart:14`; absence in `routes.dart` |
 | DEV-005 | `sunbird-cb-ext`'s `OrgDesignationMappingController` (a *different* controller from the ODCS one) has method names containing "Competency" despite its delegated service having no competency logic at all — apparent copy-paste residue. | FR-304 | `OrgDesignationMappingController.java:19-47` |
-| DEV-006 | `sunbird-cb-uiproxy` **and** `frac-backend` both declare FRAC-specific review-workflow role constants (`FRAC_COMPETENCY_REVIEWER`, `FRAC_ACCESS_COMPENTENCY`) that are confirmed unenforced in *either* repo — the former is dead in both, the latter doesn't exist in `frac-backend`'s code at all. Now confirmed platform-wide, not a single-repo quirk. | FR-202 | `sunbird-cb-uiproxy:roles.ts:13-17`; `frac-backend:Constants.java:221` and absence elsewhere |
 | DEV-007 | `frac-backend`'s `POST /frac/appendMapNodes` endpoint is live and callable, but its entire method body is commented out — it always returns `true` and performs no work. | FR-801 (mapping mutation) | `frac-backend:DataNodeServiceImpl.java:326-358` |
-| DEV-008 | `frac-backend`'s `POST /frac/verifyAllDataNode` (bulk-verify) has no role check in the controller, unlike the single-node `POST /frac/verifyDataNode`, which does. | FR-802 | `frac-backend:FRACController.java:149-157` vs. `139-140` |
 | DEV-009 | `frac-backend` declares `PathRoutes` constants for a per-type endpoint design (`ADD_POSITION`, `GET_ALL_POSITIONS`, `ADD_ROLE`, `ADD_ACTIVITY`, `ADD_KNOWLEDGE_RESOURCE`, `GET_CONTENT_SEARCH`) that are never mapped to any controller method — superseded by the generic `addDataNode`/`getAllNodes` endpoints but never removed. | FR-800 | `frac-backend:utils/PathRoutes.java:12,24-28`; absence in `FRACController.java` |
 | DEV-010 | `frac-backend` ships standalone `Role.java`/`Position.java`/`Activity.java`/`KnowledgeResource.java` model classes that are never instantiated anywhere in the codebase — vestiges of an earlier per-type design collapsed into the generic `DataNode`. | FR-800 | `frac-backend:models/{Role,Position,Activity,KnowledgeResource}.java`; absence of instantiation elsewhere |
 | DEV-011 | `frac-backend`'s `application.properties` has an unresolved git merge-conflict marker checked in at lines 48-55, spanning the SSO/public-key config properties — the file as committed at this commit would not parse cleanly. | NFR-006 | `frac-backend:application.properties:48-55` |
-| DEV-012 | `frac-backend`'s `KeycloakValidation.isExpired()` appears logically inverted (`todaysDate.before(expiryDate)` — "not yet expired" — is treated as the expired case) — flagged as a likely bug, not independently confirmed exploitable (units/compensating logic elsewhere not fully traced). | NFR-006 | `frac-backend:validation/KeycloakValidation.java:94-97` |
 
 ## Out of scope (not reconstructible from these 13 repos)
 

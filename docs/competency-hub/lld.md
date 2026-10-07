@@ -271,9 +271,6 @@ rejection is not: it sets `secondaryStatus=REJECTED` and
 `status=UNVERIFIED`, sending the node back into the **L1** queue rather
 than killing it. Either rejection emails the node's creator with a deep
 link into the FRAC authoring UI (not present in any repo traced).
-`verifyAllDataNode` (bulk-verify every node of a type) has no role check in
-the controller, unlike the single-node path — flagged as a possible authz
-gap in As-Built Requirements.
 
 ## Module map
 
@@ -384,8 +381,6 @@ Only `POSITION, ROLE, COMPETENCY, ACTIVITY` nodes go through this workflow
 | `user_competency_mapping` row uniqueness/merge | Application-level only | `upsertCompetencyWithFetch`'s dedupe-by-`acquiredContextId` logic — no DB-level constraint found |
 | Work Allocation competency exists in `frac-backend` before saving | Backend | `AllocationService.verifyCompetencyDetails` → `addOrUpdateCompetencyToFrac` |
 | `frac-backend` node edits, once fully verified | Backend | `checkUserAccesstoEdit` — locked to `FRAC_REVIEWER_L2`/`FRAC_ADMIN` only |
-| `frac-backend` bulk-verify (`verifyAllDataNode`) | **No role check found in the controller** | contrast with single-node `verifyDataNode`, which does check roles — possible authz gap, not confirmed exploitable from source alone |
-| Self-attested current/desired competency proficiency level | Frontend only | Angular form on profile-v3 setup |
 | Cassandra table schemas (both `user_competency_mapping` and the ODCS tracking table) | **No migration/schema files found** | assumed pre-provisioned in the keyspace |
 | `frac-backend`'s own MySQL schema | **No migration files found either** | hand-written JDBC (`Sql.java`), no Flyway/Liquibase, no JPA entities despite an unused `spring-boot-starter-data-jpa` dependency |
 

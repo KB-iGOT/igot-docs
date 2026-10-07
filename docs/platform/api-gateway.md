@@ -9,8 +9,8 @@ Nginx:
 ```mermaid
 flowchart LR
   P[sunbird-cb-portal /<br/>creation portal] --> N[Nginx]
-  N -- "{{host}}/apis/…" --> U[sunbird-cb-uiproxy<br/>session auth · whitelist · proxy]
-  N -- "{{host}}/api/…" --> K[Kong API Manager<br/>jwt · cors · acl plugins]
+  N -- "{{host}}/apis/…" --> U[sunbird-cb-uiproxy<br/>session · proxy]
+  N -- "{{host}}/api/…" --> K[Kong API Manager]
   U -- "KONG_API_BASE = {{host}}/api" --> K
   K --> S1[search-service :9000]
   K --> S2[knowledge-mw-service :5000]
@@ -19,12 +19,12 @@ flowchart LR
 
 | Prefix | Handled by | Role |
 |---|---|---|
-| `{{host}}/apis/…` | **sunbird-cb-uiproxy** | Browser-facing proxy: Keycloak session → tokens, route whitelist (`src/utils/whitelistApis.ts`), request shaping, then forwards to Kong (`KONG_API_BASE`) |
-| `{{host}}/api/…` | **Kong** (deployed by `sunbird-devops › kong-api` role) | API manager: `jwt`, `cors`, `acl` plugins per route; maps public URIs to internal service URLs |
+| `{{host}}/apis/…` | **sunbird-cb-uiproxy** | Browser-facing proxy: Keycloak session → tokens, request shaping, then forwards to Kong (`KONG_API_BASE`) |
+| `{{host}}/api/…` | **Kong** (deployed by `sunbird-devops › kong-api` role) | API manager: maps public URIs to internal service URLs |
 
 The Kong route map is the single reference for "which service serves this
 API": `ansible/roles/kong-api/defaults/main.yml` — each entry is
-`name / uris / upstream_url / plugins`. Upstream hosts are internal service
+`name / uris / upstream_url`. Upstream hosts are internal service
 DNS names (e.g. `http://search-service:9000`,
 `http://knowledge-mw-service:5000`).
 
