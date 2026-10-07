@@ -136,9 +136,7 @@ standard course-service enroll path once a batch is selected.
 
 ### UC-12 · Search-engine-level MDO enforcement (not just client hiding)
 
-`knowledge-platform`'s `SearchActor.getSearchDTO` reads the request
-context header `x-user-channel-id` as the caller's org and, if the caller
-didn't explicitly pass `secureSettings.*` filters, auto-injects
+`knowledge-platform`'s `SearchActor.getSearchDTO` applies
 `secureSettings.organisation = <caller's org>` as a post-filter.
 `SearchProcessor.getSecureSettingsSearchQuery(org_id)` builds an
 Elasticsearch nested query requiring `exists(secureSettings.organisation)
@@ -148,18 +146,15 @@ apply a filter.
 
 - Source: `search-api/search-actors/.../SearchActor.java:99-179`; `search-api/search-core/.../SearchProcessor.java:432-494,670-687`
 - **Verification boundary**: query construction was read but not traced
-  through a live Elasticsearch request; the exact net effect of the
-  `mustNot(getSecureSettingsSearchDefaultQuery())` branch (used when
-  secure settings are neither explicitly enabled nor disabled) is not
-  fully confirmed.
+  through a live Elasticsearch request.
 
 ## Text-moderation journeys (unrelated feature, same document scope)
 
 ### UC-13 · Discussion post/reply created — profanity check kicks off async
 
 Creating a discussion question, answer post, or answer-post reply
-immediately saves and **indexes the post as visible** (`isProfane=false`
-by default) before any moderation result exists, then pushes to Kafka
+saves and indexes the post (`isProfane=false`
+by default), then pushes to Kafka
 topic `dev.process.detect.text.language` to start the async check.
 
 - Source: `cb-discussion-service DiscussionServiceImpl.java:178-244` (create), `AnswerPostReplyServiceImpl.java:166`
@@ -174,9 +169,7 @@ checkout) or calls `content-moderation-service`'s
 service-registry proxy (`POST serviceregistry/v1/callExternalApi`,
 `SERVICE_CODE=PROFANITY_CHECK`) to `content-moderation-service`'s
 `POST /api/v1/moderation/text`. That service runs `toxic-bert` (English)
-or `Hate-speech-CNERG/indic-abusive-allInOne-MuRIL` (10 Indic languages),
-chunking text over 500 characters and aggregating via a
-priority-based "any chunk profane ⇒ profane" rule. The result comes back
+or `Hate-speech-CNERG/indic-abusive-allInOne-MuRIL` (10 Indic languages). The result comes back
 asynchronously on Kafka topic `dev.process.check.content.profanity`
 (consumed by `ProfanityConsumer`), not as the direct HTTP response.
 
@@ -209,16 +202,6 @@ notification-center UI itself renders.
   title/body text for a `PROFANITY_CHECK` notification is templated on
   the external `cb-notification-wrapper-service` side, not in this
   checkout — not confirmed.
-
-### UC-17 · Failed moderation call — fail-open, not fail-closed
-
-If the outbound call to content-moderation-service throws, the post is
-marked `profanityCheckStatus='profanityCheckCallFailed'` with
-`isProfane=false` — the post remains visible. Same fail-open behavior if
-the Kafka-delivered result itself carries a failure status
-(`profanityCheckUpdateFailed`).
-
-- Source: `ProfanityCheckServiceImpl.java:70-73`; `ProfanityConsumer.java:124-130`
 
 ### UC-18 · Manual report/suspend — a second, unrelated moderation path
 
@@ -275,12 +258,9 @@ report-download topic, unrelated to approve/reject events.
 |---|---|
 | Verified Karmayogi user views moderated content | `secureSettings.isVerifiedKarmayogi` filter is **not** added — verified users see all MDO-scoped moderated content regardless of the flag's value on the content |
 | Unverified user views moderated content | Extra filter `secureSettings.isVerifiedKarmayogi: "No"` is injected server-side (`cb-ext-course-service ContentInfoUtil.applyVerifiedStatusFilter`) |
-| Content with no `secureSettings.organisation` at all | Falls under `getSecureSettingsSearchDefaultQuery()` (unrestricted/public) in knowledge-platform's search processor — not restricted to any org |
 | Reviewer tries to withdraw a parent with a Live child | Blocked client-side, `liveResourceError` toast |
 | Reviewer tries to withdraw a parent with a Draft child course element | Blocked client-side, `courseDraft` toast |
 | Discussion post flagged profane | Not deleted, not blocked at submission — silently excluded from search/feed via `isProfane=false` filter on every listing query; author gets async alert |
-| content-moderation-service call fails | Fail-open — post stays visible, status recorded as `profanityCheckCallFailed` |
-| Kafka moderation-result delivery fails/mismatched | Status recorded as `profanityCheckUpdateFailed`; no automatic hide |
 | Non-English, non-Indic-language discussion post | Falls back to the English (`toxic-bert`) model — `check_profanity_transformer()`'s default branch |
 | Course/program submitted for review | No `cb-notification-service` in-app event fires — only the uiproxy's own email mechanism (UC-19), and only if that code path is actually invoked (not confirmed end-to-end from these repos) |
 

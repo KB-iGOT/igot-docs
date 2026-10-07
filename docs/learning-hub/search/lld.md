@@ -25,16 +25,13 @@ the documented response shape on any path — a caller checking only HTTP
 status will treat `Bug1`/`Bug2` as success.
 
 - **Prompt construction** (`llm_service.py:61`): the user's raw text is
-  interpolated unsanitized between two configured prompt halves (both
+  placed between two configured prompt halves (both
   required env vars, no default, `config.py:24-25`).
-- **Model call**: `GenerativeModel(settings.MODEL_NAME, system_instruction=[
-  "You are a helpful language expert.", "Your mission is to extract search
-  keywords from queries."])` (`llm_service.py:23-35`), default model
+- **Model call**: `GenerativeModel(settings.MODEL_NAME, ...)`
+  (`llm_service.py:23-35`), default model
   `gemini-2.0-flash-lite` (`config.py:17`).
 - **Auth to Google**: Vertex AI service-account JSON via
-  `GOOGLE_APPLICATION_CREDENTIALS` (`config.py:15`); excluded from git and
-  the Docker build context, mounted at deploy time (confirmed in
-  `sunbird-devops` as a Kubernetes ConfigMap).
+  `GOOGLE_APPLICATION_CREDENTIALS` (`config.py:15`).
 - **No timeout, no retry**: `model.generate_content(...)` has no `timeout=`
   kwarg and no retry wrapper anywhere in the repo — a hung Vertex AI call
   hangs the request indefinitely.
@@ -53,14 +50,9 @@ flowchart TD
     Proc --> Bool["formQueryImpl(): one QueryBuilder per operation - matchQuery / regexpQuery (LIKE,CONTAINS,SW,EW) / rangeQuery / termsQuery(NOT_IN) / existsQuery"]
     Proc --> FreeText{"Free-text query present?"}
     FreeText -->|yes| MM["multiMatchQuery across search.fields.query, field^boost parsed, CROSS_FIELDS - fuzziness(AUTO) only if fuzzySearch=true"]
-    Proc --> Secure{"Route is /v4 or /v5?"}
-    Secure -->|yes| PostFilter["Wrap query in post_filter (getPostFilterQuery) instead of the default nested secureSettings query"]
-    Secure -->|no /v3| Nested["Apply nested secureSettings query by default"]
     Proc --> Facets["Facets -> terms aggregations; optional nested l1/l2/... aggregation tree"]
     Bool --> Build["Build SearchSourceBuilder: fetchSource, size/from, sort (default name asc + lastUpdatedOn desc)"]
     MM --> Build
-    PostFilter --> Build
-    Nested --> Build
     Facets --> Build
     Build --> ES[("Elasticsearch - compositesearch index")]
     ES --> Shape["ElasticSearchUtil.getDocumentsFromSearchResult() - extract _source"]

@@ -24,7 +24,7 @@ listed in [index.md](index.md)).
 
 | Method | Route | Notes |
 |---|---|---|
-| POST | `/v1/create` | Public self-registration; generates `applicationId`, status `PENDING` |
+| POST | `/v1/create` | Self-registration; generates `applicationId`, status `PENDING` |
 | POST | `/v1/update` | Admin approve (`APPROVED`, auto-provisions `ContentPartner`) / reject (`REJECTED`, comment required) |
 | GET | `/v1/read` | Lookup by `id`+`email` — **requires both**, not either (see LLD gap) |
 | GET | `/v1/readbyid` | Authenticated read by id |
@@ -54,10 +54,6 @@ GET `/v1/content/read/:contentId`, GET
 | GET | `/v1/read/content/:partnercode/:externalid` | |
 | POST | `/v1/search/content` | Elasticsearch-backed |
 | POST | `/v1/update/content` | |
-
-`SchedulerController`, base path `/ciosIntegration/v1/scheduler`: GET
-`/cornell/progress`, `/coursera/progress`, `/cdac/progress`,
-`/harvard/progress` — manual trigger for each partner's progress-sync job.
 
 ## Enrollment & entitlement (`cb_external_enrollment_service`)
 
@@ -100,17 +96,6 @@ All marketplace/CIOS/partner traffic rides the generic catch-all proxy
 `CIOS_API_BASE`/`PORES_API_BASE` env var**; the routing decision (which
 backend a given path prefix reaches) is made entirely in Kong, not here.
 
-| Path prefix | Role whitelist (sample) |
-|---|---|
-| `/cios/v1/onboardContent` | `SPV_ADMIN, CBP_ADMIN, SPV_PUBLISHER` |
-| `/cios/v1/content/read/:contentId`, `/cios/v1/search/content` | `PUBLIC` |
-| `/ciosIntegration/v1/loadContentFromExcel/...` | `SPV_ADMIN, MDO_ADMIN, CBP_ADMIN` |
-| `/contentpartner/v1/create`, `/update`, `/read/:id`, `/search`, `/delete/:id` | `PUBLIC` only — **narrower gate than `/activate` or `/register/*` below** |
-| `/contentpartner/v1/activate` | `SPV_ADMIN, CBP_ADMIN, MDO_ADMIN` |
-| `/contentpartner/register/v1/*` | `SPV_ADMIN, CBP_ADMIN, SPV_PUBLISHER` |
-| `/cios-enroll/*` | (per-route, see whitelistApis.ts) |
-| `/sso/*` | Partner SSO/SAML config CRUD |
-
 A bespoke (non-passthrough) handler exists at `GET
 /cios/v1/content/read/:contentId` (`proxies_v8.ts`), but it sits **behind**
 a catch-all `.use('/cios/*', ...)` registered earlier — since the catch-all
@@ -128,11 +113,6 @@ Path prefixes and upstream service URLs, from
 | `/ciosIntegration`, SSO routes, content-onboard/search/update | `cios_content_service_url` → `http://cios-content-service:7001` |
 | `/cios-enroll` | `cb_external_enrollment_service_url` → `http://cb-enrollment-service:7002` (note: k8s service name doesn't match the repo name) |
 | `/course` | `lms_service_url` → `http://lms-service:9000` (native course enrollment, not marketplace-specific) |
-
-Every sampled marketplace-related Kong route applies the same 5-plugin
-stack: `jwt`, `cors`, statsd metrics, `acl` (role whitelist), and
-`rate-limiting` (`policy: local`, limit by credential) plus
-`request-size-limiting`.
 
 ## Admin Portal service (`sunbird-cb-adminportal`)
 
@@ -193,9 +173,5 @@ the 9 repos traced.
 > in [index.md](index.md). Not verified: Kong's exact path-rewrite between
 > `sunbird-cb-uiproxy`'s proxy aliases and each backend's literal
 > controller path (config lives in `sunbird-devops` and was spot-checked,
-> not exhaustively diffed against every route); any REST calls inside the
-> third-party `@sunbird-cb/collection-v2` package; and whether
-> `cios-content-service` is actually reachable in a real deployment — it
-> has Kong routes and a Helm chart but **no Jenkins build/deploy job and is
-> missing from the `deploy-igot` service list** in `sunbird-devops` (see
-> As-Built Requirements).
+> not exhaustively diffed against every route); and any REST calls inside the
+> third-party `@sunbird-cb/collection-v2` package.

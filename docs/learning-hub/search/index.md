@@ -53,8 +53,8 @@ normalized keyword.
 - **Shape**: two independent backends that never call each other —
   `nlp-search` (LLM keyword extraction) and `knowledge-platform`'s
   `search-service` (Elasticsearch query execution) — stitched together only
-  at the client layer. `uiproxy` fronts both with auth-header injection and
-  RBAC whitelisting, then hands off to Kong, which resolves the actual
+  at the client layer. `uiproxy` fronts both
+  and hands off to Kong, which resolves the actual
   downstream host.
 - **Status**: ✅ traced end-to-end across all ten repos — API surface,
   query-DSL construction, the indexing pipeline that feeds the search index,
