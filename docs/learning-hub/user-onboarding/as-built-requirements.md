@@ -30,11 +30,11 @@ deviation).
 | FR-002 | The system SHALL reject a registration missing any of `FirstName, Email, (sbOrgId or mapId), OrgName, Group, Source, Phone`, an invalid phone, or a group outside the configured list. | `validateRegisterationPayload:376-421`; `user.bulk.upload.group.value` |
 | FR-003 | The system SHALL reject an email or phone that already belongs to a user ("…already registered with another User profile"). | `registerUser`; `UserUtilityServiceImpl.isUserExist:559` |
 | FR-004 | A registration for an email whose existing record is not `FAILED` SHALL be rejected; a `FAILED` record SHALL be re-submittable with only its organisation fields overwritten. | `registerUser`; `updateValues` (:617-624) |
-| FR-005 | The system SHALL enforce the email domain allow-list on registration unless a `registrationLink` is supplied. | `UserUtilityServiceImpl.emailValidation:1211-1245` |
+| FR-005 | The system SHALL enforce the email domain allow-list on registration. | `UserUtilityServiceImpl.emailValidation:1211-1245` |
 | FR-006 | A registration with a `registrationLink`, or whose email domain is pre-approved, SHALL go to the auto-create topic; any other SHALL go to the approval topic. | `registerUser:140-147` |
 | FR-007 | The approval consumer SHALL start a `user_registration` workflow (`INITIATE`), store `status` and `wfIds[0]` on the record, and send a registration mail. | `UserRegistrationConsumer:66-106` |
 | FR-008 | On approval, or directly for the auto path, the system SHALL create the organisation if absent, create the account, update `profileDetails`, assign `PUBLIC`, generate a set-password link and send the `iGotWelcome_v3` welcome email, ending in `WF_APPROVED` or `FAILED`. | `initiateCreateUserFlow:271-335` |
-| FR-009 | The system SHALL generate and verify one-time codes for email and phone, throttled per key. | `OTPActor`; `OtpController` |
+| FR-009 | The system SHALL generate and verify one-time codes for email and phone. | `OTPActor`; `OtpController` |
 | FR-010 | The system SHALL provide a domain-validated OTP generate for email on the public sign-up page and in mobile direct registration. | `UserRegistrationServiceImpl.generateOTP:217-269`; Kong `generateOtpEXT` |
 | FR-011 | The learner portal SHALL gate Register on both email and mobile being OTP-verified. | `public-signup.component.ts:932-961` |
 
@@ -81,44 +81,30 @@ deviation).
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| NFR-001 | OTP generation SHALL be limited to 5 per hour and 20 per day per key, with 2 verification attempts; the code TTL is 900 s effectively. | `externalresource.properties`; `sunbird_learner-service.env:136` |
-| NFR-002 | Duplicate account creation for the same email or phone SHALL be blocked for 300 s via Redis. | `SSOUserCreateActor.processSSOUser` |
-| NFR-003 | Public Kong routes (register, OTP v1, link check, org hierarchy, groups) SHALL rely on local rate limits (1000–15000 per hour) and a 1 MB body limit rather than authentication. | `kong-api/defaults/main.yml` |
-| NFR-004 | The uiproxy SHALL require a Keycloak session for `/proxies/v8` and `/protected/v8`, and SHALL enforce a per-path role allow-list when `PORTAL_API_WHITELIST_CHECK` is `true`. | `server.ts:190-200`; `apiWhiteList.ts` |
 | NFR-005 | Registration SHALL be asynchronous: the API returns 202 and account creation runs on Kafka consumers. | `registerUser`; `UserRegistrationConsumer` |
 
 ## Constraints and assumptions baked into the build
 
 | ID | Constraint / assumption | Implication | Source |
 |---|---|---|---|
-| CON-001 | The register endpoint does not verify that either OTP was verified. | Registration with arbitrary, unowned email / phone is possible by calling the API directly; OTP is a client-side gate. | `registerUser` / `validateRegisterationPayload` (no OTP reference); `OTPValidator` used only in profile update |
 | CON-002 | The core service sends onboarding mail only when `callerId` is set (bulk-upload job); HTTP create never sets it. | Welcome mail for HTTP-created users must come from cb-ext or uiproxy. | `SSOUserCreateActor:259`; `RequestInterceptor` / `BaseController.initRequest` |
 | CON-003 | The core service never creates a Keycloak user; the Keycloak user is a federated view of Cassandra. | Without a password, a user can only log in via the set-password link. | `SSOManager` interface; `KeyCloakServiceImpl.getFederatedUserId` |
-| CON-004 | `emailVerified` / `phoneVerified` are discarded at creation and every read returns `true`. | The platform has no durable email / phone verification state. | `User.java`; `UserServiceImpl.getUserDetailsById:102` |
 | CON-005 | The approval state machine is loaded at runtime from `wfUserRegServiceConfig`. | State names and approver roles cannot be derived from code. | `WorkFlowServiceImplV2:546`; `WorkflowServiceImpl:916` |
-| CON-006 | A registration link replaces both the domain check and approval. | Anyone holding a link is trusted for that organisation until its end date. | `registerUser:140-147`; `emailValidation` |
 | CON-007 | Only one link per organisation is active at a time. | Re-publishing a link immediately invalidates the previous one. | `isRegistrationQRCodeActive(orgId)` |
-| CON-008 | Mobile calls go to Kong via `/api`, not uiproxy. | uiproxy allow-list rules do not protect mobile onboarding calls. | `proxy-default.conf:140-172`; `api_endpoints.dart` |
 
 ## Known deviations (inconsistent by accident, not by design)
 
 | ID | Deviation | Requirements in tension | Source |
 |---|---|---|---|
 | DEV-001 | Email-exists / phone-exists checks are not chained: a duplicate email with a new phone writes the ES record and fires Kafka, then returns 400. | FR-003, FR-006 | `registerUser:100-105, 163-167` |
-| DEV-002 | Link date errors on register return HTTP 200 with the message in the result body; a link without an id segment passes. | FR-023 | `validateRegistrationDates:651-680` |
-| DEV-003 | The Redis duplicate guard is set before validation and never cleared on failure. | NFR-002 | `SSOUserCreateActor.processSSOUser` |
+| DEV-002 | Link date errors on register return HTTP 200 with the message in the result body. | FR-023 | `validateRegistrationDates:651-680` |
 | DEV-004 | Account-insert failures are swallowed; the response may be empty. | FR-033 | `createUserAndPassword` (:94-120) |
 | DEV-005 | The link counter increments even when account creation failed, and is overwritten with the org total on list. | FR-024 | `UserRegistrationConsumer:120-140`; `listAllQRCodes` |
 | DEV-006 | The learner sign-up page shows the "domain isn't recognised" message for any `errmsg` on email OTP. | FR-010 | `public-signup.component.ts:1066-1081` |
-| DEV-007 | Step-one validation does not block "Next"; the reCAPTCHA token is requested but never sent; the link page has reCAPTCHA commented out. | FR-011 | `public-signup.component.ts:1450-1457, 1196-1290` |
-| DEV-008 | Mobile OTP wrappers return success on any exception or missing `errmsg`. | FR-009 | `profile_repository.dart:652-777` |
 | DEV-009 | `isEmailRequired:false` is coerced to `true` in the admin create endpoint; welcome-mail failure returns 500 after the user is created. | FR-034 | `profile-details.ts` |
-| DEV-010 | The public role-assign route is unauthenticated and deletes all other roles of the user. | FR-030 | `UserRoleServiceImpl:45-61, 97-135`; `RequestInterceptor` |
 | DEV-011 | Admin-portal request resolvers return `undefined`; the domain pattern loses its backslash; one error branch can never match. Detail in [SPV & Admin Registration](../spv-admin-registration/as-built-requirements.md). | FR-050 | `onboarding-requests.component.ts:61-66`; `requests-approval`; `create-user` |
 | DEV-012 | The workflow `DOMAIN` case falls through to the BP workflow processor; `workflowTransition` may dereference a null `toValue` for registration. | FR-007, FR-051 | `ApplicationProcessingServiceImpl:54-56`; `WorkflowServiceImpl:113-122` |
-| DEV-013 | The Keycloak realm template enables native registration without email verification; only the UI hides it. | CON-006 | `keycloak-realm.j2` (`registrationAllowed: true`, `verifyEmail: false`) |
 | DEV-014 | Dead or unmounted code remains (`publicApi_v8/signup.ts`, `admin/userRegistration.ts`, `createUserV2*`, `app/signup`, profile-v3 welcome redirect, `isUserOnboarded`). | — | See [Operations Manual](operations-manual.md) |
-| DEV-016 | The core service's `/v2/user/exists` returns `id` and full name to any token holder; the OTP TTL differs between the properties file (1800) and the learner-service env (900). | NFR-001 | `CheckUserExistActor`; `sunbird_learner-service.env:136` |
 
 ## Out of scope (not reconstructible from these repos)
 
@@ -131,8 +117,7 @@ deviation).
 - The Keycloak federation provider and the deployed Keycloak realm.
 - Registration and welcome email templates, and notification-service
   internals.
-- Kong ACL group membership (e.g. which consumers hold `userCreate`), the
-  Kong routes for `masterData/v1/upsert`, `basicInfo` and the workflow
+- The Kong routes for `masterData/v1/upsert`, `basicInfo` and the workflow
   `search` / `update`, and the Kubernetes ingress rule for `/apis`.
 - Values of mobile env constants (`portalBaseUrl`, `configUrl`,
   `xChannelId`) and of the Jinja variables `user_reg_domain_name`,
@@ -142,10 +127,8 @@ deviation).
 
 > **Verification boundary:** every FR / NFR / CON / DEV above is traced to
 > the repo and file or function in its Source column, drawn from four
-> independent code-reading passes over the 14 repos, with the register flow,
-> the absence of OTP verification on register, the `callerId` mail gate, the
-> Kong `registerUser`, `generateOtpEXT` and link-check routes re-read
-> directly while writing this document. No original specification existed to
+> independent code-reading passes over the 14 repos, with the register flow
+> and the `callerId` mail gate re-read directly while writing this document. No original specification existed to
 > compare against. Resolving the workflow configuration and the
 > `/public/welcome` trigger would convert the document's two most
 > operationally significant open questions from "unverified" to "confirmed."

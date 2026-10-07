@@ -17,8 +17,7 @@ designations and email domains. It is the platform-owner side of
   **Requests**, **Designation approval**
 - **Who**: SPV Admin and State Admin mainly; SPV Publisher and Dashboard
   Admin see some of the same screens
-- **Status**: ⚠️ the screens and the gateway disagree about who may do what,
-  and several screens call routes nothing serves — see
+- **Status**: ⚠️ several screens call routes nothing serves — see
   [As-Built Requirements](as-built-requirements.md)
 
 ## In one paragraph
@@ -59,21 +58,10 @@ rejects each one, optionally correcting the name first.
 | Actor | Role |
 |---|---|
 | SPV Admin | Full set: creates organisations, creates users in any organisation, approves requests, activates / deactivates volunteer organisations, adds designation masters |
-| State Admin | Same screens, scoped to their own state: directory limited to organisations under that state; category fixed to "state" when creating; cannot see the request queues in practice |
-| SPV Publisher / Dashboard Admin | See the Directory's Create and Generate-link buttons; most of the calls behind them are refused by the gateway for these roles |
+| State Admin | Same screens, scoped to their own state: directory limited to organisations under that state; category fixed to "state" when creating |
+| SPV Publisher / Dashboard Admin | See the Directory's Create and Generate-link buttons |
 | MDO Admin / MDO Leader | Operate the equivalent screens for their own organisation in the MDO portal — see [User Onboarding](../user-onboarding/index.md) |
-| Requester (anyone) | Raises a request for an organisation, designation or domain through public workflow endpoints; not an admin-portal user |
-
-## The one decision that defines the feature
-
-> The admin portal's routes carry no role requirement at all. Who sees
-> which menu item comes from page configuration served by the backend, and
-> the only hard check is the gateway proxy's allow-list, which looks at
-> the URL path and ignores the HTTP method. The buttons a role sees and the
-> calls the gateway accepts for that role are maintained separately, and
-> they do not agree: Dashboard Admin and SPV Publisher are shown **Create
-> new**, but the create call is refused for them; State Admin can open the
-> Requests screens, but the request calls are not allowed for State Admin.
+| Requester (anyone) | Raises a request for an organisation, designation or domain through workflow endpoints; not an admin-portal user |
 
 See [Use Cases](use-cases.md), [APIs](apis.md), [HLD](hld.md) and
 [LLD](lld.md) for the full picture, the
@@ -89,8 +77,7 @@ requirement set with every known deviation called out.
 > `sunbird-cb-orgportal` (`14961d92`) was read only for comparison. Not
 > answerable from these repos: the left-menu page configuration (so which
 > role sees which menu item), the Helm value `igot_spvrules` that decides who
-> may enter the portal at all, the Kong ACL groups held by the portal's
-> credentials, the workflow state graphs for organisation / position /
+> may enter the portal at all, the workflow state graphs for organisation / position /
 > domain requests (loaded from platform settings), what actually serves the
 > legacy `/portal/spv/*` routes, and `ai-cbp-mdo-service` (designation
 > approval). Each is flagged where it matters.

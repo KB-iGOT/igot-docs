@@ -66,7 +66,7 @@ flowchart TB
     Flink -->|trainingPlan_v2 change| CaLink
     CaLink -->|compare-then-write calinkedid| CassV34
     CII -->|dual pipeline, v3 + v4| CassV34
-    Bulk -->|aicbp/create + aicbp/publish, direct HTTP, bypasses GW| CtlV3
+    Bulk -->|aicbp/create + aicbp/publish, direct HTTP| CtlV3
 ```
 
 Dashed arrows mark a link inferred from naming/routing rather than traced
@@ -86,7 +86,7 @@ through a shared identifier end to end.
 | `CbPlanCaLinkConsumer` | One-way mirror of Comprehensive-Assessment linkage onto a plan's `calinkedid` | `cb-ext-course-service` |
 | `ContentInfoUtil` / `CourseAccessServiceImpl` | Two independently-written "how much plan-derived content does this learner have" pipelines (v4-based and v3-based, respectively) | `cb-ext-course-service` |
 | `request` screens + `ConfirmationPopupComponent` | Provider-org review/action of content requests, using a generic reusable confirm dialog | `sunbird-cb-adminportal` |
-| `bulk_training_plan_approval.py` | Direct-to-backend bulk publish of AI-drafted designation plans, bypassing the Org Portal UI and uiproxy | `cbp-ai-service` |
+| `bulk_training_plan_approval.py` | Direct-to-backend bulk publish of AI-drafted designation plans | `cbp-ai-service` |
 | `proxies_v8` + `whitelistApis` | Generic Kong passthrough for all four `cbplan/*` version families; role-based allow/deny (`MDO_ADMIN`/`MDO_LEADER` write, `PUBLIC` learner read) | `sunbird-cb-uiproxy` |
 
 **Not found in any of the 9 repos**: the Kong gateway's own routing rule
@@ -122,9 +122,7 @@ endpoint itself.
   different feature (Comprehensive Assessment Program).
 - **The AI/bulk pipeline is architecturally separate from human authoring.**
   `cbp-ai-service` talks directly to `cb-ext-course-service`'s `aicbp/*`
-  endpoints over plain HTTP with a human's bearer token — it does not go
-  through the Org Portal, uiproxy, or any of the RBAC whitelist checks that
-  gate the same operations for interactive users.
+  endpoints over plain HTTP — it does not go through the Org Portal.
 
 See [LLD](lld.md) for the storage reality, state machines, and sequence
 flows, and the [Operations Manual](operations-manual.md) for how these

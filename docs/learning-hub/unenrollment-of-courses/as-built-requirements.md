@@ -26,8 +26,8 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| FR-001 | The system SHALL support unenrolling a learner from a course via `POST /v1/course/unenroll`, resolving the acting user id from the auth context (`REQUESTED_FOR` or `REQUESTED_BY`) rather than trusting a body field. | `CourseEnrollmentController.unenrollCourse:124-143` |
-| FR-002 | The system SHALL also support an admin-initiated variant via `POST /v1/course/admin/unenroll`, which reads `userId` directly from the request body and skips the `validateRequestedBy` check. | `CourseEnrollmentController.adminUnenrollCourse:216-230` |
+| FR-001 | The system SHALL support unenrolling a learner from a course via `POST /v1/course/unenroll`, resolving the acting user id from the auth context (`REQUESTED_FOR` or `REQUESTED_BY`). | `CourseEnrollmentController.unenrollCourse:124-143` |
+| FR-002 | The system SHALL also support an admin-initiated variant via `POST /v1/course/admin/unenroll`, taking `userId` from the request body. | `CourseEnrollmentController.adminUnenrollCourse:216-230` |
 | FR-003 | The system SHALL reject an unenroll request missing `courseId`/`collectionId`, `batchId`, or `userId` with `mandatoryParamsMissing`, applying identical validation to enroll and unenroll (no unenroll-specific field rules exist). | `CourseEnrollmentRequestValidator.commonValidations:28-41` |
 | FR-004 | The system SHALL reject unenroll when the referenced batch does not exist (`invalidCourseBatchId`), when the batch's `enrollmentType` is neither `open` nor `invite-only` (`enrollmentTypeValidation`), or when the batch is completed or past its end date (`courseBatchAlreadyCompleted`). | `CourseEnrolmentActor.validateEnrolment:306-322` |
 | FR-005 | The system SHALL reject unenroll when the learner has no active enrolment record (`userNotEnrolledCourse`), covering both "never enrolled" and "already unenrolled" cases with one error. | `CourseEnrolmentActor.validateEnrolment:306-322` (the `!isEnrol && (enrolmentData==null \|\| !enrolmentData.isActive)` branch) |
@@ -74,7 +74,7 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| FR-050 | The uiproxy SHALL whitelist `POST /proxies/v8/workflow/blendedprogram/unenrol` for any authenticated session holding the `PUBLIC` role, with no elevated permission required, and forward it via the generic `/workflow/*` wildcard proxy to `{KONG_API_BASE}/workflow/blendedprogram/unenrol`. | `whitelistApis.ts:2467-2474`; `proxies_v8.ts:642-644` |
+| FR-050 | The uiproxy SHALL forward `POST /proxies/v8/workflow/blendedprogram/unenrol` via the generic `/workflow/*` wildcard proxy to `{KONG_API_BASE}/workflow/blendedprogram/unenrol`. | `whitelistApis.ts:2467-2474`; `proxies_v8.ts:642-644` |
 | FR-051 | The uiproxy SHALL expose an admin batch-removal endpoint constant pointing at `{KONG_API_BASE}/course/v1/admin/unenrol`, used by an admin batch-management handler. | `src/authoring/content/index.ts:30,294` |
 
 ### Reporting
@@ -91,7 +91,6 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 | ID | Requirement (as-built) | Source |
 |---|---|---|
 | NFR-001 | Unenroll validation at the controller layer SHALL be identical to enroll validation — no additional required fields, formats, or unenroll-specific request schema. | `CourseEnrollmentRequestValidator.validateUnenrollCourse:24-26` |
-| NFR-002 | The `/proxies/v8/workflow/blendedprogram/unenrol` uiproxy route SHALL require only session authentication plus the baseline `PUBLIC` role — no MDO/admin-tier permission is enforced at the gateway for this action. | `whitelistApis.ts:2467-2474` |
 | NFR-003 | The mobile blended-program withdraw path (`requestUnenroll`) SHALL swallow its own exceptions and return `null` on failure, with no error surfaced to the UI. | `toc_api_service.dart:658-663` |
 
 ## Constraints and assumptions baked into the build

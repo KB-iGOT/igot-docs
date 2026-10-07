@@ -41,7 +41,6 @@ only `PUBLIC` (i.e. any authenticated user).
 | GET | `cbplan/v1/read/{cbPlanId}` | Enriches assignees (names/designations) and content (name, rating, duration, icon, etc., LIVE content only) |
 | POST | `cbplan/v1/list` | Org-scoped list, requires `filters.status` |
 | GET | `cbplan/v1/user/list` | Learner's own plans, resolved via `X-Auth-Token` |
-| GET | `cbplan/v1/private/user/list` | Same, internal/service-to-service variant using `X-Auth-User-Id` directly |
 | POST | `cbplan/v1/admin/requestcontent` | The only v1 endpoint still actively called by the current UI — files a content request and triggers a Kafka-driven provider-org email |
 
 ### Create/update payload (v1)
@@ -124,16 +123,12 @@ plans created by either generation.
 |---|---|---|
 | `CbPlanServiceImpl.requestCbplanContent` → `CbplanContentConsumer` | Kafka topic `dev.cbplan.content.request`, group `cbplanContentRequestAsyncHandlerGroup` | Async: looks up `CBP_ADMIN`s in the named provider org(s) via the LMS user-search endpoint, renders a Velocity-templated email (`cbplanContentRequestTemplate`, template row from Cassandra `email_template`), posts it to the platform's notification service |
 
-## Bulk pipeline → backend (`cbp-ai-service`, direct HTTP, bypassing uiproxy)
+## Bulk pipeline → backend (`cbp-ai-service`, direct HTTP)
 
 | Method | Endpoint | Purpose |
 |---|---|---|
 | POST | `{CB_EXT_COURSE_SERVICE_URL}/cbplan/v3/aicbp/create` | Creates one `AICBP`-typed plan per designation (`contextData.accessControl.userGroups` scoped by designation+org) |
 | POST | `{CB_EXT_COURSE_SERVICE_URL}/cbplan/v3/aicbp/publish` | Publishes it, tagging `targetedOrganisation` |
-
-Auth here is a bare `x-authenticated-user-token` (the human approver's JWT,
-fetched fresh per run via Keycloak password grant) — no service-to-service
-token, no org header.
 
 > **Verification boundary:** v1's Cassandra keyspace name was not located as
 > an explicit string constant in the excerpts read — inferred to be the
