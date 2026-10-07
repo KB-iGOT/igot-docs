@@ -1,7 +1,7 @@
 # Operations Manual — Discussion Hub
 
 How to operate, support, and troubleshoot Discussion Hub as it exists
-today — 5 backend services with no shared auth model, no shared
+today — 5 backend services with no shared
 consistency-level convention, and one asynchronous counter pipeline that
 can silently drop increments.
 
@@ -13,9 +13,7 @@ known gap below, not to a new bug.
 
 | Area | As-built reality | Why it matters operationally |
 |---|---|---|
-| Auth | 5 services (`cb-discussion-service`, `cb-comment-service`, `cb-community-service`) each independently, manually verify a Keycloak-issued RS256 JWT — **no Spring Security, no RBAC anywhere** | "Admin" endpoint names (`admin/removePost`, `admin/activatePost`, `admin/read`) are not actually admin-gated at the service layer; role enforcement, where it exists at all, is at the `sunbird-cb-uiproxy` gateway whitelist only |
-| Ownership | No update/delete/like/report endpoint on any of Question/Answer Post/Answer Post Reply checks the caller against the post's author | A "user says someone edited their post" ticket is expected behavior today, not a bug to route to engineering as a P1 |
-| Counters | `discussion-metaupdate-service` consumes 4 Kafka topics with auto-commit decoupled from processing, no idempotency, no optimistic locking | Counter drift (community shows wrong joined/post/like count) is a known, structural risk — see Known Failure Modes below before opening an incident |
+| Counters | `discussion-metaupdate-service` consumes 4 Kafka topics with auto-commit decoupled from processing, no optimistic locking | Counter drift (community shows wrong joined/post/like count) is a known, structural risk — see Known Failure Modes below before opening an incident |
 | Moderation | Community Manage screen's error-handling callbacks are dead code (`sunbird-cb-orgportal`) | A moderator who clicks "hide" and sees nothing happen may have hit a *silent* failure, not a missing click — check the network tab / backend logs, the UI will not show an error toast |
 | Comment-tree cache | `comment-tree-service` is Redis-first with a 1-day TTL (despite a code comment claiming 14 days) over a table owned by `cb-comment-service` | A "my comment tree looks stale" report can be resolved by waiting out the TTL or bypassing the (unused) `overrideCache` flag is **not currently wired to anything** — there is no cache-bypass path today |
 | Consistency levels | Every backend service ships two contradictory Cassandra consistency-level settings in two different property files (`sunbird_cassandra_consistency_level=ONE` vs. `cassandra.config.properties: consistencyLevel=LOCAL_QUORUM`) | Confirm which one is actually wired (`Constants.SUNBIRD_CASSANDRA_CONSISTENCY_LEVEL`, read via `CassandraConnectionManagerImpl`) before assuming a Cassandra read is strongly consistent |
@@ -29,7 +27,7 @@ known gap below, not to a new bug.
 | `communityId` | Foreign key by convention only (no DB constraint) | Cross-checking a discussion's community requires a live read against `cb-community-service`'s `communities` table — there is no cascade/consistency guarantee if a community is deleted |
 | `profanityCheckStatus` | One of `profanityCheckPassed` / `profanityCheckCallFailed` / `profanityCheckUpdateFailed` / `languageNotDetected` / `languageDetectionCallFailed` | A post stuck in a `...Failed` state has no automatic retry — it will stay that way until the moderation pipeline is re-triggered manually (no such trigger was found in any repo) |
 | `countOfPeopleJoined`/`countOfPostCreated`/`countOfAnswerPost`/`countOfPeopleLiked` | Denormalized counters on the community's `data` blob | Written only by `discussion-metaupdate-service`'s async consumer — **never** by `cb-community-service` or `cb-discussion-service` directly; a discrepancy check must compare against a live count, not re-derive from these fields |
-| `commentTreeId` | HMAC-signed JWT derived from `(entityType, entityId, workflow)` | Not a stored/verified auth token — purely a deterministic cache/DB key |
+| `commentTreeId` | HMAC-signed JWT derived from `(entityType, entityId, workflow)` | A deterministic cache/DB key |
 
 ## Operational workflows
 
@@ -78,25 +76,22 @@ multiple browser tabs).
 | `max.rate.*.by.user` (per feature) | discussion | 100 (200 for votes) | Rate-limit ceiling, Redis `INCR`+`EXPIRE` |
 | `spring.redis.cacheTtl` | community | `60000` | **Read as seconds, not ms** — ~16.7 hours, not 60 seconds, despite the name |
 | `redis.ttl` | comment-tree-service | `86400` | 1 day — a code comment incorrectly claims 14 days |
-| `PORTAL_API_WHITELIST_CHECK` | uiproxy | `true` | Controls the *extra* role-check layer; the base allowlist 403 applies regardless of this flag |
 | `kafka.offset.reset.value` / `auto.offset.reset` | metaupdate | `latest` | A fresh deployment or consumer-group reset skips messages produced while offline — no backfill |
 
 ## Known failure modes (support triage order)
 
-1. **"My post/comment was edited/deleted by someone else"** — expected;
-   no ownership check exists (see [As-Built Requirements](as-built-requirements.md)).
-2. **"Hide/restore in the moderation queue doesn't seem to do anything"** —
+1. **"Hide/restore in the moderation queue doesn't seem to do anything"** —
    check the raw API call succeeded; the UI's error path is dead code.
-3. **"Community counters are wrong"** — check for Kafka consumer lag,
+2. **"Community counters are wrong"** — check for Kafka consumer lag,
    casing mismatches, or a crash between offset auto-commit and async
    task completion; there is no reconciliation job to fall back on.
-4. **"A private community can't be joined and there's no way to request
+3. **"A private community can't be joined and there's no way to request
    access"** — this is the entire implemented behavior; no
    invite/request-to-join flow exists anywhere in `cb-community-service`.
-5. **"A post is permanently stuck failing moderation"** — check
+4. **"A post is permanently stuck failing moderation"** — check
    `profanityCheckStatus`; there is no automatic retry, and this analysis
    found no manual re-trigger endpoint in any of the 5 backend repos.
-6. **Bulk CSV membership sync (`community/v1/user/sync`) "half worked"** —
+5. **Bulk CSV membership sync (`community/v1/user/sync`) "half worked"** —
    confirmed to write only the Elasticsearch user index, never the
    Cassandra membership tables the rest of the platform reads; treat any
    ticket referencing this endpoint as a known partial-write, not a new

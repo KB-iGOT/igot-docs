@@ -13,8 +13,7 @@ exist in the portal repo itself for this flow.
 - Likely APIs (per uiproxy path convention, not directly observed in the
   widget's own — unvendored — source): `POST /apis/proxies/v8/community/v1/search`,
   `POST /apis/proxies/v8/community/v1/topic/search`, `GET /apis/proxies/v8/community/v1/category/listAll`
-  — all unauthenticated at the backend (`cb-community-service`
-  `CommunityController`).
+  (`cb-community-service` `CommunityController`).
 - Source (host wiring only): `sunbird-cb-portal`
   `project/ws/app/src/lib/routes/discuss-v2/routes/discuss-v2-home/discuss-v2-home.component.ts`
 - **Verification boundary**: the actual network calls are inside
@@ -72,9 +71,6 @@ exist in the portal repo itself for this flow.
   Cassandra tables (`discussion_post_report_lookup_bypost`/`..._byuser`)
   are written non-atomically — a failure on the second insert leaves them
   out of sync silently (`cb-discussion-service.md` §7.4).
-- **Non-obvious**: none of update/delete/like on any level check that the
-  caller is the post's author — see
-  [As-Built Requirements](as-built-requirements.md) FR-020/CON group.
 
 ### UC-6 · Get notified of a reply/mention
 
@@ -125,9 +121,7 @@ exist in the portal repo itself for this flow.
   including comments/replies) · `POST /apis/proxies/v8/feedDiscussion/admin/removePost` ·
   `POST /apis/proxies/v8/feedDiscussion/admin/activatePost`
 - Source: `community-manage.component.ts`
-- **Non-obvious**: the two "admin" endpoints require only a valid platform
-  JWT on the backend — no admin/moderator role, no community-membership
-  check (`cb-discussion-service.md` §6). Client-side, all five of this
+- **Non-obvious**: client-side, all five of this
   screen's error-handling callbacks are unreachable dead code (missing
   comma before the error handler in `.subscribe(success, error)`), so a
   failed hide/restore call fails silently with no snackbar
@@ -144,7 +138,7 @@ exist in the portal repo itself for this flow.
   Redis cache.
 - Source: `discussion-metaupdate-service`
   `CommunityMetaUpdateConsumer`
-- **Known gap**: no idempotency/dedup key and no optimistic locking on the
+- **Known gap**: no optimistic locking on the
   read-modify-write — concurrent messages for the same community can lose
   an increment; a case-sensitivity mismatch between two of the four
   listener methods means an uppercase `"INCREMENT"` payload silently
@@ -156,7 +150,7 @@ exist in the portal repo itself for this flow.
 ### UC-11 · Comment on a course/CBP content item under review
 
 This is **not part of the Discussion Hub flow** above — it is a separate
-feature reusing a similarly-named "comment" domain, gated by
+feature reusing a similarly-named "comment" domain, used by
 content-workflow roles (`CONTENT_CREATOR`, `CONTENT_REVIEWER`,
 `SPV_PUBLISHER`, …) rather than community membership.
 

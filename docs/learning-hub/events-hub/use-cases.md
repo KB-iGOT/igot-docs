@@ -136,18 +136,14 @@ each email to a user ID, enrolls or completes their enrollment, and
 row — with a `reissue` flag to force re-issuance for already-completed
 rows.
 
-- APIs: `POST /user/event/bulkOnboard` (v1, header-based auth) ·
-  `POST /v2/user/event/bulkOnboard/{eventId}/{batchId}` (v2, bearer-token
-  auth) · `GET /user/event/bulkonboard/status/{eventId}` ·
+- APIs: `POST /user/event/bulkOnboard` (v1) ·
+  `POST /v2/user/event/bulkOnboard/{eventId}/{batchId}` (v2) · `GET /user/event/bulkonboard/status/{eventId}` ·
   `GET /user/event/bulkonboard/download/{fileName}`
 - Source: `PublicUserEventBulkonboardController.java`,
   `PublicUserEventBulkonboardConsumer.java` (Kafka-consumer driven,
   topic `dev.public.user.event.bulk.onboard`)
 - **Non-obvious mechanism**: karma points are only awarded on the
-  non-public-certificate branch, and there is no idempotency check
-  anywhere in this repo before the karma-point Kafka push — re-running a
-  bulk-onboard for the same rows would re-award points unless a
-  downstream consumer de-dupes.
+  non-public-certificate branch.
 
 ### UC-12 · Bulk-create/publish calendar events from a spreadsheet
 
@@ -164,7 +160,7 @@ search, and either updated or newly created, then published.
 A manual, on-demand CSV upload (no scheduler, no Kafka trigger) that
 recomputes a user's true completion timestamp from the event batch's end
 time, marks the enrollment complete, issues a certificate if none exists,
-and always (re-)pushes a karma-point event.
+and pushes a karma-point event.
 
 - APIs: `POST /user/event/postConsumption` ·
   `POST /user/event/postConsumption/updateStatus` (corrective rollback)
@@ -182,8 +178,7 @@ and always (re-)pushes a karma-point event.
 | Event is part of an EventSet | Cannot be directly updated/published/retired/discarded — `EventActor.verifyStandaloneEventAndApply` rejects with a client error naming the parent EventSet |
 | EventSet update | Only allowed while the EventSet is still `Draft` — all child Events are torn down and fully re-created on every update, never incrementally diffed |
 | Org Portal event create → Creation Portal review queue | The create flow publishes directly (`status:'Live'`); the review queue expects `status:'SentToPublish'` — no traced code path sets that status from this create flow |
-| Certificate issuance (any of the 4 trigger points) | Always claims `eventCompletionPercentage = 100.0` regardless of actual recorded consumption |
-| Bulk-onboard the same CSV twice | No idempotency check on karma-point awarding within `sunbird-cb-ext`; already-complete rows are only skipped for certificate re-issuance if `reissue=true`, otherwise marked `FAILED` |
+| Bulk-onboard the same CSV twice | Already-complete rows are only skipped for certificate re-issuance if `reissue=true`, otherwise marked `FAILED` |
 | Cover image upload in Org Portal create flow | Uploaded but the attach-and-republish call is commented out — image may not appear on the published event |
 | Event type selection in Org Portal | Only "Webinar" is enabled; "Ask me anything"/"Workshop"/"Interview" exist in code but are disabled |
 | `meetup`/`app-event` microsite | A separate, unrelated feature sharing a similarly-named folder — not part of Events Hub; see the HLD's naming-collision note |

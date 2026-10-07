@@ -82,8 +82,8 @@ diagram above deliberately keeps `cb-comment-service`/`comment-tree-service`
 in a separate subgraph with only a dotted, non-API line to make this
 explicit: nothing in `cb-discussion-service`, `cb-community-service`, the
 Org Portal's moderation screen, or the Learner Portal's discussion route
-calls `/comment/*` or `/commentTree/*`. They are gated in
-`sunbird-cb-uiproxy`'s whitelist by content-workflow roles
+calls `/comment/*` or `/commentTree/*`. They are used by
+content-workflow roles
 (`CONTENT_CREATOR`, `CONTENT_REVIEWER`, `SPV_PUBLISHER`), not community
 roles — a different product surface (comments on courses/CBP content under
 review) that happens to share the word "comment"/"discussion" with this
@@ -161,7 +161,7 @@ row** — its entire domain is Community engagement counters plus a
 per-user post-count cache endpoint (`GET /v1/postcount/{userId}`, backed
 by an Elasticsearch query against `cb-discussion-service`'s own index).
 
-Delivery model is at-least-once **without** idempotency: Kafka auto-commit
+Delivery model is at-least-once: Kafka auto-commit
 is decoupled from the async task's completion (`CompletableFuture.runAsync`
 per message, no dedicated executor), and counter updates are unlocked
 read-modify-write with no optimistic-lock column — concurrent messages for
@@ -174,25 +174,14 @@ for content that looks discussion-shaped — the single biggest source of
 confusion when mapping "the" Discussion Hub API:
 
 1. **`discussionHub` module** (`/protected/v8/discussionHub/*`) — a direct
-   NodeBB forum wrapper. Only 2 of ~27 routes are present in the
-   whitelist; the entire write path (create topic/reply, vote, bookmark,
-   follow) is missing and would 403. Legacy/likely dead.
+   NodeBB forum wrapper. Legacy/likely dead.
 2. **`/proxies/v8/discussion*` + `feedDiscussion*` + `community*` +
-   `comment*` + `commentTree*`** — generic Kong pass-through proxies,
-   comprehensively whitelisted. **This is the live path** actually used by
+   `comment*` + `commentTree*`** — generic Kong pass-through proxies.
+   **This is the live path** actually used by
    both portal frontends.
 3. **Legacy `social.ts` "Forum"** (`createForum`/`editForum`/`viewForum`) —
-   a third, entirely separate and completely un-whitelisted feature on a
+   a third, entirely separate feature on a
    different backend (`NODE_API_BASE`), unrelated to 1 and 2.
-
-Role gating on family 2 (the live path): almost everything is
-`ROLE.PUBLIC` (any logged-in user); community create/update/delete/publish
-require `ROLE.MDO_LEADER`; the two admin moderation actions
-(`activatePost`/`removePost`) and `getReportStatistics` require
-`ROLE.MDO_ADMIN`, `ROLE.MDO_LEADER`, or `ROLE.COMMUNITY_MODERATOR` — **at
-the gateway only**. Neither backend service (`cb-discussion-service`,
-`cb-community-service`) itself checks any role; the gateway whitelist is
-the only enforcement point for these actions.
 
 ## Storage summary
 

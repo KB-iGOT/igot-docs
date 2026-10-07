@@ -111,7 +111,7 @@ would not assume). Source shorthand: **WF** `sunbird-cb-workflow`
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| FR-100 | The single-user Blended Program enrol SHALL accept enrolment until the end of the batch start date (IST), SHALL ignore `enrollmentEndDate`, and SHALL NOT check `currentBatchSize` or one-batch-per-program. | CS `ExtendedCourseEnrollmentActor.scala:1269-1411` |
+| FR-100 | The single-user Blended Program enrol SHALL accept enrolment until the end of the batch start date (IST). | CS `ExtendedCourseEnrollmentActor.scala:1269-1411` |
 | FR-101 | The enrol SHALL honour `lastEnrollmentDate`, mandatory `preEnrolmentResources` and, if `accessSettingsEnabled`, batch-keyed access rules. | CS `CourseEnrollmentRequestValidator.java:190-260` |
 | FR-102 | On enrol the course service SHALL increment the Redis hash `bp:batch:enrollment:stats:{batchId}.approved`, never decrement it on un-enrol. | CS `ExtendedCourseEnrollmentActor.scala:55-58, 1949-1971` |
 | FR-103 | Bulk enrol of a Blended Program SHALL reject the whole request when `active participants + requested > currentBatchSize` and SHALL return `BATCH_SIZE_NOT_DEFINED` when the size is not numeric. | CS `ExtendedCourseEnrollmentActor.scala:1415-1530` |
@@ -122,12 +122,12 @@ would not assume). Source shorthand: **WF** `sunbird-cb-workflow`
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| FR-110 | `POST /content/progress/v1/ext/update` SHALL enqueue the body to Kafka without validation and return HTTP 200 once queued (500 only if the push throws); the consumer SHALL `PATCH` the course service's admin content-state route and, on `OK`, email the learner ("ATTENDANCE MARKED"). | EXT `ContentProgressServiceImpl.java:64-84`; `UpdateContentProgressConsumer.java:74-230` |
+| FR-110 | `POST /content/progress/v1/ext/update` SHALL enqueue the body to Kafka and return HTTP 200 once queued (500 only if the push throws); the consumer SHALL `PATCH` the course service's admin content-state route and, on `OK`, email the learner ("ATTENDANCE MARKED"). | EXT `ContentProgressServiceImpl.java:64-84`; `UpdateContentProgressConsumer.java:74-230` |
 | FR-111 | `POST /content/progress/v1/ext/attendance/update` SHALL map an external content id to the program, take the user's active batch and mark the **first** session present. | EXT `ContentProgressServiceImpl.java:231-360` |
 | FR-112 | `POST /content/progress/v1/read/getUserDetails` SHALL return per-learner session statuses for given content ids (batchId, courseId, contentId mandatory). | EXT `ContentProgressServiceImpl.java:95-204` |
 | FR-113 | The session QR PDF SHALL contain one page per `Offline` session with a QR of `{courseId, batchId, sessionId}`. | EXT `PdfGeneratorServiceImpl.java:394-460` |
 | FR-114 | The self-enrolment QR SHALL be available only when the program's `selfEnrollment` is `"Yes"`, SHALL carry `{courseId, batchId, selfEnrol:true}` and SHALL set `selfEnrolQrGenerated` in `batch_attributes`. | EXT `PdfGeneratorServiceImpl.java:722-852` |
-| FR-115 | The answer-file endpoint SHALL accept `pdf, doc, docx` up to 5000 KB (extension check only) and store under `bp-assignment/{contentId}/{batchId}/{formId}/{epoch}_{name}` in the public container. | EXT `StorageServiceImpl.java:817-893` |
+| FR-115 | The answer-file endpoint SHALL accept `pdf, doc, docx` up to 5000 KB and store under `bp-assignment/{contentId}/{batchId}/{formId}/{epoch}_{name}`. | EXT `StorageServiceImpl.java:817-893` |
 | FR-116 | The Program Coordinator service SHALL store coordinators in Postgres, add / remove with `status` 1 / 0, require the caller to hold `PROGRAM_COORDINATOR`, and publish `COORDINATOR_LIST_SYNCED` to Kafka. | EXT `ProgramCoordinatorController`, `ProgramCoordinatorServiceImpl` |
 | FR-117 | The sync consumer SHALL maintain ES `user_program_lookup_v1` documents `{userId, programIds[], updatedOn}`. | EXT `ProgramCoordinatorSyncService.java:95-103` |
 | FR-118 | `POST /v4/bp/search` SHALL restrict results to the program ids in the caller's lookup document. | KP `SearchProcessor.java:1075-1114`; `ExtendedSearchController.scala:92-117` |
@@ -145,7 +145,6 @@ would not assume). Source shorthand: **WF** `sunbird-cb-workflow`
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| FR-140 | The uiproxy SHALL whitelist Blended Program routes with per-role lists and return 403 for a path not in the list when `PORTAL_API_WHITELIST_CHECK` is on (default `true`). | uiproxy `apiWhiteList.ts:129-385`; `env.ts:96` (HEAD `175d24c4`) |
 | FR-141 | Kong SHALL route `/workflow/blendedprogram/*` to `workflow-handler-service:5099/v1/blendedprogram/workflow/*` and `/blendedprogram/*`, `/batchsesion/*`, `/bp/*`, `/storage/v1/bp/*` to `sb-cb-ext-service:7001`. | DEV `kong-api/defaults/main.yml` |
 | FR-142 | The uiproxy SHALL route `/action/*` to `knowledge-mw-service`, not Kong. | uiproxy `proxies_v8.ts:538-540` |
 
@@ -155,7 +154,6 @@ would not assume). Source shorthand: **WF** `sunbird-cb-workflow`
 |---|---|---|
 | NFR-001 | Enrolment and reports SHALL be asynchronous (Kafka); the client receives success before the first state hop or before a report exists. | WF BPSI:135; EXT `BPReportConsumer.java` |
 | NFR-002 | Kafka messages SHALL be fire-and-forget with no retry or dead-letter handling in code. | WF `Producer`; consumers |
-| NFR-003 | Every Blended Program Kong route SHALL carry jwt, ACL, rate-limit and size-limit plugins; rate classes include 1000, 5000 and 100000 per hour. | DEV `kong-api/defaults/main.yml` |
 | NFR-004 | Status counts SHALL be cached locally for ≈ 1.8 s (unit defect) keyed by the first application id; extended read SHALL be cached in Redis for 86400 s with batch counters added after the cache write. | WF `LRUCache.java:28,46`; KP `ExtendedContentActor.scala:60,1343-1380` |
 | NFR-005 | Report builds SHALL page Postgres at 100 rows and Cassandra / ES in chunks of 100. | EXT `application.properties:693-698` |
 | NFR-006 | Date comparisons SHALL use `Asia/Kolkata`. | WF `application.properties` (`sunbird_time_zone`) |
@@ -165,21 +163,18 @@ would not assume). Source shorthand: **WF** `sunbird-cb-workflow`
 
 | ID | Constraint / defect | Source |
 |---|---|---|
-| CON-001 | The approval state machine and its role lists are not in code; they are LMS `system_settings` rows. Roles in them are parsed but never enforced by the workflow service. | WF BPSI:921-951; `WorkflowServiceImpl.java:445-456` |
+| CON-001 | The approval state machine and its role lists are not in code; they are LMS `system_settings` rows. | WF BPSI:921-951; `WorkflowServiceImpl.java:445-456` |
 | CON-002 | `currentBatchSize` must be a string in `batch_attributes`; a JSON number makes the batch read as full. | WF BPSI:261-282 |
 | CON-003 | The web conflict check iterates only the current program's enrolments and can never fire across programs; the server check is inclusive-endpoint based and misses an enclosing batch. | TOC `app-toc-banner.component.ts:587-601`; WF BPSI:838 |
 | CON-004 | The server's conflict check runs on approve and withdraw and converts the action into `REJECT`. | WF BPSI:157-164 |
 | CON-005 | Nominated and QR-enrolled rows bypass the approval route; a PC nomination can set an earlier row `WITHDRAWN` before later checks fail. | WF BPSI:1657-1804 |
 | CON-006 | A `WITHDRAWN` or `REJECTED` row never un-enrols; only `REMOVED` does. | WF BPSI:351-375, 847-874 |
 | CON-007 | `/remove/pc` and `/remove/mdo` likely throw (`ClassCastException`); `/remove/approved/user` is blocked once the batch starts or is full. | WF BPSI:647, 383 |
-| CON-008 | The course service's single-user enrol ignores `currentBatchSize`, `enrollmentEndDate` and one-batch-per-program; only bulk paths cap seats. | CS `ExtendedCourseEnrollmentActor.scala:1269-1530` |
-| CON-009 | Attendance has no server-side role, ownership or time-window check; the 7-day post-batch rule is a Creation Portal button rule; mobile adds a live window and a 1000 m fence. | EXT `ContentProgressServiceImpl.java:64-84`; CP `content-sessions.component.ts:79-90` |
+| CON-009 | The 7-day post-batch attendance rule is a Creation Portal button rule; mobile adds a live window and a 1000 m fence. | EXT `ContentProgressServiceImpl.java:64-84`; CP `content-sessions.component.ts:79-90` |
 | CON-010 | A batch without `latlong` cannot mark attendance on mobile. | MOB `attendence_marker.dart:81-150` |
 | CON-011 | The session QR's `courseId` holds the program name. | EXT `PdfGeneratorServiceImpl.java:445` |
 | CON-012 | The v2 report loses the last page for batches with more than 100 rows and carries no attendance. | EXT `BPReportsServiceV2Impl.java:471-486` |
-| CON-013 | Answer files can be read by any signed-in user who knows the path, and upload is open to every signed-in user. | EXT `StorageServiceImpl.java:854-985`; uiproxy `whitelistApis.ts:6730-6737` |
-| CON-014 | The program-coordinator service refuses to start without a "Program Coordinator" role row that the shipped DDL does not seed; the repo-default admin role list includes `PUBLIC`. | EXT `ProgramCoordinatorServiceImpl`; `application.properties:733` |
-| CON-015 | `qr/enrolments` and `v1/attendance/update` are not whitelisted in the uiproxy; mobile reaches the first by calling Kong directly. | uiproxy `whitelistApis.ts`; MOB `toc_config.dart:112` |
+| CON-014 | The program-coordinator service refuses to start without a "Program Coordinator" role row that the shipped DDL does not seed. | EXT `ProgramCoordinatorServiceImpl`; `application.properties:733` |
 | CON-016 | Kong routes `…/workflow/blendedprogram/update` and `/remove`, and the Creation Portal's `/v1/blendedprogram/workflow/update`, have no matching controller. | DEV `main.yml:10312,10330`; CP `content-batch.service.ts:15` |
 | CON-017 | The web Withdraw is unavailable after `APPROVED`; mobile has none either; no withdraw reason is captured. | TOC `app-toc-banner.component.html`; MOB `withdraw_request_button.dart` |
 | CON-018 | Profile-survey submission hard-codes `version 4` and uses the program id as the context; the batch id is not on the submission. | TOC `enroll-profile-form.component.ts:1437`; MOB `survey_form_repository.dart:141-142` |

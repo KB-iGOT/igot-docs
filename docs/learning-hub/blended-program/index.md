@@ -9,9 +9,8 @@ handed in along the way.
   written to `courseCategory` when the program is created)
 - **Consumption route**: the program's TOC page (`/app/toc/:id`) on web;
   the same TOC page inside the mobile app
-- **Status**: ⚠️ fully built, but several rules that look enforced on screen
-  are enforced only in one place (or nowhere) — see "The one decision" and
-  the honest-gap lists in [LLD](lld.md) and
+- **Status**: ⚠️ fully built, with several honest gaps — see "The one
+  decision" and the honest-gap lists in [LLD](lld.md) and
   [As-Built Requirements](as-built-requirements.md)
 
 ## Sourced from
@@ -35,8 +34,7 @@ carries a **Verification boundary** note.
 
 Read as supporting context only (**not** one of the pinned commits —
 treat anything sourced from them as "at that SHA"): `sunbird-cb-uiproxy` at
-`175d24c4` (tag `cbrelease-4.8.41_RC7`) for the gateway route map and role
-whitelist, and `knowledge-mw-service` at `dbf19f1` (a 2021 `master`
+`175d24c4` (tag `cbrelease-4.8.41_RC7`) for the gateway route map, and `knowledge-mw-service` at `dbf19f1` (a 2021 `master`
 checkout).
 
 **Not available for this analysis:** `sb-cb-ext-service` and

@@ -26,8 +26,8 @@ flowchart LR
     end
 
     NGX["Nginx - /apis to uiproxy, /api to Kong"]
-    UIP["sunbird-cb-uiproxy - whitelist and roles"]
-    KONG["Kong - jwt, acl, rate limits"]
+    UIP["sunbird-cb-uiproxy - BFF proxy"]
+    KONG["Kong - API gateway"]
     KMW["knowledge-mw-service - authoring relay"]
 
     subgraph Services
@@ -91,7 +91,7 @@ flowchart LR
 | Web portal + `@sunbird-cb/toc` | The program page: batch picker, profile / survey / confirm gates, status messages, seat chips, start gating, sessions, attendance **display**, learner assignments | `sunbird-cb-portal` + `sb-cb-ui-components › sb-cb-ui-toc` |
 | Creation Portal | Authoring (create → review → publish), batches and sessions, co-trainers and coordinators, the PC request console, nomination, attendance marking, assignments (create / evaluate), reports, QR PDFs | `sunbird-cb-creationportal` (+ `collection-v2` package) |
 | Mobile app | Learner flow only: batch picker, gates, withdraw, QR self-enrol, **QR + geofenced attendance**, assignments. No approver, nominate or batch-admin screens | `igot_karmayogi_mobile` |
-| uiproxy | Browser-side whitelist and role lists per route; `/action/*` authoring relay; multipart bulk-CSV special case | `sunbird-cb-uiproxy` (not pinned) |
+| uiproxy | `/action/*` authoring relay; multipart bulk-CSV special case | `sunbird-cb-uiproxy` (not pinned) |
 | Workflow service | The `wf_status` row and its state hops, seat / start-date / schedule checks, nomination, QR enrol, CSV bulk approve, emails, the callback that writes the enrolment | `sunbird-cb-workflow` |
 | Course service | Batch create / update / delete, the enrolment record, progress writes (incl. session attendance), bulk enrol, per-batch Redis counter | `sunbird-course-service` |
 | `sunbird-cb-ext` | Attendance entry point and email, report generation, session / self-enrol QR PDFs, assignment answer files, Program Coordinator service and its search-index sync | `sunbird-cb-ext` (served as `sb-cb-ext-service`, by path match) |
@@ -112,8 +112,7 @@ leads where, and who is named per action is read at runtime from the LMS
 `system_settings` table (keys `oneStepMDOApproval`, `oneStepPCApproval`,
 `twoStepMDOAndPCApproval`, `twoStepPCAndMDOApproval`; legacy
 `wfBlendedProgramServiceConfig`). The approval type is a **program** field
-(`wfApprovalType`). The workflow service parses the roles list but never
-enforces it — authorisation lives in the uiproxy whitelist and Kong ACLs.
+(`wfApprovalType`).
 
 **Enrolment is a callback, so it is asynchronous and can diverge.** An
 `enrol` call returns as soon as a row exists; a Kafka consumer moves it to the
@@ -128,10 +127,9 @@ earlier requests, hard cap, schedule check, 200-user cap) and *QR
 self-enrolment* writes `APPROVED` and calls the course service
 synchronously (self-enrolment flag, start-date window, one batch per course).
 
-**Seat enforcement is layered and uneven.** Client: display only. Workflow
+**Seat enforcement is layered.** Client: display only. Workflow
 service: soft cap (size + 20%) on requests, hard cap on approvals and
-nominations. Course service: caps only the bulk-enrol paths; its
-single-user Blended Program enrol and the learner `/v2/course/enroll` do not.
+nominations. Course service: caps the bulk-enrol paths.
 `currentBatchSize` must be a **string** in `batch_attributes`.
 
 **Attendance is a progress write.** There is no attendance table. Marking
@@ -146,10 +144,6 @@ caller's document in `user_program_lookup_v1`, which `sunbird-cb-ext` keeps in
 step with its `program_coordinator` Postgres table via a Kafka sync topic.
 A coordinator with no document sees nothing.
 
-**Authoring bypasses Kong.** The Creation Portal's `/action/*` calls go from
-the uiproxy straight to `knowledge-mw-service`, so Kong's ACL, rate and size
-plugins do not apply to program create / update / publish.
-
 **Reports are asynchronous by construction, and there are two worlds.** The
 in-product Enrollment (v1) and Consumption (v2) reports are built on demand
 from `wf_status` + Cassandra by a Kafka consumer in `sunbird-cb-ext`; the
@@ -159,7 +153,7 @@ attendance picture exists only in the nightly Spark job.
 
 - The deployed state machine (the `system_settings` rows) is not in any repo.
 - No MDO-side screen was found in the attached UI repos even though the
-  workflow endpoints and role whitelist for MDO exist.
+  workflow endpoints for MDO exist.
 - Completion rules ("online *and* offline sessions required") and
   certificate issuance run in downstream event jobs (Flink / Samza style) that
   were not attached; course-service has no Blended-Program completion branch.

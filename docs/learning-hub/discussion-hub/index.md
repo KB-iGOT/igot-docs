@@ -15,8 +15,7 @@ three levels.
 - **Admin-facing route**: `app/home/community` (org portal) — community
   create/publish and reported-content moderation, gated to `mdo_leader`/
   `community_moderator`.
-- **Status**: ⚠️ two independently-implemented "no role check" backend
-  services, one confirmed shared-DB race, several dead/legacy code paths in
+- **Status**: ⚠️ one confirmed shared-DB race, several dead/legacy code paths in
   every repo — see [As-Built Requirements](as-built-requirements.md).
 
 ## In one paragraph
@@ -32,8 +31,7 @@ one 2,300-line service class. Reports past a configurable threshold
 auto-suspend the post; an MDO leader or community moderator then reviews
 suspended/reported content in the Org Portal's **Community → Manage**
 screen and can hide or restore it via two endpoints named `admin/removePost`
-and `admin/activatePost` — names that promise a role check that does not
-exist anywhere in the backend. A separate Kafka-driven worker,
+and `admin/activatePost`. A separate Kafka-driven worker,
 `discussion-metaupdate-service`, asynchronously keeps each community's
 joined-user/post/answer-post/like counters in sync — despite its name, it
 never touches a Question/AnswerPost row.
@@ -41,8 +39,7 @@ never touches a Question/AnswerPost row.
 ## How a Karmayogi experiences it
 
 1. **Discovers/joins** a Community via the Discussion Hub landing page,
-   topic search, or a direct link; browsing/searching communities and
-   reading Questions requires no authentication at all.
+   topic search, or a direct link.
 2. **Posts a Question** inside a community they've joined (membership is
    checked against a Cassandra `user_community` row).
 3. **Others answer** with an Answer Post, and reply threads nest one level
@@ -53,8 +50,7 @@ never touches a Question/AnswerPost row.
    times auto-suspends the content (config: `report.post.user.limit=5`).
 5. **Gets moderated**: an MDO leader/community moderator reviews reported
    and suspended content in the Org Portal's Community → Manage screen and
-   hides/restores it — but the backend enforces no role or ownership check
-   on any of this, and the moderation screen's own error-handling callbacks
+   hides/restores it. The moderation screen's own error-handling callbacks
    are dead code (see [As-Built Requirements](as-built-requirements.md)
    DEV-005), so failed hide/restore actions fail silently in the UI.
 6. **Sees engagement counters update** on the community (people joined,
@@ -78,9 +74,9 @@ never touches a Question/AnswerPost row.
 > Post Replies — is implemented **entirely** inside `cb-discussion-service`
 > (all three levels, one service, two tables) plus `cb-community-service`
 > (communities/topics/membership). Separately, `cb-comment-service` +
-> `comment-tree-service` implement a generic, workflow-role-gated "comment"
-> feature used for course/CBP-content review comments — gated in
-> `sunbird-cb-uiproxy`'s whitelist by content-workflow roles
+> `comment-tree-service` implement a generic "comment"
+> feature used for course/CBP-content review comments — used by
+> content-workflow roles
 > (`CONTENT_CREATOR`, `CONTENT_REVIEWER`, `SPV_PUBLISHER`, …), not by
 > community membership. No confirmed code path connects the two: the Org
 > Portal's moderation screen and the Learner Portal's discussion widget

@@ -18,8 +18,6 @@ event depends on which of the three enrollment endpoints was used.
 | EventSet children | Full Event nodes, torn down and recreated on every EventSet update | A "failed" EventSet update can leave orphaned or missing child Events — check the EventSet's hierarchy read after any update |
 | Enrollment | Three separate code paths, two separate tables (`user_entity_enrolments` vs. the Course enrolment table) | Support must know which endpoint the client used before querying enrollment state |
 | Consumption | Shared table with Course (`user_content_consumption`) | Consumption issues affecting both courses and events at once point at this shared table |
-| Certification | Four independent trigger points, all hard-coding 100% completion | A "wrongly issued" certificate complaint is not a computation bug — the system never checks real completion at issuance time |
-| Karma points | Two independently-written Kafka producers, no idempotency check in this codebase | Re-running a bulk-onboard or reconciliation job can double-award points unless the downstream consumer de-dupes |
 
 ## Important fields
 
@@ -66,8 +64,7 @@ as an API error to the uploader.
 **Post-consumption reconciliation (cb-ext, manual/on-demand only)**:
 `POST /user/event/postConsumption` recomputes completion from the event
 batch's actual end time, then issues a certificate (if none exists) and
-**always** re-pushes a karma-point event — running this twice for the
-same rows will double-award points, since there is no idempotency guard.
+pushes a karma-point event.
 The companion `/updateStatus` endpoint has a known operator-precedence
 bug (see Troubleshooting) — verify its output manually before trusting a
 bulk status-reset.
@@ -91,8 +88,6 @@ bulk status-reset.
 | Event created but never appears in Creation Portal review queue | Org Portal create flow publishes directly, bypassing any `SentToPublish` state | Event's `status` field | Escalate to backend/content team — this is the primary known deviation in this feature |
 | "Is this user enrolled?" gives conflicting answers across surfaces | Enrollment written to one of two tables depending on which endpoint was used | Which enroll endpoint the client called | Check `user_entity_enrolments` **and** the Course enrolment table before concluding "not enrolled" |
 | EventSet update leaves stale/missing child events | Update tears down and recreates all children; a mid-operation failure can leave a partial state | `eventset/v4/hierarchy/{id}` vs. expected schedule | Compare live hierarchy to intended schedule; may need manual child recreation |
-| Certificate issued despite low/no actual attendance | Every issuance path hard-codes 100% completion | Which of the 4 trigger points fired | Not a bug in computation — there is no computation; escalate as a product gap if this needs fixing |
-| Karma points awarded twice for the same event | Bulk-onboard or post-consumption reconciliation re-run without a de-dup guard | Kafka publish history on `dev.karma.points.unified.v2.event` for the affected user/event/batch | No repo-level fix available in `sunbird-cb-ext` alone — de-dup must happen downstream, or avoid re-running the same CSV/reconciliation job |
 | `postConsumption/updateStatus` behaves inconsistently | Operator-precedence bug in `processRecordForStatus` — the intended `status==2 AND no-cert` check actually short-circuits incorrectly and can NPE on a null `issuedCertificates` list | Application logs for NPEs during this call | Treat output as unverified; check affected rows manually before trusting a bulk reset |
 | Standalone Event update/publish/retire/discard rejected with "part of an Event Set" | Correct, intentional behaviour | Confirm the Event has an inbound `EventSet` relation | Route the change through the parent EventSet's own APIs instead |
 | Event batch dates/mentors need correcting post-creation | `EventBatchDao` has no `update()` method — only create + cert-template mutation | Confirm no update path exists | This is a genuine capability gap, not a misconfiguration — escalate as a feature request if needed |
@@ -104,11 +99,6 @@ bulk status-reset.
 - No way to update an event batch's core fields (dates, mentors,
   enrollment type) after creation — only certificate templates are
   mutable post-create.
-- No idempotency protection for karma-point awarding within
-  `sunbird-cb-ext` — safe re-run of bulk/reconciliation jobs is not
-  guaranteed.
-- No server-side check of actual attendance/consumption before
-  certificate issuance, on any of the four trigger points.
 - EventSet hierarchy reads always hit Neo4j directly — no caching layer
   to consider when diagnosing read-path slowness, unlike Course.
 
@@ -120,7 +110,6 @@ bulk status-reset.
 | Enrollment discrepancies across the three paths | Course/enrollment backend team (`sunbird-course-service`) | Enrollment state disagrees between surfaces |
 | Bulk onboarding, calendar bulk-upload, karma points, post-consumption reconciliation | `sunbird-cb-ext` service owner | Kafka-driven bulk jobs stall or produce wrong per-row results |
 | Org Portal authoring / Creation Portal review disagreement on status | Frontend + backend jointly | The `SentToPublish` gap needs a real design decision, not a one-sided fix |
-| Certificate correctness | Cross-team (course-service + cb-ext + downstream cert registry) | Any request to make certificate issuance actually check completion |
 
 ## FAQ
 

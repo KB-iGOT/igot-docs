@@ -89,7 +89,7 @@ families exist** — see [HLD](hld.md#three-parallel-enrollment-paths).
 
 | Method | Route | Op |
 |---|---|---|
-| POST | `/v1/event/batch/cert/issue` | `issueEventCertificate` — hard-codes `eventCompletionPercentage=100.0`; publishes a hand-built JSON string (not the shared `InstructionEvent` model) to topic `user_issue_certificate_for_event` |
+| POST | `/v1/event/batch/cert/issue` | `issueEventCertificate` — publishes a hand-built JSON string (not the shared `InstructionEvent` model) to topic `user_issue_certificate_for_event` |
 | PATCH | `/private/v1/event/batch/cert/template/add` | `addCertificateToEventBatch` |
 
 > No route was found wiring a "remove event batch cert template" endpoint,
@@ -98,8 +98,7 @@ families exist** — see [HLD](hld.md#three-parallel-enrollment-paths).
 
 ## uiproxy (`sunbird-cb-uiproxy`) — BFF layer
 
-Two dedicated single-route files, both requiring only Keycloak auth (not
-in the role whitelist):
+Two dedicated single-route files:
 
 | Method | Path | Proxies to |
 |---|---|---|
@@ -110,17 +109,14 @@ Everything else rides the generic `/proxies/v8/*` catch-all
 (`proxyCreatorSunbird`), forwarding to `KONG_API_BASE` 1:1 with no body
 transformation. Key prefixes: `event/*`, `eventprogress/*`, `user/*`
 (covers `user/events/...`, `user/event/...`, `user/v2/event/bulkonboard/...`).
-Every generic route is gated by a per-role whitelist
-(`src/utils/whitelistApis.ts`) — e.g. `event/v4/create` requires
-`MDO_ADMIN, MDO_LEADER, SPV_ADMIN`; `event/v4/read/:id` is `PUBLIC`.
 
 ## cb-ext (`sunbird-cb-ext`) — supporting services
 
 | Method | Path | Purpose |
 |---|---|---|
 | POST | `/calendar/v1/bulkUpload` | Calendar-category event bulk create/update from XLSX |
-| POST | `/user/event/bulkOnboard` | Public bulk-onboard v1 (header auth) |
-| POST | `/v2/user/event/bulkOnboard/{eventId}/{batchId}` | Public bulk-onboard v2 (bearer token) |
+| POST | `/user/event/bulkOnboard` | Public bulk-onboard v1 |
+| POST | `/v2/user/event/bulkOnboard/{eventId}/{batchId}` | Public bulk-onboard v2 |
 | GET | `/user/event/bulkonboard/status/{eventId}` | Status lookup |
 | GET | `/user/event/bulkonboard/download/{fileName}` | Result CSV download |
 | POST | `/user/event/postConsumption` | Ops reconciliation — completion + certificate + karma points |

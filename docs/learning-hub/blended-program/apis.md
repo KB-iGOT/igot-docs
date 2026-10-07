@@ -12,21 +12,18 @@ listed on the [overview](index.md) unless it carries a boundary note.
 ```text
 Browser  →  /apis/*  →  Nginx  →  ui-proxies:3003  →  Kong (KONG_API_BASE)  →  upstream service
 Mobile   →  /api/*   →  Nginx  →  Kong                                        →  upstream service
-Authoring (/apis/proxies/v8/action/*) →  ui-proxies  →  knowledge-mw-service:5000   (bypasses Kong)
+Authoring (/apis/proxies/v8/action/*) →  ui-proxies  →  knowledge-mw-service:5000
 ```
 
 - Nginx: `/apis/` → `http://ui-proxies:3003`, `/api/` → `http://kong`
   (`sunbird-devops › kubernetes/helm_charts/core/nginx-public-ingress/values.j2`).
 - uiproxy forwards `/workflow/*`, `/blendedprogram/*`, `/batchsesion/*`,
   `/bp/*`, `/storage/*`, `/assignment/*`, `/course/*`, `/learner/*`,
-  `/program/*` to Kong, and applies a **whitelist with per-route role
-  lists** (`PORTAL_API_WHITELIST_CHECK` defaults to `true`; a path not in the
-  list is a 403). `sunbird-cb-uiproxy › src/proxies_v8/proxies_v8.ts`,
+  `/program/*` to Kong.
+  `sunbird-cb-uiproxy › src/proxies_v8/proxies_v8.ts`,
   `src/utils/whitelistApis.ts`.
 - Kong route entries live in
-  `sunbird-devops › ansible/roles/kong-api/defaults/main.yml`; every Blended
-  Program route there carries `jwt, cors, statsd, acl, rate-limiting,
-  request-size-limiting`.
+  `sunbird-devops › ansible/roles/kong-api/defaults/main.yml`.
 - Upstreams: workflow routes → `workflow-handler-service:5099`
   (**identified as `sunbird-cb-workflow`** by port and by a one-to-one match
   of `@RequestMapping("/v1/blendedprogram/workflow")`); `sb-cb-ext-service:7001`
@@ -35,7 +32,7 @@ Authoring (/apis/proxies/v8/action/*) →  ui-proxies  →  knowledge-mw-service
 
 > **Verification boundary:** the uiproxy commit read (`175d24c4`,
 > `cbrelease-4.8.41_RC7`) is not one of the pinned commits; every
-> whitelist/role statement below is "at that SHA". That `sb-cb-ext-service`
+> role statement below is "at that SHA". That `sb-cb-ext-service`
 > *is* the `sunbird-cb-ext` image, and that a given Kong route behaves as
 > its `strip_uri: true` suffix-append implies, are inferred, not read.
 
@@ -61,19 +58,19 @@ Sources: `sb-cb-ui-components › sb-cb-ui-toc/…/widget-content.service.ts`,
 ## Enrolment workflow — learner
 
 All served by `sunbird-cb-workflow › BPWorkFlowController`
-(`/v1/blendedprogram/workflow`). Role column is the uiproxy whitelist.
+(`/v1/blendedprogram/workflow`).
 
-| Method | Endpoint | Role (uiproxy) | Purpose |
+| Method | Endpoint | Role | Purpose |
 |---|---|---|---|
-| POST | `workflow/blendedprogram/enrol` | PUBLIC | Request a seat. Writes a `wf_status` row at `ENROLL_IS_IN_PROGRESS` and publishes to Kafka; returns `{message, data:{status, wfIds}}` |
-| POST | `workflow/blendedprogram/unenrol` | PUBLIC | Any non-role-tagged transition; the portals use it for `WITHDRAW` (needs `wfId`) |
-| POST | `workflow/blendedprogram/user/search` | PUBLIC | The caller's own requests for the given `applicationIds` (batch ids) |
-| POST | `workflow/blendedprogram/enrol/status/count` | PUBLIC | `[{currentStatus, statusCount}]` per batch (cached ≈ 1.8 s) |
-| POST | `workflow/blendedprogram/qr/enrolments` | **not whitelisted in uiproxy** — mobile calls Kong directly | Self-enrol by QR; auto-approves |
+| POST | `workflow/blendedprogram/enrol` | — | Request a seat. Writes a `wf_status` row at `ENROLL_IS_IN_PROGRESS` and publishes to Kafka; returns `{message, data:{status, wfIds}}` |
+| POST | `workflow/blendedprogram/unenrol` | — | Any non-role-tagged transition; the portals use it for `WITHDRAW` (needs `wfId`) |
+| POST | `workflow/blendedprogram/user/search` | — | The caller's own requests for the given `applicationIds` (batch ids) |
+| POST | `workflow/blendedprogram/enrol/status/count` | — | `[{currentStatus, statusCount}]` per batch (cached ≈ 1.8 s) |
+| POST | `workflow/blendedprogram/qr/enrolments` | — | Self-enrol by QR; auto-approves; mobile calls Kong directly |
 
 ## Approvals, nomination & removal — coordinator / MDO
 
-| Method | Endpoint | Role (uiproxy) | Purpose |
+| Method | Endpoint | Role | Purpose |
 |---|---|---|---|
 | POST | `workflow/blendedprogram/search` | PC, BP trainer, MDO admin/leader, program instructor | List requests by status / dept / applicationIds |
 | POST | `workflow/blendedprogram/searchV2/pc` | PC, BP trainer | Multi-status, multi-batch list (the Creation Portal's request queue) |
@@ -92,8 +89,7 @@ All served by `sunbird-cb-workflow › BPWorkFlowController`
 > **Boundary — routes that do not line up.** Kong defines
 > `workflowBlendedProgramUpdate` and `workflowBlendedProgramRemove` (URIs
 > `/workflow/blendedprogram/update` and `/remove`) pointing at workflow
-> paths that **do not exist** in `BPWorkFlowController`, and neither is in
-> the uiproxy whitelist. The Creation Portal's `UPDATE_REQUEST`
+> paths that **do not exist** in `BPWorkFlowController`. The Creation Portal's `UPDATE_REQUEST`
 > (`/v1/blendedprogram/workflow/update`) matches no uiproxy mapping or Kong
 > URI, and has no caller. There is no `workflowhandler/…` prefix in Kong
 > (the prefix is `/workflow`). `read/{wfId}/{applicationId}` exists on the
@@ -104,13 +100,13 @@ All served by `sunbird-cb-workflow › BPWorkFlowController`
 
 ## Sessions, attendance & QR
 
-| Method | Endpoint | Role (uiproxy) | Purpose |
+| Method | Endpoint | Role | Purpose |
 |---|---|---|---|
 | POST | `blendedprogram/v1/update/progress` | PC, BP trainer | Coordinator marks attendance → `sunbird-cb-ext` `POST /content/progress/v1/ext/update` (asynchronous: 200 once queued, whatever happens downstream) |
 | POST | `blendedprogram/v1/getUserContentProgress` | PC, BP trainer | Learners' session progress → `/content/progress/v1/read/getUserDetails` |
-| POST | `blendedprogram/v1/attendance/update` | **not whitelisted in uiproxy** (Kong ACL `illumineAccess`) | External (Illumine) attendance: marks the **first session** of the learner's active batch |
+| POST | `blendedprogram/v1/attendance/update` | — | External (Illumine) attendance: marks the **first session** of the learner's active batch |
 | PATCH | `course/v5/content/state/update` | learner | **Mobile's** QR attendance — a plain progress write on the session id |
-| GET | `batchsesion/qrcode/:courseId/:batchId` | PUBLIC | PDF with one session QR per offline session |
+| GET | `batchsesion/qrcode/:courseId/:batchId` | — | PDF with one session QR per offline session |
 | GET | `batch/v1/enrollment/qrcode/status/:doId/:batchId` | — | `{selfEnrolQrGenerated}` boolean (self-enrolment QR) |
 | GET | `batch/v1/enrollment/qrcode/download/:doId/:batchId` | — | Self-enrolment QR PDF; requires program `selfEnrollment = "Yes"` and flips `selfEnrolQrGenerated` |
 
@@ -179,14 +175,12 @@ Kong sends `assignment/*` to the forms service
 | POST | `bp/v2/generate/report` | **Consumption Report** |
 | POST | `bp/v1/bpreport/status` · `bp/v2/bpreport/status` | Row status (defined, unused by the UI) |
 | POST | `bp/v2/bpreport/list` | Rows of both versions |
-| GET | `bp/v1/bpreport/download/:orgId/:courseId/:batchId/:fileName` | Download xlsx (token check only) |
+| GET | `bp/v1/bpreport/download/:orgId/:courseId/:batchId/:fileName` | Download xlsx |
 | GET | `storage/v1/reportInfo/:orgId` · `storage/v1/report/:reportType/:date/:orgId/:file` | Nightly Spark `BlendedProgramReport.csv` (`blended-program-report-mdo` / `-cbp`) |
 
 All `bp/*` routes need the user token; generate and status additionally
-require the caller's root org to equal the request `orgId` (the v1 download
-checks the token only). Allowed `reportRequester`: `MDO_ADMIN`, `MDO_LEADER`,
-`PROGRAM_COORDINATOR` (a `BP_PROGRAM_TRAINER` value is rejected as invalid
-although the gateway lets that role through).
+require the caller's root org to equal the request `orgId`. Allowed `reportRequester`: `MDO_ADMIN`, `MDO_LEADER`,
+`PROGRAM_COORDINATOR` (a `BP_PROGRAM_TRAINER` value is rejected as invalid).
 
 ## Program coordinators
 
@@ -198,7 +192,7 @@ Served by `sunbird-cb-ext › ProgramCoordinatorController`.
 | POST | `program/coordinator/list/:programId` | `{request:{limit, offset, sortBy, sortDirection, roleName:[…]}}` |
 | GET | `program/coordinator/roles` | Role catalogue |
 | PUT | `program/admin/coordinator/upsert/:programId` | Admin variant — used by the Creation Portal editor to persist the ≤ 5 coordinators |
-| GET | `v1/program/:programId/coordinators` | Any authenticated user |
+| GET | `v1/program/:programId/coordinators` | Coordinators of a program |
 
 ## Program authoring lifecycle
 
