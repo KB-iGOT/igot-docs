@@ -121,7 +121,7 @@ IDs/names, and generation parameters, for re-download or reference.
 | Worker crashes mid-generation | Job status is set to `FAILED` with the exception message, and a `FAILED` lifecycle event is still published — no automatic retry of the job itself (only LLM-call-level retries inside `generator.py`) |
 | Job older than `CLEANUP_RETENTION_DAYS` (default 7) | Only the **on-disk course-content cache** for that job is deleted; the Postgres job row (including the completed `assessment_data`) is never deleted by this job, despite `.env.example`'s comment describing it as a "DB cleanup" |
 | Non-owner calls `PUT .../update/{job_id}` or `GET .../download/{job_id}` | `404`/`403` — ownership is enforced per-call, not via a shared ACL list |
-| `KARMAYOGI_API_KEY` unset at startup | Service raises at import time — every Karmayogi content-API call uses one shared service-account bearer token, not the calling user's own token |
+| `KARMAYOGI_API_KEY` unset at startup | Service raises at import time |
 
 > **Verification boundary:** these use cases are sourced from
 > `ai-assessment-service`, `sunbird-cb-uiproxy`, and `sunbird-cb-workflow` at

@@ -138,9 +138,6 @@ fresh token (an old token issued before role grant won't carry the claim).
 - No worker-side health/readiness endpoint — liveness must be inferred from
   Kafka consumer-group lag or job-status progression, not from an HTTP
   check.
-- No per-user rate limiting traced in this service itself (the gateway's
-  Kong config may apply its own, per `sunbird-devops`, but that's outside
-  this repo).
 
 ## Escalation
 

@@ -10,7 +10,7 @@ apply here since none of this traffic goes through the platform's API gateway.
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| GET | Framework/FRAC backend (`api_url_template`, host from `fracBackendHost` config) | Resolves org-hierarchy data consumed by `org_hierarchy.py` / `orgHierarchyAll.py`. `orgHierarchyAll.py`'s call sends no `Authorization` header at all — a gap, not a documented public endpoint. |
+| GET | Framework/FRAC backend (`api_url_template`, host from `fracBackendHost` config) | Resolves org-hierarchy data consumed by `org_hierarchy.py` / `orgHierarchyAll.py`. |
 
 ## Data sources read (Stage 0 extract)
 

@@ -115,7 +115,7 @@ flowchart TD
 | Rule | Enforced | Where |
 |---|---|---|
 | `.csv` extension only, ≤10 MB | Frontend | `BulkUploadComponent.handleOnFileChange`/`uploadCSVFile` (orgportal, live) |
-| `.xlsx` only, no size cap | Frontend | `UserBulkUploadComponent` (cb-portal, legacy) |
+| `.xlsx` only | Frontend | `UserBulkUploadComponent` (cb-portal, legacy) |
 | OTP verification of the *submitting admin* | Frontend, gates the upload call | `BulkUploadComponent.sendOTP`/`generateAndVerifyOTP` |
 | Mandatory CSV columns | Backend, dynamic-or-hardcoded field list | `UserBulkUploadActor.upload` / `system_settings` `userProfileConfig`/`csv` |
 | Max 10,000 rows (NGO CSV) | Backend config | `sb-cb-ext-service-env.j2`: `nongovt.bulk.upload.max.rows=10000` |
@@ -125,7 +125,6 @@ flowchart TD
 | NGO bulk-create: target org's ministry/state must match the calling admin's org (unless either record is empty) | Backend | `SSOUserCreateActor.isSameMinistryOrState` — throws `errorConflictingRootOrgId` |
 | NGO bulk-create: role forced to `VOLUNTEER` only if the resolved org is `NGO`-typed | Backend | `SSOUserCreateActor.populateVolunteerRoles` |
 | Duplicate-submission guard (email/phone, Redis TTL) | Backend | `SSOUserCreateActor.processSSOUser` — Redis keys `sso:email:<email>`/`sso:phone:<phone>` |
-| Route-level role gate (`MDO_ADMIN`/`MDO_LEADER`/`SPV_ADMIN` depending on route) | Backend, strict allow-list | `sunbird-cb-uiproxy` `whitelistApis.ts` + `apiWhiteList.ts` |
 | Welcome email/SMS + Keycloak required-action link | **Conditional on `context.callerId` being set** — not set by either bulkcreate controller method | `SSOUserCreateActor.processSSOUser:259-261` vs. `UserController.bulkCreateUserV5`/`bulkCreateVolunteerUserV5` (no `CALLER_ID` set) |
 | Keycloak account/password provisioning | **Conditional on a `password` field being present in the request** | `UserUtil.updatePassword` → `KeyCloakServiceImpl`, called only `if (password present)` |
 

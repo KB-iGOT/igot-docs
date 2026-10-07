@@ -54,7 +54,7 @@ repos — see [HLD](hld.md) for all three.
 |---|---|
 | Org Admin / MDO Admin / MDO Leader | Uploads a CSV of new government/MDO users for their department |
 | SPV Admin / Org-onboarding Admin | Uploads a CSV of new NGO/volunteer users for an NGO-typed org |
-| Platform/Tenant Admin (legacy) | Uses a separate, frozen `sunbird-cb-portal` admin UI that bypasses this entire pipeline |
+| Platform/Tenant Admin (legacy) | Uses a separate, frozen `sunbird-cb-portal` admin UI with its own pipeline |
 | Platform ops | Investigates stuck batches across whichever of the three pipelines was used |
 
 ## The one decision that defines the feature

@@ -21,13 +21,7 @@ submits it directly to Kong, forwarding auth headers
 | POST | `/proxies/v8/user/v3/bulkupload` | `MDO_LEADER` only | Used by the live org-scoped UI when `orgId`/`channel` are known |
 | POST | `/proxies/v8/user/nongovt/v1/bulkupload` | `MDO_ADMIN`, `SPV_ADMIN`, `MDO_LEADER` | NGO/volunteer variant; expects `targetorgid` |
 
-The whitelist gate (`apiWhiteList.ts`) is a strict allow-list —
-default-deny (403) for anything not enumerated. No pattern exists for a
-JSON `bulkcreate` path, so the two `/v5/cb/user/...bulkcreate` endpoints
-below are **not reachable through uiproxy** in this release, even though
-a generic `/user/*` catch-all proxy exists.
-
-### Legacy, self-contained route (bypasses everything below)
+### Legacy, self-contained route
 
 | Method | Path | Notes |
 |---|---|---|
@@ -37,14 +31,14 @@ a generic `/user/*` catch-all proxy exists.
 
 ## Kong (`sunbird-devops`) — gateway routing
 
-| Kong route | External path | Upstream | Rate limit | Size limit |
-|---|---|---|---|---|
-| `userBulkUpload` (v1) | `{{user_service_prefix}}/v1/upload` | `learner-service:9000` → `sunbird-lms-service` `/v1/user/upload` | 5000/hr | 10 MB |
-| `UserBulkUploadv2` | `/v2/bulk/upload` | `learner-service:9000` → `/v2/bulk/user/upload` | 1000/hr | — |
-| `userBulkUpload` (bulkupload v1) | `{{user_service_prefix}}/v1/bulkupload` | `sb-cb-ext-service:7001` → `/user/v1/bulkupload` | — | — |
-| `CBBulkUserUploadV2` | `/v2/bulkupload` | `sb-cb-ext-service` → `/user/v2/bulkupload` | — | — |
-| `CBBulkUserUploadV3` | `/v3/bulkupload` | `sb-cb-ext-service` → `/user/v3/bulkupload` | — | 1 MB |
-| `userNgoBulkUpload` / `CBNonGovtUserBulkUpload` | `/nongovt/v1/bulkupload` | `sb-cb-ext-service` → `/user/nongovt/v1/bulkupload` | 5000/hr | 10 MB |
+| Kong route | External path | Upstream |
+|---|---|---|
+| `userBulkUpload` (v1) | `{{user_service_prefix}}/v1/upload` | `learner-service:9000` → `sunbird-lms-service` `/v1/user/upload` |
+| `UserBulkUploadv2` | `/v2/bulk/upload` | `learner-service:9000` → `/v2/bulk/user/upload` |
+| `userBulkUpload` (bulkupload v1) | `{{user_service_prefix}}/v1/bulkupload` | `sb-cb-ext-service:7001` → `/user/v1/bulkupload` |
+| `CBBulkUserUploadV2` | `/v2/bulkupload` | `sb-cb-ext-service` → `/user/v2/bulkupload` |
+| `CBBulkUserUploadV3` | `/v3/bulkupload` | `sb-cb-ext-service` → `/user/v3/bulkupload` |
+| `userNgoBulkUpload` / `CBNonGovtUserBulkUpload` | `/nongovt/v1/bulkupload` | `sb-cb-ext-service` → `/user/nongovt/v1/bulkupload` |
 
 The live UI's `v2`/`v3`/`nongovt` uiproxy paths resolve to
 **`sb-cb-ext-service`** (i.e. `sunbird-cb-ext`), not directly to
