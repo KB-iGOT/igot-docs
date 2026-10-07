@@ -74,7 +74,7 @@ Intended to run after each day's pipeline completes (not itself scheduled in-rep
 types, 1-day retention); removes `standalone-reports/merged` and `warehouse/fullReport`
 unconditionally. **Disabled in this branch:** download-staging copy, dated backup ZIP,
 log-file retention — if disk usage grows unexpectedly, check
-`/home/analytics/pyspark/logs/data-products/` first, since nothing currently prunes it.
+`<LOG_DIR>/` first, since nothing currently prunes it.
 
 ## Monitoring & alerts
 

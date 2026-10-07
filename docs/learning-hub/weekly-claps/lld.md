@@ -26,7 +26,7 @@ File paths are relative to each named repo's root. Companion to the
 |---|---|
 | `src/proxies_v8/proxies_v8.ts:309-311` | Mounts `/read/user/insights` → generic passthrough to `${KONG_API_BASE}/insights` |
 | `src/utils/whitelistApis.ts:2645-2652` | Whitelist entry: `checksNeeded: [ROLE]`, `ROLE_CHECK: [PUBLIC, VOLUNTEER]` |
-| `src/utils/env.ts:60` | `KONG_API_BASE` resolution (env override, default `https://portal.karmayogi.nic.in/api`) |
+| `src/utils/env.ts:60` | `KONG_API_BASE` resolution (env override, default `https://<PORTAL_HOST>/api`) |
 | `src/utils/proxyCreator.ts:376-387` | `proxyCreatorSunbirdSearch` — the generic, route-agnostic passthrough factory used here (and by ~dozens of other routes) |
 
 ### Web (`sunbird-cb-portal`)

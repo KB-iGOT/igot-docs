@@ -47,7 +47,7 @@ ends up in one of them, the page says so.
 
 **What "release" means here:** the commits are the tips of each repo's
 newest `cbrelease-*` branch (or `master` for mobile), and for the forks they
-are tagged `cbrelease-<n>_RC<m>` in KB-iGOT's own repo. That proves the
+are tagged `cbrelease-<n>_RC<m>` in the organisation's own repo. That proves the
 commit was cut as a release candidate; nothing in these repos proves it is
 what is currently deployed in production.
 

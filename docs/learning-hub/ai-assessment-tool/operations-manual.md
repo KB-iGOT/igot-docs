@@ -44,8 +44,8 @@ deployed today," not "what this commit changed."
 | Env var | Default | Purpose |
 |---|---|---|
 | `KARMAYOGI_API_KEY` | — (required, raises at startup if unset) | Service-account bearer token for Karmayogi content-API calls |
-| `KARMAYOGI_BASE_URL` | `https://igotkarmayogi.gov.in` | Content search API host |
-| `LEARNING_AI_BASE_URL` | `https://learning-ai.prod.karmayogibharat.net` | Transcoder-stats API host (VTT discovery) |
+| `KARMAYOGI_BASE_URL` | `https://<PORTAL_HOST>` | Content search API host |
+| `LEARNING_AI_BASE_URL` | `https://<LEARNING_AI_HOST>` | Transcoder-stats API host (VTT discovery) |
 | `SUNBIRD_SSO_URL` / `SUNBIRD_SSO_REALM` | — | JWKS + issuer validation source |
 | `REQUIRED_ROLE` | `AI_ASSESSMENT_CREATOR` | Role claim gating every `/ai-assessments/v1/*` call |
 | `DATABASE_URL` | local dev Postgres URL | Job store connection string |

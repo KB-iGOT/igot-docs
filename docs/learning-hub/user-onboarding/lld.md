@@ -121,10 +121,10 @@ stateDiagram-v2
 
 `master_data` rows with context type `userRegistrationDomain` and
 `userRegistrationPreApprovedDomain` are the allow-lists; the approved-domains
-API returns their union (500 if empty). `user.registration.domain=gmail.com`
-and `user.registration.preApproved.domain=yopmail.com` exist in
+API returns their union (500 if empty). `user.registration.domain=<TEST_EMAIL_DOMAIN>`
+and `user.registration.preApproved.domain=<TEST_EMAIL_DOMAIN>` exist in
 `application.properties:271-272`, but the validation code reads the DB only;
-the helm template hard-codes `user.registration.domain=yopmail.com`
+the helm template hard-codes `user.registration.domain=<TEST_EMAIL_DOMAIN>`
 (`sb-cb-ext-service-env.j2:204`).
 
 Domain request workflow (`sunbird-cb-workflow`, headers `rootOrg`, `org`):
@@ -322,11 +322,11 @@ end **and** `status = ACTIVE`. `listAllQRCodes` overwrites every row's
 | `sunbird_otp_*` | see §3 | core + learner env |
 | `enable_captcha` | per env | core (exists v2 only) |
 | `user.bulk.upload.group.value` | `GROUP A,GROUP B,GROUP C,GROUP D,Contractual Staff,Honorarium-Based,Others` | cb-ext `application.properties:345` |
-| `user.registration.dept.exclude.list` | `0133334975707217922` (helm: empty) | cb-ext |
+| `user.registration.dept.exclude.list` | `<ORG_ID_LIST>` (helm: empty) | cb-ext |
 | `user.registration.custodian.orgId` / `.orgName` | `{{reg_orgid}}` / `iGOT` | helm |
 | `url.custom.self.registration` | `https://{{domain_name}}` | helm `:498` |
 | `qr.custom.self.registration.skip.validation` | `false` (injected, usage not found) | helm `:499-504` |
-| `X_CHANNEL_ID` | `0131397178949058560` | uiproxy `env.ts:169` |
+| `X_CHANNEL_ID` | `<HOLDING_ORG_ID>` | uiproxy `env.ts:169` |
 | `PORTAL_API_WHITELIST_CHECK` | `true` | uiproxy / helm `:194` |
 | `PORTAL_CREATE_NODEBB_USER` | `false` | uiproxy |
 | Keycloak realm template | `registrationAllowed: true`, `verifyEmail: false`, password policy length + upper + lower + digit + special, `passwordHistory(1)` | `keycloak-realm.j2` |

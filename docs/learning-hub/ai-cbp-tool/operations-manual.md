@@ -51,7 +51,7 @@ logs/DB access, not just the one the ticket happened to name.
 | Setting | Meaning | Why it matters |
 |---|---|---|
 | `DATABASE_URL` | Postgres connection string, required, no default | **Must point at the same physical database as `cbp-ai-service`** — if it doesn't, MDO admins will simply see no requests, with no error to indicate why |
-| `KB_BASE_URL` (default `https://portal.dev.karmayogibharat.net`) | Base URL for every outbound iGOT call: CBP-plan create/publish, designation create, content/designation search, and the JWKS certs endpoint used for auth | A wrong value here breaks both the publish flow *and* login (both hit this host) |
+| `KB_BASE_URL` (default `https://<PORTAL_HOST_DEV>`) | Base URL for every outbound iGOT call: CBP-plan create/publish, designation create, content/designation search, and the JWKS certs endpoint used for auth | A wrong value here breaks both the publish flow *and* login (both hit this host) |
 | `KB_AUTH_TOKEN` | Static token sent as `Authorization` to iGOT | Inconsistently prefixed across call sites — most calls send it raw, one CRUD call site prepends `Bearer ` (`crud/mdo_approval_request.py:437`) — worth checking if iGOT-side auth failures cluster around that one call path |
 | `SUNBIRD_SSO_REALM` / `SUNBIRD_SSO_URL` | Used to build the issuer-check URL for JWT validation | **Not** used to build the JWKS certs URL, which is hardcoded to the `sunbird` realm regardless of this setting (`core/auth.py:12`) — a non-default realm would only affect issuer validation, not key fetching |
 | `REQUIRED_ROLES` (default `["MDO_ADMIN","MDO_LEADER"]`) | Declared setting | **Unused** — every route's actual required roles are hardcoded literals at the call site; changing this setting has no effect anywhere |

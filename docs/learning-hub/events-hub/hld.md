@@ -13,7 +13,7 @@ share a similarly-named folder:
   content-type-driven system this document covers: search/browse,
   enroll, consume, certify, plus role-split authoring/review.
 - **`app-event` ("meetup")** — a small, single-external-API microsite
-  (`event-external` proxy, `https://igot.in`) with no enrollment and no
+  (`event-external` proxy, `<EXTERNAL_SITE>`) with no enrollment and no
   data-model relationship to Event/EventSet content. It is not called
   "Event Hub" anywhere in its own code, and in two of the three portals
   its route is either unreachable (Org Portal — shadowed by a duplicate

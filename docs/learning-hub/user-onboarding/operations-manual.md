@@ -94,7 +94,7 @@ first. The org must have designations imported into its framework.
 | `user.bulk.upload.group.value` | six groups + Others | Allowed `group` on register |
 | `user.registration.dept.exclude.list` | one org id (properties) / empty (helm) | Orgs hidden from the department list |
 | `url.custom.self.registration` | `https://{{domain_name}}` | Base of generated links; its trailing slash yields `//crp` |
-| `X_CHANNEL_ID` | `0131397178949058560` | Holding org; first-time-user detection |
+| `X_CHANNEL_ID` | `<HOLDING_ORG_ID>` | Holding org; first-time-user detection |
 | `PORTAL_API_WHITELIST_CHECK` | `true` | Enables the route allow-list check |
 | `PORTAL_CREATE_NODEBB_USER` | `false` | Optional forum-user creation after admin create |
 | Kong rate limits | register 1000/h; OTP and link check 5000/h; hierarchy 15000/h per IP | `policy: local` — per Kong node, not cluster-wide |

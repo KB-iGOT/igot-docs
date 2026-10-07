@@ -152,8 +152,8 @@ history contains "gyaan"/"amrit"/"AGK" as literal text.
 Two other matches for `resourceCategory` in this repo are confirmed
 **unrelated** to AGK: `content-api/content-service/conf/application.conf`
 (a generic ~60-field list added for the unrelated Learning Pathway feature,
-KB-12556) and `ContentActor.scala` (a generic notification-suppression
-fallback check, KB-11220).
+<JIRA_ID>) and `ContentActor.scala` (a generic notification-suppression
+fallback check, <JIRA_ID>).
 
 ## Content authoring (`sunbird-cb-creationportal`)
 

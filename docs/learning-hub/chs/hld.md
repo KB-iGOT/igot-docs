@@ -60,7 +60,7 @@ flowchart LR
 
 | Component | Owns | Repo |
 |---|---|---|
-| Stage 0 extract | Point-in-time snapshot of every operational store into local Parquet, zero business logic | `KB-iGOT/cb-core-data` — `jobs/stage-0/dataExhaust.py` |
+| Stage 0 extract | Point-in-time snapshot of every operational store into local Parquet, zero business logic | `<ORG>/cb-core-data` — `jobs/stage-0/dataExhaust.py` |
 | Stage 1 prejoin | The reusable "computed" tables (user×org, content master, enrolment facts) that ~30 of the 46 Stage 2 jobs read; also runs the ACBP allocation engine | `cb-core-data` — `jobs/stage-1/prejoinData.py`, `dfutil/` |
 | Stage 2 jobs | Compliance reports, warehouse/dashboard sync, gamification & scoring, leaderboards & campaigns, surveys & export — ~46 independently runnable scripts | `cb-core-data` — `jobs/stage-2/*.py` |
 | CSV export layer | Size-adaptive per-org CSV writing (direct Spark under 100k rows, DuckDB-mediated above) shared by ~15 report jobs | `cb-core-data` — `dfutil/dfexport/dfexportutil.py` |

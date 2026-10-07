@@ -71,14 +71,14 @@ addition to the generic pass-through mechanism:
 
 - `src/protectedApi_v8/competency.ts` and `src/protectedApi_v8/frac.ts` —
   call the FRAC backend directly (`CONSTANTS.FRAC_API_BASE`, default
-  `https://frac.igot-dev.in`), doing light request shaping (e.g. building a
+  `https://<FRAC_HOST_DEV>`), doing light request shaping (e.g. building a
   `searchNodes` filter from a `type`/`key` path param) rather than pure
   pass-through.
 - Everything else — `/competency/*`, `/competencyArea|Theme|SubTheme/*`,
   `/v1/search/competenciesByOrg`, `/organisation/v1/competencyDesignationMappings/*`,
   `/user/profile/v1/extended/competencies`, `/learner/v1/competency/read` —
   is a generic pass-through to `CONSTANTS.KONG_API_BASE` (default
-  `https://portal.karmayogi.nic.in/api`).
+  `https://<PORTAL_HOST>/api`).
 
 Every one of the ~30 competency-related paths has its own explicit
 role-based ACL entry in `whitelistApis.ts`. The pattern is consistent where

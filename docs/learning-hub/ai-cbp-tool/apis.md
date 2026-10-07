@@ -159,7 +159,7 @@ initial generation.
 and `user-added-courses` are all called by name — but for the actual iGOT
 course *search* (as opposed to saving a result), `cbp-ai-ui` bypasses
 `/course/suggestions` entirely and calls a hardcoded
-`https://portal.igotkarmayogi.gov.in/api/content/v1/search` directly
+`https://<PORTAL_HOST>/api/content/v1/search` directly
 (`getIGOTSuggestedCourses()`, `shared.service.ts:451-474`).
 
 ### CBP Plan — `/api/v1/cbp-plan`
@@ -287,7 +287,7 @@ which endpoints it does *not* call.
   gets is `POST cbp-tpc-ai/api/v1/approval-requests/mdo-admins` and
   `POST .../approval-requests/send`, both `cbp-ai-service` endpoints.
 - `cbp-ai-ui` calls one hardcoded absolute iGOT URL
-  (`https://portal.igotkarmayogi.gov.in/api/content/v1/search`) directly,
+  (`https://<PORTAL_HOST>/api/content/v1/search`) directly,
   bypassing its own backend's proxy for that one search.
 - The actual request/response bodies for most of the ~40 endpoints in
   `SharedService` are untyped (`Observable<any>`) — there is no
