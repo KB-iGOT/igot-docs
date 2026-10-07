@@ -22,18 +22,15 @@ Path construction: `/api` (`src/api/__init__.py:8`) + `/v1`, `/v2`, or `/v3`
 any) + the route path. Auth column values refer to dependencies in
 `src/api/dependencies.py`: `active` = `get_current_active_user` (any
 authenticated, active user), `admin` = `require_role("Super Admin")`,
-`token` = `get_current_user_with_token`, `public` = no auth.
+`token` = `get_current_user_with_token`.
 
 ### Auth — `/api/v1/auth`
 
 | Method | Path | Handler | Purpose | Auth |
 |---|---|---|---|---|
-| POST | `/login` | `src/api/v1/auth.py:42` | Form login (username/password); brute-force lockout via `LoginAttempt`; returns JWT access+refresh pair, persists a `UserSession` row | public |
-| POST | `/refresh` | `src/api/v1/auth.py:157` | Exchanges a valid refresh token for a new access token | public |
-| POST | `/logout` | `src/api/v1/auth.py:207` | Deletes the session row for the current token (blacklists it) | token |
-| POST | `/unlock-account/{username}` | `src/api/v1/auth.py:252` | Clears an account's failed-login counter | admin |
-| GET | `/account-status/{username}` | `src/api/v1/auth.py:305` | Reports lockout state/attempt counts for an account | admin |
-| POST | `/cleanup-expired-sessions` | `src/api/v1/auth.py:350` | Deletes DB session rows whose refresh token has expired | admin |
+| POST | `/login` | `src/api/v1/auth.py:42` | Form login (username/password); returns JWT access+refresh pair, persists a `UserSession` row | — |
+| POST | `/refresh` | `src/api/v1/auth.py:157` | Exchanges a valid refresh token for a new access token | — |
+| POST | `/logout` | `src/api/v1/auth.py:207` | Deletes the session row for the current token | token |
 
 `cbp-ai-ui` confirms `/login` and `/logout` are called exactly as documented
 (`LOGIN`/`LOGOUT` constants, `shared.service.ts:9-10`, `performLogin()`/
@@ -50,7 +47,7 @@ the UI actually makes right after login.
 | GET | `/state-center/` | `src/api/v1/state_center.py:18` | Proxies iGOT `POST {KB_BASE_URL}/api/org/v1/search` to list ministries/states | active |
 | GET | `/department/state-center/{state_center_id}` | `src/api/v1/department.py:19` | Proxies the same iGOT org-search API to list departments under a ministry/state | active |
 | POST | `/kb/designation/search` | `src/api/v1/designation.py:15` | Raw passthrough of a designation search to iGOT's designation-master API | active |
-| GET | `/health` | `src/api/v1/health.py:21` | Liveness check — app version + UTC timestamp | public |
+| GET | `/health` | `src/api/v1/health.py:21` | Liveness check — app version + UTC timestamp | — |
 
 ### Roles &amp; users — `/api/v1`
 
@@ -63,7 +60,6 @@ the UI actually makes right after login.
 | DELETE | `/roles/{role_id}` | `src/api/v1/roles.py:189` | Delete a role — blocked if any user is assigned | admin |
 | POST | `/users` | `src/api/v1/users.py:21` | Create a user (unique username, valid role, hashed password) | admin |
 | GET | `/users/me` | `src/api/v1/users.py:127` | Caller's own profile | active |
-| GET | `/users/{user_id}` | `src/api/v1/users.py:154` | Fetch any user by id | active |
 | PUT | `/users/{user_id}` | `src/api/v1/users.py:182` | Update a user | admin |
 | DELETE | `/users/{user_id}` | `src/api/v1/users.py:238` | Soft-delete a user (`is_active=False`) | admin |
 | GET | `/users` | `src/api/v1/users.py:269` | Paginated user listing | admin |
@@ -222,13 +218,8 @@ reachable only via a commented-out button (see Operations Manual).
 Paths below are relative to `/v1` (`src/api/__init__.py:6-8`,
 `src/api/v1/__init__.py:10-14`), plus `settings.APP_ROOT_PATH` at the ASGI
 level (default empty). **No client in any of the three traced repos calls
-this service** — its public-facing gateway path (analogous to
-`cbp-ai-service`'s inferred `cbp-tpc-ai` prefix) is unverified. Auth is a
-custom `x-authenticated-user-token` header, RS256-verified against
-`{KB_BASE_URL}/auth/realms/sunbird/protocol/openid-connect/certs`
-(`core/auth.py:12,49-116`) — not a standard `Authorization: Bearer` header,
-and not the same mechanism `cbp-ai-service` uses for its own end users.
-There is **no health/liveness endpoint** anywhere in this service.
+this service** — its gateway path (analogous to
+`cbp-ai-service`'s inferred `cbp-tpc-ai` prefix) is unverified. There is **no health/liveness endpoint** anywhere in this service.
 
 ### MDO approval — `/v1/mdo` (`src/api/v1/mdo_approval.py`)
 
@@ -263,14 +254,9 @@ There is **no health/liveness endpoint** anywhere in this service.
 
 | Target | Used for | Config |
 |---|---|---|
-| iGOT KB API (`{KB_BASE_URL}`) | CBP-plan create/publish (`/api/cbplan/v2/{create,publish}`), designation create (`/api/designation/create`), content/designation search, JWKS certs for auth | `KB_BASE_URL`, `KB_AUTH_TOKEN` |
+| iGOT KB API (`{KB_BASE_URL}`) | CBP-plan create/publish (`/api/cbplan/v2/{create,publish}`), designation create (`/api/designation/create`), content/designation search | `KB_BASE_URL`, `KB_AUTH_TOKEN` |
 | Notification service (`{NOTIFICATION_BASE_URL}/v2/notification/send`) | Approval/rejection emails for both the MDO and SPV flows | `NOTIFICATION_BASE_URL`, `ENABLE_EMAIL_NOTIFICATION` |
 | Shared Postgres database | `approval_requests`, `approval_request_items`, `users` (mirrored, `extend_existing=True`); `role_mappings` (no ORM model — raw SQL only); `mdo_approval`, `designation_approvals` (owned outright) | `DATABASE_URL` |
-
-**Note**: `settings.REQUIRED_ROLES` (default `["MDO_ADMIN","MDO_LEADER"]`,
-`configs.py:25`) is defined but never referenced anywhere in the codebase —
-every route's required-role list is a hardcoded literal at the call site
-instead.
 
 ## `cbp-ai-ui` — client integration only
 

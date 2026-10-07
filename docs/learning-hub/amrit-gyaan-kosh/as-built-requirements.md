@@ -27,8 +27,8 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| FR-001 | On web, the system SHALL expose the feature at route `app/amrit-gyaan-kosh`, guarded by `GeneralGuard` and resolving `pageData`/`gyaanData` before load. | `src/app/app-routing.module.ts:167-179` |
-| FR-002 | On web, the system SHALL fetch `/<sitePath>/feature/tenant-admin.json` as a second, module-level gate before rendering any AGK child route; a failed fetch SHALL redirect the user to `/`. | `gyaan-resolver.service.ts:13-34` |
+| FR-001 | On web, the system SHALL expose the feature at route `app/amrit-gyaan-kosh`, resolving `pageData`/`gyaanData` before load. | `src/app/app-routing.module.ts:167-179` |
+| FR-002 | On web, the system SHALL fetch `/<sitePath>/feature/tenant-admin.json` before rendering any AGK child route; a failed fetch SHALL redirect the user to `/`. | `gyaan-resolver.service.ts:13-34` |
 | FR-003 | On mobile, the system SHALL render an "AGK" hub tile (icon, `telemetryId: amritGyaanKosh`) on the explore/hub grid, sourced from a remote `explore-hub-config` JSON with a bundled static fallback, gated per-entry by an `enabled` flag. | `explore_hub_config.dart:31-42`; `mobile_explore_screen.dart:134-139` |
 | FR-004 | On mobile, tapping the AGK tile SHALL navigate to `/knowledgeResourcesPage`, resolving to the `GyaanKarmayogiV2` screen. | `app_routes.dart`; `routes.dart:226-227` |
 
@@ -74,8 +74,6 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 |---|---|---|
 | NFR-001 | The web feature module SHALL be lazy-loaded, so a build failure in it surfaces only when a user navigates to `app/amrit-gyaan-kosh`. | `route-gyaan-karmayogi.module.ts` |
 | NFR-002 | Mobile SHALL cache the remote AGK config (`knowledge-resource.json`) for 10 minutes before refetching. | `gyaan_karmayogi_service.dart:168-181` |
-| NFR-003 | Neither client SHALL require the same schema-validation constraints on `resourceCategory`/`sectorDetails_v1`/`contextSDGs`/`contextStateOrUTs`/`contextYear` — the underlying content schema leaves all five unconstrained (plain strings / untyped object arrays). | `knowledge-platform` `schemas/content/1.0/schema.json:1494-1538` |
-| NFR-004 | The web route SHALL be disableable platform-wide via `globalConfig.routes['amrit-gyaan-kosh']`, independent of the tenant-admin resolver gate (FR-002). | `src/app/guards/general.guard.ts` (~lines 44-64, `isBlockedUrl` / `globalConfig.routes` check) |
 
 ## Constraints and assumptions baked into the build
 
@@ -84,7 +82,6 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 | CON-001 | The web and mobile clients each declare their own copy of the AGK field-name constants (`resourceCategory`, `sectorDetails_v1.*`, `contextSDGs`, etc.) — no shared library/constants file was found between the two repos. | A field rename in the content schema must be applied independently in both `gyaan-contants.model.ts` (web) and the mobile service layer, or the two clients silently diverge. | `gyaan-contants.model.ts`; `gyaan_karmayogi_service.dart` |
 | CON-002 | The CBC org id used for the Case-Studies filter is configured independently per platform (`environment.cbcOrg` web; remote `cbcOrg` mobile). | The two clients can disagree on what counts as a Case Study if the values drift. | `gyaan-karmayogi-home.component.ts`; `feature_config_repository.dart:14,38,55,88` |
 | CON-003 | The search endpoints both clients call (`sunbirdigot/search`, `sunbirdigot/v4/search`, and the mobile composite-search equivalent) are not implemented in any of the eight repos analyzed for this feature. | This document cannot describe server-side search/ranking/relevance behaviour for AGK content — only what the clients send and expect back. | See [APIs](apis.md) verification boundary |
-| CON-004 | `sectorDetails_v1` has no nested schema — its object shape (`sectorName`/`subSectorName`) is a convention enforced only by client-side code, not by the content schema. | A malformed or differently-shaped object from an authoring bug would pass schema validation and only fail silently at render time on both clients. | `schemas/content/1.0/schema.json:1533-1538` |
 
 ## Known deviations (inconsistent by accident, not by design)
 
@@ -92,7 +89,6 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 |---|---|---|---|
 | DEV-001 | Web and mobile use differently-named/versioned search calls (`sunbirdigot/search` / `sunbirdigot/v4/search` vs. a `compositeV1Search`-style mobile call) for conceptually the same content discovery, with no shared client library. | FR-010/FR-012 vs. FR-020/FR-023 | [APIs](apis.md) |
 | DEV-002 | Two independently configured CBC org-id values with no reconciliation mechanism found in either repo. | FR-011 vs. FR-020 | CON-002 |
-| DEV-003 | Web access is gated twice (route guard + tenant-admin resolver); mobile access is gated once (hub-tile `enabled` flag) with no equivalent secondary guard found on the `/knowledgeResourcesPage` route itself. | FR-001/FR-002 vs. FR-003/FR-004 | `app-routing.module.ts`; `routes.dart` |
 
 ## Out of scope (not reconstructible from this repo set)
 

@@ -107,8 +107,6 @@ edit. Deleting a Live pathway is blocked if it has enrolled learners.
 | Course picker "Apply Filters" | Non-functional — the button and its handler are a commented-out no-op; only search + pagination actually work |
 | Same course added to two milestones | Blocked with a message naming the milestone that already has it |
 | Milestone assessment save vs. pre-assessment save | Inconsistent: pre-assessment autosaves on configuration, milestone assessment requires an explicit "Save Milestone" click |
-| Retry limit on a milestone checkpoint | None found — a learner can retry indefinitely; no attempt cap or cool-off exists on any client or in the assessment backend |
 | Milestone "in progress" state | Never shown — mobile's status is binary (incomplete/complete); partial completion looks identical to not-started |
 | Pathway reverted from Live to Draft | Forced read-only client-side, with no traced path back to fully editable |
 | Deleting a Live pathway with enrolled learners | Blocked with an explanation dialog |
-| Malformed `milestones_v1` payload | Accepted and stored as-is — no server-side schema validation exists for this field |

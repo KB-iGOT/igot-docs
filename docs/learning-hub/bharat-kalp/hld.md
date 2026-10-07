@@ -61,7 +61,6 @@ cohort-specific, not a rollout toggle.
 | `src/app/routes/route-kalp.module.ts` | Thin app-shell wrapper; owns nothing feature-specific — just re-exports the library module for lazy loading |
 | `project/ws/app/src/lib/routes/kalp/kalp.module.ts` (`KalpModule`) | Declares the two feature components, wires Material UI, community/consumption UI libraries, and a **feature-local** ngx-translate loader |
 | `BharatKalpFormService` | Single source of the program's configuration (`bkConfig`, `sectionList`, `weekProgress`) fetched once per session and cached |
-| `BharatKalpGuard` + `GeneralGuard` | Access control at the route boundary |
 | Home page integration (`Home2ResolverService`, `InSpotlightV2Component`) | Conditionally injects/removes the Bharat Kalp spotlight card |
 | `InSightSideBarComponent` | Notification banner entry point into the feature |
 
@@ -89,13 +88,11 @@ documented here; and the content-authoring workflow that produces the
   control or observe those components' internal behaviour (loading states,
   telemetry) — they are black boxes from this codebase's point of view, and a
   version bump to either package can change the feature with no commit here.
-- **Access hangs on one profile attribute, checked four ways.** There is no
+- **Access hangs on one profile attribute.** There is no
   environment or config-based feature flag; membership is entirely
   user-attribute driven. Appropriate for a cohort-restricted program rather
   than a staged rollout, but it means enabling or disabling the feature for
-  QA/staging requires backend profile data, not a config toggle — and the four
-  read sites do not agree on what counts as true. See access control in the
-  [LLD](lld.md).
+  QA/staging requires backend profile data, not a config toggle.
 - **Config-driven content, no domain model.** Weeks, tabs and content buckets
   are all shaped by a backend-authored JSON blob (`bkConfig`/`weekProgress`)
   consumed as `any`. The content team can reshape the program without a
@@ -116,14 +113,13 @@ documented here; and the content-authoring workflow that produces the
   error state to separate "nothing configured" from "something broke".
 - **Config cached for the SPA's lifetime, not the session.** The form-config
   cache is an unkeyed singleton with no invalidation, tied to the SPA rather
-  than the user — so config changes need a full reload, and a user switch in
-  the same tab risks serving the previous user's config. See the
+  than the user — so config changes need a full reload. See the
   [Operations Manual](operations-manual.md) for the day-2 implication.
 - **A feature-local i18n loader.** The module declares its own ngx-translate
   instance in addition to whatever the app shell configures — functionally
   isolated, but a duplicate-loader pattern worth revisiting.
 
-See the [LLD](lld.md) for the access-control mechanics, component detail and
+See the [LLD](lld.md) for component detail and
 sequence flows, and the [Operations Manual](operations-manual.md) for how
 these decisions show up in day-2 support.
 

@@ -21,25 +21,21 @@ through generic search, filtered by a sector taxonomy served from
 
 | Field | Meaning | Where | Why it matters |
 |---|---|---|---|
-| `resourceCategory` | Free-text category on a content item | Content schema (`knowledge-platform`) | Unconstrained — any string an author types becomes a filter value; no enum to keep values consistent |
-| `sectorDetails_v1` | Array of untyped `{sectorName, subSectorName}`-shaped objects | Content schema | No schema validation on the object shape — a malformed entry from authoring silently fails to filter/display correctly rather than being rejected |
-| `contextSDGs`, `contextStateOrUTs`, `contextYear` | Arrays of free-text strings | Content schema | Same lack of enum constraint |
+| `resourceCategory` | Free-text category on a content item | Content schema (`knowledge-platform`) | Any string an author types becomes a filter value |
+| `sectorDetails_v1` | Array of `{sectorName, subSectorName}`-shaped objects | Content schema | Drives sector/sub-sector filtering and display |
+| `contextSDGs`, `contextStateOrUTs`, `contextYear` | Arrays of free-text strings | Content schema | Used as filter values |
 | `createdFor` | Org id(s) a content item is attributed to | Content schema | The **entire** mechanism distinguishing "Case Studies" from "Other Resources" on both clients — a content item is a Case Study purely because its `createdFor` matches the configured CBC org id |
 | `environment.cbcOrg` (web) / `amritGyaanOrgId` from remote `cbcOrg` (mobile) | The CBC org id used in the `createdFor` filter | Web: build-time environment file. Mobile: remote assets config | If these two values ever drift apart, the two clients will disagree on what counts as a Case Study |
-| `globalConfig.routes['amrit-gyaan-kosh']` | Web route kill-switch | Portal `GeneralGuard` | Disables the entire web route; independent of the tenant-admin resolver below |
-| `tenant-admin.json` (web) | Per-tenant feature-flag JSON fetched by `GyaanResolverService` | `/<sitePath>/feature/tenant-admin.json` | Fetch failure redirects the user to `/` — this is a second, separate gate from the route guard above |
-| `explore-hub-config` (mobile) | Remote JSON listing hub tiles, incl. AGK's `enabled` flag | `AppConfiguration.exploreHubConfigData`, falls back to a bundled static config | Setting the AGK entry's `enabled` to `false` (or omitting it) hides the hub tile; the route itself isn't separately guarded |
+| `tenant-admin.json` (web) | Per-tenant feature-flag JSON fetched by `GyaanResolverService` | `/<sitePath>/feature/tenant-admin.json` | Fetch failure redirects the user to `/` |
+| `explore-hub-config` (mobile) | Remote JSON listing hub tiles, incl. AGK's `enabled` flag | `AppConfiguration.exploreHubConfigData`, falls back to a bundled static config | Setting the AGK entry's `enabled` to `false` (or omitting it) hides the hub tile |
 | `knowledge-resource.json` (mobile) | Remote config for the "know more" banner | `{baseUrl}/assets/configurations/feature/knowledge-resource.json`, 10-min cache | Missing `knowMoreInfo` simply renders nothing — not an error state |
 
 ## How to enable/disable the feature
 
-- **Web, whole feature**: set `globalConfig.routes['amrit-gyaan-kosh']` to
-  `false` (or `{enabled: false}`), or make `tenant-admin.json` fail/404 for
-  the tenant (soft-gates the module via the resolver).
+- **Web, whole feature**: make `tenant-admin.json` fail/404 for
+  the tenant (the resolver then redirects away from the module).
 - **Mobile, hub visibility**: set the AGK entry's `enabled` to `false` in the
-  `explore-hub-config` remote JSON. This only hides the entry-point tile —
-  if a user has the route/deep-link memorized, no separate guard was found
-  blocking direct navigation to `/knowledgeResourcesPage` on mobile.
+  `explore-hub-config` remote JSON. This hides the entry-point tile.
 - **Case Studies vs Other Resources split**: controlled entirely by the CBC
   org id config (`environment.cbcOrg` web / `cbcOrg` remote config mobile) —
   there is no separate toggle for this; changing the org id changes what
@@ -69,7 +65,6 @@ flowchart TD
 
     Q1 -- Web --> W1{"Can the user\nreach app/amrit-gyaan-kosh\nat all?"}
     W1 -- "No, redirected to /" --> WS1["tenant-admin.json fetch\nfailed — resolver gate"]
-    W1 -- "No, blank/blocked route" --> WS2["globalConfig.routes\n['amrit-gyaan-kosh'] disabled"]
     W1 -- "Yes, but empty strips/facets" --> WS3["sunbirdigot/search or\nsunbirdigot/v4/search failing —\ncheck Network tab"]
     W1 -- "Yes, but wrong Case Studies split" --> WS4["environment.cbcOrg\nmismatched with content's\ncreatedFor value"]
 
@@ -86,13 +81,9 @@ flowchart TD
 ```
 
 ### "Web user can't reach AGK at all"
-Two independent gates can cause this — distinguish by what the user actually
-sees:
-1. Redirected to `/` immediately → the `tenant-admin.json` resolver fetch
-   failed. Check that `/<sitePath>/feature/tenant-admin.json` resolves for
-   the tenant.
-2. Route inert / never loads the module → check
-   `globalConfig.routes['amrit-gyaan-kosh']` hasn't been disabled.
+Redirected to `/` immediately → the `tenant-admin.json` resolver fetch
+failed. Check that `/<sitePath>/feature/tenant-admin.json` resolves for
+the tenant.
 
 ### "Content is missing or facets are empty"
 Both platforms' search calls were not traced to an implementing service in
@@ -160,12 +151,9 @@ See the [LLD](lld.md) for the engineering-facing version of these:
 1. No shared contract between the web and mobile clients for AGK's metadata
    field names or search request shape — they were built independently and
    happen to agree, not because they're generated from a common source.
-2. All five AGK metadata fields are schema-unconstrained (no enums) — a
-   typo in `resourceCategory` at authoring time creates a new, silently
-   uncatalogued filter value on both clients.
-3. Two independently configured CBC-org values (web `environment.cbcOrg`,
+2. Two independently configured CBC-org values (web `environment.cbcOrg`,
    mobile remote `cbcOrg`) with no reconciliation mechanism.
-4. The search service both clients depend on for all content discovery is
+3. The search service both clients depend on for all content discovery is
    outside the scope of every repo analyzed for this feature.
 
 ## Escalation
@@ -175,7 +163,7 @@ team or on-call rotation for this feature was found in the repos traced.
 
 | Issue type | Owner | Escalate when |
 |---|---|---|
-| AGK unreachable on web (redirect to `/` or blocked route) | Web portal team | `tenant-admin.json` / `globalConfig.routes` gates behave unexpectedly |
+| AGK unreachable on web (redirect to `/`) | Web portal team | `tenant-admin.json` behaves unexpectedly |
 | AGK hub tile missing on mobile | Mobile app team | `explore-hub-config` looks correct but the tile still doesn't render |
 | Content/facets missing on either platform | Platform search team | `sunbirdigot/search` / composite-search calls return non-2xx or empty results |
 | Sector/sub-sector list wrong or empty | `sunbird-cb-ext` / knowledge-mw-service owners | `catalog/v1/sector` itself errors, or its data looks stale/incorrect |

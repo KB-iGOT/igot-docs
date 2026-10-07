@@ -115,7 +115,7 @@ coordinate purely by reading and writing the same rows.
 | Actor | Role |
 |---|---|
 | CBP author (state/ministry user) | Uploads documents, generates/edits role mappings and course recommendations, builds and submits CBP plans, via `cbp-ai-service` + `cbp-ai-ui` |
-| Super Admin | Manages users/roles, views org-wide dashboards and gap analysis, account-lockout administration, in `cbp-ai-service` |
+| Super Admin | Manages users/roles, views org-wide dashboards and gap analysis, in `cbp-ai-service` |
 | MDO Admin / MDO Leader | Reviews, edits, approves/rejects, and publishes submitted CBP plans in `ai-cbp-mdo-service`; the screens they use are not part of this trace |
 | SPV Admin | Approves or rejects an escalated designation-naming request in `ai-cbp-mdo-service`, creating the designation in iGOT's master list on approval; screens not part of this trace |
 | Operator running `bulk_scripts/` | A human operator executing the offline onboarding pipeline (document copy → summarize → generate role mappings → recommend courses → submit for approval → publish) for a new state/ministry, stage by stage, from a jumphost — its final stage independently drives the same approve/publish transition `ai-cbp-mdo-service` drives live |

@@ -105,7 +105,6 @@ share action.
 | Situation | Behaviour |
 |---|---|
 | Tenant feature-flag fetch fails (web) | `GyaanResolverService` redirects the user to `/` — the whole module is gated on this one config fetch succeeding |
-| `globalConfig.routes['amrit-gyaan-kosh']` disabled (web) | `GeneralGuard` blocks the route entirely, independent of the tenant-admin resolver |
 | Remote `explore-hub-config` omits or disables the AGK entry (mobile) | The app falls back to a locally bundled static config; if that entry's `enabled` is `false`, the hub tile simply doesn't render |
 | `AgkForm`'s remote config has no `knowMoreInfo` (mobile) | The info banner renders nothing (`SizedBox()`) rather than an empty placeholder |
 | A resource has no `sectorDetails_v1` | Sector/sub-sector display sections are skipped, both in the web player and the mobile "About"/details screens |

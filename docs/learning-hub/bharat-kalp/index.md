@@ -8,9 +8,7 @@ week's content.
   `app/learn/bharat-kalp/see-all` (content browser)
 - **Who it's for**: members flagged into the program — it doesn't appear for
   anyone else
-- **Status**: ⚠️ no backend of its own — composes existing platform services,
-  and one access check is stricter than the other three; see the honest gap
-  below
+- **Status**: ⚠️ no backend of its own — composes existing platform services
 
 ## In one paragraph
 
@@ -49,9 +47,6 @@ enrolment status where they left off.
 
 > Whether you can see Bharat Kalp at all comes from one flag on your
 > profile — there's no separate on/off switch for the feature itself.
-
-And that flag is read in four places, one of them more strictly than the
-rest — the gap worth knowing about before it turns into a support ticket.
 
 See [Use Cases](use-cases.md), [APIs](apis.md), [HLD](hld.md) and
 [LLD](lld.md) for the full picture, the

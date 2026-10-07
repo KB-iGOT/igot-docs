@@ -28,10 +28,9 @@ File paths below are relative to each repo's root. Companion to the
 
 | File | Role |
 |---|---|
-| `src/app/app-routing.module.ts` (route `app/amrit-gyaan-kosh`) | Lazy-loads `RouteGyaanKarmayogiModule`; `canActivate: [GeneralGuard]`; resolves `pageData: FormDataResolverService`, `gyaanData: AppGyaanKarmayogiService` |
+| `src/app/app-routing.module.ts` (route `app/amrit-gyaan-kosh`) | Lazy-loads `RouteGyaanKarmayogiModule`; resolves `pageData: FormDataResolverService`, `gyaanData: AppGyaanKarmayogiService` |
 | `src/app/routes/route-gyaan-karmayogi.module.ts` | Thin wrapper re-exporting `GyaanKarmayogiModule` from `@ws/app` |
 | `src/app/services/app-gyaan-karmayogi.service.ts` | Route-resolver service: parallel `forkJoin` of facet search (`sunbirdigot/v4/search`) and sector list (`catalog/v1/sector`) |
-| `src/app/guards/general.guard.ts` | Generic guard — can globally disable the route via `globalConfig.routes['amrit-gyaan-kosh']`; no AGK-specific role/feature check declared on this route |
 | `src/app/component/igot-sarthi/igot-sarthi.component.ts`, `src/app/component/support-ai/support-ai.component.ts` | Build deep-link URLs (`app/amrit-gyaan-kosh/player/<pdf\|video>/<id>?...`) into the AGK player from AI-assistant search results |
 | `project/ws/app/src/lib/routes/search-v3/components/course-content-card/course-content-card.component.ts` | Builds the same deep-link pattern for global search results |
 | `project/ws/app/src/lib/routes/kalp/bharat-kalp-see-all/bharat-kalp-see-all.component.ts` | Same deep-link pattern from Bharat Kalp's content browser |
@@ -40,7 +39,7 @@ File paths below are relative to each repo's root. Companion to the
 
 ```mermaid
 flowchart LR
-    R0["app/amrit-gyaan-kosh\nguard: GeneralGuard\nresolve: pageData, gyaanData"]
+    R0["app/amrit-gyaan-kosh\nresolve: pageData, gyaanData"]
     R0 -- loadChildren --> RGK["RouteGyaanKarmayogiModule\n→ GyaanKarmayogiModule"]
     RGK --> R1["'' → redirectTo 'all'"]
     RGK --> R2["'all' → GyaanKarmayogiHomeComponent\nresolve: tenant-admin.json (GyaanResolverService)"]

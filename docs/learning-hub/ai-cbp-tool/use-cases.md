@@ -14,7 +14,7 @@ gateway path in at least one environment (`API_END_POINTS`,
 `shared.service.ts:9-62`) — upgrading the older "not otherwise confirmed"
 note to a cross-repo-verified fact. No client in any of the three repos
 calls `ai-cbp-mdo-service` directly by host or under a discoverable gateway
-prefix; its public-facing path is unverified.
+prefix; its gateway path is unverified.
 
 ## Document journeys (`cbp-ai-service`, author-facing)
 
@@ -469,7 +469,6 @@ content to a new scope (`copy_role_mapping_by_designation.py`).
 | SPV designation approval, iGOT reports "Already Present" | Still recorded as an approved request (different confirmation message), with no `designation_id` captured |
 | Course added to a CBP plan from iGOT search or a suggestion (not the AI recommendation) | Stamped with a fixed relevancy of 90 (`DEFAULT_RELEVANCY_SCORE` — the same setting name and default exist independently in both `cbp-ai-service` and `ai-cbp-mdo-service`) |
 | `cbp-ai-ui`'s "Suggest Course from iGOT" search | Bypasses `cbp-ai-service`'s own `/course/suggestions` proxy entirely, calling a hardcoded `https://<PORTAL_HOST>/api/content/v1/search` directly, even in non-production builds |
-| `cbp-ai-ui` auth headers | No global interceptor attaches `Authorization`; each `SharedService` method rebuilds it from `localStorage` per call, and some reuse a header object captured once at service construction — a token refreshed later may not reach every call |
 | `cbp-ai-ui` dashboard route | `routeToDashboard()` exists and is wired to a route, but the UI button that would call it is commented out in the template — effectively unreachable from the running app |
 
 > **Verification boundary:** use cases above are traced to `cbp-ai-service`
