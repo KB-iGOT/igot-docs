@@ -26,8 +26,6 @@ logs/DB access, not just the one the ticket happened to name.
 | Email notifications (both) | Outbound only, each independently gated by its own `ENABLE_EMAIL_NOTIFICATION` flag | The two services can have notifications enabled/disabled independently of each other — check the right one |
 | Approval loop | Closed, but **per item, not per request** — `ai-cbp-mdo-service`'s publish can leave a request `APPROVED` with some items still `FAILED` | Never assume "request shows APPROVED" means every designation actually published — check item-level status |
 | Health checks | `cbp-ai-service` has `GET /api/v1/health`; `ai-cbp-mdo-service` has **no health/liveness endpoint at all** | Liveness probes for `ai-cbp-mdo-service` cannot use an HTTP health check the way `cbp-ai-service`'s can |
-| Auth model | `cbp-ai-service` issues and validates its own JWTs (DB-backed sessions); `ai-cbp-mdo-service` instead verifies externally-issued RS256 JWTs against iGOT/Sunbird's realm certs, via a custom `x-authenticated-user-token` header | A token valid against one service is not automatically meaningful to the other — they are not interchangeable, and `ai-cbp-mdo-service`'s `REQUIRED_ROLES` setting is defined but unused (roles are hardcoded per route) |
-| Container (`cbp-ai-service`) | Runs as root (no `USER` in `Dockerfile` on this branch) | Flag for security review — `ai-cbp-mdo-service`'s own `Dockerfile` does create a non-root `appuser`, so the two sibling services differ here |
 | `cbp-ai-ui` deployment | Built with `ng build` (not `--configuration production`) inside its `Dockerfile`, served via Apache HTTPD (`httpd:alpine`) from `dist/cbp-ai-ui`, expected under a `/training-pla-ai/` sub-path | The Docker image as written does not apply Angular's `production` build configuration/environment file unless CI overrides the build command — worth confirming per environment |
 | `cbp-ai-ui` backend URL | Read at runtime from a static JSON asset (`assets/jsonfiles/configurations.json`'s `portalURL`), not from an Angular environment file | Switching `cbp-ai-ui` to point at a different backend means replacing this JSON asset in the deployed build, not rebuilding with a different `--configuration` |
 
@@ -43,7 +41,6 @@ logs/DB access, not just the one the ticket happened to name.
 | `COURSE_RECOMMENDATION_MIN_RELEVANCY` (80) / `DEFAULT_RELEVANCY_SCORE` (90) | Recommendation cutoff / fixed score for non-AI-sourced plan courses | If recommendations look sparse, check this floor before assuming the search itself is broken. `ai-cbp-mdo-service` has its **own**, independently-configured `DEFAULT_RELEVANCY_SCORE` (also default 90) for courses it adds during MDO review — the two settings are not shared |
 | `ENABLE_EMAIL_NOTIFICATION`, `NOTIFICATION_BASE_URL`, `SPV_PORTAL_URL`, `MDO_PORTAL_URL` | Email gate + outbound targets | All default to empty/`False` — must be set per environment or approval/designation emails silently never send |
 | `DOCUMENT_STORAGE_TYPE` | `local` or `gcp` | Determines whether uploaded PDFs live on local disk (`DOCUMENT_STORAGE_ROOT`) or GCS (`GCP_STORAGE_BUCKET`) |
-| `ENABLE_TOKEN_BLACKLIST` | Session-backed JWT validation | If `True` (default), logout/session-cleanup actually invalidates tokens server-side; if disabled, a "logged out" JWT stays valid until expiry |
 | `CB_EXT_COURSE_SERVICE_URL` | External publish-API base URL | Not part of the app's `Settings` — read directly from the environment only by `bulk_scripts/bulk_training_plan_approval.py`; irrelevant to the running API service; **not confirmed** to be the same downstream target as `ai-cbp-mdo-service`'s `KB_BASE_URL` |
 
 ## Important configuration — `ai-cbp-mdo-service`
@@ -51,10 +48,7 @@ logs/DB access, not just the one the ticket happened to name.
 | Setting | Meaning | Why it matters |
 |---|---|---|
 | `DATABASE_URL` | Postgres connection string, required, no default | **Must point at the same physical database as `cbp-ai-service`** — if it doesn't, MDO admins will simply see no requests, with no error to indicate why |
-| `KB_BASE_URL` (default `https://portal.dev.karmayogibharat.net`) | Base URL for every outbound iGOT call: CBP-plan create/publish, designation create, content/designation search, and the JWKS certs endpoint used for auth | A wrong value here breaks both the publish flow *and* login (both hit this host) |
-| `KB_AUTH_TOKEN` | Static token sent as `Authorization` to iGOT | Inconsistently prefixed across call sites — most calls send it raw, one CRUD call site prepends `Bearer ` (`crud/mdo_approval_request.py:437`) — worth checking if iGOT-side auth failures cluster around that one call path |
-| `SUNBIRD_SSO_REALM` / `SUNBIRD_SSO_URL` | Used to build the issuer-check URL for JWT validation | **Not** used to build the JWKS certs URL, which is hardcoded to the `sunbird` realm regardless of this setting (`core/auth.py:12`) — a non-default realm would only affect issuer validation, not key fetching |
-| `REQUIRED_ROLES` (default `["MDO_ADMIN","MDO_LEADER"]`) | Declared setting | **Unused** — every route's actual required roles are hardcoded literals at the call site; changing this setting has no effect anywhere |
+| `KB_BASE_URL` (default `https://<PORTAL_HOST_DEV>`) | Base URL for every outbound iGOT call: CBP-plan create/publish, designation create, content/designation search| A wrong value here breaks the publish flow |
 | `ENABLE_EMAIL_NOTIFICATION`, `NOTIFICATION_BASE_URL` | Email gate + target, independent of `cbp-ai-service`'s own equivalents | Must be set per environment or MDO/SPV outcome emails silently never send, even if `cbp-ai-service`'s own flag is on |
 | `DEFAULT_RELEVANCY_SCORE` (90) | Score stamped on a course added during MDO review via `course/add` | Independent of `cbp-ai-service`'s same-named, same-default setting |
 
@@ -64,7 +58,6 @@ logs/DB access, not just the one the ticket happened to name.
 |---|---|---|
 | `assets/jsonfiles/configurations.json` → `portalURL` | Runtime backend base URL, fetched at app-init | The actual environment switch — not `environment.ts`/`environment.prod.ts`, which carry no API URL at all |
 | `assets/jsonfiles/configurations.json` → `isMaintenancePage` | Intended maintenance-mode flag | Not actually wired to anything in the code reviewed — the maintenance check inspects the URL for `/maintenance` directly, ignoring this field |
-| `localStorage['loginData']` | Bearer token storage | Kept in `localStorage`, not an httpOnly cookie — an XSS on this app is a full session-takeover vector; flag for security review alongside `cbp-ai-service`'s own open-CORS note |
 
 ## Operational workflows — `cbp-ai-service` (author side)
 
@@ -128,7 +121,7 @@ all-or-nothing.
   request.
 - If it returns `502`: **every** eligible item failed its iGOT round-trip —
   the request itself is left `PENDING`, unchanged; check `KB_BASE_URL`
-  reachability and `KB_AUTH_TOKEN` validity first.
+  reachability first.
 - If it returns success but the response shows `items_failed > 0`: the
   request is now `APPROVED` regardless, with the failed items sitting
   `FAILED` — use `/publish/retry` per item rather than re-running the whole
@@ -164,7 +157,7 @@ safe to retry. Reject never calls iGOT.
 
 **No health endpoint**: `ai-cbp-mdo-service` has no `/health` or equivalent
 route — liveness/readiness checks against this service must rely on a TCP
-check or an actual authenticated API call, not an HTTP health probe.
+check or an actual API call, not an HTTP health probe.
 
 ## Offline bulk-onboarding pipeline (`bulk_scripts/`, in `cbp-ai-service`)
 
@@ -208,10 +201,7 @@ own audit table (`mdo_approval`).
 - No migration tool on either backend — schema changes require reviewing model file diffs directly, not a migration log, and the two services' mirrored tables have no shared source of truth.
 - No admin endpoint anywhere (either repo) to force-approve, force-reject, or repair a stuck `ApprovalRequest`/`DesignationApproval` beyond `ai-cbp-mdo-service`'s own approve/reject/retry endpoints.
 - No dedup safeguard in `batch_send_approval_requests.py` — re-running it duplicates requests and emails.
-- `cbp-ai-service` container runs as root on this branch — no non-root user configured in its `Dockerfile`; `ai-cbp-mdo-service`'s `Dockerfile` does create one.
-- `cbp-ai-service` CORS is configured with `allow_origins=["*"]` and `allow_credentials=True` together (`src/main.py:48-54`) — a combination most browsers/spec guidance treat as unsafe; flag for security review. `ai-cbp-mdo-service`'s CORS is also `allow_origins=["*"]` but with `allow_credentials=False`, which is internally consistent given its header-based (not cookie-based) auth.
 - `ai-cbp-mdo-service` has no test suite and no health endpoint at all (confirmed absent, not just unlisted).
-- `cbp-ai-ui`'s token lives in `localStorage`, and no request interceptor globally attaches it — some `SharedService` methods reuse a header captured once at construction, which can go stale after a token refresh.
 - `cbp-ai-ui`'s own unit/E2E test suite is largely unmodified Angular-CLI boilerplate asserting text (`'sunbird-cb-staticweb app is running!'`) that doesn't exist in the current app — it does not exercise this feature at all, and some specs cannot pass as written.
 
 ## Escalation
@@ -226,7 +216,7 @@ own audit table (`mdo_approval`).
 | Approval request `APPROVED` but some items `FAILED` | `ai-cbp-mdo-service` team | Check `mdo_approval` rows with `igot_cbp_plan_id IS NULL` for that request; retry via `/publish/retry` |
 | Designation-naming request stuck | SPV admin / `ai-cbp-mdo-service` operations team | Confirm the request is genuinely still `PENDING` in the shared table, not just unreflected in whatever frontend the SPV admin uses (not part of this trace) |
 | Publish-to-iGOT failures (bulk pipeline) | `cbp-ai-service` team + CB-ext-course-service owner | `bulk_training_plan_approval.py`'s outcome CSV shows a failed `create`/`publish` call — remember this is a **different** downstream target from `ai-cbp-mdo-service`'s own publish calls |
-| `cbp-ai-ui` shell issues (login, routing, session expiry) | `cbp-ai-ui` team | Bug is in `app.component.*`, `shared.service.ts`, or the auth interceptor |
+| `cbp-ai-ui` shell issues (login, routing, session expiry) | `cbp-ai-ui` team | Bug is in `app.component.*`, or `shared.service.ts` |
 | CBP author's actual wizard screens (upload UI, role-mapping editor, course selection) | Owner of the `@sunbird-cb/cbp-ai` library (not this repo) | Bug is in a screen this trace cannot see the source of |
 
 ## FAQ

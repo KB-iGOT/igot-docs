@@ -27,12 +27,11 @@ scanning every plan in the org. The learner sees their assigned plans —
 bucketed into Upcoming / Overdue / APAR / Completed — in the public portal's
 `cbp` module. Separately, an entirely different pipeline exists: an AI
 service (`cbp-ai-service`) generates designation-wise "AICBP" plans in bulk
-and an operator publishes them directly against the backend, bypassing the
-Org Portal UI entirely. And running underneath all of this, in parallel, are
+and an operator publishes them through the backend API. And running underneath all of this, in parallel, are
 **four independently-tabled generations of the same feature** — `cb_plan`
 (v1, in `sunbird-cb-ext`), `cb_plan_v2`, and `cb_plan_v3` (shared by both the
-v3 and v4 API surfaces, in `cb-ext-course-service`) — all still whitelisted
-and reachable today.
+v3 and v4 API surfaces, in `cb-ext-course-service`) — all still available
+today.
 
 ## How this plays out for each actor
 
@@ -58,7 +57,7 @@ and reachable today.
 6. **Separately, Platform Ops runs a 7-stage AI pipeline** (`cbp-ai-service`)
    that drafts "AICBP" plans per designation and bulk-publishes them by
    calling `cb-ext-course-service`'s `aicbp/create`+`aicbp/publish` endpoints
-   directly — no Org Portal step, no uiproxy hop.
+   directly, with no Org Portal step.
 
 ## Actors
 
@@ -81,7 +80,7 @@ and reachable today.
 > utility), and **v3/v4** (`cb_plan_v3` — confirmed by config
 > (`cbplan.v4.plan.table=cb_plan_v3`) to be the *same table* for both API
 > versions; v4 layers reusable-user-group targeting on top of v3's data).
-> All four are still whitelisted in `sunbird-cb-uiproxy` today. The Org
+> All four are still served today. The Org
 > Portal's own service file calls all four families side by side.
 
 See [Use Cases](use-cases.md), [APIs](apis.md), [HLD](hld.md) and

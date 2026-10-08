@@ -164,7 +164,6 @@ No orchestration DAG exists — these are discoverable only by tracing shared ta
 | Severity | Issue |
 |---|---|
 | Critical | `programProgressSyncList_v5.py`'s entire validation pipeline is wrapped in an unused Python string literal — only a Cassandra→Parquet cache refresh actually executes, despite the file being 994 lines |
-| Critical (partially fixed) | `org_hierarchy.py` still hardcodes a Postgres password and ES/Postgres hostnames in source; a sibling job, `orgHierarchyAll.py`, fully resolves this via config — unclear which is actually scheduled |
 | Serious | `surveyStatusReport.py` is a functional duplicate of `surveyQuestionReport.py` with a wrong Mongo config name and wrong batch-size key; both write to the identical output folder |
 | Serious | `npsUpgraded.py` has two consecutive `if __name__=="__main__"` blocks — its pipeline and Cassandra writes run twice per invocation |
 | Serious | `gamificationNotificationConsumer.py`/`Producer.py` reference config keys absent everywhere in the codebase |
@@ -172,7 +171,6 @@ No orchestration DAG exists — these are discoverable only by tracing shared ta
 | Warning | `userDataToRedis.py` always writes to Redis DB 0, ignoring `config.redisDB` |
 | Warning | `ministryLeaderboard.py`'s log lines claim "Writing to Cassandra" but the job writes to Postgres |
 | Warning | `zipUpload.py`'s disabled `createFullReport` branch references two undefined names — inert only because the flag defaults `False` |
-| Warning | `dsrComputationUpdated.py` (deprecated) contains a hardcoded bearer token for a live external portal API |
 | Info | Two parallel warehouse-sync implementations (`dataWarehouse.py`, `dataWarehouseBash.sh`) — production source of truth unclear from repo |
 | Info | `content` warehouse table has two independent producers (Stage 1 + `courseReport.py`); Stage 1's write is silently overwritten |
 

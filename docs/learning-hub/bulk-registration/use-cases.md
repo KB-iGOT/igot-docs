@@ -10,7 +10,7 @@ in [index.md](index.md)).
 | ID | Use case | Detail | API |
 |---|---|---|---|
 | UC-1 | Download the CSV template | A per-org sample file path resolved from route config; NGO orgs get a different sample file/name than standard orgs. There is no template file committed in any traced repo — the field list is either a Cassandra `system_settings` entry (`userProfileConfig`/`csv`) or, if absent, a hardcoded array in `DataCacheHandler.bulkUserAllowedFields` (`firstName, lastName, phone, countryCode, email, userName, roles, position, location, dob, language, profileSummary, subject, externalIdProvider, externalId, externalIdType, externalIds`). | `FileService.download()` (static asset fetch, orgportal) |
-| UC-2 | Bulk-create government/MDO users | Picks a `.csv` file (≤10 MB, extension-checked client-side), completes an OTP challenge sent to the *admin's own* email/phone, then uploads. No row-count cap enforced client-side. | POST `/apis/proxies/v8/user/v3/bulkupload?orgId=&channel=` (falls back to `v2/bulkupload` if no org context) |
+| UC-2 | Bulk-create government/MDO users | Picks a `.csv` file (≤10 MB, extension-checked client-side), completes an OTP challenge sent to the *admin's own* email/phone, then uploads. | POST `/apis/proxies/v8/user/v3/bulkupload?orgId=&channel=` (falls back to `v2/bulkupload` if no org context) |
 | UC-3 | Bulk-create NGO/volunteer users | Same flow, gated on `OrgHierarchyService.getOrgData().isNgo`; posts `file` + `targetorgid` instead of `data`. Backend enforces a 10,000-row cap (`nongovt.bulk.upload.max.rows`) not visible to the UI. | POST `/apis/proxies/v8/user/nongovt/v1/bulkupload` |
 | UC-4 | Check batch status | A one-time (non-polling) re-fetch of a paginated list of the admin's own past uploads, keyed by org, showing batch-level total/success/failed counts — no per-row detail inline. | GET `/apis/proxies/v8/user/v1/bulkupload/{rootOrgId}` |
 | UC-5 | Download the result file | Per-row pass/fail and error messages are visible only in a downloadable CSV, never inline in the UI table. | GET `/apis/proxies/v8/user/v1/bulkuser/download/{fileName}` |
@@ -19,7 +19,7 @@ in [index.md](index.md)).
 
 | ID | Use case | Detail | API |
 |---|---|---|---|
-| UC-6 | Bulk-register users (legacy, department-scoped) | A separate admin UI (`admin`/`register-admin` role), functionally unchanged since 2021, that reads the file as a base64 data URL and posts JSON — no OTP gate, no client-side size cap, `.xlsx` only. Hits an entirely different backend path than UC-2/UC-3, bypassing both `sunbird-cb-ext` and `sunbird-lms-service` (see [HLD](hld.md)). | POST `/apis/protected/v8/admin/userRegistration/bulkUpload` |
+| UC-6 | Bulk-register users (legacy, department-scoped) | A separate admin UI (`admin`/`register-admin` role), functionally unchanged since 2021, that reads the file as a base64 data URL and posts JSON, `.xlsx` only. Hits an entirely different backend path than UC-2/UC-3, not using `sunbird-cb-ext` or `sunbird-lms-service` (see [HLD](hld.md)). | POST `/apis/protected/v8/admin/userRegistration/bulkUpload` |
 | UC-7 | Check legacy batch status | Same one-time-refresh pattern as UC-4, against the legacy path's own status/report endpoints. | GET `/apis/protected/v8/admin/userRegistration/bulkUploadData`, `.../bulkUploadReport/{id}` |
 
 ## Not surfaced in any traced UI

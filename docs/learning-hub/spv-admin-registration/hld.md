@@ -22,8 +22,8 @@ flowchart LR
         DA["Designation approval"]
     end
 
-    UP["sunbird-cb-uiproxy: keycloak session + path-only role allow-list"]
-    KONG["Kong (jwt + acl groups)"]
+    UP["sunbird-cb-uiproxy: keycloak session + role allow-list"]
+    KONG["Kong"]
 
     subgraph EXT["sunbird-cb-ext"]
         ORG["ExtendedOrgService: create, update v2"]
@@ -76,21 +76,14 @@ flowchart LR
 | Component | Owns | Repo |
 |---|---|---|
 | Admin portal | Directory, create-organisation drawer, legacy create-department forms, Create user, Users / State-users / Roles-users, Add-admin popup, registration-link drawer, Requests, Designation approval, hierarchy mapping | `sunbird-cb-adminportal` |
-| uiproxy | Keycloak session, path-only role allow-list, STATE_ADMIN scoping of `org/v1/search`, admin `createUser` orchestration | `sunbird-cb-uiproxy` |
+| uiproxy | Keycloak session, role allow-list, STATE_ADMIN scoping of `org/v1/search`, admin `createUser` orchestration | `sunbird-cb-uiproxy` |
 | cb-ext | Organisation create / update v2 with `org_hierarchy` sync and the new-org Kafka event; registration link + QR; designation-master upsert | `sunbird-cb-ext` |
 | Core user service | The organisation record (status machine), the user, role assignment and its validator | `sunbird-lms-service` |
 | Workflow | Organisation / position / domain request records and transitions; domain approval writes the pre-approved-domain row | `sunbird-cb-workflow` |
-| Gateway | Kong routes, ACL groups, rate limits | `sunbird-devops` |
+| Gateway | Kong routes | `sunbird-devops` |
 | Outside the repos | Menu / page config, portal-entry roles (`igot_spvrules`), request state graphs, designation-approval service, new-org Kafka consumer | — |
 
 ## Key design decisions
-
-**Authorization lives in the proxy, not in the portal.** No admin-portal
-route has `requiredRoles`; `GeneralGuard` would honour them but is never
-given any, and the SPV check in `DepartmentResolve` is commented out. The
-only hard gate is the uiproxy allow-list — by path, regardless of method.
-The portal-entry check (`environment.portalRoles`, Helm `igot_spvrules`) is
-the one place a role keeps someone out entirely.
 
 **Organisation creation is orchestrated in cb-ext, not the core service.**
 `org/ext/v1/create` decides top-level versus child, derives the hierarchy id
@@ -107,17 +100,14 @@ users of the organisation only).
 **Requests are records, not actions.** Approving an *organisation* or
 *position* request only changes its status and notifies; approving a *domain*
 request is the one that has an effect (it adds the pre-approved domain).
-Request creation is public at the gateway.
 
-**State Admin is a scoped SPV, partially.** The proxy narrows the directory
+**State Admin is a scoped SPV.** The proxy narrows the directory
 to the State Admin's state, the drawer fixes category and state, and the
 core service lets a State Admin act on organisations whose
-`ministryOrStateId` is their own — but several gateway rules and screens
-were never extended to State Admin (volunteer status, workflow requests,
-profile patch for SPV).
+`ministryOrStateId` is their own.
 
 > **Verification boundary:** facts above are read from the repos listed at
 > the top. Not analysed from source: the left-menu page configuration, the
-> portal's Kong ACL groups, the workflow state graphs, the
+> workflow state graphs, the
 > `dev.org.hierarchy.new.org` consumer, `ai-cbp-mdo-service`, and whatever
 > serves the legacy `/portal/spv/*` routes.

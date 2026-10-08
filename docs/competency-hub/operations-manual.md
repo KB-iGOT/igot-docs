@@ -114,15 +114,6 @@ returned 200 before any of that ran).
   `accesstoken.publickey.basepath`/`sunbird_sso_url`/`sunbird_sso_realm`
   properties. As committed, this file will not parse cleanly — resolve the
   conflict before deploying from this exact commit.
-- **`KeycloakValidation.isExpired()` looks logically inverted** — flagged,
-  not confirmed exploitable, in the source analysis. Worth a deliberate
-  look before relying on this service's token-expiry enforcement in a
-  security-sensitive context.
-- **`verifyAllDataNode` (bulk-verify) has no role check in the
-  controller**, unlike the single-node `verifyDataNode`. If bulk review
-  actions are showing up from unexpected callers, this is why — and it's
-  not gated anywhere else in this trace either (Kong/uiproxy don't add a
-  role check on top).
 
 ## Caching and consistency
 
@@ -196,7 +187,7 @@ then suspect client-side rendering.
   failed batch were not confirmed in this trace.
 - `frac-backend` has three disagreeing port numbers across its own config
   (`8091`/`8083`/`8090`), an unresolved merge-conflict marker checked into
-  `application.properties`, and a possible token-expiry logic inversion —
+  `application.properties` —
   see "configuration issues" above before treating it as production-ready
   as-is.
 - No competency self-assessment or gap-scoring engine exists in this

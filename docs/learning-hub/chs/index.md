@@ -1,6 +1,6 @@
 # CHS — Analytics & Warehouse Pipeline
 
-- **Repository**: `KB-iGOT/cb-core-data`, branch `cbrelease-4.8.40`
+- **Repository**: `<ORG>/cb-core-data`, branch `cbrelease-4.8.40`
 - **Who it's for**: no Karmayogi ever opens this directly — it runs unattended and shapes what four other groups see
 
 ## What it is

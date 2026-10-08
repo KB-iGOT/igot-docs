@@ -43,7 +43,7 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 | FR-011 | Each catalog row SHALL be transformed using a partner-specific JOLT transform spec fetched from `cb-pores-service`, then validated against a JSON-Schema before persistence. | `DataTransformUtility.processRowsAndCreateLogs()`, lines 499-532; `PayloadValidation/ContentFileValidation.json` |
 | FR-012 | A content item's `courseType` SHALL default to `"paid"` if not supplied in the source row. | `DataTransformUtility.updateProcessedDataInDb()`, lines 366-369 |
 | FR-013 | Re-ingesting a catalog row whose existing content is already `live` or `draft` SHALL be a no-op (confirmed empty branch, not merely undocumented). | `DataTransformUtility.saveOrUpdateCornellContent()`, lines 410-412 |
-| FR-014 | The system SHALL support four partner-specific progress-sync jobs (Cornell, Coursera, CDAC, Harvard), each independently triggerable via a scheduler endpoint. | `SchedulerController`, lines 34-56 |
+| FR-014 | The system SHALL support four partner-specific progress-sync jobs (Cornell, Coursera, CDAC, Harvard). | `SchedulerController`, lines 34-56 |
 
 ### Curation and publishing
 
@@ -53,7 +53,7 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 | FR-021 | A curator SHALL be able to tag a course with competency area/theme/sub-theme and free-text search tags before publishing. | `competency-configuration.component.ts`; `compentencies-mapping.component.ts` |
 | FR-022 | A curator SHALL be able to set `courseType`, `courseEnrolLimit`, and `requiredKarmaPoints` on a course, with course-type and karma-point fields locked once the course's status is `live`. | `compentencies-mapping.component.ts`, `isCoursePublished` getter, line 322 |
 | FR-023 | Saving as draft and publishing SHALL both route through the same onboard-content API, distinguished only by a `status` parameter. | `MarketPlaceServicesService.formateOnboardContent()`, lines 93-132 |
-| FR-024 | A curator SHALL be able to preview a course exactly as a learner would see it, via the same public CIOS detail URL used at runtime. | `curation-content.component.ts` `openPreview()`, lines 792-799 |
+| FR-024 | A curator SHALL be able to preview a course exactly as a learner would see it, via the same CIOS detail URL used at runtime. | `curation-content.component.ts` `openPreview()`, lines 792-799 |
 
 ### Enrollment and entitlement
 
@@ -78,20 +78,16 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| NFR-001 | Every marketplace/CIOS/partner gateway route SHALL be subject to JWT auth, CORS, metrics, role-based ACL, and hourly rate-limiting, applied uniformly by the same 5-plugin Kong stack used for every other domain. | `ansible/roles/kong-api/defaults/main.yml`, sampled routes lines 826-840, 13765-13780 |
-| NFR-002 | Partner-record CRUD endpoints (`contentpartner/v1/create|update|read|search|delete`) SHALL require only the baseline `PUBLIC` session role, while `activate` and `register/*` endpoints SHALL require an admin role — this is the as-shipped access model, not a claim that it is the intended one. | `whitelistApis.ts`, lines 4209-4243 vs. 6895-6970, 7034 |
 | NFR-003 | Search-result and provider-record lookups SHALL be cached in Redis with a configurable TTL (default 600s). | `application.properties:50`; `ContentPartnerServiceImpl.generateRedisJwtTokenKey()`, lines 449-461 |
 
 ## Constraints / assumptions baked into the build
 
 | ID | Constraint | Source |
 |---|---|---|
-| CON-001 | Neither the Admin Portal's `marketplace-provider` routes nor the Creation Portal's `market-place`/`curation`/`external-contents` routes carry a client-side `canActivate` guard — access control, if any, is entirely server-side. | `marketplace-provider.module.ts` route definitions; `ws-auth-root-routing.module.ts` lines 44-51; absence confirmed by repo-wide `canActivate`/`guard` grep in both repos |
 | CON-002 | There is no dedicated backend base-URL configuration for CIOS/content-partner traffic in `sunbird-cb-uiproxy` — every such request rides the single shared `KONG_API_BASE`, meaning routing decisions for this feature are made entirely inside Kong (`sunbird-devops`), outside the proxy repo's visibility. | `src/utils/env.ts`, lines 5-179 (no `CIOS_API_BASE`/`PORES_API_BASE` present) |
 | CON-003 | No typed domain model exists for `Provider`, marketplace course, or content-upload log rows anywhere in the Admin Portal's marketplace module — everything is `any`-typed and accessed via lodash `.get()` path strings. | Confirmed absent across `routes/marketplace-provider/`; only `SsoConfiguration` and two filter-tree models are typed |
 | CON-004 | Two structurally independent onboarding UI flows coexist in the Admin Portal (`onboard-partner` legacy, `configure-provider` current); the dashboard only ever links to the current one, leaving the legacy flow reachable only by a bookmarked/typed URL. | `market-place-dashboard.component.ts`, `navigateToConfiguration()` (dead, line 272) vs. `navigateToConfigurationV2()` (live, line 280) |
 | CON-005 | The learner-facing CIOS detail/enroll page depends on a third-party npm package (`@sunbird-cb/collection-v2`) whose source is not present in any of the 9 repos traced — its actual REST contract with the backend cannot be verified from this codebase. | `AppTocCiosHomeComponent`; `package.json:54` |
-| CON-006 | `cios-content-service` has Kong routes and a Helm chart but no confirmed Jenkins build/deploy job and is absent from the `deploy-igot` Ansible service list — its actual deployment mechanism is unconfirmed. | `kubernetes/ansible/roles/deploy-igot/tasks/main.yml`, lines 66-90; `find deploy/jenkins -iname "*cios*"` → zero results |
 
 > **Verification boundary:** every requirement above traces to a specific
 > file/function in one of the 9 repos listed in [index.md](index.md); none

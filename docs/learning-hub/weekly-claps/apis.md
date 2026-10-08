@@ -25,9 +25,7 @@ part of this feature):
 | POST | `/user/v2/insights` | `W4` | The mode every traced client actually consumes |
 | POST | `/chatbot/v2/insights` | `W12` | A 12-week history mode; no client in this documentation set's repos calls it — presumably consumed by a chatbot service outside this set |
 
-Both require header `x-authenticated-userid` (no further authorization
-check in this repo — the header is trusted, the same convention used by
-~10 other controllers in this codebase) and read the body only for
+Both require header `x-authenticated-userid` and read the body only for
 `request.filters.organisations` (used solely by the separate, same-response
 "nudges" section — claps are not filtered by it).
 

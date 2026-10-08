@@ -10,7 +10,7 @@ apply here since none of this traffic goes through the platform's API gateway.
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| GET | Framework/FRAC backend (`api_url_template`, host from `fracBackendHost` config) | Resolves org-hierarchy data consumed by `org_hierarchy.py` / `orgHierarchyAll.py`. `orgHierarchyAll.py`'s call sends no `Authorization` header at all — a gap, not a documented public endpoint. |
+| GET | Framework/FRAC backend (`api_url_template`, host from `fracBackendHost` config) | Resolves org-hierarchy data consumed by `org_hierarchy.py` / `orgHierarchyAll.py`. |
 
 ## Data sources read (Stage 0 extract)
 
@@ -27,7 +27,7 @@ apply here since none of this traffic goes through the platform's API gateway.
 | System | Protocol | Purpose |
 |---|---|---|
 | Postgres (`warehouse` schema) | JDBC, full truncate-and-reload | 12 core BI tables — `user_detail`, `content`, `content_resource`, `assessment_detail`, `bp_enrolments`, `cb_plan`, `org_hierarchy`, `kcm_content_mapping`, `kcm_dictionary`, `events`, `events_enrolment`, `user_enrolments`. Two independent implementations coexist (`dataWarehouse.py`, `dataWarehouseBash.sh`) — which is production-live is not determinable from the repo. |
-| BigQuery | `bq`/`gsutil` CLI, full delete-and-reload | Mirrors the same 12 tables (project `prj-kb-prd-looker-gcp-1014`, dataset `kb_prod_dataset`); table names diverge for events data (`events`/`events_enrolment` vs. `event_details`/`event_enrolment_details`). |
+| BigQuery | `bq`/`gsutil` CLI, full delete-and-reload | Mirrors the same 12 tables (project `<GCP_PROJECT>`, dataset `<BQ_DATASET>`); table names diverge for events data (`events`/`events_enrolment` vs. `event_details`/`event_enrolment_details`). |
 | Redis (main + a separate "karma points" instance) | `redis` client via `dfutil/utils/redis.py` | 50+ live-dashboard keys, per-user profile snapshots (`user:{user_id}`), ZIP-bundle passwords for the notification/portal layer. |
 | Cassandra | Spark Cassandra connector / direct writes | Leaderboards, karma-points ledger (append-only), notification feeds (in-app review nudges, NPS prompts). |
 | Kafka | Spark Kafka sink | Declared for `workFlowSummarizer.py` (not functionally active — no live data source wired in this branch) and several side-output topics; peer-validation and gamification-notification flows use a Postgres outbox instead, despite class naming. |

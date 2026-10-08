@@ -44,11 +44,10 @@ deployed today," not "what this commit changed."
 | Env var | Default | Purpose |
 |---|---|---|
 | `KARMAYOGI_API_KEY` | — (required, raises at startup if unset) | Service-account bearer token for Karmayogi content-API calls |
-| `KARMAYOGI_BASE_URL` | `https://igotkarmayogi.gov.in` | Content search API host |
-| `LEARNING_AI_BASE_URL` | `https://learning-ai.prod.karmayogibharat.net` | Transcoder-stats API host (VTT discovery) |
+| `KARMAYOGI_BASE_URL` | `https://<PORTAL_HOST>` | Content search API host |
+| `LEARNING_AI_BASE_URL` | `https://<LEARNING_AI_HOST>` | Transcoder-stats API host (VTT discovery) |
 | `SUNBIRD_SSO_URL` / `SUNBIRD_SSO_REALM` | — | JWKS + issuer validation source |
 | `REQUIRED_ROLE` | `AI_ASSESSMENT_CREATOR` | Role claim gating every `/ai-assessments/v1/*` call |
-| `DISABLE_AUTH_VERIFICATION` | `false` | **Must never be `true` in any shared environment** — bypasses all auth and hardcodes a test user |
 | `DATABASE_URL` | local dev Postgres URL | Job store connection string |
 | `GENAI_MODEL_NAME` | `gemini-2.5-pro` (repo default; seen as `gemini-3.1-flash-lite` in one traced devops env template) | Vertex AI model identifier |
 | `GOOGLE_PROJECT_ID` / `GOOGLE_LOCATION` | — / `us-central1` | Vertex AI project/region |
@@ -139,11 +138,6 @@ fresh token (an old token issued before role grant won't carry the claim).
 - No worker-side health/readiness endpoint — liveness must be inferred from
   Kafka consumer-group lag or job-status progression, not from an HTTP
   check.
-- No per-user rate limiting traced in this service itself (the gateway's
-  Kong config may apply its own, per `sunbird-devops`, but that's outside
-  this repo).
-- `DISABLE_AUTH_VERIFICATION` exists as a real, working bypass — treat any
-  environment where it might be set as unsafe for real user data.
 
 ## Escalation
 

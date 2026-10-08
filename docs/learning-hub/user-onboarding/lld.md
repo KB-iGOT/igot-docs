@@ -11,8 +11,7 @@ Reverse-engineered from code. Paths are relative to each repo;
 
 1. `validateRegisterationPayload` (:376-421): mandatory `FirstName, Email,
    (sbOrgId or mapId), OrgName, Group, Source, Phone`; email via
-   `emailValidation(email, linkBlank)` — the **domain check runs only when
-   `registrationLink` is blank**; phone via `validateContactPattern`; `group`
+   `emailValidation(email, linkBlank)`; phone via `validateContactPattern`; `group`
    in `user.bulk.upload.group.value`.
 2. `isUserExist` for email and for phone (LMS `private/user/v1/search`).
 3. Look up the ES `user_registration` document by `email`; proceed only if
@@ -39,7 +38,7 @@ sequenceDiagram
     participant W as Approval consumer and workflow
     participant L as Core user service
     C->>K: POST user/registration/v1/register
-    K->>X: forward (no jwt)
+    K->>X: forward
     X->>L: private/user/v1/search email and phone
     X->>ES: get by email, index or update (CREATED)
     alt registrationLink present or pre-approved domain
@@ -106,7 +105,7 @@ stateDiagram-v2
    `NOT-VERIFIED`, `professionalDetails[0]{organisationType:"Government",
    designation, group}`, `additionalProperties{group, tag, externalSystemId,
    externalSystem}`, `isWhatsappConsent`.
-4. `assignRole`: POST `/v1/user/public/role/assign` with `["PUBLIC"]`.
+4. `assignRole`: assigns the `PUBLIC` role.
 5. `createNodeBBUser` calls only `getActivationLink` — the NodeBB call is
    commented out.
 6. `getActivationLink`: POST `/private/user/v1/password/reset`
@@ -121,10 +120,10 @@ stateDiagram-v2
 
 `master_data` rows with context type `userRegistrationDomain` and
 `userRegistrationPreApprovedDomain` are the allow-lists; the approved-domains
-API returns their union (500 if empty). `user.registration.domain=gmail.com`
-and `user.registration.preApproved.domain=yopmail.com` exist in
+API returns their union (500 if empty). `user.registration.domain=<TEST_EMAIL_DOMAIN>`
+and `user.registration.preApproved.domain=<TEST_EMAIL_DOMAIN>` exist in
 `application.properties:271-272`, but the validation code reads the DB only;
-the helm template hard-codes `user.registration.domain=yopmail.com`
+the helm template hard-codes `user.registration.domain=<TEST_EMAIL_DOMAIN>`
 (`sb-cb-ext-service-env.j2:204`).
 
 Domain request workflow (`sunbird-cb-workflow`, headers `rootOrg`, `org`):
@@ -151,34 +150,28 @@ into `sunbird.master_data`.
 2. Validate (`validateCreateUserRequest`): `firstName` mandatory; email or
    phone required; email / phone / dob format; password regex when supplied;
    `registeredOrgId, rootOrgId, provider, externalId…` are not allowed.
-3. **Redis guard**: keys `sso:email:<email>` and `sso:phone:<phone>`, TTL
-   `userCreationRedisTTL` (300 s). An existing key throws "Duplicate request:
-   This EMAIL was processed recently…". The key is set **before** any other
-   check and never deleted on failure.
-4. Resolve location codes, then org: channel → root org via ES (`isTenant`,
+3. Resolve location codes, then org: channel → root org via ES (`isTenant`,
    `status=1`), mismatch → `parameterMismatch`; channel and root org both
    blank → custodian org from system settings.
-5. `setUserDefaultValue`: `status=1`, `isDeleted=false`, username generated
+4. `setUserDefaultValue`: `status=1`, `isDeleted=false`, username generated
    from the name when absent, otherwise it must be unique.
-6. External-id and `user_lookup` uniqueness for email / phone
+5. External-id and `user_lookup` uniqueness for email / phone
    ("This EMAIL is already registered with an existing User").
-7. Mask email / phone, generate `userId`, encrypt email / phone, upper-case
-   roles; `emailVerified` / `phoneVerified` are stripped (the `User` model has
-   no such field — every read returns `true`).
-8. `flagsValue`: `STATE_VALIDATED` bit = (`rootOrgId` ≠ custodian org id).
-9. `createUserAndPassword` (:94-120), all in one try/catch that **swallows**
+6. Mask email / phone, generate `userId`, encrypt email / phone, upper-case
+   roles.
+7. `flagsValue`: `STATE_VALIDATED` bit = (`rootOrgId` ≠ custodian org id).
+8. `createUserAndPassword` (:94-120), all in one try/catch that **swallows**
    exceptions: INSERT `sunbird.user` → `user_lookup` rows → `user_login`
    `{firstLogin=now, lastLogin=now}` → Keycloak password update (only when a
    `password` is present).
-10. Roles: INSERT `user_roles` with `scope=[{organisationId: rootOrgId}]`.
-11. `saveUserAttributes`: external ids, then `user_organisation` rows for the
+9. Roles: INSERT `user_roles` with `scope=[{organisationId: rootOrgId}]`.
+10. `saveUserAttributes`: external ids, then `user_organisation` rows for the
     organisation and the root org (`associationType` `SSO`).
-12. Synchronous Elasticsearch save, then reply.
-13. Onboarding mail / SMS — **only if `callerId` is set** (bulk-upload job).
-14. Telemetry.
+11. Synchronous Elasticsearch save, then reply.
+12. Onboarding mail / SMS — **only if `callerId` is set** (bulk-upload job).
+13. Telemetry.
 
-No Kafka event is emitted on any v5 create path. `emailVerified` /
-`phoneVerified` sent by callers are discarded.
+No Kafka event is emitted on any v5 create path.
 
 ### 2.2 Variant pre-steps
 
@@ -186,8 +179,7 @@ No Kafka event is emitted on any v5 create path. `emailVerified` /
 |---|---|---|
 | Self / custom / support | `/v5/cb/user/{self,custom}/register`, `/v5/cb/support/user/create` | Force role `PUBLIC`; build `profileDetails` JSON: `departmentName` = channel, three statuses `NOT-VERIFIED`, `mandatoryFieldsExists=false`, ministry fields from the channel's org |
 | Admin | `/v5/cb/user/create` | Find root org (inactive → error), roles default `PUBLIC`, `MDO_LEADER` uniqueness per org, statuses from request (default `NOT-VERIFIED`), `validateRoleAssignment` |
-| OAuth | `/v5/cb/user/{parichay,oilindia,ntpc}/create` | Role `PUBLIC`; channel forced from config; `emailVerified`/`phoneVerified` set true but discarded |
-| Signup (SSU) | `/v1/user/signup`, `/v2/user/signup` | Custodian org forced; no Redis guard, no `user_login`, no `user_roles`, no `profileDetails`; Keycloak password and ES save run in parallel unless `sunbird_user_create_sync_type=kafka` |
+| OAuth | `/v5/cb/user/{parichay,oilindia,ntpc}/create` | Role `PUBLIC`; channel forced from config |
 
 `validateRoleAssignment`: requester must hold a role ending `_ADMIN` /
 `_LEADER` or `SPV_PUBLISHER` (`admin_role_suffixes`); `spv_roles`
@@ -198,34 +190,11 @@ No Kafka event is emitted on any v5 create path. `emailVerified` /
 requester's org as its ministry/state; roles must exist in the system
 settings `orgTypeConfig` / `orgTypeList`.
 
-### 2.3 Public role assign
-
-`POST /v1/user/public/role/assign` (public route, `userId` and
-`organisationId` mandatory). If the user's first org differs from the request
-the call returns 200 with a mismatch message. Otherwise `assignRole` goes
-through the update branch, which **deletes every other role** and writes
-`PUBLIC` with scope = the organisation; it then syncs ES and publishes a
-`dev.mentorship.user.update` Kafka event.
-
 ## 3. OTP
 
-| Aspect | Value (source) |
-|---|---|
-| Types | `email, phone, prevUsedEmail, prevUsedPhone, recoveryEmail, recoveryPhone` (`OtpRequestValidator`) |
-| Length / TTL | 6 digits; `sunbird_otp_expiration` 1800 s in `externalresource.properties` — **learner-service env hard-codes 900 s** (`sunbird_learner-service.env:136`) |
-| Rate limit | Hour 5, day 20 per key (`sunbird_otp_hour_rate_limit`, `sunbird_otp_day_rate_limit`) → HTTP 429, code 0059 |
-| Attempts | `sunbird_otp_allowed_attempt` = 2; exhausted → code 0076, expired / missing → 0075 |
-| Re-issue | An unexpired OTP is re-sent, not regenerated |
-| Delivery | Async tell; failure is swallowed — response is `SUCCESS` regardless |
-| v3 verify | Returns a JWT `contextToken` (HS256, secret `otpValidationSecretKey`, default `"secretKey"`, 300 s) and does **not** delete the OTP row |
-| v4 verify | Inserts `otp_lookup` (TTL 3600 s) for a one-time `verifyFromLookup` |
-| Auth | v1 / v2 routes public; v3 / v4 / `verifyFromLookup` need a user token |
-
 cb-ext wraps generate: `POST /user/otp/v1/generate` validates the request,
-applies the email-domain check for `type=email`, proxies to the core
-`/v1/otp/generate` and maps `responseCode` to HTTP status (429, 400, 500,
-404). `OTPValidator` (`lms.otp.verify.path=/v1/otp/verifyFromLookup`) is used
-by profile-update flows, **not** by registration.
+applies the email-domain check for `type=email` and proxies to the core
+`/v1/otp/generate`.
 
 ## 4. Custom registration link / QR
 
@@ -264,19 +233,16 @@ end **and** `status = ACTIVE`. `listAllQRCodes` overwrites every row's
 ### 5.1 Learner web
 
 - `/public/signup` (`public-signup.component.ts`, 2471 lines): two-step
-  reactive form; Next sets `currentStep='step2'` in both branches, so step-one
-  validation does not block navigation. reCAPTCHA v3 `execute` is called but
-  the token is never included in the register body.
+  reactive form.
 - `/crp/:qrCodeId/:orgId`: resolver checks link activity, reads org and
   framework, builds the designation list; the submitted designation must be
-  in that list ("Invalid Designation"); reCAPTCHA is commented out.
+  in that list ("Invalid Designation").
 - Guards: `GeneralGuard` redirects an unauthenticated user to
   `loginV2`; the profile-completion and TnC redirects are commented out.
 - `/public/welcome`: `WelcomeUserResolverService` reads `user/basicInfo`; a
   user whose `isUpdateRequired` is false is sent to `/page/home`.
   `profile-v3`'s own welcome redirect is dead (its resolver is commented out).
-- Legacy `app/signup` and `app/auto-signup/:id` remain mounted without a
-  guard in the learner, MDO and admin portals; the matching uiproxy router
+- Legacy `app/signup` and `app/auto-signup/:id` remain mounted in the learner, MDO and admin portals; the matching uiproxy router
   `publicApi_v8/signup.ts` is **never mounted**.
 
 ### 5.2 Mobile
@@ -292,8 +258,6 @@ end **and** `status = ACTIVE`. `listAllQRCodes` overwrites every row's
 - Direct mode org lists come from the remote config
   `modules.registrationConfig`, with a hard-coded fallback in
   `app_global_config.dart`.
-- OTP wrappers in `profile_repository.dart:652-777` `catch (_) { return ''; }`
-  and treat an empty string as success.
 - Keycloak login runs in a WebView; the theme's sign-up link
   `${client.baseUrl}public/signup` is intercepted and replaced by the app's
   own register route.
@@ -310,32 +274,26 @@ end **and** `status = ACTIVE`. `listAllQRCodes` overwrites every row's
 | Cassandra `sunbird` | `master_data` (domain allow-lists), `system_settings` (`wfUserRegServiceConfig`, `custodianOrgId`, …) | cb-ext reads, workflow writes domains |
 | Postgres | `registration_qr_code`, `org_hierarchy_v4` | cb-ext |
 | Postgres | `WfStatusEntity`, `WfDomainLookup`, `WfDomainUserInfo` (table names not captured) | workflow |
-| Redis | `sso:email:<e>`, `sso:phone:<p>` (300 s) | core service; also dept-list cache in cb-ext |
+| Redis | Department-list cache | cb-ext |
 | Kafka | `user.register.event`, `user.register.createUser.event`, `workflow.user.registration.createUser`, `workflowContentTopic`, `workflowNotificationTopic`, `dev.org.hierarchy.new.org`, `dev.public.user.event.bulk.onboard`, `dev.mentorship.user.update`, `dev.user.profile.update` | various |
 
 ## 7. Configuration
 
 | Property | Default | Where |
 |---|---|---|
-| `userCreationRedisTTL` | 300 s | core `externalresource.properties:115` |
 | `sunbird_pass_regex` | ≥8, digit, lower, upper, special | core |
-| `sunbird_otp_*` | see §3 | core + learner env |
-| `enable_captcha` | per env | core (exists v2 only) |
 | `user.bulk.upload.group.value` | `GROUP A,GROUP B,GROUP C,GROUP D,Contractual Staff,Honorarium-Based,Others` | cb-ext `application.properties:345` |
-| `user.registration.dept.exclude.list` | `0133334975707217922` (helm: empty) | cb-ext |
+| `user.registration.dept.exclude.list` | `<ORG_ID_LIST>` (helm: empty) | cb-ext |
 | `user.registration.custodian.orgId` / `.orgName` | `{{reg_orgid}}` / `iGOT` | helm |
 | `url.custom.self.registration` | `https://{{domain_name}}` | helm `:498` |
 | `qr.custom.self.registration.skip.validation` | `false` (injected, usage not found) | helm `:499-504` |
-| `X_CHANNEL_ID` | `0131397178949058560` | uiproxy `env.ts:169` |
-| `KC_NEW_USER_DEFAULT_PWD` | `User@123` (legacy route only) | uiproxy `env.ts:52` |
-| `PORTAL_API_WHITELIST_CHECK` | `true` | uiproxy / helm `:194` |
+| `X_CHANNEL_ID` | `<HOLDING_ORG_ID>` | uiproxy `env.ts:169` |
 | `PORTAL_CREATE_NODEBB_USER` | `false` | uiproxy |
-| Keycloak realm template | `registrationAllowed: true`, `verifyEmail: false`, password policy length + upper + lower + digit + special, `passwordHistory(1)` | `keycloak-realm.j2` |
 
 ## 8. Known bugs and dead code (observed)
 
-Listed in [As-Built Requirements](as-built-requirements.md) under DEV-001 …
-DEV-016.
+Listed in [As-Built Requirements](as-built-requirements.md) under the DEV
+entries.
 
 > **Verification boundary:** facts above are read from the repos named at
 > the top of [index.md](index.md). Not analysed from source: the

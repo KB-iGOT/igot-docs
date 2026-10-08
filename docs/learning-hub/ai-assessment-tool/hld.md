@@ -104,10 +104,8 @@ out (`cbp-ai-ui`, `sunbird-cb-creationportal`).
   separate cache layer (e.g. Redis) for generated results, unlike Learning
   Pathway's Redis-cached enriched reads.
 - **Access control is entirely claim-based, not service-to-service.**
-  `ai-assessment-service` trusts whatever `user_roles` claim is in the JWT;
-  it has no knowledge of, and makes no call to, `sunbird-cb-workflow`. This
-  means role revocation timing depends entirely on JWT/session lifetime, not
-  on any live check per request.
+  `ai-assessment-service` reads the `user_roles` claim from the JWT; it
+  has no knowledge of, and makes no call to, `sunbird-cb-workflow`.
 - **One monolithic prompt template drives every combination.** All five
   assessment types and five question types share a single prompt template
   (`prompts.yaml`), with type-specific behavior expressed as conditionally

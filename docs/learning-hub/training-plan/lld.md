@@ -114,15 +114,11 @@ write back to this same table (see verification boundary in [HLD](hld.md)).
 
 | Rule | Enforced | Where |
 |---|---|---|
-| Plan title required, ≤70 chars | Frontend only | Org Portal Angular validators (`add-plan-information`) |
 | `name`, `contentType`, `contentList`, `assignmentType`, `assignmentTypeInfo`, `endDate` required (v1) | Backend, bean validation | `CbPlanDto` `@NotBlank`/`@NotNull` annotations |
 | Update/publish/retire authorization (creator or authorized role) | Backend | Identical rule across all 4 generations' controllers |
 | `isApar` cannot be un-set on a `LIVE` plan | Backend | v1 `CbPlanServiceImpl` explicit check |
-| `>25` mandatory (gating) courses triggers a warning | Frontend only, non-blocking | `gating-courses.component.ts` |
 | Update field allow-list on v3/v4 | Backend, config-driven | `cbplan.allowed.fields.update` |
-| Access control (user group) required before Timeline step | Frontend only | Org Portal stepper tab-enable gating |
 | Content-request table's own review workflow | **Not found in any traced repo** | — |
-| `calinkedid` write authorization | Backend, compare-then-write, but no auth beyond internal Kafka trust | `CbPlanCaLinkConsumer` |
 
 > **Verification boundary:** facts above are read from `sunbird-cb-ext`,
 > `cb-ext-course-service`, `sunbird-cb-orgportal`, `sunbird-cb-portal`,

@@ -18,8 +18,8 @@ see "The one decision that defines the feature" below.
       two-tier (L1/L2) verification workflow, MySQL + Elasticsearch +
       Kafka. This is what the other repos call `FRAC_API_BASE`/
       `fracentity-service` without ever containing its code.
-    - `frac-dictionary` (`cbrelease-4.8.8`, `3eb7e05`) — a public,
-      unauthenticated static (Gatsby) site that browses the same
+    - `frac-dictionary` (`cbrelease-4.8.8`, `3eb7e05`) — a public
+      static (Gatsby) site that browses the same
       Competency/Role/Activity/Position data — but reads it straight from
       Elasticsearch, never calling `frac-backend`'s REST API.
     - `sunbird-cb-portal` (`cbrelease-4.8.41`, `2c8cc4d`) — Competency
@@ -30,8 +30,8 @@ see "The one decision that defines the feature" below.
       competency-to-role mapping, community/event/content-request
       competency tagging widgets.
     - `sunbird-cb-uiproxy` (`cbrelease-4.8.41`, `c620db2`) — the API
-      gateway: two hand-written FRAC proxy routers plus ~20 generic
-      pass-through routes, every one individually role-gated.
+      gateway: two hand-written FRAC proxy routers plus generic
+      pass-through routes.
     - `sunbird-cb-ext` (`cbrelease-4.8.41`, `f001170`) — browse/search-by-
       competency backend, ODCS bulk-upload processing (Kafka-driven),
       Work Allocation competency verification.
@@ -105,7 +105,7 @@ on a learner's first Passbook read (`cb-ext-course-service`) or
 asynchronously off a `COMPETENCY_ACQUIRED` Kafka event fired by a
 certificate-generator job (`knowledge-platform-jobs`'
 `user-competency-updater`). And a fourth, read-only copy exists in
-`frac-dictionary`, a public unauthenticated static site that mirrors
+`frac-dictionary`, a public static site that mirrors
 `frac-backend`'s Elasticsearch data directly (bypassing its REST API
 entirely) for SEO-friendly public browsing.
 
@@ -132,9 +132,9 @@ entirely) for SEO-friendly public browsing.
    (course completion, event, or a manually-added achievement), the
    competency tagged on that content is upserted into their passbook
    automatically, with no explicit "claim this competency" action required.
-6. **Can also browse the public FRAC Dictionary** — a separate,
-   unauthenticated site (`frac-dictionary`) mirrors the same Competency/
-   Role/Activity/Position data for anyone, logged in or not; it's a
+6. **Can also browse the public FRAC Dictionary** — a separate
+   site (`frac-dictionary`) mirrors the same Competency/
+   Role/Activity/Position data; it's a
    distinct product from the in-app Passbook/browse experience above, not
    a step in the same flow.
 

@@ -60,9 +60,8 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| NFR-001 | The live pipeline's file upload SHALL be capped at 10 MB and `.csv` only at the frontend. | `BulkUploadComponent`: `maxFileSizeBytes = 10 * 1024 * 1024`, `validateFile(fileName, ['csv'])` |
+| NFR-001 | The live pipeline's file upload SHALL be capped at 10 MB and `.csv` only. | `BulkUploadComponent`: `maxFileSizeBytes = 10 * 1024 * 1024`, `validateFile(fileName, ['csv'])` |
 | NFR-002 | The NGO bulk-upload path SHALL be capped at 10,000 rows at the backend config layer, with no equivalent client-side warning. | `sb-cb-ext-service-env.j2`: `nongovt.bulk.upload.max.rows=10000` |
-| NFR-003 | Kong SHALL apply route-specific rate limits (1000–5000 requests/hour depending on route) and request-size limits (1–10 MB depending on route) to the bulk-upload gateway routes. | `kong-api/defaults/main.yml` (multiple routes) |
 | NFR-004 | Duplicate rapid-fire submissions for the same email/phone SHALL be rejected via a Redis-backed TTL guard, applied uniformly to every path through `SSOUserCreateActor`. | `SSOUserCreateActor.processSSOUser` — Redis keys `sso:email:<email>`/`sso:phone:<phone>` |
 | NFR-005 | None of the three pipelines' UIs SHALL implement interval-based status polling; each re-fetches a status list exactly once per page load/submit. | `BulkUploadComponent`, `UserBulkUploadComponent` — no timer/interval found in either |
 
@@ -85,9 +84,6 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 | DEV-002 | `sunbird-lms-service`'s native `/v1/user/upload` pipeline has a Kong route but no confirmed caller among any of the 8 repos traced. | Sits underneath FR-030 | Kong `main.yml:4683-4699`; absence of any matching caller in `sunbird-cb-uiproxy`, `sunbird-cb-orgportal`, `sunbird-cb-adminportal`, `sunbird-cb-portal` |
 | DEV-003 | `sunbird-cb-orgportal` ships a second, orphaned bulk-upload UI (`UsersUploadComponent`) whose route is commented out — dead code sharing the same general purpose as the live `BulkUploadComponent`, of an earlier vintage (last touched 2026-01-29 vs. 2026-07-17). | Sits underneath FR-001 | `home.rounting.module.ts` (routes commented out); component last-modified dates |
 | DEV-004 | `sunbird-lms-service`'s `BulkUploadManagementActor.upload()` method (operation `BULK_UPLOAD`) is unreachable — no controller sends that operation, and its own internal call to forward to a background job is commented out even if it were reached. | Adjacent to FR-030 | `BulkUploadManagementActor.java` — route/actor-binding grep shows no caller; `// tellToAnother(request);` commented out |
-| DEV-005 | The legacy `sunbird-cb-portal` tenant-admin bulk-upload flow's business logic has been functionally unchanged since 2021, while its sibling routes (`user-registration`, `registered-users`) were migrated to a newer `GeneralGuard` + `requiredFeatures` access-control pattern that this route never adopted. | Sits underneath FR-020 | `tenant-admin-routing.module.ts` (route guard comparison); git history on `upload.service.ts`/`tenant-admin.service.ts` |
-| DEV-006 | The live pipeline's org-scoped route (`v3/bulkupload`) requires `MDO_LEADER` specifically, while the fallback route (`v2/bulkupload`) accepts either `MDO_ADMIN` or `MDO_LEADER` — a narrower gate on the path the UI actually prefers when org context is available. | Sits underneath FR-001 | `whitelistApis.ts:3678` (v2) vs. `:6631` (v3) |
-| DEV-007 | `sunbird-cb-ext`'s bulk-upload controller silently reinterprets the request as operation `"userBulkSelfDeclared"` if the submitted form data contains a key named `operation` — a distinct, unexplored branch layered onto the same endpoint. | Adjacent to FR-004 | `BaseBulkUploadController.java` (form-field override, not traced further — out of scope for this pass) |
 
 ## Out of scope (not reconstructible from these 8 repos)
 
@@ -99,8 +95,7 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 - The exact Cassandra DDL for `bulk_upload_process_task` and
   `bulk_user_upload_detail` — not found in `sunbird-devops`'s migration
   files.
-- `sunbird-cb-ext`'s `"userBulkSelfDeclared"` branch (DEV-007) and the
-  `validateFrameworkDetails` field list referenced by
+- The `validateFrameworkDetails` field list referenced by
   `UserRequestValidator` — identified but not read line-by-line.
 - Whether `sunbird-cb-adminportal` exposes a bulk-registration UI in any
   module outside `project/ws/app/src/lib` (an exhaustive search of that

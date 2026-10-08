@@ -116,7 +116,7 @@ both call the same onboard endpoint with a different <code>status</code>.</p>
 </div>
 <div class="uc-card">
 <div class="who">Content Curator</div><b class="t">UC-12 · Preview a course as a learner would see it</b>
-<p>Opens the same public CIOS detail page a learner would reach
+<p>Opens the same CIOS detail page a learner would reach
 (<code>public/toc/ext/:partnerCode/:externalId</code>) with an edit-mode
 flag, in a new tab.</p>
 <div class="api">— (opens learner-facing route directly)</div>
@@ -197,6 +197,4 @@ and fetched separately from native platform achievements.</p>
 > and the Kafka cascades above are confirmed from the 9 repos listed in
 > [index.md](index.md). Not verified: any consumer-side behaviour inside
 > the `@sunbird-cb/collection-v2` npm package that the learner-facing CIOS
-> detail page depends on, and any backend authorization that might exist
-> for the Admin/Creation Portal marketplace routes outside their own
-> Angular route guards (none were found client-side in either portal).
+> detail page depends on.

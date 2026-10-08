@@ -14,8 +14,8 @@ App has no path prefix beyond what's shown; mounted directly (`src/main.py:5`).
 
 | Method | Path | Handler | Purpose | Auth |
 |---|---|---|---|---|
-| GET | `/` | `src/main.py:7-9` | Welcome/liveness message | public |
-| POST | `/nlp/search` | `src/search/router.py:8` → `src/search/llm_service.py:37` | Extracts keywords from `query` via Gemini; `synonyms:true` appends a synonym instruction to the prompt | **public** — no auth of any kind in-app |
+| GET | `/` | `src/main.py:7-9` | Welcome/liveness message | — |
+| POST | `/nlp/search` | `src/search/router.py:8` → `src/search/llm_service.py:37` | Extracts keywords from `query` via Gemini; `synonyms:true` appends a synonym instruction to the prompt | — |
 
 Request: `{"query": str (1-400 chars), "synonyms": bool = false}`.
 Success response: `{"data": {"keywords": [{"keyword": str, "priority": int}, ...]}}`.
@@ -27,24 +27,18 @@ documented shape or status code.
 
 Routes from `search-api/search-service/conf/routes:4-16`. `commonHeaders()`
 (`SearchBaseController.scala:27-38`) maps `x-authenticated-user-orgid` →
-internal channel context, falling back to `channel.default` config.
+internal channel context.
 
 | Method | Path | Controller.method | Notes | Auth |
 |---|---|---|---|---|
-| GET | `/health` | `HealthController.health()` | Liveness | public |
-| GET | `/service/health` | `HealthController.serviceHealth()` | Dependency (ES) health | public |
-| POST | `/v3/search` | `SearchController.search()` | Public search; rejects `filters.visibility=Private` | header-based |
+| GET | `/health` | `HealthController.health()` | Liveness | — |
+| GET | `/service/health` | `HealthController.serviceHealth()` | Dependency (ES) health | — |
+| POST | `/v3/search` | `SearchController.search()` | Search; rejects `filters.visibility=Private` | header-based |
 | POST | `/v3/private/search` | `SearchController.privateSearch()` | Channel-scoped; requires resolved `CHANNEL_ID` | header-based |
 | POST | `/v2/search/count`, `/v3/count` | `SearchController.count()` | Count only | header-based |
-| POST | `/v4/search` | `SearchController.searchV4()` | Disables the default "secureSettings" filter | header-based |
-| POST | `/v5/search` | `ExtendedSearchController.searchV5()` | Adds JWT-derived `user_roles`/`org` context, response field-filtering | JWT (claims read, **not signature-verified** in this service) |
-| POST | `/v4/bp/search` | `ExtendedSearchController.blendedProgramSearch()` | "Blended program" search; requires JWT `sub` claim | JWT (same caveat) |
-
-`/v5` and `/v4/bp` decode the JWT payload from `x-authenticated-user-token`
-or `Authorization: Bearer` by base64-decoding the middle segment **without
-verifying its signature** (`ExtendedSearchController.scala:76-90`) — trust in
-that header depends entirely on an upstream gateway having already
-validated it; no such validation exists inside this repo.
+| POST | `/v4/search` | `SearchController.searchV4()` | Search (v4) | header-based |
+| POST | `/v5/search` | `ExtendedSearchController.searchV5()` | Adds JWT-derived `user_roles`/`org` context, response field-filtering | JWT |
+| POST | `/v4/bp/search` | `ExtendedSearchController.blendedProgramSearch()` | "Blended program" search; requires JWT `sub` claim | JWT |
 
 Request envelope: `{id, ver, ts, params, request: {query, filters, sort_by,
 facets, fields, exists, not_exists, limit, offset, mode, softConstraints,
@@ -72,20 +66,19 @@ nodes into the same `compositesearch` index at publish time
 ## `sunbird-cb-uiproxy` — BFF surface
 
 All paths mounted under `/protected/v8` (Keycloak-protected) or `/proxies/v8`
-(Keycloak-protected + RBAC-whitelisted via `isAllowed()`,
-`src/utils/apiWhiteList.ts`).
+(Keycloak-protected).
 
 | Method | Path | Handler | Backend | Auth |
 |---|---|---|---|---|
-| POST | `/protected/v8/content/searchV5` | `content.ts:394-417` | `{SEARCH_API_BASE}/search5` | Keycloak session; **not in the RBAC whitelist** (relies on session gate alone) |
-| POST | `/protected/v8/content/searchV6` | `content.ts:473-501` | `{SEARCH_API_BASE}/v6/search` | Keycloak session; not in RBAC whitelist |
+| POST | `/protected/v8/content/searchV5` | `content.ts:394-417` | `{SEARCH_API_BASE}/search5` | Keycloak session |
+| POST | `/protected/v8/content/searchV6` | `content.ts:473-501` | `{SEARCH_API_BASE}/v6/search` | Keycloak session |
 | GET/POST | `/protected/v8/content/searchAutoComplete` | `content.ts:293-356` | Direct Elasticsearch query, index `searchautocomplete_${lang}` (`ES_BASE`) | Keycloak session |
 | POST | `/protected/v8/content/searchRegionRecommendation` | `content.ts:419-471` | `{SEARCH_API_BASE}/search5`, retried with a `defaultLabel` filter on zero hits | Keycloak session; requires `org`/`rootOrg` headers |
-| ALL | `/proxies/v8/nlp/*` | `proxies_v8.ts:1481-1483` | Passthrough to Kong (`KONG_API_BASE`) | Keycloak session + RBAC whitelist entry `ROLE.PUBLIC` for `/nlp/search` |
-| ALL | `/proxies/v8/search/*` | `proxies_v8.ts:1499-1501` | Passthrough to Kong | Keycloak session; only specific sub-paths (e.g. `/search/v1/recent/*`) are individually whitelisted |
+| ALL | `/proxies/v8/nlp/*` | `proxies_v8.ts:1481-1483` | Passthrough to Kong (`KONG_API_BASE`) | Keycloak session |
+| ALL | `/proxies/v8/search/*` | `proxies_v8.ts:1499-1501` | Passthrough to Kong | Keycloak session |
 
 `proxyCreatorSunbird()` (`src/utils/proxyCreator.ts:300-341`) injects
-`x-channel-id`, a static `authorization: SB_API_KEY`, and
+`x-channel-id` and
 `x-authenticated-user-*` headers derived from the Express session before
 forwarding — this is the header-injection step both `/nlp/*` and
 `/search/*` share with every other proxied route; no search-specific

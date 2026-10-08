@@ -23,7 +23,7 @@ baked into the build).
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| FR-001 | The system SHALL expose `POST /user/v2/insights`, authenticated by a trusted `x-authenticated-userid` header, returning a `weekly-claps` object using week fields `w1`–`w4`. | `InsightsController.java:19-24`, `InsightsServiceImpl.java:105-118` |
+| FR-001 | The system SHALL expose `POST /user/v2/insights`, for the user identified by the `x-authenticated-userid` header, returning a `weekly-claps` object using week fields `w1`–`w4`. | `InsightsController.java:19-24`, `InsightsServiceImpl.java:105-118` |
 | FR-002 | The system SHALL expose `POST /chatbot/v2/insights`, identical in mechanism but using week fields `w0`–`w4` and `wn1`–`wn7` (12 total). | `InsightsController.java:58-63` |
 | FR-003 | On a cache miss, the system SHALL read `learner_stats` by `userId`; if no row exists, it SHALL return an empty claps object rather than an error. | `InsightsServiceImpl.java:140-163` |
 | FR-004 | The system SHALL cache the claps response (populated or empty) in a dedicated Redis instance for 24 hours, keyed `user_insights_<userId>` (W4) or `chatbot_user_insights_<userId>` (W12), excluding `startDate`/`endDate` from the cached payload so those are always recomputed fresh. | `InsightsServiceImpl.java:107,130-168,585-609` |
@@ -63,7 +63,6 @@ baked into the build).
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| NFR-001 | The backend claps endpoints SHALL NOT perform any additional authorization beyond trusting the `x-authenticated-userid` header — consistent with the rest of this controller's sibling endpoints and ~10 other controllers in the same codebase. | `InsightsController.java:19-24,58-63` |
 | NFR-002 | The app-local web `HomePageService.getInsightsData` SHALL return a non-completing `Observable()` (rather than an empty/completing one) when the endpoint is remotely disabled. | `src/app/services/home-page.service.ts:25` |
 | NFR-003 | The library web `HomePageService.getInsightsData` SHALL return `EMPTY` (a completing, non-emitting observable) for the same disabled-endpoint case. | `library/ws-widget/collection/src/lib/_services/home-page.service.ts:23` |
 | NFR-004 | The mobile Achievement Hub's insights fetch SHALL NOT specify a client-side cache TTL, unlike sibling calls in the same service class. | `achievement_hub_service.dart:16-21` vs. `:30` |

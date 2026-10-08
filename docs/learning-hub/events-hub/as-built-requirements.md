@@ -57,10 +57,10 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| FR-030 | The system SHALL support issuing an event certificate via `POST /v1/event/batch/cert/issue`, which SHALL treat every issuance request as `eventCompletionPercentage = 100.0` regardless of actual recorded consumption. | `CertificateActor.issueEventCertificate:180-267` |
+| FR-030 | The system SHALL support issuing an event certificate via `POST /v1/event/batch/cert/issue`. | `CertificateActor.issueEventCertificate:180-267` |
 | FR-031 | Certificate-template management for an event batch (`add`) SHALL be available via `PATCH /private/v1/event/batch/cert/template/add`. | `EventBatchCertificateActor.java` |
 | FR-032 | The bulk-onboarding flow SHALL award karma points for event attendance by publishing to Kafka topic `dev.karma.points.unified.v2.event`, unless the row was processed under `publicCert`. | `PublicUserEventBulkonboardConsumer.java:272,294`, `ClaimEventKarmaPointsServiceImpl.java:23-38` |
-| FR-033 | The post-consumption reconciliation flow SHALL always publish a karma-point event after successfully updating a user's completion state, regardless of whether a certificate was already issued. | `UserEventPostConsumptionServiceImpl.java:167-181` |
+| FR-033 | The post-consumption reconciliation flow SHALL publish a karma-point event after successfully updating a user's completion state. | `UserEventPostConsumptionServiceImpl.java:167-181` |
 
 ### Bulk operations
 
@@ -86,8 +86,6 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 | ID | Requirement (as-built) | Source |
 |---|---|---|
 | NFR-001 | Bulk-onboard processing SHALL run asynchronously off the Kafka consumer thread (fire-and-forget), so a processing failure surfaces only in logs, not to the original uploader. | `PublicUserEventBulkonboardConsumer.java:70-84` |
-| NFR-002 | The `event-external` uiproxy route SHALL authenticate to its upstream using a fixed API key embedded in source rather than environment/secret configuration. | `event-external.ts:11` |
-| NFR-003 | Event-related uiproxy routes not present in the role whitelist SHALL default-deny under the standard whitelist-check configuration. | `whitelistApis.ts`, `apiWhiteList.ts:335-382` |
 | NFR-004 | `EventBatchDaoImpl` SHALL apply an environment-configurable `+5:30` correction when merging batch start/end times, to compensate for an otherwise-unresolved timezone handling issue. | `EventBatchDaoImpl.processStartEndDate` |
 
 ## Constraints and assumptions baked into the build
@@ -98,8 +96,6 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 | CON-002 | No scheduler or job in any traced repo transitions an event batch's `status` from `NOT_STARTED`/`STARTED` to `COMPLETED` over time. | Batch status set at creation is effectively permanent unless manually corrected. | `EventsActor.setEventBatchStatus` |
 | CON-003 | The `eventset` JSON schema's `schedule.nonRecurringDetails` field name does not match the actor code's `schedule.value`. | Any external tooling built against the published schema would send the wrong field and silently produce zero child events. | `schemas/eventset/1.0/schema.json` vs. `EventSetActor.formChildEvents` |
 | CON-004 | The `eventset` schema's `contentType` enum is `["Event"]`, not `["EventSet"]`. | Schema-based client-side validation of an EventSet's `contentType` would incorrectly reject the correct value. | `schemas/eventset/1.0/schema.json` |
-| CON-005 | Certificate issuance across all four trigger points assumes 100% completion without querying consumption data. | Certificates can be issued to users who did not actually attend/complete the event. | `CertificateActor.issueEventCertificate`; `PublicUserEventBulkonboardConsumer`; `UserEventPostConsumptionServiceImpl` |
-| CON-006 | No idempotency key or duplicate-claim check exists in `sunbird-cb-ext` before publishing a karma-points event. | Any process that re-runs a bulk-onboard or reconciliation job for the same rows will re-award points, unless a downstream (unverified) consumer de-dupes. | `ClaimEventKarmaPointsServiceImpl.java`, `UserEventPostConsumptionServiceImpl.java` |
 | CON-007 | The Org Portal's event-creation flow assumes there is no review gate — it publishes directly. | An event created here never appears to pass through the Creation Portal's `SentToPublish` review queue via any traced path. | `create-event.component.ts` vs. `dashboard.component.ts` |
 
 ## Known deviations (inconsistent by accident, not by design)
@@ -110,7 +106,7 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 | DEV-002 | `UserEventPostConsumptionServiceImpl.processRecordForStatus` has an operator-precedence bug: missing parentheses make the second half of an `&&`/`||` condition evaluate unconditionally, and can NPE if `issuedCertificates` is null. | Sits underneath FR-044 | `UserEventPostConsumptionServiceImpl.java:350` |
 | DEV-003 | `EventSetActor.discardChildEvents` calls `RetireManager.retire` on each child instead of `DiscardManager.discard`, even though the parent EventSet's own discard correctly uses `DiscardManager` — children are likely retired, not discarded, when the parent is discarded. | Sits underneath FR-005 | `EventSetActor.scala:236-254` |
 | DEV-004 | `EventBatchCertificateActor.removeCertificateTemplateFromCourseBatch` reads the event id from `JsonKey.COURSE_ID` instead of `JsonKey.EVENT_ID` (used everywhere else in the same class), and validates via the Course batch validator instead of the Event one. No route wires this method to any HTTP endpoint, so it may be dead code. | Sits underneath FR-031 | `EventBatchCertificateActor.java:82` (cf. line 57) |
-| DEV-005 | Certificate issuance for Course uses the shared `InstructionEvent` enum + `InstructionEventGenerator.pushInstructionEvent`; the Event path hand-builds a raw JSON string via `String.format` (no escaping) and calls `KafkaClient.send` directly, to a differently-named topic. | Sits underneath FR-030 | `CertificateActor.java:64-178` (Course) vs. `:218-253` (Event) |
+| DEV-005 | Certificate issuance for Course uses the shared `InstructionEvent` enum + `InstructionEventGenerator.pushInstructionEvent`; the Event path hand-builds a JSON string and calls `KafkaClient.send` directly, to a differently-named topic. | Sits underneath FR-030 | `CertificateActor.java:64-178` (Course) vs. `:218-253` (Event) |
 | DEV-006 | Two apparently-overlapping "consumption" tables exist for events (`user_entity_consumption`, read-only, vs. `user_content_consumption`, read+write) with no code found writing to the first — its use in enriching `EventManagementActor` responses may always yield empty data. | Sits underneath FR-020 | `EventEnrolmentDaoImpl.getUserEventConsumption` |
 | DEV-007 | The Org Portal's `app/events` route is declared twice in its routing module; the second declaration (the unrelated "meetup" microsite) is unreachable because Angular matches the first. | N/A — out-of-scope feature, noted for completeness | `sunbird-cb-orgportal/src/app/app-routing.module.ts:139-140,212-213` |
 | DEV-008 | The Org Portal create-event flow uploads a cover image and defines the code to attach it to the event and republish, but the call that would invoke that attachment (`this.fileSubmit(identifier)`) is commented out. | Sits underneath FR-050 | `create-event.component.ts:522` |
@@ -147,5 +143,4 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 > behaviour, not compared to an approved requirement set. Attaching the
 > originating spec, the Kong gateway config, and the downstream Kafka
 > consumers listed under Out of scope would convert several of the open
-> questions here (especially DEV-007's status-transition gap and CON-006's
-> idempotency gap) from "unverified" to "confirmed."
+> questions here (especially DEV-007's status-transition gap) from "unverified" to "confirmed."

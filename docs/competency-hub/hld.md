@@ -135,10 +135,9 @@ flowchart TB
 | `FRACController` (`/frac/*`) | The **real** competency-taxonomy CRUD/search API — one generic `DataNode` model for Competency, CompetencyArea, Role, Activity, Position, KnowledgeResource, Sector, ... | `frac-backend` |
 | `VerificationServiceImpl` | The two-tier (L1 technical review, L2 review board) approval workflow every new/edited node goes through | `frac-backend` |
 | `ConfigurationPanel` | Loads every node + every parent/child mapping into an in-memory cache at boot; almost all reads go through this, not the DB directly | `frac-backend` |
-| Gatsby build (`gatsby-source-elasticsearch`) + Express/Apollo proxy | Public, unauthenticated mirror of `frac-backend`'s Elasticsearch data — never calls `frac-backend`'s own REST API | `frac-dictionary` |
+| Gatsby build (`gatsby-source-elasticsearch`) + Express/Apollo proxy | Public mirror of `frac-backend`'s Elasticsearch data — never calls `frac-backend`'s own REST API | `frac-dictionary` |
 | Generic Framework/Category/Term API | Hosts the `kcmfinal_fw` framework — a **second**, separately-maintained competency taxonomy that most read traffic and the ODCS write path actually use | `knowledge-platform` |
 | `competency.ts` / `frac.ts` | The only two hand-written (non-pass-through) competency routers — call `frac-backend` directly | `sunbird-cb-uiproxy` |
-| `whitelistApis.ts` | Per-path role gating for every competency route, ~30 entries | `sunbird-cb-uiproxy` |
 | `SearchByService` | Browse/search-by-competency directory, Redis-cached facets pulled from Composite Search + `frac-backend` | `sunbird-cb-ext` |
 | `OrgDesignationCompetencyMappingServiceImpl` + Kafka consumer | ODCS bulk-upload processing — writes new terms into the `kcmfinal_fw` mirror, **not** `frac-backend` | `sunbird-cb-ext` |
 | `AllocationService`/`AllocationServiceV2` | Work Allocation competency-to-role mapping, verify/create against the real `frac-backend` | `sunbird-cb-ext` |

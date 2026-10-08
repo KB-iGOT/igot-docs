@@ -52,8 +52,7 @@ the X aborts the request.
 ### UC-3 · Request a seat (Learner)
 
 A confirmation dialog states the batch dates. On confirm, the app calls the
-enrol endpoint. The server re-checks everything the client cannot be
-trusted with — volunteer eligibility, seat room (with a 20% over-subscription
+enrol endpoint. The server checks volunteer eligibility, seat room (with a 20% over-subscription
 buffer at this stage), schedule clash — and then writes a workflow row.
 The response is immediate but the row is only `ENROLL_IS_IN_PROGRESS`: a
 Kafka consumer moves it into the first approval state a moment later, and
@@ -162,7 +161,7 @@ CSV with an `Updated`/`Not updated` column.
 ### UC-11 · Act as MDO admin (MDO admin)
 
 The workflow service has MDO-side endpoints (`update/mdo`, `searchV2/mdo`,
-`read/mdo`, `remove/mdo`, `admin/enrol`) and the gateway whitelists them for
+`read/mdo`, `remove/mdo`, `admin/enrol`) and they are used by
 `MDO_ADMIN` / `MDO_LEADER`. **Verification boundary:** no screen in the
 attached UI repos calls them — the Creation Portal console and the
 `sb-cb-ui-components` service methods only call the `…/pc` variants — so
@@ -306,15 +305,14 @@ one page per offline session of the batch, each carrying
 | Existing batch fully encloses the new one | **Not detected** — the server tests only whether the existing batch's start or end falls inside the new batch |
 | Batch full (learner request) | Server allows requests up to size + 20%; approval is capped hard at size (counting active enrolments). `currentBatchSize` of 0 or missing always reads as full |
 | Batch full (nomination) | Hard cap, and the nominee's own pending requests are not counted |
-| Batch full (the enrol call into the course service) | The workflow service re-checks the hard cap just before calling, but the course service's own single-user BP enrol does **not** check `currentBatchSize`; only its bulk-enrol paths do |
-| Enrolment window | Web/mobile hide batches after `enrollmentEndDate`; the single BP enrol in the course service **ignores** `enrollmentEndDate` and closes at the end of the batch **start date** (IST) |
+| Enrolment window | Web/mobile hide batches after `enrollmentEndDate`; the single BP enrol in the course service closes at the end of the batch **start date** (IST) |
 | Batch already started | Approvals are refused ("This batch is already in progress") unless the action is `REJECT`/`WITHDRAW`. `REMOVE` is *not* excluded, so removing an approved learner after start is blocked too |
 | `currentBatchSize` stored as a JSON number | Treated as unreadable → batch reads as full. The Creation Portal stores it as a string |
 | Volunteer role without an eligibility entry | HTTP 406 "User is not eligible to enrol into this course." |
 | Withdrawal after approval | Not offered on web or mobile; and a `WITHDRAWN` row never un-enrols (only `REMOVED` does) |
 | Reject with no reason | Blocked in the Creation Portal (reason required); the server itself does not require one |
 | Duplicate request | The workflow service's ordinary learner enrol has **no** duplicate guard (admin enrol and QR enrol do). The web page renders from the latest request it can find; any other prevention would be outside the attached repos |
-| Attendance | No time window on the server; the 7-day post-batch window is a Creation Portal button rule only; mobile's live-session window and 1 km fence are client-side |
+| Attendance | The 7-day post-batch window is a Creation Portal button rule; mobile has a live-session window and a 1 km fence |
 | Batch with no `latlong` | No QR self-enrol geofence; **no mobile attendance** |
 | Nominee already in the course on another batch | `ALREADY_EXISTS` |
-| Assignment file | Extension-only check on the server (`pdf, doc, docx`); no content-type check; any signed-in user can read any answer file if they know the path |
+| Assignment file | Accepted extensions on the server: `pdf, doc, docx` |
