@@ -16,7 +16,7 @@
 |---|---|---|
 | `user_karma_points_summary.total_points` | Running total | What every UI total ultimately shows |
 | `…summary.addinfo.claimedNonACBPCourseKarmaQuota` | Non-ACBP completions this month | ≥ 4 stops further non-ACBP awards |
-| `user_karma_points_credit_lookup` | Dedup index | A missing lookup row causes a double award on replay; an orphan row blocks an award |
+| `user_karma_points_credit_lookup` | Dedup index | A row here marks an event as already processed |
 | `user_karma_coin_lookup.addinfo.status` | Conversion state | PROCESSING stuck = job failure |
 | `user_karma_coin_wallet` | earned / redeemed | Balance = earned − redeemed |
 
@@ -28,8 +28,7 @@
 duplicate. Check the failed topic for `DataQualityException` rejections.
 
 **"Points total wrong / mismatched."** Compare `user_karma_points_summary.total_points`
-with the sum of `user_karma_points.points`. The summary update is a non-atomic
-read-modify-write; `KARMA_POINTS_ADJUSTMENT` changes only the summary.
+with the sum of `user_karma_points.points`. `KARMA_POINTS_ADJUSTMENT` changes only the summary.
 
 **Conversion stuck at PROCESSING.** Check `user_karma_coin_lookup` for the
 `userId|POINTS_CONVERSION|requestId` row. A frozen plan in `addinfo` resumes on replay.
@@ -75,7 +74,7 @@ uses start-of-today as the cursor and excludes today's credits.
 | `SystemException` (Cassandra, Redis, HTTP) | Rethrown → task fails → Flink restart from checkpoint (fixed delay 240 s in Helm) |
 | Cassandra transient error | One retry, then `CassandraException` |
 | Redis mirror failure | Logged, not thrown |
-| Redis dedup failure | Fails open to Cassandra |
+| Redis dedup failure | Falls back to the Cassandra check |
 
 V1 has no try/catch and no failed topic — any exception restarts the job.
 
@@ -85,10 +84,6 @@ V1 has no try/catch and no failed topic — any exception restarts the job.
 - **Helm key placement**: `requestClaimTtlSeconds`, dedup flags and `transactionId{}`
   sit under different blocks than the code reads, so deployed values likely fall back
   to code defaults (INFERRED).
-- **`ClaimKarmaPoints` trusts the body userId** — no check against the caller.
-- **Hall of Fame `/read`** loops back month-by-month with no lower bound; an empty
-  table never terminates (INFERRED).
-- **`setIfAbsent` fails open** on Redis errors — duplicate conversions are then possible.
 - **Event-certificate karma path is disabled** (emit call commented out).
 - **Two processors deployed** — confirm which producers still feed V1 before changing either.
 
@@ -108,7 +103,3 @@ converted 1:1 (rate configurable) and spent on paid courses.
 
 **Why does the app say 15 for an ACBP course?** Client copy; the job awards 5 + 5.
 See the mismatch table in the As-Built doc.
-
-**Can points be negative?** Reversal zeroes the first-enrolment row and subtracts it
-from the summary; nothing in the code floors the summary itself at 0 in V2 reversal.
-Verify before promising otherwise.

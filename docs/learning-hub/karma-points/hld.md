@@ -85,7 +85,7 @@ flowchart LR
 ## Key design decisions
 
 - **One writer.** Every point and coin write happens in the Flink job, which keys
-  the stream by user so its read-before-write dedup and non-atomic summary update
+  the stream by user so its dedup and summary update
   are ordered per user (V1 relied on parallelism = 1 for the same safety).
 - **Event envelope, uneven payloads.** All producers use `{eventType, data, version}`
   but the userId sits in a different place per type — the job's

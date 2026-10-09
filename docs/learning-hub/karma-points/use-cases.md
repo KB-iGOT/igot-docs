@@ -53,7 +53,7 @@ Points by completing this learning pathway" (mobile).
 - Monthly learner leaderboard within the learner's MDO, top 3 podium plus 3
   neighbours: `GET /halloffame/learnerleaderboard`.
 - Public Hall of Fame of top MDOs for the previous month, grouped by MDO size:
-  `POST /halloffame/read` (unauthenticated).
+  `POST /halloffame/read`.
 
 ### UC-6 · Convert points to Karma Coins
 
@@ -105,7 +105,6 @@ completes event enrolments and emits `EVENT_ATTENDED` for each.
 | History page, offset 0 | Cursor = start of today → today's credits excluded from the first page |
 | History older than 2023-12-01 | Never returned (hard-coded cut-off) |
 | Convert while another conversion pending | Pending locks are counted against balance and cap |
-| Redis down during convert | Duplicate-conversion guard fails open |
 | Kafka push fails after lock set | 500 returned, lock stays up to 900 s |
 | Data-quality-bad event (V2) | Published to `…unified.v2.failed`, not retried |
 | System failure (V2) | Job fails and replays from checkpoint |

@@ -7,8 +7,7 @@ Verified from `sunbird-cb-ext` (`KarmaPointsController`, `KarmaCoinWalletControl
 `sunbird-course-service`, `sunbird-lms-service` and `knowledge-platform-jobs`.
 
 Web calls go `portal → /apis/proxies/v8/… → uiproxy → ${KONG_API_BASE}/… → sb-cb-ext`.
-Mobile calls Kong directly under `/api/…`. All uiproxy karma entries are
-`ROLE.PUBLIC` in the whitelist — authorization is upstream (Kong JWT + ACL).
+Mobile calls Kong directly under `/api/…`.
 
 ## Points endpoints (sunbird-cb-ext)
 
@@ -16,15 +15,12 @@ Mobile calls Kong directly under `/api/…`. All uiproxy karma entries are
 |---|---|---|---|---|
 | POST | `/karmapoints/read` → `/v1/karmapoints/read` | `x-authenticated-userid`, `x-authenticated-user-orgid` | `{limit, offset}` (offset = epoch ms cursor) | `{kpList:[…], count}` |
 | POST | `/karmapoints/user/course/read` → `/v1/user/course/karmapoints/read` | `x-authenticated-userid` | `{request:{filters:{contextType, contextId}}}` | `{kpList:{row}}` or `{}` |
-| POST | `/claimkarmapoints` → `/v1/claimkarmapoints` | none | `{userId, courseId}` | `200`, empty body |
+| POST | `/claimkarmapoints` → `/v1/claimkarmapoints` | — | `{userId, courseId}` | `200`, empty body |
 | POST | `/user/totalkarmapoints` → `/v1/user/totalkarmapoints` | `x-authenticated-userid` | none | `{kpList:{summaryRow}}` |
-
-Kong ACLs: `read`, `course/read` → dataAccess, itsmAccess; `claim`, `total` → dataAccess.
 
 ## Karma Coin Wallet (sunbird-cb-ext, base `/v1/karmawallet`)
 
-Header `x-authenticated-user-token`; role must be in `karma.coin.wallet.authorized.roles`
-(`PUBLIC` in code default; `PUBLIC,VOLUNTEER` in the DevOps env template).
+Header `x-authenticated-user-token`; the caller's role must be authorized for the wallet.
 
 | Method | Path | Request | Success |
 |---|---|---|---|
@@ -43,12 +39,12 @@ Error codes seen: `401 USER_ID_DOESNT_EXIST`, `403 UNAUTHORIZED_USER`,
 
 | Method | Path | Auth | Source |
 |---|---|---|---|
-| POST | `/v1/halloffame/read` | none (also in uiproxy `publicApiV8`) | Cassandra `mdo_karma_points`, previous month |
+| POST | `/v1/halloffame/read` | — | Cassandra `mdo_karma_points`, previous month |
 | GET | `/v1/halloffame/learnerleaderboard` | token + org-id header | `learner_leaderboard_lookup` + `learner_leaderboard`, Redis-cached |
 | GET | `/v1/top/learners/{ministryOrgId}` | token | `mdo_top_learners`, ranks 1–10 |
 | GET | `/v1/halloffame/user/read` | token | Postgres `nlw_user_leaderboard` |
-| GET | `/v1/halloffame/mdoleaderboard` | none | `nlw_mdo_leaderboard` |
-| POST | `/v1/halloffame/state/mdoleaderboard` | none | Postgres `slw_mdo_leaderboard` |
+| GET | `/v1/halloffame/mdoleaderboard` | — | `nlw_mdo_leaderboard` |
+| POST | `/v1/halloffame/state/mdoleaderboard` | — | Postgres `slw_mdo_leaderboard` |
 | GET | `/v1/state/top/learners/{stateOrgId}` | token | Postgres `slw_mdo_top_learners` |
 
 ## Operational / bulk endpoint

@@ -41,7 +41,7 @@ dispatches to a handler extending the `EventHandler` trait. Standard credit:
 1. Validate fields (missing → `DataQualityException`).
 2. Check the lookup (`doesEntryExist`); skip if present.
 3. `insertKarmaPoints` — ledger row, then lookup row.
-4. `updateKarmaSummary` — read `total_points`, write `+delta` (non-atomic read-modify-write).
+4. `updateKarmaSummary` — read `total_points`, write `+delta`.
 5. Mirror total to Redis (best-effort).
 
 ### Points formulas (V2)
@@ -68,7 +68,7 @@ credit exists.
 **cb-ext (`KarmaCoinWalletServiceImpl.redeem`)**
 
 1. Token → userId (401); role in authorized set (403).
-2. `pointsToConvert` Number > 0 (decimals truncated via `intValue()`), `requestId` non-blank.
+2. `pointsToConvert` Number > 0, `requestId` non-blank.
 3. Read wallet, monthly row, summary at QUORUM; subtract other in-flight lock points.
 4. `unredeemed = max(0, total − earned − otherPending)`;
    `remainingCap = max(0, 300 − convertedThisMonth − otherPending)`.
