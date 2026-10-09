@@ -338,7 +338,7 @@
       Competency Hub<span class="sub">feature</span>
     </button>
     <button class="bub hub" style="left:355px; top:339px; width:140px; height:140px; font-size:15px; font-weight:900; flex-direction:column; gap:3px" onclick="openHub(this, 'v-features')">
-      Features<span class="sub">9 features</span>
+      Features<span class="sub">10 features</span>
     </button>
     <button class="bub item" style="left:945px; top:531px; width:140px; height:140px; font-size:14px; font-weight:900; flex-direction:column; gap:3px" onclick="openFeature('agk')">
       Amrit Gyaan Kosh<span class="sub">feature</span>
@@ -435,6 +435,7 @@
       <line x1="720" y1="505" x2="720" y2="205" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="955" y2="318" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="1012" y2="572" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="955" y2="692" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="850" y2="775" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="590" y2="775" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="428" y2="572" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
@@ -445,12 +446,13 @@
     <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Features</div>
-      <div class="sub">9 features</div>
+      <div class="sub">10 features</div>
     </div>
 
     <button class="bub item" style="left:654px; top:139px; width:132px; height:132px; font-size:15px;" onclick="openFeature('explore')">Explore Content</button>
     <button class="bub hub" style="left:886px; top:249px; width:138px; height:138px; font-size:15px; flex-direction:column; gap:3px" onclick="openSubHub('v-registration')">Registration<span class="sub">3 features</span></button>
     <button class="bub item" style="left:946px; top:506px; width:132px; height:132px; font-size:13px;" onclick="openFeature('weeklyclaps')">Weekly Claps</button>
+    <button class="bub item" style="left:895px; top:632px; width:120px; height:120px; font-size:14px;" onclick="openFeature('karmapoints')">Karma Points</button>
     <button class="bub item" style="left:784px; top:709px; width:132px; height:132px; font-size:14px;" onclick="openFeature('trainingplan')">Training Plan</button>
     <button class="bub item" style="left:524px; top:709px; width:132px; height:132px; font-size:14px;" onclick="openFeature('chs')">CHS</button>
     <button class="bub item" style="left:362px; top:506px; width:132px; height:132px; font-size:14px;" onclick="openFeature('aicbp')">AI CBP Tool</button>
@@ -2194,6 +2196,57 @@
     </div><!-- /fdoc weeklyclaps -->
 
     <!-- ═══ TRAINING PLAN ═══ -->
+    <div class="fdoc" data-fdoc="karmapoints" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg></div>
+        <div>
+          <div class="fp-title">Karma Points</div>
+          <div class="fp-sub">An event-sourced recognition ledger &mdash; services emit events, one Flink job decides and writes every point, and the apps read it back as history, rank and a convertible Karma Coin wallet.</div>
+          <div class="fp-chips"><span class="chip">Route&nbsp; <code>/app/person-profile/karma-points</code> &middot; <code>/karma-wallet</code></span><span class="chip">Writer&nbsp; <code>knowledge-platform-jobs</code> (Flink)</span><span class="chip ok">&#10003; Verified from 10 repos &middot; Oct 2026</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+        <button class="fp-tab" role="tab" data-tab="asbuilt" onclick="setTab(this)">As-Built</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A Karmayogi earns points for logging in, enrolling, completing, rating and attending events, and can convert unconverted points into Karma Coins (up to 300 a month). No request-path service computes a point: course-service, LMS-service and cb-ext only publish events to one Kafka topic, and a keyed Flink job awards, dedups, caps and reverses them, writing a Cassandra ledger and running total that cb-ext reads back.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> the clients, not the processor, are the source of several displayed values &mdash; mobile and orgportal show 15 points for an ACBP course while the processor awards 5&nbsp;+&nbsp;5, and the mobile claim button hard-codes +10 against a processor claim of 5. See the As-Built tab.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>One writer, many producers</b><p>Every ledger and wallet write happens in the Flink job; producers share one envelope but put the userId in a different place per event type.</p></div>
+          <div class="fp-card"><b>Wallet is a Kafka round-trip</b><p>cb-ext validates and locks, returns 202; the job applies a frozen conversion plan with a Cassandra LWT claim and Redis dedup.</p></div>
+          <div class="fp-card"><b>Two processors still deploy</b><p>V1 (seven topics) and V2 (one unified topic) both ship; which producers still feed V1 is not determinable from the code.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Earn points automatically</b><p>First login, first enrolment, completion, rating, event attendance and more &mdash; each an event the Flink job turns into a ledger row.</p><div class="api">Kafka <code>karma.points.unified.v2.event</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 &middot; Claim ACBP points</b><p>After completing an ACBP-plan course, a Claim button emits a message the job credits.</p><div class="api">POST <code>/api/claimkarmapoints</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 &middot; View total and history</b><p>Profile strip, achievement hub and a paged history, newest first.</p><div class="api">POST <code>/karmapoints/read</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-6 &middot; Convert points to Karma Coins</b><p>Enter points in the wallet; the call returns 202 and the job credits the wallet.</p><div class="api">POST <code>/karmawallet/v1/redeem</code></div></div>
+          <div class="uc-card"><div class="who">Visitor</div><b class="t">UC-5 &middot; See the Hall of Fame</b><p>Public, previous-month top MDOs grouped by size.</p><div class="api">POST <code>/halloffame/read</code></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/karma-points/apis.md"></article><div class="md-src">source: docs/learning-hub/karma-points/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/karma-points/hld.md"></article><div class="md-src">source: docs/learning-hub/karma-points/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/karma-points/lld.md"></article><div class="md-src">source: docs/learning-hub/karma-points/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/karma-points/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/karma-points/operations-manual.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/karma-points/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/karma-points/as-built-requirements.md</div></div>
+    </div><!-- /fdoc karmapoints -->
+
     <div class="fdoc" data-fdoc="trainingplan" hidden>
     <div class="fp-hero">
       <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
