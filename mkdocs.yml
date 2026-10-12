@@ -26,6 +26,7 @@ nav:
       - LLD: competency-hub/lld.md
       - Operations Manual: competency-hub/operations-manual.md
       - As-Built Requirements: competency-hub/as-built-requirements.md
+      - Context Diagram: competency-hub/context-diagram.md
   - Features:
       - Explore Content:
           - explore-content/index.md
