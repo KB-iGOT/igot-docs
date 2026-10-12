@@ -128,6 +128,7 @@ nav:
           - HLD: learning-hub/curated-program/hld.md
           - LLD: learning-hub/curated-program/lld.md
           - Operations Manual: learning-hub/curated-program/operations-manual.md
+          - Context Diagram: learning-hub/curated-program/context-diagram.md
       - My Assigned Courses:
           - learning-hub/my-assigned-courses/index.md
           - Use Cases: learning-hub/my-assigned-courses/use-cases.md
