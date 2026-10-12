@@ -222,6 +222,7 @@ nav:
       - LLD: learning-hub/discussion-hub/lld.md
       - Operations Manual: learning-hub/discussion-hub/operations-manual.md
       - As-Built Requirements: learning-hub/discussion-hub/as-built-requirements.md
+      - Context Diagram: learning-hub/discussion-hub/context-diagram.md
   - Amrit Gyaan Kosh:
       - learning-hub/amrit-gyaan-kosh/index.md
       - Use Cases: learning-hub/amrit-gyaan-kosh/use-cases.md
