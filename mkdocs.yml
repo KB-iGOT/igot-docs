@@ -111,6 +111,7 @@ nav:
           - LLD: learning-hub/blended-program/lld.md
           - Operations Manual: learning-hub/blended-program/operations-manual.md
           - As-Built Requirements: learning-hub/blended-program/as-built-requirements.md
+          - Context Diagram: learning-hub/blended-program/context-diagram.md
       - Course:
           - learning-hub/course/index.md
           - Use Cases: learning-hub/course/use-cases.md
