@@ -91,6 +91,7 @@ nav:
           - LLD: learning-hub/ai-cbp-tool/lld.md
           - Operations Manual: learning-hub/ai-cbp-tool/operations-manual.md
           - As-Built Requirements: learning-hub/ai-cbp-tool/as-built-requirements.md
+          - Context Diagram: learning-hub/ai-cbp-tool/context-diagram.md
       - AI Assessment Tool:
           - learning-hub/ai-assessment-tool/index.md
           - Use Cases: learning-hub/ai-assessment-tool/use-cases.md
