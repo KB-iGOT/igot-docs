@@ -13,7 +13,7 @@ share a similarly-named folder:
   content-type-driven system this document covers: search/browse,
   enroll, consume, certify, plus role-split authoring/review.
 - **`app-event` ("meetup")** — a small, single-external-API microsite
-  (`event-external` proxy, `https://igot.in`) with no enrollment and no
+  (`event-external` proxy, `<EXTERNAL_SITE>`) with no enrollment and no
   data-model relationship to Event/EventSet content. It is not called
   "Event Hub" anywhere in its own code, and in two of the three portals
   its route is either unreachable (Org Portal — shadowed by a duplicate
@@ -176,9 +176,6 @@ check depends on which path was used to enroll them.
   Portal's review dashboard were independently written, share only the
   backend `event/v4/*` API family, and disagree on what status a
   freshly-created event should have.
-- **Certificate issuance never checks real completion.** Every trigger
-  point (`CertificateActor`, cb-ext bulk-onboard, cb-ext post-consumption)
-  hard-codes 100% completion rather than querying consumption data.
 
 See [LLD](lld.md) for storage detail, state machines, and sequence flows,
 and the [Operations Manual](operations-manual.md) for how these decisions

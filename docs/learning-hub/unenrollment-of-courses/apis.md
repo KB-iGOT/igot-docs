@@ -91,16 +91,7 @@ never checked.
 |---|---|---|---|
 | POST | `apis/proxies/v8/workflow/blendedprogram/unenrol` | `{KONG_API_BASE}/workflow/blendedprogram/unenrol` (generic `/workflow/*` wildcard proxy, no dedicated handler) | Withdraw a pending blended-program enrolment request — **the only unenroll-labelled call web makes**; there is no web endpoint for unenrolling from a plain course |
 
-Whitelist (`sunbird-cb-uiproxy/src/utils/whitelistApis.ts`):
-
-```ts
-'/proxies/v8/workflow/blendedprogram/unenrol': {
-  checksNeeded: [CHECK.ROLE],
-  ROLE_CHECK: [ROLE.PUBLIC],   // any authenticated session role — no elevated permission
-},
-```
-
-A second, unrelated whitelist entry exists for mentoring-session unenroll
+A separate route exists for mentoring-session unenroll
 (`/proxies/v8/mentoring/v1/sessions/unEnroll/:id`) — a different feature
 (1:1/group mentoring), not courses.
 

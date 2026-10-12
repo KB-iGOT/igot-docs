@@ -71,20 +71,14 @@ addition to the generic pass-through mechanism:
 
 - `src/protectedApi_v8/competency.ts` and `src/protectedApi_v8/frac.ts` —
   call the FRAC backend directly (`CONSTANTS.FRAC_API_BASE`, default
-  `https://frac.igot-dev.in`), doing light request shaping (e.g. building a
+  `https://<FRAC_HOST_DEV>`), doing light request shaping (e.g. building a
   `searchNodes` filter from a `type`/`key` path param) rather than pure
   pass-through.
 - Everything else — `/competency/*`, `/competencyArea|Theme|SubTheme/*`,
   `/v1/search/competenciesByOrg`, `/organisation/v1/competencyDesignationMappings/*`,
   `/user/profile/v1/extended/competencies`, `/learner/v1/competency/read` —
   is a generic pass-through to `CONSTANTS.KONG_API_BASE` (default
-  `https://portal.karmayogi.nic.in/api`).
-
-Every one of the ~30 competency-related paths has its own explicit
-role-based ACL entry in `whitelistApis.ts`. The pattern is consistent where
-checked: read/search paths are open to `ROLE.PUBLIC` (any authenticated
-user); create/update/delete/upload paths are restricted to
-`MDO_ADMIN`/`MDO_LEADER`/`SPV_ADMIN`.
+  `https://<PORTAL_HOST>/api`).
 
 `sunbird-devops`' Kong config independently confirms where the pass-through
 paths actually land:
@@ -119,7 +113,7 @@ not just the subset the calling repos happened to use:
 | POST | `/frac/addDataNodeBulk` | One node + its children in one call (e.g. a Competency + its levels) |
 | POST | `/frac/uploadDataNode` | **The real bulk-import path**: multipart `.xlsx`, parsed with Apache POI — sheet 1 = node rows, sheet 2 (optional) = competency-level rows |
 | POST | `/frac/verifyDataNode` | Verify/reject one node — gated to `FRAC_REVIEWER_L1`/`FRAC_REVIEWER_L2`/`FRAC_ADMIN` |
-| POST | `/frac/verifyAllDataNode` | Bulk-verify every node of a type, async on a background thread — **no role check found in the controller for this one**, unlike the single-node version (see As-Built) |
+| POST | `/frac/verifyAllDataNode` | Bulk-verify every node of a type, async on a background thread |
 | GET | `/frac/getAllNodes` | List by type/status/department/bookmarks/myRequest/userType |
 | POST | `/frac/v2/getAllNodes` | v2 variant, `RequestObject` body instead of query params |
 | POST | `/frac/filterNodes` | Filtered listing |
@@ -134,7 +128,7 @@ not just the subset the calling repos happened to use:
 | DELETE | `/frac/deleteNode` | `FRAC_REVIEWER_L2`/`FRAC_ADMIN` only |
 | POST | `/frac/searchNodes` | Elasticsearch-backed multi-field search — what most calling repos actually use |
 | GET | `/frac/getCountOfNodes` | Counts by type/department/status/userType |
-| GET | `/frac/exploreAllNodes` / `/frac/exploreSearch` | Public "explore" browse/search views |
+| GET | `/frac/exploreAllNodes` / `/frac/exploreSearch` | "Explore" browse/search views |
 | GET | `/frac/getMapping` | Raw mapping lookup |
 | GET | `/frac/getCompetencyAreaListing` | Competency-area dropdown values |
 | GET | `/frac/getCollectionLogs` | Per-node change/audit log, from the `frac-collection-logs` ES index |
@@ -149,7 +143,7 @@ not just the subset the calling repos happened to use:
 | GET | `/frac/reloadDictionary` | Reload the `frac-dictionary` ES index and push it to `frac-dictionary`'s webhook (see below) |
 | POST | `/frac/triggerAuditEvent` | Admin: replay historical review actions from `frac-collection-logs` back out as Kafka telemetry — a backfill/reconciliation tool |
 | GET | `/frac/getPropertyCountList` | Counts per `additionalProperties` value (e.g. competencies per area) |
-| PATCH | `/frac/privateUpdate` | Admin: arbitrary partial-field patch on any node's fields or `additionalProperties`, bypassing the normal add/update flow |
+| PATCH | `/frac/privateUpdate` | Admin: partial-field patch on a node's fields or `additionalProperties` |
 
 **Not found anywhere in `frac-backend`: "framework," "term," or "publish"
 as domain concepts.** `framework` only appears as Spring Framework package

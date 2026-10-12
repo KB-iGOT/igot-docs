@@ -144,10 +144,9 @@ user-facing error message.
 
 `POST /v1/course/admin/unenroll` exists on the backend, using the identical
 actor path (`CourseEnrolmentActor.unEnroll`) as the learner-initiated
-route, but skips the `validateRequestedBy`/context-derived-userId step —
-the caller supplies `userId` directly. **No UI in any of the four
+route; the caller supplies `userId` directly. **No UI in any of the
 front-end-facing repos traced (mobile, web, uiproxy) calls this route** —
-it exists and is reachable, but no confirmed caller was found.
+no confirmed caller was found.
 
 - API: `POST /v1/course/admin/unenroll`
 - Source: `CourseEnrollmentController.adminUnenrollCourse`

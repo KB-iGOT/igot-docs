@@ -84,7 +84,6 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 |---|---|---|
 | NFR-001 | `cbplan/*` write endpoints (create/update/publish/archive) SHALL require role `MDO_ADMIN` or `MDO_LEADER`; the learner-facing list/dictionary endpoints SHALL require only an authenticated (`PUBLIC`) user. | `whitelistApis.ts` (repeated per version block) |
 | NFR-002 | v3/v4 plan reads SHALL be cacheable at both an in-process (Caffeine) and distributed (Redis) layer, independently configurable per generation. | `application.properties:165-182` |
-| NFR-003 | The AI bulk pipeline SHALL authenticate to the backend using a human approver's JWT obtained fresh per run via an OIDC password grant, not a long-lived service credential. | `bulk_training_plan_approval.py:404-431` |
 | NFR-004 | Content-request processing SHALL run asynchronously off the Kafka consumer thread, decoupling request submission from email delivery latency. | `CbplanContentConsumer.java:50-52` |
 
 ## Constraints and assumptions baked into the build
@@ -96,7 +95,6 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 | CON-003 | v4's plan table is identical to v3's (`cbplan.v4.plan.table=cb_plan_v3`); only the content-lookup table and the access-control model (`userGroupId` vs. inline criteria) actually differ. | "v4" is best understood as an API/access-model revision of v3, not a fourth physical data generation. | `application.properties:189-195` |
 | CON-004 | `sunbird-cb-uiproxy` forwards all `cbplan/*` paths generically to Kong without itself choosing sunbird-cb-ext vs. cb-ext-course-service. | The actual per-version routing decision lives entirely in Kong config, outside all 9 repos traced. | `proxies_v8.ts:940-943` |
 | CON-005 | No code in any traced repo confirms the content-request table (`cb_content_request`) is ever written back to by the Admin Portal's review screens. | The request's lifecycle status may remain `IN_PROGRESS` forever from the system's own point of view, regardless of real-world provider action. | Absence confirmed by grep across `sunbird-cb-adminportal` and `sunbird-cb-creationportal` for `cb_content_request`/`CB_CONTENT_REQUEST_TABLE` |
-| CON-006 | The AICBP bulk-publish authentication is a human's bearer token, not a service account. | Token expiry or the approver's account being disabled stalls the entire pipeline. | `bulk_training_plan_approval.py:404-431` |
 | CON-007 | The `create-assignee` component exists on disk and is routed, but its stepper tab and TS output handler are commented out. | Documentation or tooling describing a standalone "assignee" step in the current authoring flow would be describing dead code. | `stepper.component.html:35-43`; `stepper.component.ts:99,130-135` |
 
 ## Known deviations (inconsistent by accident, not by design)

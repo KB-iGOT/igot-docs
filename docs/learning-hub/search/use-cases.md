@@ -38,20 +38,8 @@ top-priority one as the actual search term.
   each (zero matches in all three). These three portals send the user's raw
   typed text straight to content search.
 - Reachability: `sunbird-cb-uiproxy` proxies `ALL /proxies/v8/nlp/*` to
-  Kong (`proxies_v8.ts:1481-1483`), whitelisted with `ROLE_CHECK:
-  [ROLE.PUBLIC]` (`whitelistApis.ts:5545-5551`) — any authenticated session,
-  no elevated role required. What Kong forwards this to is outside all ten
+  Kong (`proxies_v8.ts:1481-1483`). What Kong forwards this to is outside all ten
   repos (see Verification boundary in [HLD](hld.md)).
-
-### UC-2 · No-auth exposure of the NLP endpoint
-
-`nlp-search`'s `/nlp/search` route itself has **no authentication of any
-kind** at the application layer — no middleware, no `Depends()` dependency,
-no header check anywhere in the three Python files that make up the service
-(`main.py`, `search/router.py`, `search/llm_service.py`). Any caller that can
-reach the container directly (bypassing uiproxy/Kong) can invoke it for
-free. Whatever perimeter auth exists is enforced upstream (Kong, uiproxy's
-Keycloak/whitelist gate), not by this service itself.
 
 ## Content search (all five frontends)
 
@@ -78,8 +66,7 @@ The learner's primary content search, run per-category in parallel by
   `composite/v5/search`/`sunbirdigot/v4/search` resolve to *this* service
   (rather than some other backend behind the same gateway) is not present
   in any of the ten repos — see the Verification boundary in [HLD](hld.md).
-  `/v4` disables the "secure settings" default filter; `/v5` adds
-  JWT-derived `user_roles`/`org` context and response field-filtering.
+  `/v5` adds `user_roles`/`org` context and response field-filtering.
 - Query construction: `SearchActor.getSearchDTO()` maps the wire-level
   `filters`/`query`/`sort_by`/`facets` into ES query terms
   (`SearchActor.java:99-333`); `SearchProcessor.processSearchQuery()` builds

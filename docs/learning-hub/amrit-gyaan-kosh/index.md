@@ -14,8 +14,7 @@ the mobile app; there is no dedicated backend service of its own.
 - **Route**: `app/amrit-gyaan-kosh` (web portal — landing, view-all, and
   `player/{pdf|audio|youtube|video}/:resourceId`) and `/knowledgeResourcesPage`
   (mobile, hub tile labelled "AGK")
-- **Who it's for**: any logged-in user — access is gated by a generic route
-  guard and a feature-flag JSON, not a per-user membership attribute; content
+- **Who it's for**: any logged-in user; content
   itself is split into a CBC-authored "Case Studies" tab and an "Other
   Resources" tab by an org-id filter, not by user role
 - **Status**: ⚠️ no dedicated backend anywhere in the eight repos analyzed —

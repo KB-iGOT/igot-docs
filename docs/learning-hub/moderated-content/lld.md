@@ -67,23 +67,16 @@ flowchart TD
     Filt["Client builds filter: courseCategory in [Moderated Course/Program/Assessment], secureSettings.organisation=ownOrgId, status=Live, + isVerifiedKarmayogi=No if unverified"]
     GW["sunbird-cb-uiproxy proxy"]
     SA["knowledge-platform SearchActor.getSearchDTO"]
-    Ctx{"Caller passed explicit secureSettings.* filter?"}
-    Auto["Auto-inject secureSettings.organisation = x-user-channel-id header"]
     SP["SearchProcessor - ES nested query: exists(secureSettings.organisation) AND term(=orgId)"]
-    Res["Results scoped to caller's org, regardless of client-side filter correctness"]
+    Res["Results scoped to caller's org"]
 
-    Req --> Filt --> GW --> SA --> Ctx
-    Ctx -- no --> Auto --> SP
-    Ctx -- yes --> SP
+    Req --> Filt --> GW --> SA --> SP
     SP --> Res
 ```
 
 **Verification boundary**: query construction traced through
 `SearchProcessor.formQueryImpl` (lines 432-494); not traced through a
-live Elasticsearch request end-to-end, so the net effect of the
-`mustNot(getSecureSettingsSearchDefaultQuery())` branch (used when secure
-settings are neither explicitly enabled nor disabled) is inferred from
-the query-builder code, not runtime-confirmed.
+live Elasticsearch request end-to-end.
 
 ## Storage reality — discussion text-profanity moderation (unrelated data model)
 
@@ -128,11 +121,6 @@ flowchart TD
     Update --> Alert --> Sync
     IsProfane -- false --> NoOp
 ```
-
-**Fail-open on error**: if the outbound registry call throws,
-`profanityCheckStatus` is set to `profanityCheckCallFailed` with
-`isProfane=false` (line 70-73 of `ProfanityCheckServiceImpl.java`) — the
-post stays visible, not hidden pending retry.
 
 **Payload-shape mismatch (flagged, not confirmed broken at runtime)**:
 `NotificationTriggerService.sendNotification` posts a flat
@@ -200,9 +188,9 @@ flowchart TB
 | `courseCategory` distinguishes moderated content | Data model only, no runtime validation logic beyond enum values | `ECourseCategory` (creationportal), primary_categories.dart (mobile) |
 | MDO org restriction | Backend, search-engine level | `SearchProcessor.getSecureSettingsSearchQuery` |
 | Verified-Karmayogi restriction | Backend, conditional (only for unverified callers) | `ContentInfoUtil.applyVerifiedStatusFilter` |
-| Content review requires `CONTENT_REVIEWER` role | Frontend (role-gated tabs) + backend route ACL (`sunbird-cb-uiproxy whitelistApis.ts`, ~50 `CONTENT_REVIEWER`-gated routes) | `contents.component.ts`, `whitelistApis.ts` |
+| Content review requires `CONTENT_REVIEWER` role | Frontend (role-gated tabs) | `contents.component.ts` |
 | Parent withdraw blocked if child is Live | Frontend only | `reject-content.service.ts.getChildListData` |
-| Discussion post profanity check | Backend, async, fail-open on error | `ProfanityCheckServiceImpl`, `ProfanityConsumer` |
+| Discussion post profanity check | Backend, async | `ProfanityCheckServiceImpl`, `ProfanityConsumer` |
 | Flagged post hidden from listings | Backend, post-filter on every listing query | `DiscussionServiceImpl` (`IS_PROFANE=false` at every search/feed call site) |
 | Flagged post deleted or submission blocked | **Not enforced anywhere** — soft-hide only | — |
 | Course/program approval notification | **No confirmed producer** in any of the 13 repos | — |

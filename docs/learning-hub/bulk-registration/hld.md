@@ -24,7 +24,7 @@ one of them is reachable from a live, routed UI.
    in-process Akka call rather than HTTP — and no UI in any of the 8
    repos was found calling it. A Kong route exists for it; nothing
    observed uses that route.
-3. **The legacy, bypass pipeline** — `sunbird-cb-portal`'s tenant-admin
+3. **The legacy pipeline** — `sunbird-cb-portal`'s tenant-admin
    "user-bulk-upload" page, functionally unchanged since 2021, posts to
    `sunbird-cb-uiproxy`'s own `admin/userRegistration.ts`, which parses
    the file and calls **Keycloak directly**, never touching
@@ -137,10 +137,10 @@ flowchart TB
   reaches the identical underlying actor via an in-process Akka `ask` —
   built, seemingly, to do the same job a second, unconnected way. Neither
   reuses the other's CSV-parsing, batch-tracking, or Cassandra schema.
-- **A fourth, fully separate implementation bypasses both services.**
+- **A fourth, fully separate implementation exists outside both services.**
   `sunbird-cb-portal`'s legacy tenant-admin page talks straight to
   Keycloak through a dedicated uiproxy route, with its own Cassandra
-  table, no OTP gate, and no size cap — and its business logic hasn't
+  table — and its business logic hasn't
   changed since 2021 even though the surrounding codebase has been
   actively developed.
 - **OTP verification protects the admin, not the new users.** Before any

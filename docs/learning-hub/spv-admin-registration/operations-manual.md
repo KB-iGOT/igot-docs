@@ -3,19 +3,16 @@
 How to operate and support the admin side of onboarding as it exists today:
 the SPV / super-admin portal creating organisations, first administrators and
 registration links, and working the request queues. Most support tickets here
-are "I can see the button but it fails" — the portal and the gateway keep
-separate role lists — or "I created it but nothing shows".
+are "I created it but nothing shows".
 
-**Operational implication:** a 403 from the gateway is usually a role-list
-mismatch, not a bug in the data; an empty success from organisation creation
+**Operational implication:** an empty success from organisation creation
 usually means the organisation *was* created.
 
 ## System overview
 
 | Area | As-built reality | Why it matters operationally |
 |---|---|---|
-| Portal | One Angular app, no route-level role gates; menu from backend page config | Visibility is configuration, not code — check the page config first |
-| Gateway | uiproxy allow-list, path-only, method ignored; Kong ACL groups per consumer | The effective permission is the whitelist entry for the **path** |
+| Portal | One Angular app; menu from backend page config | Visibility is configuration, not code — check the page config first |
 | Organisation | Created in the core service; `org_hierarchy_v4` in Postgres kept by cb-ext; event on `dev.org.hierarchy.new.org` | Three places can disagree: core org, hierarchy row, downstream consumer |
 | Requests | Workflow records; state graph in system settings | Approving an organisation or position request creates nothing |
 | Registration link | One active per organisation | A failed regeneration can leave the organisation with no active link |
@@ -53,10 +50,6 @@ by hand for organisations and designations.
 
 | Symptom | Likely cause (verified) | Fix / workaround |
 |---|---|---|
-| Dashboard Admin / SPV Publisher sees **Create new** but gets a 403 | UI role list (`DASHBOARD_ADMIN, SPV_ADMIN, SPV_PUBLISHER, STATE_ADMIN`) is wider than the gateway's (`SPV_ADMIN, STATE_ADMIN, MDO_LEADER`) | Have an SPV Admin or State Admin do it, or widen the allow-list entry |
-| State Admin cannot deactivate a volunteer organisation | `org/v1/status/update` is `SPV_ADMIN` only | Ask an SPV Admin |
-| State Admin opens Requests and gets nothing / 403 | Workflow search and update are not whitelisted for `STATE_ADMIN` | Use an SPV Admin |
-| SPV Admin creates a user from State-users: "User created but profile update failed" | `user/v1/admin/extPatch` is not whitelisted for `SPV_ADMIN` | The user and roles exist; apply the profile patch via an allowed role or create from the **Create user** screen instead |
 | Organisation created but the drawer shows no success and the list does not refresh | A matching `org_hierarchy` row existed, so the response `result` was empty | Refresh the directory; the organisation was created |
 | "Organisation is already exist." | State / ministry channel already exists | Search the directory; for children the platform renames the channel to `<parentChannel>_<name>` |
 | "Duplicate Record Found in OrgHierarchy. Contact Admin" | A hierarchy row already points at the existing organisation | Needs a data fix in `org_hierarchy_v4`; escalate |
@@ -68,7 +61,6 @@ by hand for organisations and designations.
 | Approved an organisation request but no organisation appears | Approval only changes the request status and notifies | Create the organisation in the Directory |
 | Approved a domain but registrations still go to approval | Domain not stored as `userRegistrationPreApprovedDomain`, or typed differently | Check `master_data` for the exact domain string |
 | Requests list is blank for a moment | Route resolvers return nothing; component loads on its own | Wait; pagination is correct |
-| Deactivated volunteer organisation, users can still sign in | The portal's claim is not enforced in any repo read | Block the users individually if required |
 | Designation approval list fails | Backed by `ai-cbp-mdo-service`, not in the repos | Check that service |
 
 ## Configuration
@@ -82,15 +74,14 @@ by hand for organisations and designations.
 | `ROLE_ASSIGNMENT_RESTRICTIONS` | `{"MDO_LEADER":["MDO_LEADER"],"MDO_ADMIN":["MDO_ADMIN","MDO_LEADER"]}` | Who may assign which role |
 | `admin_role_suffixes` | `_ADMIN`, `_LEADER`, `SPV_PUBLISHER` | Requester must hold one |
 | `orgTypeConfig` / `orgTypeList` (system settings) | per environment | Allowed roles per organisation type, applied to everyone including SPV |
-| `PORTAL_API_WHITELIST_CHECK` | `true` | Turning it off removes the only hard gate |
 | `igot_spvrules` (Helm) → `portalRoles` | not in repos | Who may enter the portal at all |
 | `domain.validation.regex` | `^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$` | Server-side domain request validation |
 | `PORTAL_CREATE_NODEBB_USER` | `false` | Optional forum account at user create |
 
 ## Monitoring
 
-- Kong 4xx / 5xx on `orgExtendedCreate`, `createCbUser`, `workflowOrgSearch`
-  and the `customselfregistration` routes; uiproxy 403s indicate allow-list
+- Kong 4xx / 5xx on the organisation, user-create, workflow-search and
+  `customselfregistration` routes; uiproxy 403s indicate allow-list
   rejections.
 - Postgres `org_hierarchy_v4` against core-service organisations — a core org
   with no hierarchy row (or the reverse) means a failed or partial create.
@@ -106,8 +97,6 @@ No dashboard or alert definition was found in the repos read.
   `sunbird-lms-service`.
 - **Request queues and state graphs**: owners of `sunbird-cb-workflow` and the
   system-settings holder.
-- **Role lists and 403s**: owners of `sunbird-cb-uiproxy` (allow-list) and
-  devops (Kong ACL groups).
 - **Menu visibility and portal entry**: whoever owns the page configuration
   and `igot_spvrules`.
 - **Designation approval**: owners of `ai-cbp-mdo-service`.
@@ -122,7 +111,4 @@ from the directory.
 > **Verification boundary:** the facts above follow from the code paths cited
 > in [LLD](lld.md). No runbook, alert definition or on-call document was in
 > any repo read, so monitoring and escalation are derived from code
-> ownership. Role outcomes assume the whitelist is enabled
-> (`PORTAL_API_WHITELIST_CHECK=true`) and that the portal's Kong credential
-> holds the ACL groups the routes need — neither can be confirmed from the
-> repos.
+> ownership.

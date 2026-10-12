@@ -7,8 +7,7 @@
 The learner opens `/public/signup` (web) and fills a two-step form: ministry
 or state, organisation, designation and email in step one; name, group,
 mobile and two confirmation boxes in step two. Both the email and the mobile
-must be verified with an OTP before Register is enabled — but that
-enforcement is in the browser; the register endpoint does not re-check it.
+must be verified with an OTP before Register is enabled.
 The submit sends a registration request and the learner sees a success dialog.
 
 - APIs: `POST /api/user/registration/v1/register` ·
@@ -33,18 +32,14 @@ On the public sign-up page and in mobile direct registration the email OTP
 goes through the **domain-validated** generate call: the email's domain must
 be in the approved-domain list stored in `sunbird.master_data`. A rejected
 domain surfaces as "Your email domain isn't recognised — please contact your
-department for registration." In the register-via-link flows the plain OTP
-generate call is used instead, so the domain list is not consulted.
+department for registration."
 
 - APIs: `POST /api/otp/ext/v1/generate` (domain-validated) ·
   `POST /api/otp/v1/generate` (plain) · `POST /api/otp/v1/verify`
 
 ### UC-4 · Verify the mobile number (Karmayogi)
 
-The mobile OTP uses the plain generate/verify pair on every client. The
-server limits OTP generation to 5 per hour and 20 per day per key, allows 2
-verification attempts, and re-issues the same code while an earlier one is
-still valid.
+The mobile OTP uses the plain generate/verify pair on every client.
 
 - APIs: `POST /api/otp/v1/generate` · `POST /api/otp/v1/verify`
 
@@ -86,7 +81,7 @@ role, generates a set-password link and sends the `iGotWelcome_v3` welcome
 email. The registration record ends as `WF_APPROVED` or `FAILED`.
 
 - APIs: `POST /v5/cb/user/self/register` or `/v5/cb/user/custom/register` ·
-  `PATCH /private/user/v1/update` · `POST /v1/user/public/role/assign` ·
+  `PATCH /private/user/v1/update` ·
   `POST /private/user/v1/password/reset` ·
   `POST /private/user/v1/notification/email`
 
@@ -164,8 +159,8 @@ Creating organisations, the first administrators, and approving requests for
 new organisations, designations and email domains are done from the SPV /
 super-admin portal and documented in their own feature:
 [SPV & Admin Registration](../spv-admin-registration/use-cases.md). The one
-link back into this feature: approving an email domain makes everyone
-registering from that domain skip manual approval (UC-7).
+link back into this feature: approving an email domain adds the domain to
+the pre-approved list (UC-7).
 
 ### UC-15 · Onboard public participants into an event (SPV Admin / MDO Admin)
 
@@ -186,14 +181,11 @@ Listed here because the code and the Kong routes are named *bulkonboard*.
 | Email domain not recognised (public sign-up) | The client shows the domain message for *any* `errmsg` returned by email-OTP generate, not just the domain failure |
 | Registration link past its end date or not `ACTIVE` | Link check returns 400 "Registration link is not active"; web shows a "registrations are closed" dialog, mobile a bottom sheet |
 | Link check on the register call | Date errors are returned as **HTTP 200** with the message in the result body, not as an error |
-| Link without an id segment in the register call | Passes the registration-date check (the check only looks for `/crp/(\d+)`) |
 | Generating a second link for an org | All active links of that org are expired first |
 | Org has no framework designations | Link generation is blocked with "Designation is not mapped to the organization" |
-| Failed account creation | Retry with the same email or phone within 300 seconds is rejected as a duplicate request (the Redis guard is set before validation and never cleared) |
 | Account created by HTTP in the core user service | No welcome email or SMS is sent by that service — only the cb-ext registration consumer or uiproxy create-user sends one |
 | Admin creates a user and welcome-mail step fails | HTTP 500, but the user already exists (no rollback) |
 | Admin passes `isEmailRequired: false` | Coerced to `true` — the welcome mail cannot be suppressed on this endpoint |
 | MDO_LEADER role requested for an org that already has one | Rejected ("MDO Leader already exist in org") |
-| Mobile OTP verify throws or returns no `errmsg` | The app treats it as verified (fail-open); only server-side checks stand behind it |
 | Parichay user without a mobile number (web) | Redirected to logout with an error; mobile does not require one |
 | `X_CHANNEL_ID` root org | Treated as "not yet onboarded" by uiproxy and mobile |

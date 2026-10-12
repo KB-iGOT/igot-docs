@@ -16,9 +16,7 @@ backend contract.
 
 The learner can attach one PDF (≤2MB) or one MP4 (≤200MB) as supporting
 evidence. Both web and mobile enforce the same size thresholds
-independently — there's no shared validation code between them, and the
-server only checks the client-declared content type, not the file's actual
-content.
+independently — there's no shared validation code between them.
 
 - API: `POST /peersurvey/upload`
 
@@ -27,11 +25,6 @@ content.
 The learner picks 2–3 peers (the server itself would accept up to 5 — the
 2–3 limit is a client-side choice, enforced independently and identically
 by both web and mobile UIs).
-
-- **Edge case worth knowing**: nothing in the system stops a learner
-  naming themselves as a peer, or stops the same peer from being asked to
-  review the same submission twice — there's no reviewer-uniqueness or
-  self-review check anywhere in the traced code.
 
 ### UC-4 · Wait for and receive a decision
 
@@ -95,7 +88,4 @@ admin has to check back rather than being notified when it's ready.
 |---|---|
 | Peer rejects the submission | Final — there's no built-in way to resubmit for the same request today |
 | Request sits unreviewed indefinitely | It can display as "expired" on next view, but nothing actually escalates it, reminds the peer, or reassigns it — there's no escalation path at all |
-| Learner names themselves, or the same peer twice | Not blocked — no such check exists |
 | Peer decides after their request already shows "expired" | Still succeeds — expiry is a display calculation only, not an enforced cutoff |
-| Two admins in the same department look at the report list | Both see every report request for the department — the list isn't scoped to who requested it |
-| Uploaded file's declared type doesn't match its real content | Not caught — validation trusts the browser/app-declared type only |

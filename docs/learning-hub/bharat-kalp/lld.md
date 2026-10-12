@@ -19,9 +19,7 @@ Reverse-engineered from `sunbird-cb-portal` (`origin/cbrelease-4.8.40`, commit
 | File | Role |
 |---|---|
 | `src/app/routes/route-kalp.module.ts` | Wraps `KalpModule` for the app-level lazy route |
-| `src/app/app-routing.module.ts` (route entry `app/learn/bharat-kalp`) | Registers the lazy route, guards, resolver, route data |
-| `src/app/guards/bharat-kalp.guard.ts` | `BharatKalpGuard` — route-level access control |
-| `src/app/guards/general.guard.ts` | `GeneralGuard` — generic account-restriction check (applied alongside) |
+| `src/app/app-routing.module.ts` (route entry `app/learn/bharat-kalp`) | Registers the lazy route, resolver, route data |
 | `src/app/home/home-v2/home-v2-resolver.service.ts` | Filters the home spotlight config to hide the Bharat Kalp card for non-members |
 | `src/app/home/home-v2/in-spotlight-v2/in-spotlight-v2.component.ts` | Conditionally renders the spotlight card |
 | `src/app/component/in-sight-side-bar/in-sight-side-bar.component.ts` | Notification banner click/visibility handling for `bharat-kalp` |
@@ -55,7 +53,7 @@ via `@sunbird-cb/consumption` and `@sunbird-cb/discussion-v2`.*
 
 ```mermaid
 flowchart LR
-    R0["app/learn/bharat-kalp\nguards: GeneralGuard, BharatKalpGuard\nresolve: pageData → PageResolve\ndata: pageKey='bharat-kalp'"]
+    R0["app/learn/bharat-kalp\nresolve: pageData → PageResolve\ndata: pageKey='bharat-kalp'"]
     R0 -- "loadChildren" --> RKM["RouteKalpModule → KalpModule"]
     RKM --> R1["'' (child)\n→ BharatKalpPageComponent\nresolve: formData → BharatKalpFormService\npageId='app/learn/bharat-kalp'"]
     RKM --> R2["'see-all' (child)\n→ BharatKalpSeeAllComponent\nresolve: formData → BharatKalpFormService\npageId='app/learn/bharat-kalp/see-all'"]
@@ -63,9 +61,6 @@ flowchart LR
     style R0 fill:#eef4ff,stroke:#3b5bdb
     style RKM fill:#eef4ff,stroke:#3b5bdb
 ```
-
-No additional guard is applied at the child-route level — access control is
-entirely enforced once, at module load, by `BharatKalpGuard`.
 
 ## Component detail
 
@@ -186,56 +181,14 @@ resolve(route): Observable<IResolveResponse<any>>
 - On error: returns `{ data: null, error }` rather than throwing — downstream
   components must always null-check `formData?.data?.result?.form?.data`.
 
-## Access control — field-level detail
+## Program membership
 
-Single source attribute:
-`unMappedUser.profileDetails.additionalProperties.isBharatKalpMember`, read
-via `lodash.get` in four independent places (route guard, home spotlight
-resolver, home spotlight component, notification side-bar). There is no
-environment or config-based feature flag — the program is entirely
+Visibility of the feature is driven by one profile attribute,
+`unMappedUser.profileDetails.additionalProperties.isBharatKalpMember`. There
+is no environment or config-based feature flag — the program is entirely
 user-attribute driven, presumably set by an out-of-band
-enrollment/eligibility process on the backend.
-
-```mermaid
-flowchart TD
-    A["User navigates to\napp/learn/bharat-kalp"] --> B{"GeneralGuard:\naccount restricted?"}
-    B -- yes --> X1["Blocked\n(generic account restriction)"]
-    B -- no --> C{"BharatKalpGuard:\nisBharatKalpMember === true\n(strict boolean)"}
-    C -- false / not boolean --> X2["Redirect to /page-not-found"]
-    C -- true --> D["KalpModule loads\n(lazy chunk)"]
-    D --> E["BharatKalpFormService.resolve()\nfetch/cache bkConfig"]
-    E --> F["Landing page renders"]
-
-    G["Home page loads"] --> H{"isBharatKalpMember\n=== true or 'true'"}
-    H -- no --> I["Spotlight card hidden"]
-    H -- yes --> J["Spotlight card shown\n→ links to app/learn/bharat-kalp"]
-    J -.click.-> A
-
-    style X2 fill:#ffe3e3,stroke:#c92a2a
-    style X1 fill:#ffe3e3,stroke:#c92a2a
-    style C fill:#fff9db,stroke:#f08c00
-    style H fill:#fff9db,stroke:#f08c00
-```
-
-The gap the diagram makes visible: path `G → H → J → A → C` can fail at `C`
-even though `H` passed, because `C`'s check is stricter than `H`'s.
-
-| Check site | File:approx. line | Accepted truthy values | Failure behavior |
-|---|---|---|---|
-| Route guard | `bharat-kalp.guard.ts:15-27` | `true` (boolean only) | `router.parseUrl('/page-not-found')` |
-| Home spotlight filter | `home-v2-resolver.service.ts:89-104` | `true` or `'true'` | Card filtered out of `spotlightConfig` |
-| Home spotlight render | `in-spotlight-v2.component.ts:53-59` | `true` or `'true'` | Card not prepended to spotlight list |
-| Notification banner | `in-sight-side-bar.component.ts:868-889` | `true` or `'true'` | Notification not actionable; click re-checks and redirects to `/page-not-found` on failure |
-
-**Defect risk (flag for QA / backend contract):** if the backend ever emits
-`isBharatKalpMember` as the string `"true"` rather than boolean `true`, the
-guard at (1) will fail while (2)-(4) will succeed — a member sees the entry
-point (spotlight card / notification) but is redirected to `/page-not-found`
-upon clicking through. This inconsistency is the single highest-value fix in
-the feature. Recommend normalizing the truthy check to be identical across all
-four sites (prefer the guard's strict-boolean version, and coerce the profile
-attribute server-side, OR make all four checks accept both types
-consistently).
+enrollment/eligibility process on the backend. The home spotlight card and
+the notification banner are shown only for members.
 
 ## Module wiring detail
 
@@ -293,15 +246,9 @@ form.data:
 
 ## Recommendations carried forward (design debt, not bugs to silently fix)
 
-1. Unify the `isBharatKalpMember` truthy check across all four call sites (see
-   Access control — field-level detail).
-2. Consider giving `BharatKalpFormService._cache` a key (userId/session) or
-   explicit invalidation hook tied to logout, to avoid serving stale config
-   across a user switch in the same tab (see the [Operations
-   Manual](operations-manual.md) troubleshooting guide).
-3. Batch the per-item external enrollment GET calls if a week's `extCourses`
+1. Batch the per-item external enrollment GET calls if a week's `extCourses`
    list is expected to grow (see Component detail).
-4. Introduce typed interfaces for the `bkConfig`/`weekProgress` contract (see
+2. Introduce typed interfaces for the `bkConfig`/`weekProgress` contract (see
    Data contracts consumed) to catch malformed CMS-authored config at
    compile/runtime instead of silently degrading to empty UI.
 

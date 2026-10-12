@@ -72,8 +72,7 @@ outside the four repos scoped (dashed arrows mark that boundary).
 | `content-strip-multiple` + `curated-courses` module | Org-targeted curated strips and a "Curated Collections" explorer that pathway content *can* ride on, if remote config includes it | `sunbird-cb-portal` |
 
 **Not found in any of the four repos** (external, out of scope for this
-trace): a bespoke "pathway cards" frontend component, attempt-count/cool-off
-enforcement, and the certificate/QR/karma-award service implementations.
+trace): a bespoke "pathway cards" frontend component, and the certificate/QR/karma-award service implementations.
 
 ## Key design decisions
 
@@ -81,7 +80,7 @@ enforcement, and the certificate/QR/karma-award service implementations.
   generic Content CRUD actors and routes; the only pathway-aware backend
   logic is a read-side enrichment layer (`ExtendedContentActor`) and a cache
   invalidation rule. This keeps the feature cheap to add but means it has no
-  independent scaling, validation, or query surface of its own.
+  independent scaling or query surface of its own.
 - **Unlock state is always client-derived, never server-pushed.** Both web
   and mobile independently recompute milestone lock/complete state from
   generic progress data on every relevant event (RxJS subjects on web,
@@ -90,15 +89,10 @@ enforcement, and the certificate/QR/karma-award service implementations.
   concurrent session's completion in real time, and there is no shared code
   between the two clients' unlock engines — they're structurally similar,
   independently written.
-- **Config-not-code for two whole subsystems.** Learner-facing access control
-  (role/org/group visibility rules) and the discovery surfaces' actual
-  content filters both come from remotely-hosted JSON/page configuration, not
+- **Config-not-code for discovery.** The discovery surfaces' actual
+  content filters come from remotely-hosted JSON/page configuration, not
   from anything in these repos — meaning their real behaviour in production
   can differ from what static code review can confirm.
-- **Milestone data has no schema, by omission not design.** `milestones_v1`
-  is an opaque JSON blob with no JSON Schema in `knowledge-platform/schemas/`
-  and no server-side structural validation — the backend stores whatever a
-  client sends.
 
 See [LLD](lld.md) for the storage reality, state machines, and sequence
 flows, and the [Operations Manual](operations-manual.md) for how these

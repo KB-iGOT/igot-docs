@@ -46,8 +46,7 @@ duplicated, non-shared logic in more than one of them.
    Cassandra table used for course content consumption.
 5. **Receives a certificate**, if eligible — triggered either automatically
    post-publish, via an admin's bulk-onboard CSV upload, or via an ops-run
-   reconciliation script; every path hard-codes 100% completion rather
-   than checking real consumption data.
+   reconciliation script.
 6. **Earns karma points** for attendance, pushed to a shared Kafka topic
    by two independently-written, near-identical producer methods.
 
@@ -82,9 +81,9 @@ requirement set with every known deviation called out.
 > `sunbird-cb-orgportal` (`cbrelease-4.8.41`, `90f9be63`),
 > `sunbird-cb-creationportal` (`cbrelease-4.8.41`, `5a0f8b5de`),
 > `sunbird-cb-uiproxy` (`cbrelease-4.8.40`, `80d1585`), `sunbird-cb-ext`
-> (`4.8.40.1-KB-15294`, `7a46b27c`), `sunbird-course-service`
+> (`4.8.40.1-<JIRA_ID>`, `7a46b27c`), `sunbird-course-service`
 > (`cbrelease-4.8.41`, `95cb3c90`), `knowledge-platform`
-> (`4.8.41-KB15457`, `b7f050a4`), and `knowledge-platform-jobs`
+> (`4.8.41-<JIRA_ID>`, `b7f050a4`), and `knowledge-platform-jobs`
 > (`dev-4.8.41-devops`, `bfec7231`). A separate, smaller "meetup" microsite
 > also lives under a similarly-named `app-event` folder in the three portal
 > repos — it is a distinct, unrelated feature (single external API, no

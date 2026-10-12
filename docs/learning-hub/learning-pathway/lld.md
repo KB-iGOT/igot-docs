@@ -23,7 +23,7 @@ generic type `Content`:
 | `mimeType` | string | `"application/vnd.ekstep.content-collection"` |
 | `title`, `description`, `purpose` | string | learning outcome stored in `purpose` |
 | `appIcon`, `posterImage`, `creatorLogo` | string (URL) | |
-| `milestones_v1` | string (JSON) or list | opaque, unvalidated by any schema |
+| `milestones_v1` | string (JSON) or list | opaque JSON |
 | `preliminaryAssessment` | string | assessment content identifier |
 | `accessSettingsEnabled` | boolean | |
 | `duration` | number | computed client-side, stored server-side |
@@ -63,7 +63,7 @@ key or graph edge:
 ```mermaid
 flowchart TB
     PN["Content node (Neo4j) - courseCategory = Learning Pathway - identifier, title, status, versionKey, duration"]
-    MV["milestones_v1 - opaque JSON string or list, no schema, no validation"]
+    MV["milestones_v1 - opaque JSON string or list"]
     PA["preliminaryAssessment - single identifier string"]
 
     PN -->|field| MV
@@ -189,10 +189,6 @@ flowchart TD
     NextRule --> Achieve["Mobile: View Achievement button appears"]
 ```
 
-There is no "max attempts" or "cool-off" branch anywhere in the
-`Attempt → Pass?` loop — a learner can retry the milestone assessment
-indefinitely on both clients.
-
 ## State machine
 
 **Pathway status** (informal, string-literal-based — no enum found in code):
@@ -227,23 +223,6 @@ The two lock flags on a milestone are independent: `isLocked` depends on the
 **previous** milestone's status; `isAssessmentLocked` depends on **this**
 milestone's own mandatory-course completion. A milestone can be unlocked
 while its own assessment is still locked.
-
-**Assessment attempt state**: no state machine exists — no attempts counter
-and no cool-off timestamp appear in any traced data model.
-
-## Validation reality
-
-| Rule | Enforced | Where |
-|---|---|---|
-| Title 10–70 chars, char-class | Frontend only | Angular validators |
-| Title uniqueness | Frontend-triggered, backend-executed search | `checkDuplicateName()` |
-| Description/Outcome 250–1000 chars, plain text | Frontend only, post-HTML-strip | `getEditorText()` |
-| Image type/size (JPG/JPEG/PNG, 4MB) | Frontend only | `validateFile()` |
-| Max 5 milestones | Frontend only | length check + disabled button |
-| Cross-milestone course duplicate | Frontend only | `isCourseInOtherMilestones()` linear scan |
-| Access control required before publish | Frontend only | `validateStepperFour()` |
-| `milestones_v1` structural integrity | **Not enforced anywhere** | — |
-| Milestone attempt limit / cool-off | **Not found on any tier** | — |
 
 > **Verification boundary:** facts above are read from
 > `sunbird-cb-creationportal`, `sunbird-cb-portal`, `igot_karmayogi_mobile`,

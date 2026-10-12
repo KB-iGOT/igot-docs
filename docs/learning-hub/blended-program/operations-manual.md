@@ -25,7 +25,6 @@ workflow.
 | Seat counters | `course_batch.batch_attributes.currentBatchSize` (string), live counts from Postgres and Cassandra, a Redis hash for the program page | Three sources that can disagree |
 | Attendance | A progress status on the session node; asynchronous via Kafka for coordinators | No attendance table to correct; fix the status |
 | Reports | In-product v1 / v2 (Kafka + Excel) and a nightly Spark CSV | They answer different questions; v2 has no attendance |
-| Authoring | Generic content lifecycle through `knowledge-mw-service` | Not subject to Kong rate / ACL plugins |
 
 ## Important fields
 
@@ -198,27 +197,13 @@ code gives you to watch:
 - **Disagreement** — `APPROVED` rows without a matching
   `enrollment_batch_lookup` entry.
 - **HTTP** — 400 "This batch is full", 400 "already in progress", 400
-  schedule clash, 406 volunteer eligibility, 403 on nominate; uiproxy 403 for
-  routes missing from the whitelist (`qr/enrolments`, `v1/attendance/update`
-  and the dead Kong `update` / `remove` URIs).
-- **Kong** — every route has its own hourly rate limit (e.g. `v1/stats`
-  1000, `composite/v4/bp/search` 100000, the rest 5000) and request-size
-  limit (bulk CSV: 1 MB; answer upload: 400 MB at Kong, 5000 KB in the app).
+  schedule clash, 406 volunteer eligibility, 403 on nominate.
 
 ## Known operational constraints
 
 - No admin endpoint to force-approve, un-reject, re-run a hop, or repair a
   counter; re-drive through the normal update call.
 - The Redis counters only increment; they are display-only and drift.
-- Roles listed in the approval JSON are not enforced by the workflow
-  service — authorisation is the uiproxy whitelist and the Kong ACL, so a
-  mis-set ACL is a security issue, not a UI issue.
-- Single-user enrolment in the course service ignores `currentBatchSize`;
-  protection is the workflow service and the portals.
-- Attendance has no server-side role, ownership or time-window check.
-- Assignment answer files can be read by any signed-in user who knows the
-  path.
-- Authoring calls skip Kong's plugins (they go to `knowledge-mw-service`).
 - Anything derived from the live system-settings rows, the forms service or
   the downstream completion / certificate jobs cannot be verified from the
   repos.
@@ -233,7 +218,6 @@ code gives you to watch:
 | Program page, batch picker, gates, status text | Web portal team (`sb-cb-ui-toc`) | Client logic wrong while server state is right |
 | Authoring, batch / session forms, console | Creation Portal team | UI blocks a valid action |
 | Mobile flows (QR, geofence, assignments) | Mobile team | Server state right, app wrong |
-| Gateway whitelist / ACL / rate limits | Platform / devops (uiproxy, Kong) | 403 / 429 on a valid role |
 | Search / coordinator lookup / counters on program read | Content-platform team | Index doc present but program not found; counters zero |
 | Nightly Spark CSV / warehouse | Data engineering (`cb-core-data`) | Missing file, wrong attendance |
 | System-settings rows (approval routes, profile fields, cadre, certificate) | LMS / platform admins | Route wrong, field list wrong |

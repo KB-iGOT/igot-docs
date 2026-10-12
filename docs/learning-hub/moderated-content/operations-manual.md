@@ -19,7 +19,7 @@ data model, or notification path.
 | Moderated-content visibility | `secureSettings.organisation` + `isVerifiedKarmayogi` filters, enforced at Elasticsearch query time in `knowledge-platform` | A visibility complaint is a search-index/filter problem, not a permissions-table problem — there is no separate ACL table to check |
 | Review/approval | Generic Sunbird `Draft`/`Review`/`Live` workflow, `CONTENT_REVIEWER` role — same mechanism as every other content type | A "my course is stuck in review" ticket is a generic content-workflow issue, not moderated-content-specific |
 | Course/program approval notifications | Two separate mechanisms: uiproxy-routed email (`notifyContentState`) and an unfired `cb-notification-service` in-app taxonomy | Don't expect an in-app "your course was approved" notification — nothing triggers that subcategory |
-| Text-profanity check | Async (Kafka), fail-open on error, soft-hide (not delete) on a hit | A flagged post is never actually removed from storage — if a user says their post "disappeared," it likely still exists with `isProfane=true` |
+| Text-profanity check | Async (Kafka), soft-hide (not delete) on a hit | A flagged post is never actually removed from storage — if a user says their post "disappeared," it likely still exists with `isProfane=true` |
 | Profanity-alert delivery | Sync HTTP call with a flagged request/response contract mismatch | If authors report never receiving a "your post was flagged" alert, check whether the call to `cb-notification-wrapper-service` is actually succeeding, not just whether the Kafka pipeline ran |
 | Peer validation/evaluation notifications | Consumer code exists, no confirmed producer in these 13 repos | Don't assume this pipeline is live in the current build without confirming the producer service separately |
 
@@ -29,12 +29,11 @@ data model, or notification path.
 |---|---|---|
 | `courseCategory` | `Moderated Course`/`Moderated Program`/`Moderated Assessment` | The sole signal distinguishing this content from a plain Course |
 | `secureSettings.organisation` | Array of MDO org IDs the content is restricted to | Determines who can even find the content in search |
-| `secureSettings.isVerifiedKarmayogi` | `"Yes"`/`"No"` | Only enforced against **unverified** viewers — verified users bypass this filter regardless of its value |
+| `secureSettings.isVerifiedKarmayogi` | `"Yes"`/`"No"` | Applied to **unverified** viewers only |
 | `status` / `reviewStatus` | `Draft`/`Review`/`Live`/`Retired`, `''`/`InReview`/`Reviewed` | Generic content state — check here first for "content not visible" complaints (must be `Live`) |
-| `x-user-channel-id` (request header) | Caller's org, used by `SearchActor` to auto-inject the org filter if the client didn't pass one | If this header is missing/wrong, a learner may see no moderated content, or the wrong org's content |
 | `isProfane` / `profanityCheckStatus` | Discussion post state | `profanityCheckStatus` other than `profanityCheckPassed` means the check didn't complete normally — check this before assuming the ML model made a wrong call |
 | `enable.english.language.by.default` (cb-discussion-service) | If `true` (the checked-out default), skips real language detection, treats every post as English | Non-English posts get checked against the English `toxic-bert` model, not the Indic model, unless this is `false` |
-| `CONTENT_TEXT_MAX_LENGTH` / `MAX_TEXT_LENGTH` (content-moderation-service) | 3000 / 500 chars | Text over 500 chars is chunked; over 3000 is rejected outright by the request validator |
+| `CONTENT_TEXT_MAX_LENGTH` (content-moderation-service) | 3000 chars | Text over 3000 is rejected by the request validator |
 | `KAFKA_MODERATION_RESULTS_TOPIC` / `kafka.topic.process.check.content.profanity` | `dev.content.profanity` (producer default) vs `dev.process.check.content.profanity` (consumer default) | These names differ by default — confirm environment-specific alignment before assuming the pipeline is broken |
 
 ## Operational workflows
@@ -49,20 +48,19 @@ content becomes searchable, subject to the `secureSettings` filter.
 **Learner discovers moderated content**: client builds a
 `courseCategory`+`secureSettings.organisation`+`status=Live` filter →
 `knowledge-platform` search additionally enforces the org restriction
-server-side regardless of client correctness → results returned.
+server-side → results returned.
 
 **Discussion post created and checked**: post saved and indexed
 immediately (visible) → async Kafka pipeline detects language → checks
 profanity via `content-moderation-service` → on a hit, post is
 Postgres/ES-flagged and excluded from all listing queries, author gets a
-(possibly-broken, see above) in-app alert. There is no pre-publish gate —
-the post is live before the check even starts.
+(possibly-broken, see above) in-app alert.
 
 ## API reference for operations
 
 | Method | Endpoint | Operator use |
 |---|---|---|
-| GET | (search API, via `SearchActor`) | Reproduce a "moderated content not visible" complaint — check `x-user-channel-id` and the returned `secureSettings.organisation` on the content |
+| GET | (search API, via `SearchActor`) | Reproduce a "moderated content not visible" complaint — check the returned `secureSettings.organisation` on the content |
 | GET | `cb-ext-course-service /content/v2/user/info` | Check a specific learner's cached moderated-content count/identifiers (`moderatedCourseCount_{userId}` in Redis) |
 | POST | `content-moderation-service /api/v1/moderation/text` | Directly reproduce/diagnose a profanity-check result for a given text/language |
 | GET | discussion post's Postgres row (`isprofane`, `profanitycheckstatus`, `profanityresponse`) | Ground truth for whether/why a post was flagged, bypassing the async pipeline |
@@ -103,15 +101,7 @@ the post is live before the check even starts.
   check the content's `secureSettings.organisation` array actually
   contains that org's ID, check `status=Live`, and check whether the
   viewing user's `profileStatus` is unverified (which adds the
-  `isVerifiedKarmayogi=No` filter server-side) — a verified-Karmayogi-only
-  piece of content set with `isVerifiedKarmayogi=Yes` (if such a value is
-  ever set — only `"No"` injection was confirmed in code) would be
-  invisible to unverified users of the right org.
-- **"Content shows up for the wrong org"**: check the
-  `x-user-channel-id` request header the caller sent — `SearchActor`
-  trusts this header to scope the auto-injected filter, and a client
-  bug sending the wrong org header would leak content across MDOs at the
-  search layer, not just the UI layer.
+  `isVerifiedKarmayogi=No` filter server-side).
 
 ## Publishing/config checklist (before relying on this feature in an environment)
 
@@ -129,26 +119,23 @@ the post is live before the check even starts.
       and `cb-notification-service`'s `/notifications/create` before
       relying on the `PROFANITY_CHECK` in-app alert in production
 - [ ] Confirm `secureSettings.organisation` is actually populated on
-      every piece of content intended to be MDO-restricted — unrestricted
-      content (no `secureSettings.organisation`) is treated as public
+      every piece of content intended to be MDO-restricted
 
 ## Troubleshooting guide
 
 | Symptom | Likely cause | Check | Next action |
 |---|---|---|---|
 | Moderated content invisible to intended MDO | `secureSettings.organisation` missing the org, or content not `Live` | Content record `secureSettings`/`status` fields | Fix content metadata, republish if needed |
-| Moderated content visible org-wide when it shouldn't be | Missing/wrong `secureSettings.organisation`, or search called without any `secureSettings` filter and content genuinely has none set | Content record, `SearchActor` default-injection logic | Set `secureSettings.organisation` explicitly on the content |
 | Content stuck in Review | Generic content-workflow issue, not moderated-content-specific | Reviewer assignment, `CONTENT_REVIEWER` role assignment | Escalate as a generic content-workflow issue |
 | Discussion post "disappeared" | Flagged profane, soft-hidden from listings (not deleted) | `isprofane`/`profanitycheckstatus` on the post row | Explain soft-hide behavior; check ML classification if disputed |
-| Discussion post's profanity check never completed | Registry/service call failed, or language-detection failed | `profanitycheckstatus` in (`profanityCheckCallFailed`, `languageDetectionCallFailed`, `languageNotDetected`) | Fail-open means the post is still visible — check connectivity/service health for the actual fix |
+| Discussion post's profanity check never completed | Registry/service call failed, or language-detection failed | `profanitycheckstatus` in (`profanityCheckCallFailed`, `languageDetectionCallFailed`, `languageNotDetected`) | Check connectivity/service health for the actual fix |
 | Author didn't get flagged-post alert | Contract mismatch between `NotificationTriggerService` and `cb-notification-service` | Request/response logs at `cb-notification-wrapper-service:8081/notifications/create` | Treat as a likely integration defect, not a config issue |
 | No "course approved/rejected" in-app notification | Never wired up | `CONTENT_PUBLISHED`/`CONTENT_REJECTED` usage (none found) | Log as a feature gap; only the uiproxy email path is live |
 | No peer-validation/evaluation notification | Producer not present in these 13 repos | Confirm external producer service's deployment/config | Escalate to the owning team for that producer, outside this feature's repo set |
 
 **Diagnostic sequence**: identify which subsystem the complaint is
 about (visibility/access-control vs. text-profanity) → for visibility,
-check `secureSettings`/`status` on the content and the caller's org
-header → for text-profanity, check the post's `isprofane`/
+check `secureSettings`/`status` on the content → for text-profanity, check the post's `isprofane`/
 `profanitycheckstatus` directly in Postgres before trusting any
 downstream notification or UI state → only then check notification
 delivery, since both subsystems have at least one unconfirmed/likely-broken
@@ -168,9 +155,6 @@ notification path.
 - A flagged discussion post is never deleted — only excluded from
   listing queries — so "the post is gone" and "the post is deleted" are
   not the same claim.
-- Text-profanity thresholds (0.4 sigmoid cutoff, 0.8 confidence floor)
-  are hardcoded in `content-moderation-service`, not configurable per
-  tenant/community.
 - Possible duplicate moderated-content-fetch logic exists between
   `ContentInfoUtil` and `CourseAccessServiceImpl` in
   `cb-ext-course-service` — not fully resolved which is authoritative.

@@ -55,10 +55,9 @@ three independently-owned backends, correlated only by shared `formId` /
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| POST | `bulk/create/peervalidation` | Bulk-create notification + tracking rows for a set of peers/learners (called by form-service, also directly reachable) |
+| POST | `bulk/create/peervalidation` | Bulk-create notification + tracking rows for a set of peers/learners (called by form-service) |
 | GET | `peervalidation/list` | List a user's pending (as learner) and incoming (as peer) requests |
-| PATCH | `v2/read` | Mark a notification read, or record a free-form status (e.g. `IGNORED`) |
-| POST | `cleanup/peer-validations` | Trigger the previous-day cleanup job — **requires no auth header** |
+| PATCH | `v2/read` | Mark a notification read, or record a status (e.g. `IGNORED`) |
 
 ## sunbird-cb-ext — reporting and attachments
 

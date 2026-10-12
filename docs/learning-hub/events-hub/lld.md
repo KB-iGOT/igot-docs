@@ -181,7 +181,7 @@ underlying `ContentActor` logic.
 > in [index.md](index.md). Not analysed from source: the Kong gateway's
 > path-rewrite rules; any consumer of the karma-points or
 > issue-certificate Kafka topics; the actual runtime values of
-> environment-driven config flags (whitelist checks, Redis key
+> environment-driven config flags (Redis key
 > population); and four Creation Portal wizard steps
 > (`competencies`, `course-linked`, `pre-event-setup`, `preview`) that
    were identified and routed but not read line-by-line for field-level

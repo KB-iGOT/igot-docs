@@ -50,13 +50,12 @@ side of onboarding is in
 | FR-032 | Approving a domain request SHALL insert it into `master_data` as `userRegistrationPreApprovedDomain`. | `DomainWhiteListWorkFlowServiceImpl.processDomainRequest:200-218` |
 | FR-033 | An `SPV_ADMIN` SHALL be able to upsert a designation master directly. | `requests-approval.component.ts:267-292`; `whitelistApis.ts:2300` |
 | FR-034 | An `SPV_ADMIN` SHALL be able to list, approve and reject AI-generated designation requests; reject SHALL need a non-blank reviewer comment. | `designation-approval.service.ts`; `whitelistApis.ts:7597-7618` |
-| FR-035 | Request creation SHALL be public at the gateway; creation SHALL be refused when the email, phone or organisation name already exists. | `main.yml:9597-9639`; `OrganisationWorkFlowServiceImpl:49-80` |
+| FR-035 | Request creation SHALL be refused when the email, phone or organisation name already exists. | `OrganisationWorkFlowServiceImpl:49-80` |
 
 ## Non-functional requirements
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| NFR-001 | The uiproxy SHALL enforce its role allow-list by path, regardless of HTTP method, when `PORTAL_API_WHITELIST_CHECK=true`. | `apiWhiteList.ts:127-143`; `server.ts:62` |
 | NFR-002 | Portal entry SHALL be restricted to `environment.portalRoles`. | `init.service.ts:533-534,581-588` |
 | NFR-003 | Request lists SHALL be paged by page index (`PageRequest.of(offset, limit)`), 20 per page. | `onboarding-requests.component.ts`; `WorkflowServiceImpl:723` |
 | NFR-004 | Logo uploads SHALL be png / jpeg / jpg, ≤5 MB; names ≤100 characters, descriptions ≤1000. | `create-organisation.component.ts:50,139-146,385-408` |
@@ -65,7 +64,6 @@ side of onboarding is in
 
 | ID | Constraint / assumption | Implication | Source |
 |---|---|---|---|
-| CON-001 | No admin-portal route has `requiredRoles`; menu visibility is backend page config. | UI visibility cannot be audited from code. | `home.rounting.module.ts`; `general.guard.ts:126-134` |
 | CON-002 | A new organisation has no administrator. | The first admin must be created, not picked. | `ui-user-table-pop-up` search by `rootOrgId` |
 | CON-003 | The request state graphs are system settings. | States and approver roles are not in code. | `WorkflowServiceImpl.getWorkFlowConfig:908` |
 | CON-004 | Approving an organisation or position request does not create anything. | Follow-up is manual. | `ApplicationProcessingServiceImpl`; workflow services |
@@ -75,7 +73,6 @@ side of onboarding is in
 
 | ID | Deviation | Requirements in tension | Source |
 |---|---|---|---|
-| DEV-001 | UI role lists are wider than gateway lists: Create new (`DASHBOARD_ADMIN, SPV_PUBLISHER` get 403); volunteer status (State Admin 403); Requests (State Admin 403); State-users `extPatch` (SPV Admin 403). | FR-002, FR-007, FR-025, FR-031 | `directroy.component.ts:41`; `whitelistApis.ts:2163, 7963, 2315-2360, 2629` |
 | DEV-002 | `updateStateOrMinistry` POSTs to a PATCH-only endpoint with no `orgId`; non-board orgs return "not allowed" anyway. | FR-006 | `create-mdo.services.ts:103-108`; `ExtendedOrgController:26` |
 | DEV-003 | Create returns an empty `result` when a hierarchy row already existed; the portal shows nothing. | FR-004 | `ExtendedOrgServiceImpl:197-200`; `create-organisation.component.ts:340-344` |
 | DEV-004 | The directory's duplicate-name check covers only the loaded page of ≤20 rows. | FR-005 | `directory-table.component.html:5` |
@@ -88,7 +85,6 @@ side of onboarding is in
 | DEV-011 | `portal/spv/department` create / update and related routes are mapped and whitelisted but not served by any repo. | — | `portal-v3.ts:148,208`; `whitelistApis.ts:984`; `PortalController` |
 | DEV-012 | Legacy `app/signup` and `app/auto-signup/:id` remain mounted; the backend router is not. | — | `app-routing.module.ts:143-152`; `publicApi_v8/signup.ts` |
 | DEV-013 | Dead add-admin entry points remain: `gotoAddAdmin()` navigates to `/app/roles/<id>/basicinfo`, a route that does not exist. | FR-024 | `AP/routes/create-mdo/routes/users/users.component.ts`; `create-mdo-routing.module.ts` |
-| DEV-014 | The volunteer-deactivation dialog promises users cannot sign in; no enforcement found. | FR-007 | `directory-table.component.ts:369-431` |
 | DEV-015 | A workflow lookup failure is treated as "already exists" on request creation. | FR-035 | `OrganisationWorkFlowServiceImpl:98-100` |
 
 ## Out of scope (not reconstructible from these repos)
@@ -97,7 +93,6 @@ side of onboarding is in
 - The workflow state graphs and the `dev.org.hierarchy.new.org` consumer.
 - `ai-cbp-mdo-service` behaviour.
 - What serves `/portal/spv/*` and `/portal/departmentType/*` at runtime.
-- The portal credential's Kong ACL groups.
 
 ---
 

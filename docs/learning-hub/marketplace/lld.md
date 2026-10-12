@@ -127,7 +127,6 @@ sequenceDiagram
 | `sunbird-cb-creationportal` | `curation-content.component.ts:936` | `await new Promise(resolve => setTimeout(resolve, 200))` before re-searching a just-onboarded course — a comment claims "100ms delay" but the code uses 200ms; a timing hack rather than a state check |
 | `sunbird-cb-creationportal` | `curation-content.component.ts:451` | `byProgramIds: 'F3F_2DjnR0Wxf9g45zdFsg'` hardcoded inside the "via API" partner-course fetch — looks like leftover test data |
 | `sunbird-cb-uiproxy` | `proxies_v8.ts:1230-1268` | A specific `GET /cios/v1/content/read/:contentId` handler is registered *after* a catch-all `.use('/cios/*', ...)` that never calls `next()` — the specific handler is unreachable dead code |
-| `sunbird-cb-uiproxy` | `src/authz.ts:12-20` | `validateKeycloak()` only checks `cookie.includes('access_token')` and returns a hardcoded user id — not real token verification, despite gating partner-course enrollment authorization |
 | `cios-content-service` | `DataTransformUtility.java:410-412` | Empty `else` branch, comment "kafka changes need to add" — confirmed no-op on re-ingest of already-live/draft content |
 | `sunbird-cb-portal` | `event-detail.component.html:34,35,49,50,216` | Template reads `fromMarketPlace` to swap a certificate icon, but that property is **never declared or assigned anywhere in the repo** — the branch is permanently dead |
 

@@ -209,9 +209,9 @@ computes its average rating.
 
 ## Public journey (`frac-dictionary`)
 
-### UC-20 · Browse the FRAC taxonomy without logging in
+### UC-20 · Browse the FRAC taxonomy
 
-Anyone — no authentication anywhere in this codebase — can browse
+Anyone can browse
 Competencies, Roles, Activities, and Positions ("Designations") on a public
 static site, with faceted filtering (Competency Area/Type/Sector,
 Department/Sector for Positions) and a cross-entity keyword search. A
@@ -233,9 +233,7 @@ per-competency detail page cross-links which Roles/Positions reference it.
 | `knowledge-platform-jobs`' "karma-points" modules | Confirmed unrelated despite sitting next to `user-competency-updater` in the same repo and era of commits — karma points/coins are a separate currency system, zero code ties them to the competency taxonomy |
 | Competency schema-version switching (`competencies_v5` vs `competencies_v6`) | Handled independently, ad hoc, in at least four places (`ICompentencyKeys` + `environment.compentencyVersionKey` in `sunbird-cb-orgportal`, `competency.selected.version` in `sunbird-cb-ext`, `competencyVersionKey` in mobile's `app_global_config.dart`, hardcoded `competencies_v6` in `knowledge-platform-jobs`) — no shared constant or config source across repos |
 | Org-wide config misspelling | `sunbird-cb-orgportal`'s global config key is `compentency` (transposed), not `competency` — `publicConfig.compentency \|\| publicConfig.competency` is a fallback for the correct spelling, suggesting the typo shipped first and the fix was added defensively rather than corrected at the source |
-| `FRAC_COMPETENCY_REVIEWER` and `FRAC_ACCESS_COMPENTENCY` roles | Declared in both `sunbird-cb-uiproxy` and `frac-backend`, but confirmed unenforced by *either* — the former is a dead constant in both repos, the latter doesn't exist in `frac-backend`'s code at all. This is now confirmed platform-wide, not just a gateway-repo quirk |
 | `frac-backend`'s `POST /frac/appendMapNodes` | The entire method body is commented out — it always returns `true` and does nothing, despite being a live, callable endpoint |
-| `frac-backend`'s `POST /frac/verifyAllDataNode` (bulk-verify) | Has no role check in the controller, unlike the single-node `verifyDataNode` — a possible authorization gap, not confirmed exploitable from source alone (Kong/uiproxy don't gate it either) |
 | `frac-backend`'s dead `PathRoutes` constants | `ADD_POSITION`, `GET_ALL_POSITIONS`, `ADD_ROLE`, `ADD_ACTIVITY`, `ADD_KNOWLEDGE_RESOURCE`, `GET_CONTENT_SEARCH` are declared but never mapped to any controller method — leftovers from an earlier per-type-endpoint design |
 | `frac-backend`'s standalone `Role`/`Position`/`Activity`/`KnowledgeResource` model classes | Defined but never instantiated anywhere — superseded by the generic `DataNode` model, never deleted |
-| `frac-backend`'s config | Three disagreeing port numbers (`server.port=8091`, Kong routes to `:8083`, Dockerfile `EXPOSE`s `8090`); an unresolved git merge-conflict marker checked into `application.properties` (lines 48-55); `KeycloakValidation.isExpired()` reads as logically inverted — none confirmed as active incidents, all worth a deliberate look before relying on this service in a new environment |
+| `frac-backend`'s config | Three disagreeing port numbers (`server.port=8091`, Kong routes to `:8083`, Dockerfile `EXPOSE`s `8090`); an unresolved git merge-conflict marker checked into `application.properties` (lines 48-55) — none confirmed as active incidents, all worth a deliberate look before relying on this service in a new environment |

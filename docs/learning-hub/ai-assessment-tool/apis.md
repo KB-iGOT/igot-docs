@@ -22,16 +22,16 @@ synchronous API call, it's an async side effect of the transition above.
 
 ## Generation engine (`ai-assessment-service`, gatewayed via `sunbird-cb-uiproxy`)
 
-Router prefix `/ai-assessments/v1`. Every route below (except `/` and
-`/health`) requires header `x-authenticated-user-token` (a Sunbird-SSO
-JWT with role `AI_ASSESSMENT_CREATOR`).
+Router prefix `/ai-assessments/v1`. Generation routes use header
+`x-authenticated-user-token` (a Sunbird-SSO JWT with role
+`AI_ASSESSMENT_CREATOR`).
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| GET | `/` | Redirects to `/docs` (unauthenticated) |
-| GET | `/health` | `{"status": "healthy", "service": "assessment-generator"}` (unauthenticated) |
+| GET | `/` | Redirects to `/docs` |
+| GET | `/health` | `{"status": "healthy", "service": "assessment-generator"}` |
 | POST | `/ai-assessments/v1/generate` | Generate an assessment — cache-hit/clone returns immediately (200-shaped body); a genuinely new request queues a job (`PENDING`) and returns immediately without an explicit `status_code=202` set in code, despite the docstring claiming 202 |
-| GET | `/ai-assessments/v1/status/{job_id}` | Poll job status; `403` if the caller doesn't own the job, `404` if not found |
+| GET | `/ai-assessments/v1/status/{job_id}` | Poll job status; `404` if not found |
 | PUT | `/ai-assessments/v1/update/{job_id}` | Overwrite `assessment_data` for a job the caller owns |
 | GET | `/ai-assessments/v1/download/{job_id}?format=...` | Download a `COMPLETED` job's result; `format` ∈ `csv`, `csv_basic`, `json`, `pdf`, `docx` |
 | GET | `/ai-assessments/v1/history` | List every job the caller owns or has cloned |
@@ -111,7 +111,7 @@ The `questions` object always has exactly these five fixed keys
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| POST | `{KARMAYOGI_BASE_URL}/api/content/v1/search` | Fetch course/module metadata by identifier, using a static service-account bearer token (`KARMAYOGI_API_KEY`), not the calling user's token |
+| POST | `{KARMAYOGI_BASE_URL}/api/content/v1/search` | Fetch course/module metadata by identifier, using a service-account token (`KARMAYOGI_API_KEY`) |
 | GET | `{LEARNING_AI_BASE_URL}/api/kb-pipeline/v3/transcoder/stats?resource_id={id}` | Discover VTT caption URLs for a course video |
 
 > **Verification boundary:** the `/proxies/v8/ai/assessments/*` and

@@ -58,24 +58,21 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 | FR-024 | The org-portal training-plan module SHALL reuse the identical filter pattern for MDO-admin browse/assign flows. | `training-plan-home.component.ts` |
 | FR-025 | The backend SHALL expose a personal content-info endpoint (`GET /content/v2/user/info`) returning a `moderatedContent` count and identifier list, formatted from a templated search request and caching results in Redis under `moderatedCourseCount_{userId}`. | `cb-ext-course-service ContentInfoControllerV2.java:39-44`, `ContentInfoUtil.java:236-346`, `application.properties:158` |
 | FR-026 | Backend moderated-content lookups SHALL inject `secureSettings.isVerifiedKarmayogi='No'` into the search filter unless the caller's `profiledetails.profileStatus` equals `"VERIFIED"` (case-insensitive). | `ContentInfoUtil.applyVerifiedStatusFilter:275-315` |
-| FR-027 | The search-engine layer (`knowledge-platform`) SHALL enforce `secureSettings.organisation` restriction as an Elasticsearch nested query (`exists` + `term` match), independent of whether the calling client applied the equivalent filter itself. | `SearchProcessor.getSecureSettingsSearchQuery:681-687`, `formQueryImpl:432-494` |
-| FR-028 | If a search request carries no explicit `secureSettings.*` filter, `SearchActor` SHALL auto-inject `secureSettings.organisation` from the request's `x-user-channel-id` context header as a post-filter. | `SearchActor.getSearchDTO:99-179` |
+| FR-027 | The search-engine layer (`knowledge-platform`) SHALL enforce `secureSettings.organisation` restriction as an Elasticsearch nested query (`exists` + `term` match). | `SearchProcessor.getSecureSettingsSearchQuery:681-687`, `formQueryImpl:432-494` |
 
 ### Text-profanity moderation (independent subsystem, discussion posts only)
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| FR-040 | On creating a discussion question, answer post, or reply, the system SHALL save and index the content as visible immediately (`isProfane=false` default), then asynchronously trigger language detection via Kafka topic `dev.process.detect.text.language`. | `DiscussionServiceImpl.java:178-244`; `AnswerPostReplyServiceImpl.java:166` |
+| FR-040 | On creating a discussion question, answer post, or reply, the system SHALL save and index the content (`isProfane=false` default), then asynchronously trigger language detection via Kafka topic `dev.process.detect.text.language`. | `DiscussionServiceImpl.java:178-244`; `AnswerPostReplyServiceImpl.java:166` |
 | FR-041 | Language detection SHALL default to English (`en`) without calling any external service when `enable.english.language.by.default=true`; otherwise it SHALL call `content-moderation-service`'s `POST /api/v1/language/detect`. | `LanguageDetectionConsumer.java:86-120` |
 | FR-042 | The profanity check SHALL be routed through an internal service-registry proxy (`POST serviceregistry/v1/callExternalApi`, `SERVICE_CODE=PROFANITY_CHECK`) rather than calling `content-moderation-service` directly by URL. | `ProfanityCheckServiceImpl.java:43-76` |
-| FR-043 | `content-moderation-service` SHALL classify English text using `unitary/toxic-bert` (sigmoid, toxic if any label probability ≥0.4, then an 0.8-confidence-floor adjustment) and text in 10 supported Indic languages using `Hate-speech-CNERG/indic-abusive-allInOne-MuRIL` (softmax/argmax, no floor adjustment); any other detected language SHALL fall back to the English model. | `text_profanity_service.py:58-181` |
-| FR-044 | Text over 500 characters SHALL be chunked (400 tokens/100 overlap, max 10 chunks) and aggregated by a priority rule where any profane chunk marks the whole text profane. | `text_chunking_service.py:475-587`; `text_profanity_service.py:186-397` |
+| FR-043 | `content-moderation-service` SHALL classify English text using `unitary/toxic-bert` and text in 10 supported Indic languages using `Hate-speech-CNERG/indic-abusive-allInOne-MuRIL`; any other detected language SHALL fall back to the English model. | `text_profanity_service.py:58-181` |
 | FR-045 | Requests to `POST /api/v1/moderation/text` SHALL validate `text` length between 2 and 3000 characters and `language` between 2 and 10 characters. | `content-moderation-service schemas/requests.py` |
 | FR-046 | The moderation result SHALL be delivered back to `cb-discussion-service` asynchronously via Kafka (topic default `dev.process.check.content.profanity` on the consumer side), not via the synchronous HTTP response of the check call. | `ProfanityConsumer.java:86-116` |
 | FR-047 | On a positive profanity result, the system SHALL persist `isProfane=true` and `profanityCheckStatus='profanityCheckPassed'` plus the raw response JSON on the post/reply entity, sync the flag to Elasticsearch, invalidate relevant caches, and (for replies) decrement the parent answer-post's reply counter. | `ProfanityConsumer.java:140-292` |
 | FR-048 | Every discussion listing/search/feed query SHALL filter `isProfane=false`, excluding flagged content from results without deleting it. | `DiscussionServiceImpl.java:481,1635,1787/1869,2321` |
 | FR-049 | On a positive profanity result, the system SHALL trigger an in-app `PROFANITY_CHECK`/`ALERT` notification to the post's author via a synchronous HTTP call to `cb-notification-wrapper-service:8081/notifications/create`. | `NotificationTriggerService.java:42-133`; `ProfanityConsumer.java:252,258,292` |
-| FR-050 | On any failure in the outbound moderation call, the system SHALL mark `profanityCheckStatus='profanityCheckCallFailed'` with `isProfane=false`, leaving the post visible (fail-open). | `ProfanityCheckServiceImpl.java:70-73` |
 | FR-051 | `content-moderation-service` SHALL publish every check result (success or failure) to a Kafka audit topic (default `dev.content.profanity`) independent of the consumer topic used by `cb-discussion-service`. | `kafka_service.py`, `producer.py` |
 | FR-052 | The system SHALL maintain a separate, human-driven report/suspend workflow for discussion posts (`REPORTED`/`SUSPENDED` states) that is not automatically linked to the automated `isProfane` flag. | `Constants.java:121-246`; confirmed absent link by grep |
 
@@ -83,16 +80,14 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional),
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| FR-060 | The `CONTENT_REVIEWER` role SHALL gate the authoring review queue and roughly 50 backend proxy routes related to content authoring/review/publish. | `contents.component.ts`; `whitelistApis.ts` (multiple line refs, e.g. 253,261,314,325,479,490,510,...) |
-| FR-061 | The `COMMUNITY_MODERATOR` role SHALL be a distinct role gating discussion/forum human-moderation routes only, unrelated to content review or the ML profanity pipeline. | `whitelistApis.ts:530,5142,5914-5932` |
+| FR-060 | The `CONTENT_REVIEWER` role SHALL gate the authoring review queue. | `contents.component.ts` |
+| FR-061 | The `COMMUNITY_MODERATOR` role SHALL be a distinct role for discussion/forum human moderation only, unrelated to content review or the ML profanity pipeline. | — |
 
 ## Non-functional requirements
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| NFR-001 | MDO-restriction enforcement SHALL occur at the search-engine layer (Elasticsearch nested query), not solely as a client-side filter, so a client that omits the filter still cannot retrieve out-of-org restricted content through the search API. | `SearchProcessor.java:432-494,670-687` |
-| NFR-002 | Text-profanity classification thresholds (0.4 sigmoid cutoff, 0.8 confidence floor) SHALL be hardcoded in `content-moderation-service`, not exposed as per-tenant/per-community configuration. | `text_profanity_service.py:69,82,86` |
-| NFR-003 | The discussion-profanity pipeline SHALL fail open — any failure in the moderation call or its result-processing SHALL leave the content visible rather than blocking or hiding it pending retry. | `ProfanityCheckServiceImpl.java:70-73`; `ProfanityConsumer.java` (`profanityCheckUpdateFailed` handling) |
+| NFR-001 | MDO-restriction enforcement SHALL occur at the search-engine layer (Elasticsearch nested query), not solely as a client-side filter. | `SearchProcessor.java:432-494,670-687` |
 
 ## Constraints and assumptions baked into the build
 

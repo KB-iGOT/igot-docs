@@ -20,8 +20,8 @@ Reverse-engineered from code. `AP` = `sunbird-cb-adminportal/project/ws/app/src/
 | Designation approval | `designation-approval` | `H/routes/designation-approval/*`, `reject-request-form` | AI-CBP designation requests |
 | Hierarchy mapping | `directory/orgHierarchies` | `org-hierarchy-mapping.component.ts` | Create framework, bulk upload |
 
-All are children of `app/home` guarded by `GeneralGuard` with no
-`requiredRoles` (`AP/src/app/app-routing.module.ts:42-55`). Portal entry:
+All are children of `app/home` guarded by `GeneralGuard`
+(`AP/src/app/app-routing.module.ts:42-55`). Portal entry:
 `init.service.ts:533-534` checks `environment.portalRoles`; failure sends the
 user to `apis/reset` (`:581-588`).
 
@@ -69,9 +69,8 @@ sequenceDiagram
     participant D as Postgres org_hierarchy
     participant Q as Kafka
     P->>U: POST org/ext/v1/create
-    U->>U: allow-list SPV_ADMIN or STATE_ADMIN or MDO_LEADER
     U->>K: forward
-    K->>E: jwt + acl dataAccess
+    K->>E: forward
     E->>L: org search by channel
     alt channel not found
         E->>L: POST private/v1/org/create
@@ -112,8 +111,7 @@ stateDiagram-v2
 Allowed targets: `ACTIVE(1)` → {1, 0, 2, 3}; `INACTIVE(0)` → {1, 0};
 `BLOCKED(2)` → {1, 2, 3}; `RETIRED(3)` → {3}. The portal uses only 0 and 1
 (`PATCH org/v1/status/update`, validator requires `status` present and an
-`Integer`, `OrgRequestValidator:138-154`). The dialog's claim that inactive
-organisations' users cannot log in was not found enforced in the repos.
+`Integer`, `OrgRequestValidator:138-154`).
 
 ### 2.4 Edit
 
@@ -177,7 +175,7 @@ existing roles + `MDO_ADMIN` (or `STATE_ADMIN` when sub-type is `state`).
 Core `UserRoleActor.assignRoles` (:81…): user's org ≠ `organisationId` →
 **HTTP 200** "User Organisation Id and Assigner organisation Id mismatch"; an
 `MDO_LEADER` already present → **HTTP 200** "MDO Leader already exists in
-org"; success replaces the user's org roles, syncs ES, emits a
+org"; success syncs ES, emits a
 `dev.mentorship.user.update` event. The role-edit flow shows
 `data.result.response` in a snackbar, so both rejections look like success.
 
@@ -204,7 +202,6 @@ a warning. State scoping: with no organisation chosen the search filters
 | Create user | roles from `orgTypeList[name==currentDept]` | `['STATE_ADMIN','PUBLIC']`; CBC roles hidden (`create-user.component.ts:60,257-259,305-309`) |
 | Org hierarchy mapping | org selector | org replaced by `org/v1/read` of own `rootOrgId` (`org-hierarchy-mapping.component.ts:78-90`) |
 | Designation master | bulk upload shown | bulk upload hidden |
-| Gateway gaps | no `extPatch` (`WL:2629`) | no volunteer status (`WL:7963`), no workflow org / position / domain (`WL:2315-2360`) |
 
 ## 5. Registration link drawer
 
@@ -215,8 +212,7 @@ drawer opens only when the modal returns `reviewImporting=false`. List →
 [User Onboarding LLD](../user-onboarding/lld.md); the order that matters here
 (`CustomSelfRegistrationServiceImpl.java:90-128`): `isRegistrationQRCodeActive(orgId)`
 (line 103) marks **every** ACTIVE row for the org `expired` *before*
-`isDesignationMappedToOrg` (line 105) can fail. cb-ext performs no role or
-org-ownership check on `orgId`. QR URLs are rewritten `portal`→`spv` with a
+`isDesignationMappedToOrg` (line 105) can fail. QR URLs are rewritten `portal`→`spv` with a
 first-occurrence string replace (`custom-self-registration.component.ts:85,124-125,155-161`).
 
 ## 6. Request review
@@ -224,8 +220,7 @@ first-occurrence string replace (`custom-self-registration.component.ts:85,124-1
 - **List**: `POST workflow/{org|position|domain}/search`, Kong
   `workflowOrgSearch` (`:9710`) → workflow `POST /v1/org/workflow/search`;
   `offset` = page index → `PageRequest.of(offset, limit)`.
-- **Create (public)**: Kong create routes carry no jwt (`main.yml:9597-9639`).
-  `createOrgWorkFlow` (`OrganisationWorkFlowServiceImpl:49-80`) rejects if
+- **Create**: `createOrgWorkFlow` (`OrganisationWorkFlowServiceImpl:49-80`) rejects if
   email, phone or org name exists — a lookup failure also counts as "exists"
   (:98-100). Domain create validates `^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$`,
   short-circuits already-approved domains, counts requesters per domain and
@@ -262,20 +257,16 @@ first-occurrence string replace (`custom-self-registration.component.ts:85,124-1
 3. `updateStateOrMinistry` (see 2.4); the unused `ORG_SEARCH` constant;
    `gotoAddAdmin()` → `/app/roles/<id>/basicinfo` (route does not exist).
 4. `RequestsResolve`, `ApprovedRequestsResolve`, `RejectedRequestsResolve`
-   no-ops; `GeneralGuard` role arguments unused; `DepartmentResolve` role check
-   commented out; commented-out `assignAdminToDepartment` after create.
-5. Legacy `app/signup` and `app/auto-signup/:id` — no guard, call
-   `/apis/public/v8/signup[/create/:id]`; uiproxy's `publicApi_v8/signup.ts`
-   is not imported or mounted anywhere, so these cannot work (and the router
-   would be unauthenticated if it were mounted).
+   no-ops; commented-out `assignAdminToDepartment` after create.
+5. Legacy `app/signup` and `app/auto-signup/:id` call the uiproxy signup
+   route; uiproxy's `publicApi_v8/signup.ts` is not imported or mounted
+   anywhere, so these cannot work.
 
 ## 8. Comparison with the MDO portal (`sunbird-cb-orgportal`)
 
-Same create-organisation payload and `org/ext/v1/create` call (a `MDO_LEADER`
-is allowed by the gateway); same custom-registration endpoints with the URL
+Same create-organisation payload and `org/ext/v1/create` call; same custom-registration endpoints with the URL
 rewrite `portal`→`mdo`; create user always uses the caller's own channel
-(`create-user.component.ts:96,216`); some routes carry
-`requiredRoles: ['mdo_leader','community_moderator']` (`home.rounting.module.ts:379`).
+(`create-user.component.ts:96,216`).
 State / ministry onboarding, request approval, volunteer status change and
 designation approval were not found in the MDO portal.
 
@@ -283,7 +274,6 @@ designation approval were not found in the MDO portal.
 > top of [index.md](index.md). Not analysed from source: the menu page
 > configuration, `igot_spvrules`, the workflow state graphs, the new-org
 > Kafka consumer, `ai-cbp-mdo-service`, the runtime handler for
-> `/portal/spv/*`, whether the portal's Kong credentials hold the needed ACL
-> groups, whether LMS enforces "inactive organisation blocks login", whether
+> `/portal/spv/*`, whether
 > LMS consumes the `sbRootOrgId` the State Admin forms send, and the effective
 > SPV result on the State-users page when no organisation is chosen.

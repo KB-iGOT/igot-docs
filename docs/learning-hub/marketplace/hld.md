@@ -13,7 +13,7 @@ flowchart TB
     Admin["sunbird-cb-adminportal<br/>marketplace-provider module<br/>(onboard, SSO, certificate, licensing)"]
     Creation["sunbird-cb-creationportal<br/>market-place / curated-configs<br/>(review, competency-tag, publish)"]
   end
-  Proxy["sunbird-cb-uiproxy<br/>generic Kong-passthrough BFF<br/>role whitelist"]
+  Proxy["sunbird-cb-uiproxy<br/>generic Kong-passthrough BFF"]
   Kong["Kong API Gateway<br/>(sunbird-devops)"]
   Pores["cb-pores-service<br/>ContentPartner + Registration<br/>Postgres + Elasticsearch"]
   Cios["cios-content-service<br/>catalog ingestion ETL<br/>Postgres + Elasticsearch + GCS"]
@@ -42,7 +42,7 @@ flowchart TB
 | `cios-content-service` | Catalog ingestion pipeline (Excel → GCS → Kafka → JOLT transform → Postgres + ES), partner progress-sync scheduler jobs, SSO client provisioning in Keycloak | Partner master data (fetches it from `cb-pores-service`), enrollment |
 | `cb_external_enrollment_service` | The actual enrollment write, per-partner license-limit enforcement (overall/user-wise/concurrent/course-level), a local `CiosContentEntity` mirror, Coursera invite integration | Catalog ingestion, partner master data |
 | `sunbird-course-service` | A **second, independent** external-course enrollment path (`externalCoursesEnrolment_db`) and badge/cert merge for external completions | Nothing marketplace-specific is delegated to it — it duplicates rather than calls `cb_external_enrollment_service` |
-| `sunbird-cb-uiproxy` | Generic Kong-passthrough + role whitelist for every marketplace/CIOS/partner path | Any marketplace-specific base-URL config — routing is entirely Kong's job |
+| `sunbird-cb-uiproxy` | Generic Kong-passthrough for every marketplace/CIOS/partner path | Any marketplace-specific base-URL config — routing is entirely Kong's job |
 | `sunbird-devops` | Kong route/plugin definitions, Helm charts, CI/CD pipelines for the above services | — |
 | `sunbird-cb-adminportal` | Partner onboarding/licensing/SSO/certificate UI | Catalog curation UI (that's Creation Portal) |
 | `sunbird-cb-creationportal` | Catalog review/curation/competency-tagging/publish UI | Partner master-data UI (that's Admin Portal) |
@@ -86,20 +86,6 @@ path was independently implemented against its own storage.
 | Redis | `cb-pores-service`, `cb_external_enrollment_service` | Provider record cache, search-result cache, license-counter cache |
 | GCS | `cios-content-service` | Uploaded catalog/progress files, generated logs |
 | Kafka | `cb-pores-service`, `cios-content-service`, `cb_external_enrollment_service` | Registration notifications, partner activate/deactivate cascade, content onboarding, enrollment counter updates, progress-from-partner, certificate generation |
-
-## Gateway & access control
-
-`sunbird-cb-uiproxy` applies a role whitelist per path
-(`whitelistApis.ts`), but it is **inconsistent**: `contentpartner/v1/create
-|update|read|search|delete` require only the baseline `PUBLIC` role, while
-`contentpartner/v1/activate` and every `contentpartner/register/v1/*`
-endpoint require `SPV_ADMIN`/`CBP_ADMIN`/`SPV_PUBLISHER`. Neither Admin
-Portal's `marketplace-provider` routes nor Creation Portal's
-`market-place`/`curation` routes carry an Angular `canActivate` guard
-(confirmed absent in both repos, unlike sibling routes in the same routing
-files that do use a guard) — client-side, reachability is the only gate;
-any real authorization would have to be enforced entirely server-side,
-which is outside what these two portal repos can confirm.
 
 > **Verification boundary:** the topology above is built from confirmed
 > outbound HTTP/Kafka calls in each of the 9 repos. Not verified: Kong's

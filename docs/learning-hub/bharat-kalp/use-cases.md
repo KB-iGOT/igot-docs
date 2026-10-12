@@ -51,16 +51,13 @@ or the normal course/program overview for everything else.
 
 Someone outside the program sees no entry points at all — the home
 spotlight card and the notification banner are both filtered out — and a
-direct link to the route is redirected to `/page-not-found` by the guard.
-The one exception is the string-vs-boolean flag mismatch below, where the
-entry points appear but the guard still refuses the click.
+direct link to the route is redirected to `/page-not-found`.
 
 ## Edge cases
 
 | Situation | Behaviour |
 |---|---|
 | User isn't a Bharat Kalp member | Direct link to `app/learn/bharat-kalp` redirects to `/page-not-found`; entry points (spotlight card, notification) are hidden |
-| Member's profile stores the flag as the string `"true"` instead of boolean `true` | Entry points *do* show (they accept both), but clicking through hits the guard, which only accepts boolean `true` — the member sees the door but can't open it |
 | A dependency call fails (config, search, or enrolment) | Silently caught; the affected area renders empty ("No content found") rather than showing an error |
 | A week's date fields aren't in the expected format | Week/current-week calculation can silently go wrong, showing the wrong week selection |
 | Program config changes after a member's session already loaded it | Member keeps seeing the old config until a full page reload — the config cache has no invalidation |

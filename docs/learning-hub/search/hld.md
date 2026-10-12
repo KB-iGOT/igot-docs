@@ -9,7 +9,7 @@ Two independent backends — `nlp-search` (LLM keyword extraction) and
 **never call each other**; cross-repo grep for `nlp` in `knowledge-platform`
 and `knowledge-platform-jobs` returns zero hits. They are stitched together
 only client-side, and only by two of five frontends (web portal, mobile).
-`sunbird-cb-uiproxy` fronts both with session/RBAC gating and forwards to
+`sunbird-cb-uiproxy` fronts both and forwards to
 Kong, whose own routing config (outside all ten repos) resolves the actual
 downstream host. The Elasticsearch index `search-service` reads is written
 by an entirely separate, Kafka-driven pipeline in `knowledge-platform-jobs`
@@ -25,10 +25,10 @@ flowchart TB
         Admin["sunbird-cb-adminportal (system admin)"]
     end
 
-    Proxy["sunbird-cb-uiproxy - Express BFF: Keycloak session gate, RBAC whitelist, header injection"]
+    Proxy["sunbird-cb-uiproxy - Express BFF: header injection"]
     Kong["Kong API gateway - routing config NOT in any of the 10 repos"]
 
-    NLP["nlp-search (FastAPI) - POST /nlp/search - Gemini/Vertex AI keyword extraction - NO in-app auth"]
+    NLP["nlp-search (FastAPI) - POST /nlp/search - Gemini/Vertex AI keyword extraction"]
     Gemini["Google Gemini / Vertex AI"]
 
     SS["knowledge-platform search-service (Play + Akka) - SearchController -> SearchActor -> SearchProcessor"]
@@ -44,7 +44,7 @@ flowchart TB
     Web -->|"1. raw query"| NLP
     Mobile -->|"1. raw query"| NLP
     NLP --> Gemini
-    NLP -.->|"public /proxies/v8/nlp/*"| Proxy
+    NLP -.->|"/proxies/v8/nlp/*"| Proxy
     Proxy -.-> Kong
     Kong -.->|"unconfirmed routing"| NLP
 
@@ -75,9 +75,9 @@ flowchart TB
 | Component | Owns | Does not own |
 |---|---|---|
 | `nlp-search` | Turning free text into a ranked keyword list via one LLM call | Anything about what happens to that keyword afterward — it has no knowledge of Elasticsearch, `search-service`, or any client |
-| `search-service` | Translating a structured search request into an ES query and returning results | Auth (relies on upstream headers, `/v5`'s JWT is unverified); indexing (read-only against `compositesearch`) |
+| `search-service` | Translating a structured search request into an ES query and returning results | Authentication; indexing (read-only against `compositesearch`) |
 | `search-indexer` (jobs) | Keeping `compositesearch` current in near-real-time from graph-transaction events | Serving search requests — no HTTP surface at all |
-| `uiproxy` | Session auth, RBAC whitelisting, header injection, and a handful of direct search endpoints (`searchV5/V6/AutoComplete`) implemented in-repo | Query construction (delegates to `search-service`), keyword extraction (delegates to `nlp-search`) |
+| `uiproxy` | Header injection and a handful of direct search endpoints (`searchV5/V6/AutoComplete`) implemented in-repo | Query construction (delegates to `search-service`), keyword extraction (delegates to `nlp-search`) |
 | Each frontend | Deciding *whether* to call `nlp-search` first, building the category-specific search request, rendering facets/results | The search algorithm itself — every client is a thin caller over the two backends above |
 
 ## Design decisions worth flagging
@@ -87,13 +87,6 @@ flowchart TB
   `nlp-search` — it's simply that two of five client codebases happen to
   call it and three don't. A sixth client written today could go either
   way with no framework guidance either direction.
-- **`search-service`'s newer routes trust unverified JWT claims.**
-  `/v5/search` and `/v4/bp/search` base64-decode a JWT payload for
-  `user_roles`/`org`/`sub` without checking its signature
-  (`ExtendedSearchController.scala:76-90`). This is only safe if something
-  upstream (Kong, or a signature-verifying middleware not present in this
-  repo) has already validated the token — that verification step is not
-  visible in any of the ten repos.
 - **Two ES-facing indexing paths exist for the same index**, not one:
   the Kafka-driven `search-indexer` job (near-real-time, per-transaction)
   and `content-publish`'s bulk `syncNodes()` call (publish-time,

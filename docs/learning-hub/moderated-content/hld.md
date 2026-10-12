@@ -26,7 +26,7 @@ flowchart TB
     GW["sunbird-cb-uiproxy - proxies_v8, notifyContentState email"]
 
     subgraph KP["knowledge-platform"]
-        SA["SearchActor.getSearchDTO - x-user-channel-id -> secureSettings filter"]
+        SA["SearchActor.getSearchDTO - secureSettings filter"]
         SP["SearchProcessor - secureSettings nested ES query"]
         Schema[("content/collection/questionset schema.json - secureSettings.organisation, isVerifiedKarmayogi")]
     end
@@ -41,7 +41,7 @@ flowchart TB
     end
 
     subgraph Disc["cb-discussion-service - unrelated feature, same doc"]
-        DSI["DiscussionServiceImpl.create - saves+indexes immediately, isProfane=false"]
+        DSI["DiscussionServiceImpl.create - saves+indexes, isProfane=false"]
         PCS["ProfanityCheckServiceImpl - via service-registry proxy"]
         PC["ProfanityConsumer - Kafka result, soft-hide + alert"]
     end
@@ -85,11 +85,11 @@ flowchart TB
 | `contents.component.ts` | Role-driven review queue (`CONTENT_REVIEWER` sees For Review/Under Publish/Live) — generic to all content, not moderated-content-specific | `sunbird-cb-creationportal` |
 | `editor.service.ts` | Generic review/publish/retire/status-change API calls, reused unmodified by moderated content | `sunbird-cb-creationportal` |
 | `card-learn.component.ts` | Learner-facing "Moderated contents" tab, MDO + verified-status scoped search, conditionally shown | `sunbird-cb-portal` |
-| `SearchActor` / `SearchProcessor` | The actual enforcement point — Elasticsearch nested-query restriction on `secureSettings.organisation`, defaulted from the caller's org header | `knowledge-platform` |
+| `SearchActor` / `SearchProcessor` | The actual enforcement point — Elasticsearch nested-query restriction on `secureSettings.organisation` | `knowledge-platform` |
 | `ContentInfoUtil` | Backend moderated-content identifier lookup + verified-status filter injection + Redis caching | `cb-ext-course-service` |
 | `CourseMgmtStatus` / generic content workflow | Draft/Review/Live/Retired state machine every content type (including moderated) rides on | `sunbird-course-service` |
 | `DiscussionServiceImpl` / `ProfanityCheckServiceImpl` / `ProfanityConsumer` | Async text-profanity pipeline for discussion posts/replies — unrelated code path to the above | `cb-discussion-service` |
-| `text_profanity_service.py` | Transformer-based (toxic-bert/MuRIL) profanity classification, chunking, aggregation | `content-moderation-service` |
+| `text_profanity_service.py` | Transformer-based (toxic-bert/MuRIL) profanity classification | `content-moderation-service` |
 | `NotificationController` / `NotificationSubCategory` | In-app notification store; `PROFANITY_CHECK` has a confirmed producer, `CONTENT_*` subcategories do not | `cb-notification-service` |
 | `sunbird-notification-service` | Multi-channel (email/SMS/push/feed) dispatch engine; no confirmed moderation-related caller | `sunbird-notification-service` |
 
@@ -111,11 +111,8 @@ entirely independent systems that happen to share the word "moderation."
   (`secureSettings`, the generic review workflow, generic search).
 - **MDO restriction is enforced at the search engine, not just the UI.**
   `SearchProcessor`'s nested Elasticsearch query on
-  `secureSettings.organisation` means a client that skips the UI filter
-  still cannot retrieve out-of-org moderated content through the search
-  API — `SearchActor` auto-injects the caller's own org if no explicit
-  filter is supplied. This is a real access-control boundary, not
-  cosmetic hiding.
+  `secureSettings.organisation` restricts moderated content to the
+  caller's own org at the search API level, not just in the UI.
 - **Review/approval reuses the generic Sunbird content workflow
   verbatim.** The `CONTENT_REVIEWER` review queue, `InReview`/`Reviewed`
   states, and publish/retire endpoints are identical to what every other

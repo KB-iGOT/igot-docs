@@ -7,7 +7,7 @@ maintained as Markdown (docs-as-code) and paired with a visual, interactive
 
 ## Published site
 
-The **Docs Explorer** is published at **https://kb-igot.github.io/igot-docs/**
+The **Docs Explorer** is published at **<DOCS_SITE_URL>**
 by `.github/workflows/docs.yml`: on every push to `main` that touches `docs/`,
 `tools/` or the explorer template, it runs `tools/build_docs_explorer.py` and
 deploys the result as the site's `index.html` (so the published copy always

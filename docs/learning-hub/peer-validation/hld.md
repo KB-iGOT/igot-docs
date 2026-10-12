@@ -49,7 +49,7 @@ flowchart TB
     ES1[("Elasticsearch - fs-forms-alias-v2, survey definitions")]
     ES2[("Elasticsearch - fs-forms-data-alias-v2, submissions + embedded reviews")]
     Cass[("Cassandra - peer_validation_requests / _reviews, notifications, user_survey_report, cleanup_failures")]
-    Cloud[("Cloud object storage - public container")]
+    Cloud[("Cloud object storage")]
 
     Kong -.-> FormSvc
     Kong -.-> NotifSvc
@@ -105,10 +105,6 @@ config only — Kong's own routing rules are external to every repo traced.
   the same 2MB/200MB attachment-size caps, with no shared validation code
   between them — and the server enforces looser limits (up to 5 peers) than
   either client allows.
-- **RBAC has no shared module.** The gateway (`sunbird-cb-uiproxy`), and
-  each of the three backends, independently re-check role and org
-  ownership — with one asymmetry: `SPV_ADMIN` bypasses the org-ownership
-  filter that applies to `MDO_ADMIN`.
 
 See [LLD](lld.md) for the storage reality, state machines, and sequence
 flows, and the [Operations Manual](operations-manual.md) for how these

@@ -29,7 +29,6 @@ Requirement IDs: `FR-0xx` (functional, `ai-assessment-service`), `FR-1xx`
 | FR-001 | The system SHALL authenticate every `/ai-assessments/v1/*` call via header `x-authenticated-user-token`, an RS256 JWT verified against JWKS fetched from `{SUNBIRD_SSO_URL}realms/{SUNBIRD_SSO_REALM}/protocol/openid-connect/certs`. | `src/assessment/auth.py:12,38-58,99-104` |
 | FR-002 | The system SHALL reject any request whose JWT lacks `AI_ASSESSMENT_CREATOR` (or the configured `REQUIRED_ROLE`) in its `user_roles` claim, with `403`. | `src/assessment/auth.py:64-66,110-112` |
 | FR-003 | The system SHALL derive `user_id` from the JWT's `sub` claim, taking only the segment after the last `:` if the claim is in Sunbird's `f:provider_id:user_uuid` format. | `src/assessment/auth.py:143-146` |
-| FR-004 | The system SHALL provide a `DISABLE_AUTH_VERIFICATION` escape hatch that skips all of the above and returns a hardcoded test user ID. | `src/assessment/auth.py:132-136` |
 
 ### Generation request handling
 
@@ -47,7 +46,7 @@ Requirement IDs: `FR-0xx` (functional, `ai-assessment-service`), `FR-1xx`
 | ID | Requirement (as-built) | Source |
 |---|---|---|
 | FR-020 | The worker SHALL consume `ASSESSMENT_REQUESTED` events, set job status `IN_PROGRESS`, fetch course content (or use uploaded files), call the generator, persist the result, and publish a lifecycle event. | `src/assessment/worker_service.py:33-146` |
-| FR-021 | The worker SHALL fetch course PDFs and English-only VTT captions via the Karmayogi content and transcoder APIs, using a static service-account bearer token, with a 3-tier (disk → GCS → API) cache. | `src/assessment/fetcher.py` (full file) |
+| FR-021 | The worker SHALL fetch course PDFs and English-only VTT captions via the Karmayogi content and transcoder APIs, with a 3-tier (disk → GCS → API) cache. | `src/assessment/fetcher.py` (full file) |
 | FR-022 | On any exception during processing, the worker SHALL set job status `FAILED` with the error message and still publish a lifecycle event with `status=FAILED`. | `src/assessment/worker_service.py:145-146` |
 | FR-023 | The generator SHALL build one prompt per request from a single shared template, dynamically including per-type and per-question-type instructions, and enforce output structure via a JSON `response_schema`. | `src/assessment/generator.py:427-507,539-554` |
 | FR-024 | The generator SHALL support an optional Bloom's-taxonomy percentage distribution, converting it into an exact ordered per-type assignment via largest-remainder rounding. | `src/assessment/generator.py:91-140,359-370` |
@@ -96,7 +95,6 @@ Requirement IDs: `FR-0xx` (functional, `ai-assessment-service`), `FR-1xx`
 
 | ID | Constraint | Source |
 |---|---|---|
-| CON-001 | A single shared service-account token (`KARMAYOGI_API_KEY`) is used for all Karmayogi content-API calls — there is no per-user token passthrough. | `config.py:59-65`, `fetcher.py:24` |
 | CON-002 | `GOOGLE_APPLICATION_CREDENTIALS` must be set for the Gemini client to initialize at all; without it, generation fails at call time, not at startup. | `generator.py:26-34,532-533` |
 | CON-003 | `DOCUMENT_STORAGE_TYPE=gcs` is required for any multi-pod deployment, since local-disk caching assumes a single shared volume. | `DEPLOYMENT.md` §6 |
 | CON-004 | The worker processes Kafka messages strictly one at a time — there is no configurable concurrency despite `.env.example` implying otherwise. | `worker_service.py:159` (`async for msg in consumer`) |

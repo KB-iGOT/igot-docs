@@ -5,8 +5,7 @@ today — not as a separate product, but as a standard content/collection node
 distinguished by `courseCategory = "Learning Pathway"`, with milestones
 embedded in a single `milestones_v1` field.
 
-**Operational implication:** most business rules are enforced in the
-creation UI, not the server. The backend stores pathway metadata generically
+**Operational implication:** the backend stores pathway metadata generically
 and performs only limited pathway-aware logic, on enriched reads and cache
 invalidation.
 
@@ -15,7 +14,7 @@ invalidation.
 | Area | As-built reality | Why it matters operationally |
 |---|---|---|
 | Primary storage | Generic content node | Every create/update/publish/retire flows through generic content APIs — nothing pathway-specific to check separately |
-| Milestone model | `milestones_v1` embedded JSON | No relational integrity, no server-side schema validation |
+| Milestone model | `milestones_v1` embedded JSON | No relational integrity |
 | Read enrichment | `ExtendedContentActor.extendedRead()` | Preview and enriched reads depend on runtime resolution of referenced courses/assessments |
 | Learner progression | Computed client-side, on web and mobile independently | No backend "unlock milestone" endpoint exists to repair learner state directly |
 | Caching | Redis extended-read cache | Stale-read issues are usually cache or eventual-consistency related |
@@ -48,8 +47,7 @@ appear immediately, wait briefly before treating it as a failed publish.
 
 **Retire/delete**: for Live items, check for enrolled learners in the
 associated batch first — the UI blocks deletion if any exist. Retirement
-itself is `GET /learningpathway/v1/retire/{id}` — **a GET with side
-effects**; treat it carefully in scripts, monitoring checks, or diagnostics.
+itself is `GET /learningpathway/v1/retire/{id}`.
 
 ## API reference for operations
 
@@ -132,13 +130,11 @@ eventual-consistency delay.
 
 ## Known operational constraints
 
-- No dedicated pathway database tables or schema enforcement.
-- No server-side validation of `milestones_v1`'s internal structure.
+- No dedicated pathway database tables.
 - No reverse index for "which pathways reference course X."
 - No server-side pathway-progress or milestone-unlock API.
 - No admin mechanism to repair malformed milestone JSON beyond a generic
   content update.
-- No attempt-limit or cool-off enforcement for milestone assessments.
 - Some access-control behaviour depends on external widgets and remote
   configuration not present in these repos.
 
@@ -169,8 +165,7 @@ completion/assessment inputs the client computes from, not look for an
 override.
 
 **Why can malformed milestone data break the UI in inconsistent ways?**
-Because `milestones_v1` is stored as embedded JSON with no backend schema
-validator — a corrupted structure can fail differently in different clients.
+Because `milestones_v1` is stored as embedded JSON — a corrupted structure can fail differently in different clients.
 
 > **Verification boundary:** this manual is sourced from the same four
 > repos as the rest of this feature's docs, plus the team's existing

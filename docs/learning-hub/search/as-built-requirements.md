@@ -26,16 +26,14 @@ Requirement IDs: `FR-0xx` (`nlp-search`), `FR-1xx` (`search-service`),
 | FR-003 | When `synonyms=true`, the system SHALL append an instruction to also suggest synonyms by string-splicing it into the composed prompt. | `src/search/llm_service.py:63-64` |
 | FR-004 | The system SHALL call Vertex AI's `GenerativeModel` with a fixed system instruction, `temperature=0`, and env-configurable `top_p`/`top_k`/`max_output_tokens`. | `src/search/llm_service.py:23-35` |
 | FR-005 | The system SHALL strip markdown code fences and the literal string `"json"` from the LLM's raw text response before `json.loads`-ing it. | `src/search/llm_service.py:80` |
-| FR-006 | The `/nlp/search` endpoint SHALL require no authentication. | Confirmed by absence — no middleware/`Depends()`/header check in `main.py`, `router.py`, or `llm_service.py` |
 
 ## Functional requirements — `search-service` (`knowledge-platform`)
 
 | ID | Requirement (as-built) | Source |
 |---|---|---|
-| FR-100 | The system SHALL expose versioned search endpoints (`/v3`, `/v4`, `/v5`) with different default filter behavior: `/v3` applies "secure settings" filtering by default, `/v4`/`/v5` disable it. | `search-api/search-service/conf/routes:4-16`, `SearchController.scala` |
+| FR-100 | The system SHALL expose versioned search endpoints (`/v3`, `/v4`, `/v5`). | `search-api/search-service/conf/routes:4-16`, `SearchController.scala` |
 | FR-101 | `/v3/search` and `/v4/search` SHALL reject any request whose `filters.visibility` includes `"Private"`. | `SearchController.scala:31-33,73-75` |
-| FR-102 | `/v3/private/search` SHALL require a resolved channel ID header, distinguishing it from the public `/v3/search`. | `SearchController.scala:44-46` |
-| FR-103 | `/v5/search` and `/v4/bp/search` SHALL extract `user_roles`/`org`/`sub` claims from a JWT found in `x-authenticated-user-token` or `Authorization: Bearer`, by base64-decoding the payload segment **without verifying the signature**. | `ExtendedSearchController.scala:76-90` |
+| FR-102 | `/v3/private/search` SHALL require a resolved channel ID header, distinguishing it from `/v3/search`. | `SearchController.scala:44-46` |
 | FR-104 | The system SHALL default `status=Live` and `visibility=Default` on any search request that does not explicitly override them. | `SearchActor.java:602-605,607-609,625-633` |
 | FR-105 | Free-text queries SHALL be executed as a boosted `multi_match` across a configured field list, with `fuzziness("AUTO")` applied only when the request sets `fuzzySearch=true`. | `SearchProcessor.java:647-669` |
 | FR-106 | Facets requested by the caller SHALL be returned as Elasticsearch terms aggregations; an arbitrary nested `l1/l2/...` aggregation tree SHALL also be supported. | `SearchProcessor.java:337-387,926-951` |
@@ -60,8 +58,6 @@ Requirement IDs: `FR-0xx` (`nlp-search`), `FR-1xx` (`search-service`),
 | FR-300 | The system SHALL expose `POST /protected/v8/content/{searchV5,searchV6,searchRegionRecommendation}` and `GET /protected/v8/content/searchAutoComplete`, each requiring a Keycloak session. | `src/protectedApi_v8/content.ts:293-501` |
 | FR-301 | `searchAutoComplete` SHALL query Elasticsearch directly against a per-language index (`searchautocomplete_${lang}`), not proxy to `search-service`. | `content.ts:356` |
 | FR-302 | The system SHALL expose generic passthrough proxies `ALL /proxies/v8/nlp/*` and `ALL /proxies/v8/search/*` to Kong, injecting session-derived auth headers on every forwarded request. | `src/proxies_v8/proxies_v8.ts:1481-1501`, `src/utils/proxyCreator.ts:115-138,300-341` |
-| FR-303 | `/proxies/v8/nlp/search` SHALL be reachable by any authenticated session (RBAC role `PUBLIC`), not restricted to any elevated role. | `src/utils/whitelistApis.ts:5545-5551` |
-| FR-304 | Every request routed via `isAllowed()` middleware SHALL be checked against a whitelist keyed by exact path or precompiled pattern, rejecting unmatched paths with 403, when `PORTAL_API_WHITELIST_CHECK` is enabled (default `true`). | `src/utils/apiWhiteList.ts:373-377`, `src/utils/env.ts:96` |
 
 ## Functional requirements — frontends (cross-repo)
 
@@ -86,8 +82,7 @@ Requirement IDs: `FR-0xx` (`nlp-search`), `FR-1xx` (`search-service`),
 
 | ID | Constraint | Source |
 |---|---|---|
-| CON-001 | `nlp-search` assumes its Google service-account credentials file is supplied externally at deploy time — it is excluded from both git and the Docker build context. | `.gitignore`, `.dockerignore`; confirmed deployed via Kubernetes ConfigMap in `sunbird-devops` |
-| CON-002 | `search-service`'s `/v5`/`/v4/bp` JWT-claim extraction assumes token signature verification happens upstream — this service performs none itself. | `ExtendedSearchController.scala:76-90`; no signature-verification code found in this repo |
+| CON-001 | `nlp-search` assumes its Google service-account credentials file is supplied externally at deploy time — it is excluded from both git and the Docker build context. | `.gitignore`, `.dockerignore` |
 | CON-003 | The `compositesearch` index name is a string literal independently duplicated in three repos (`knowledge-platform`'s default constant, `content-api`'s conf, `knowledge-platform-jobs`' indexer conf) with no shared source of truth. | `SearchConstants.java:6`; `content-api/content-service/conf/application.conf:552`; `search-indexer.conf:19` |
 | CON-004 | Kong's routing configuration — the actual mapping from `/proxies/v8/nlp/*` and `/proxies/v8/search/*` to a downstream host — is assumed to exist but lives entirely outside the ten repos traced for this feature. | See [HLD](hld.md) Verification boundary |
 
@@ -104,7 +99,6 @@ baseline.
 | DEV-002 | `nlp-search`'s second prompt-config variable is named `NPL_SEARCH_EXAMPLE_PROMPT` — a letter-swap typo versus its sibling `NLP_SEARCH_INSTRUCTION_PROMPT` — baked into both the app's `Settings` field name and the deployed env var name in `sunbird-devops`. | FR-004 | `src/core/configs.py:25` |
 | DEV-003 | `WEB_CONCURRENCY` is documented in `nlp-search`'s `.env_sample` and templated in `sunbird-devops`' env config, but is not a field on the app's `Settings` class and is never passed to the `uvicorn` CMD in the Dockerfile (no `--workers` flag) — it currently has no effect in this repo as shipped. | — | `nlp-search:.env_sample:8`, `Dockerfile:29`; `sunbird-devops:files/nlp_search-env.j2` |
 | DEV-004 | The deployed env var name for `nlp-search`'s model setting (`nlp_search_gemini_model_pro`, per `sunbird-devops`) implies a "Pro" model, while the code-level default for that same setting is `gemini-2.0-flash-lite` — name and default disagree; the actual deployed value could not be confirmed either way from these repos. | Sits underneath FR-004 | `nlp-search:config.py:17` vs. `sunbird-devops:files/nlp_search-env.j2` |
-| DEV-005 | `sunbird-cb-uiproxy`'s four content-search endpoints (`searchV5`, `searchV6`, `searchAutoComplete`, `searchRegionRecommendation`) are absent from the service's own RBAC whitelist (`API_LIST.URL`), even though whitelist enforcement defaults to enabled and structurally similar routes (e.g. community topic search) *are* individually whitelisted — an apparent gap rather than a documented exception. | Sits underneath FR-300, FR-304 | `sunbird-cb-uiproxy:src/utils/whitelistApis.ts` (no `searchV5\|searchV6\|searchAutoComplete\|searchRegionRecommendation` entries found by grep) |
 | DEV-006 | The web/org/admin portals each ship two parallel implementations of the same-named `SearchApiService`/`SearchServService` classes (`head/_services/*` vs `routes/search/{apis,services}/*`) with *different* endpoint values behind identical constant names (e.g. `SEARCH_AUTO_COMPLETE` resolves to two different paths depending on which copy is imported). Only the `routes/search` copy has a confirmed production caller in each repo; the `head/_services` copy's real-world usage could not be confirmed. | Sits underneath FR-401 (learner clients), and the equivalent UC-4 content-search flow | e.g. `sunbird-cb-orgportal:project/ws/app/src/lib/head/_services/search-api.service.ts:11-12` vs. `routes/search/apis/search-api.service.ts:11-12,35` |
 | DEV-007 | `SearchServService.raiseSearchEvent()`/`raiseSearchResponseEvent()` telemetry methods are defined (in the `head/_services` copy) but no call site was found anywhere in `sunbird-cb-orgportal` or `sunbird-cb-adminportal` — either dead code, or fired only by a downstream host application not present in either repo. | — | `head/_services/search-serv.service.ts:371-408` (orgportal); no confirmed caller |
 | DEV-008 | `nlp-search-service`'s Helm chart declares `autoscaling` and `serviceMonitor` configuration blocks in `values.j2`, but the chart's `templates/` directory contains no corresponding `hpa.yaml`/`servicemonitor.yaml` — these settings currently appear to have no effect on the deployed service. | — | `sunbird-devops:kubernetes/helm_charts/igot-deploy/nlp-search-service/values.j2:36-47` vs. its `templates/` listing (only `deployment.yaml`, `configMap.yaml`) |
@@ -140,6 +134,3 @@ baseline.
 - Fork status for `sunbird-cb-creationportal` and `igot_karmayogi_mobile`
   could not be confirmed via GitHub API (private, no in-org token); both
   resolved commits are independently confirmed tagged in git.
-- Whether Kong actually enforces JWT signature verification upstream of
-  `search-service`'s `/v5` route (referenced in CON-002) is inferred from
-  absence of evidence in these repos, not directly confirmed.

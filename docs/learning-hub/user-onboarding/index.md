@@ -72,9 +72,7 @@ finish their basic details.
 > call writes a registration record, returns "accepted", and hands it to a
 > background consumer that creates the real account later — immediately for
 > a registration link or a pre-approved email domain, after an approval step
-> otherwise. And the "verified" tick next to the email and mobile fields is
-> the client's own bookkeeping: the server never re-checks that the one-time
-> codes were verified before accepting the registration.
+> otherwise.
 
 See [Use Cases](use-cases.md), [APIs](apis.md), [HLD](hld.md) and
 [LLD](lld.md) for the full picture, the

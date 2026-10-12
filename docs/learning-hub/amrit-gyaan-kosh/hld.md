@@ -116,11 +116,10 @@ repo in this trace defines them. See [APIs](apis.md) for the full gap.
   `amritGyaanOrgId`/`cbcOrg` from remote config on mobile) — any user can see
   both tabs; the split is about which org authored the content, not who is
   viewing it.
-- **Gated by generic mechanisms, not an AGK-specific flag.** Web access
-  passes through `GeneralGuard` (which can be globally disabled via
-  `globalConfig.routes['amrit-gyaan-kosh']`) and a `GyaanResolverService`
-  fetch of a tenant `feature/tenant-admin.json` file — neither is AGK-aware
-  beyond the route key string. Mobile visibility comes from a generic,
+- **Configured by generic mechanisms, not an AGK-specific flag.** Web
+  uses a `GyaanResolverService` fetch of a tenant
+  `feature/tenant-admin.json` file — not AGK-aware beyond the route key
+  string. Mobile visibility comes from a generic,
   remotely-overridable `explore-hub-config` JSON shared by every hub tile.
 - **Content authoring reuses the platform, deliberately.** No AGK-specific
   authoring screen exists in `sunbird-cb-creationportal`; `Resource`-type

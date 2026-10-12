@@ -170,8 +170,7 @@ caller has already received 200, so a row can stay at
 
 1. Re-checks the **hard** seat cap; if it fails the method silently does
    nothing — the row stays `APPROVED` with no enrolment.
-2. Body `{"request":{"userId","batchId":<applicationId>,"courseId"}}`, no auth
-   token.
+2. Body `{"request":{"userId","batchId":<applicationId>,"courseId"}}`.
 3. URL: course service `/v2/blended/program/admin/enroll` **only if** the
    payload `state == SEND_FOR_PC_APPROVAL` and `serviceName == "blendedprogram"`
    (it adds `enrolled_date` = the row's `created_on`); otherwise
@@ -340,8 +339,8 @@ Redis-sync code exists but nothing calls it.
 | Operation | Rules |
 |---|---|
 | Create | `enrollmentType` ∈ {open, invite-only}; `startDate` ≥ today; `endDate ≥ startDate`; `enrollmentEndDate ≤ endDate`. **Blended Program:** `batchAttributes.currentBatchSize` must be present, a **string**, integer ≥ 1 (`INVALID_FIELD_CURRENT_BATCH_SIZE`). Status `STARTED(1)` if start is today (IST) else `NOT_STARTED(0)`. Each `instructorsUserId` is verified; new instructors get an email + in-app notification. The batch is **not** appended to the program's `batches` array (other categories are) |
-| Update | Caller must be `createdBy` or in `mentors` (else 401). `batchAttributes` are **merged** (`putAll`), so a re-sent `sessionDetails_v2` replaces the whole array. No re-validation of `currentBatchSize` and **no check against the approved count** — size can be lowered below enrolled. On an **expired** batch only `id, courseId, batchAttributes` survive, and inside it only `instructorsUserId, instructors` |
-| Delete | **Blended Program only**; before the start date; sets status 3, removes from the program's `batches`, **deactivates every enrolment** of the batch and emails all learners. The actor has **no permission check** (the portal gates it) |
+| Update | Caller must be `createdBy` or in `mentors` (else 401). `batchAttributes` are **merged** (`putAll`), so a re-sent `sessionDetails_v2` replaces the whole array. `currentBatchSize` is not re-validated on update. On an **expired** batch only `id, courseId, batchAttributes` survive, and inside it only `instructorsUserId, instructors` |
+| Delete | **Blended Program only**; before the start date; sets status 3, removes from the program's `batches`, **deactivates every enrolment** of the batch and emails all learners. |
 
 ### Single-user Blended Program enrol (`/v2/blended/program/admin/enroll`)
 
@@ -351,8 +350,7 @@ not completed, **start-date cut-off (end of the start date, IST)** — and
 ignores `enrollmentEndDate` for Blended Programs; mandatory
 `preEnrolmentResources` complete; `lastEnrollmentDate` not passed; and, if
 `accessSettingsEnabled`, access rules keyed by **batchId** for this category.
-It does **not** check `currentBatchSize` and does **not** enforce one batch
-per program. `enrolled_date` is required (`yyyy-MM-dd HH:mm:ss.SSS`, missing → NPE). Then children are auto-enrolled
+`enrolled_date` is required (`yyyy-MM-dd HH:mm:ss.SSS`, missing → NPE). Then children are auto-enrolled
 (never Blended Programs), rows upserted into `user_enrolments_v2` and
 `enrollment_batch_lookup`, caches deleted, karma-points event emitted and
 `incrementBatchApprovedCount` run. The v1 route validates with the wrong
@@ -418,9 +416,9 @@ recomputed on batch update).
 
 | Path | Who | How | Checks |
 |---|---|---|---|
-| Coordinator | PC / trainer in the Creation Portal | `POST blendedprogram/v1/update/progress` → `sunbird-cb-ext` `ContentProgressController.updateContentProgress` pushes to Kafka `dev.update.content.progress` and returns **200 whenever the push succeeds** (500 only if the push throws; nothing about the later PATCH is reported) → consumer `PATCH {course service}/v2/content/state/admin/update` → on `responseCode OK` sends "ATTENDANCE MARKED" email | **None server-side**: no role, ownership or date check in `sunbird-cb-ext`; gate = uiproxy role + Kong ACL; the button window (start date → batch end + 7 days) is Creation-Portal-only |
+| Coordinator | PC / trainer in the Creation Portal | `POST blendedprogram/v1/update/progress` → `sunbird-cb-ext` `ContentProgressController.updateContentProgress` pushes to Kafka `dev.update.content.progress` and returns **200 whenever the push succeeds** (500 only if the push throws; nothing about the later PATCH is reported) → consumer `PATCH {course service}/v2/content/state/admin/update` → on `responseCode OK` sends "ATTENDANCE MARKED" email | The button window (start date → batch end + 7 days) is a Creation Portal rule |
 | Learner (mobile) | Learner | `PATCH course/v5/content/state/update` with `contentId = sessionId`, `status 2`, `100` | Live window (start → start + whole hours of duration + 1 h), 1000 m geofence, QR `sessionId` and `batchId` match (the QR's `courseId` is **not** checked) |
-| Illumine | External | `POST blendedprogram/v1/attendance/update` → `external_content_integration` lookup → marks the **first** session of the batch | Kong ACL `illumineAccess`; forwards no headers (works only if the course service path is auth-exempt) |
+| Illumine | External | `POST blendedprogram/v1/attendance/update` → `external_content_integration` lookup → marks the **first** session of the batch | Forwards no headers |
 
 A learner is "attended" when the session node's status is `2`. The web
 session card shows "marked" iff `completionStatus === 2`, matching
@@ -444,12 +442,8 @@ status smallint 1/0, created_by, created_on, updated_by, updated_on)`, PK
 - Startup requires a role literally named **"Program Coordinator"**; the
   shipped DDL does not seed it (service fails to start unless added by hand).
 - Upsert guard: caller's token roles ∩ `program.coordinator.allowed.roles`
-  (`PROGRAM_COORDINATOR`). No check that the caller coordinates that
-  program. Re-adding an active user is a no-op; removal is soft
+  (`PROGRAM_COORDINATOR`). Re-adding an active user is a no-op; removal is soft
   (`status = 0`).
-- The admin upsert's role list in the repo default includes `PUBLIC`
-  (`CONTENT_CREATOR,CONTENT_REVIEWER,SPV_PUBLISHER,PUBLIC`); the devops
-  template drops it.
 - A change publishes `{eventType:"COORDINATOR_LIST_SYNCED", userIds[]}` to
   `cb.program.coordinator.sync`; the consumer rewrites each user's document
   in ES `user_program_lookup_v1` (`{userId, programIds[], updatedOn}`).
@@ -457,8 +451,7 @@ status smallint 1/0, created_by, created_on, updated_by, updated_on)`, PK
 ### Coordinator-scoped program search
 
 `POST /v4/bp/search` → `ExtendedSearchController.blendedProgramSearch`
-(`knowledge-platform › search-api`). It decodes the JWT payload with **no
-signature check** (trust rests on the Kong `jwt` plugin), takes `sub` as the
+(`knowledge-platform › search-api`). It reads `sub` from the JWT payload as the
 user id, and adds an ES **terms lookup** so only identifiers listed in
 `programIds` of `user_program_lookup_v1/<userId>` match. No document → no
 hits. `NO_PROGRAM_SENTINEL` is declared but unused.
@@ -477,8 +470,7 @@ hits. `NO_PROGRAM_SENTINEL` is declared but unused.
 
 Both ride Kafka topic `{env}.bp.report.generation` (flat message; v2 adds
 `version:"v2"`, `contextType`). An org guard requires the caller's rootOrg
-to equal `orgId`; there is no check that the caller holds the requested
-`reportRequester` role or coordinates that batch.
+to equal `orgId`.
 
 **Nightly Spark** (`cb-core-data › jobs/stage-2/blendedReport.py`, 05:25 daily):
 inputs are Live / Retired programs with category "Blended Program"; one row
@@ -566,14 +558,12 @@ Read from code, not executed — treat as leads to confirm.
 | 8 | Bulk-enrol failures reported with a shared status map | course service `:1500-1512` |
 | 9 | v2 report drops the **last page** for batches with > 100 rows | `BPReportsServiceV2Impl.fetchEnrolledUsers:471-486` |
 | 10 | Session QR carries the program **name** in `courseId` | `PdfGeneratorServiceImpl:445` |
-| 11 | Assignment answer read has no ownership check and an unsanitised `fileName`; upload is open to any signed-in user | `StorageServiceImpl` |
-| 12 | Attendance notification lookup unguarded `.get(0)` — a bad session id drops the message and **aborts the progress update** | `UpdateContentProgressConsumer:149-152` |
-| 13 | `Delete batch` un-enrols everyone, with no permission check in the actor | `CourseBatchManagementActor:901-976` |
-| 14 | Redis counters only increment | `ExtendedCourseEnrollmentActor` |
-| 15 | Web: after a withdraw the request object lacks `wfId`/`applicationId` until a refetch; `checkWithdrawn` compares to `WITHDRAWN` twice | `app-toc-banner.component.ts:743` |
-| 16 | Creation Portal: Rejected tab always says "rejected" even for approve; attendance dialog can post one learner several times; Assessments and Batch-settings tabs are stubs; assignment delete is UI-only | Creation Portal |
-| 17 | Creation Portal nominate result handling looks for `BATCH_FULL`, the server returns `Batch Size Error` — counted under "failed" | `content-nominate-learner.component.ts:127-190` |
-| 18 | `DOMAIN` case falls through into the Blended Program handler | `ApplicationProcessingServiceImpl:56-58` |
+| 11 | Attendance notification lookup unguarded `.get(0)` — a bad session id drops the message and **aborts the progress update** | `UpdateContentProgressConsumer:149-152` |
+| 12 | Redis counters only increment | `ExtendedCourseEnrollmentActor` |
+| 13 | Web: after a withdraw the request object lacks `wfId`/`applicationId` until a refetch; `checkWithdrawn` compares to `WITHDRAWN` twice | `app-toc-banner.component.ts:743` |
+| 14 | Creation Portal: Rejected tab always says "rejected" even for approve; attendance dialog can post one learner several times; Assessments and Batch-settings tabs are stubs; assignment delete is UI-only | Creation Portal |
+| 15 | Creation Portal nominate result handling looks for `BATCH_FULL`, the server returns `Batch Size Error` — counted under "failed" | `content-nominate-learner.component.ts:127-190` |
+| 16 | `DOMAIN` case falls through into the Blended Program handler | `ApplicationProcessingServiceImpl:56-58` |
 
 ## 14 · Configuration reference
 
@@ -594,7 +584,7 @@ Read from code, not executed — treat as leads to confirm.
 | `bp.assignment.answer.file.upload.max-size-kb` / `.allowed-extensions` / `bp.assignment.ans.folder.name` | `5000` / `pdf,doc,docx` / `bp-assignment` | `sunbird-cb-ext` |
 | `kafka.topic.bp.report` | `dev.bp.report.generation` (`{env}.bp.report.generation`) | `sunbird-cb-ext` |
 | `progress.api.update.endpoint` | `/v1/content/state/admin/update` (devops: `/v2/…`) | `sunbird-cb-ext` |
-| `program.coordinator.allowed.roles` / `.admin.allowed.roles` | `PROGRAM_COORDINATOR` / `CONTENT_CREATOR,CONTENT_REVIEWER,SPV_PUBLISHER,PUBLIC` (devops: no `PUBLIC`) | `sunbird-cb-ext` |
+| `program.coordinator.allowed.roles` | `PROGRAM_COORDINATOR` | `sunbird-cb-ext` |
 | `extended.content.enrichment.fields` | repo default omits `batches`; devops template includes it | `knowledge-platform` |
 | `window.env.pbPhaseTwo`, `karmYogi`, `portalsForNotifications`, `doptOrg` | deploy-time | portals |
 

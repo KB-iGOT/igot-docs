@@ -28,9 +28,8 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional), `CON-xxx`
 | ID | Requirement (as-built) | Source |
 |---|---|---|
 | FR-001 | The system SHALL restrict navigation to `app/learn/bharat-kalp` to users whose profile attribute `unMappedUser.profileDetails.additionalProperties.isBharatKalpMember` is the **boolean** `true`; all other users are redirected to `/page-not-found`. | `src/app/guards/bharat-kalp.guard.ts:15-27` |
-| FR-002 | The system SHALL also apply the portal-wide `GeneralGuard` account-restriction check before loading the Bharat Kalp module, independent of membership status. | `src/app/app-routing.module.ts:299-309`, `src/app/guards/general.guard.ts:24-31` |
 | FR-003 | The system SHALL show a "Bharat Kalp" card in the home page spotlight section only for users where the membership attribute is `true` **or** the string `'true'`. | `src/app/home/home-v2/in-spotlight-v2/in-spotlight-v2.component.ts:53-59`, `home-v2-resolver.service.ts:89-104` |
-| FR-004 | The system SHALL surface a Bharat Kalp notification/banner entry in the in-sight sidebar only for members (same `true`/`'true'` check), and SHALL re-validate membership on click, redirecting to `/page-not-found` if the check fails at click time. | `src/app/component/in-sight-side-bar/in-sight-side-bar.component.ts:858-889` |
+| FR-004 | The system SHALL surface a Bharat Kalp notification/banner entry in the in-sight sidebar only for members (same `true`/`'true'` check). | `src/app/component/in-sight-side-bar/in-sight-side-bar.component.ts:858-889` |
 | FR-005 | The Bharat Kalp spotlight card SHALL link to `app/learn/bharat-kalp` and display an icon (`/assets/icons/home-v2/bharat-kalp.png`) and a label sourced from i18n key `home.spotlightCards.bharatKalp`. | `in-spotlight-v2.component.ts:35-38` |
 
 ### Landing page
@@ -95,7 +94,7 @@ Requirement IDs: `FR-xxx` (functional), `NFR-xxx` (non-functional), `CON-xxx`
 | CON-001 | `bkConfig.startDate` / `endDate` are assumed to be either `DD-MM-YYYY` formatted strings or otherwise parseable by JavaScript's native `Date` constructor. | CMS/config authors must conform to this format or week calculations silently produce wrong results. | `bharat-kalp-see-all.component.ts:132-138` |
 | CON-002 | No TypeScript interfaces exist for the `bkConfig` / `weekProgress` / `sectionList` payloads — all typed as `any`. | Malformed backend config produces no compile-time or runtime validation error; it degrades silently to empty UI. | `bharat-kalp-form.service.ts:19`; `bharat-kalp.component.ts:12-14` |
 | CON-003 | The external enrollment API (`cios-enroll`) is assumed to return a flat, lowercase-keyed response shape distinct from the internal enrollment API. | A future backend change to normalize these shapes would require a corresponding code change in the merge logic (FR-029) or status pills silently break for external content. | `bharat-kalp-see-all.component.ts:75-93` |
-| CON-004 | The `_cache` in `BharatKalpFormService` is a single, unkeyed in-memory value (not per-user, no TTL). | Config changes require a full page reload to take effect; a user switch within the same tab without reload risks serving stale/wrong-user config. | `bharat-kalp-form.service.ts:12,21` |
+| CON-004 | The `_cache` in `BharatKalpFormService` is a single, unkeyed in-memory value (not per-user, no TTL). | Config changes require a full page reload to take effect. | `bharat-kalp-form.service.ts:12,21` |
 | CON-005 | Tab label localization for the see-all page falls back to `localStorage.getItem('websiteLanguage')` rather than the app's `TranslateService`. | Language-switch behavior for this specific UI text may diverge from the rest of the app if the two mechanisms ever fall out of sync. | `bharat-kalp-see-all.component.ts:195` |
 
 ## Known deviations (inconsistent by accident, not by design)
@@ -106,7 +105,6 @@ they are not mistaken for intended behavior when used as a QA/test baseline.
 
 | ID | Deviation | Requirements in tension | Source |
 |---|---|---|---|
-| DEV-001 | The route guard (FR-001) accepts only the strict boolean `true`, while the spotlight-visibility (FR-003) and notification-visibility (FR-004) checks also accept the string `'true'`. If the backend ever serializes the attribute as a string, a member can see the entry points but be redirected to `/page-not-found` on click. | FR-001 vs. FR-003/FR-004 | `bharat-kalp.guard.ts:15-27` vs. `home-v2-resolver.service.ts:89-104`, `in-spotlight-v2.component.ts:53-59`, `in-sight-side-bar.component.ts:868-876` |
 | DEV-002 | The internal and external enrollment APIs return differently-cased response shapes (FR-029 works around this today), which is fragile to any future backend normalization. | Sits underneath FR-027/FR-028/FR-029 | `bharat-kalp-see-all.component.ts:75-93` |
 | DEV-003 | No distinction exists in the UI between "no content configured for this week/filter" and "an API call failed" — both present as the same empty-state message (FR-034). | Sits underneath NFR-002 | `bharat-kalp-see-all.component.html:85-88` |
 

@@ -40,14 +40,13 @@ flowchart TB
         MDO["mdo_approval.py - reads and updates the SAME rows"]
         SPV["designation_approval.py - reads and updates the SAME rows"]
         KBProxy["kb_apis.py - course/designation search proxy"]
-        Auth2["auth.py - RS256 JWT verify against Sunbird realm certs, DIFFERENT from App1's own auth"]
     end
 
     PG[("Postgres (App1) + pgvector - role_mappings, cbp_plans, recommended_courses, documents, designation_embeddings, course_metadata_weightage, approval_requests, approval_request_items, users, ...")]
     PG2[("Postgres (App2) - same approval_requests / approval_request_items / users rows (extend_existing mirror), plus App2-owned mdo_approval and designation_approvals tables")]
     Redis[("Redis - designation embedding cache")]
     Gemini["Google Gemini / Vertex AI"]
-    KB["iGOT Knowledge Platform API - org/designation/content/user search, cbplan create+publish, designation create, JWKS certs"]
+    KB["iGOT Knowledge Platform API - org/designation/content/user search, cbplan create+publish, designation create"]
     Notif["Notification service - email send (both apps, independently configured)"]
     MDOFrontend["MDO / SPV admin's own frontend - external, NOT in any of the three traced repos"]
     GCS[("GCS or local disk - document storage")]
@@ -94,7 +93,7 @@ flowchart TB
     SPV -->|create designation| KB
     SPV -.->|status email| Notif
     KBProxy --> KB
-    Auth2 --> KB
+
 
     MDOFrontend -.->|"not traced - assumed"| App2
 
@@ -128,7 +127,7 @@ services' connection strings pointed at the same rows.
 | `mdo_approval.py` / `controller` / `crud` | Owns the actual approve/reject/publish decision and its per-item retry semantics, reading/writing the rows `cbp-ai-service` created | `ai-cbp-mdo-service:src/api/v1/mdo_approval.py`, `controller/mdo_approval.py`, `crud/mdo_approval_request.py` |
 | `designation_approval.py` (MDO service) | Owns the SPV admin's approve/reject decision for designation-naming requests, calling iGOT to create the designation on approval | `ai-cbp-mdo-service:src/api/v1/designation_approval.py`, `controller/designation_approval.py` |
 | `kb_apis.py` (MDO service) | A second, independent proxy to iGOT content/designation search, for the MDO/SPV side | `ai-cbp-mdo-service:src/api/v1/kb_apis.py` |
-| `cbp-ai-ui` shell | Login, session/token storage, routing, and the ~40-endpoint `SharedService` API client — the one part of the author-facing client that is actually verifiable | `cbp-ai-ui:src/app/app.component.*`, `src/app/modules/shared/services/shared.service.ts` |
+| `cbp-ai-ui` shell | Login, session storage, routing, and the ~40-endpoint `SharedService` API client — the one part of the author-facing client that is actually verifiable | `cbp-ai-ui:src/app/app.component.*`, `src/app/modules/shared/services/shared.service.ts` |
 
 **Not found in any of the three repos**: the MDO/SPV admin's own frontend
 (whatever renders `ai-cbp-mdo-service`'s API), and the CBP author's
@@ -193,15 +192,6 @@ whether `bulk_scripts/bulk_training_plan_approval.py`'s
   construction") turns out to be finer-grained than that once
   `ai-cbp-mdo-service` is in view: the loop is closed, but item-by-item, not
   request-by-request.
-- **Two independent, differently-shaped auth systems for two different
-  audiences.** `cbp-ai-service` authenticates its own end users with a
-  self-issued JWT + `UserSession` DB-session pair (server-side
-  logout/blacklisting); `ai-cbp-mdo-service` instead *verifies* an
-  externally-issued RS256 JWT against iGOT/Sunbird's own realm certificate
-  endpoint, using a custom `x-authenticated-user-token` header rather than
-  `Authorization: Bearer`. Neither service authenticates the other's users
-  — they never call each other, so there is no cross-service auth to
-  design.
 - **No schema-migration tool, on either backend.** Neither repo has Alembic
   (or any other migration tool) — `cbp-ai-service` creates its tables
   idempotently via `Base.metadata.create_all` on every startup;
@@ -211,15 +201,6 @@ whether `bulk_scripts/bulk_training_plan_approval.py`'s
   either side has no tracked history — it can only be read from the current
   model files, and a change to one service's mirror of a shared table
   cannot be enforced against the other's.
-- **`cbp-ai-ui` has no global auth-header interceptor.** Every
-  `SharedService` method individually rebuilds its own `Authorization`
-  header from `localStorage` (or, in some methods, reuses a header captured
-  once at service construction) — there is no single request interceptor
-  attaching credentials, only a response interceptor that reacts to `401`s.
-- **Runs as root in the `cbp-ai-service` container on this branch.** The
-  `Dockerfile` has no `USER` instruction. `ai-cbp-mdo-service`'s own
-  `Dockerfile`, by contrast, does create and switch to a non-root `appuser`
-  — the two sibling services differ on this point.
 
 See [LLD](lld.md) for the storage reality, state machines, and sequence
 flows, and the [Operations Manual](operations-manual.md) for how these

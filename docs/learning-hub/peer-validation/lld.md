@@ -29,7 +29,7 @@ separate rows — one document is updated in place per peer action.
 
 ```plaintext
 notification_id, user_id (composite key), survey_end_date, metadata (JSON)
-created_at, updated_at, status  // PENDING | SUBMITTED | APPROVED | REJECTED | free-form
+created_at, updated_at, status  // PENDING | SUBMITTED | APPROVED | REJECTED
 ```
 
 Which table a row lives in (`_requests` vs `_reviews`) is the only thing
@@ -49,8 +49,7 @@ status (IN_PROGRESS | COMPLETED | FAILED), createdon, updatedon
 totalrecords, successfulrecordscount, failedrecordscount, artifacturl, errormessage
 ```
 
-The tracking row disappears after 24 hours regardless of whether the
-generated CSV file itself is ever deleted — no code path deletes the file.
+The tracking row disappears after 24 hours.
 
 There is no foreign-key or referential-integrity mechanism between a
 "request," a "review," and its "submission" — they live in different
@@ -128,9 +127,6 @@ sequenceDiagram
 | Attachment type/size (PDF ≤2MB, MP4 ≤200MB) | Both, independently implemented per client | Web, mobile, and server each check separately |
 | A peer can only review a submission they were named on | Backend only | 403 if caller not in `peerReviews[]` |
 | Review decision, once set, is terminal | Backend only | Pre-update status check refuses a second write |
-| Reviewer cannot review their own submission | **Not enforced anywhere** | — |
-| One review per peer per submission | Implicit only, via the composite key | No explicit check |
-| Free-form status via the generic `/v2/read` endpoint | **Not validated against a whitelist** | Accepted and stored as-is |
 
 ## State machines
 

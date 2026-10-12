@@ -148,13 +148,8 @@ processing if all LLM retries are exhausted — the job is simply marked
    GCS/disk miss; results synced back to GCS afterward for reuse by other
    pods.
 
-Auth to the Karmayogi content/transcoder APIs is a **static service-account
-bearer token** (`KARMAYOGI_API_KEY`), not a passthrough of the calling
-user's own JWT — every fetch looks the same to the Karmayogi platform
-regardless of which `AI_ASSESSMENT_CREATOR` triggered it. Signed CDN URLs
-for VTT downloads are fetched with a separate, unauthenticated HTTP client
-specifically to avoid sending the service headers (which would cause a 401
-on a pre-signed URL).
+Signed CDN URLs for VTT downloads are fetched with a separate HTTP client
+that omits the service headers.
 
 ## Export schemas
 
@@ -208,7 +203,6 @@ copy of someone else's).
 | `format` must be one of 5 supported values on download | Backend | `api.py:394` |
 | Job ownership on update/download/status | Backend, per-row `user_id` match | `db.py:136-144`, `api.py:354-356` |
 | Requested `language` in the 12-value enum | Backend (Pydantic enum) | `api.py:93-105` |
-| Uploaded file type/size limits | **Not found** — no explicit MIME/size validation on the `files` upload field | — |
 | `question_type_counts` internal consistency vs. `total_questions` | **Not found** — no cross-check that the two agree | — |
 
 > **Verification boundary:** everything above is read from

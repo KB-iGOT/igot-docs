@@ -25,7 +25,7 @@ the enriched read.
 | GET | `questionset/v1/hierarchy/{id}?mode=edit` | Read an assessment's hierarchy for duration calc and publish-readiness validation |
 | POST | `questionset/v1/publish/{id}` | Publish a draft assessment referenced by the pathway |
 | POST | `action/content/v3/publish/{id}` | Publish the pathway itself |
-| GET | `learningpathway/v1/retire/{id}` | Retire (delete) a pathway — **note: a GET with side effects** |
+| GET | `learningpathway/v1/retire/{id}` | Retire (delete) a pathway |
 | GET | `extended/content/v1/read/{id}` | Enriched read used by the Preview step — delegates to the backend's `ExtendedContentActor` |
 | GET | `apis/protected/v8/cohorts/course/getUsersForBatch/{id}` | Check for enrolled learners before allowing a Live-tab delete |
 

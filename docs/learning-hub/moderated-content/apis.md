@@ -97,16 +97,14 @@ the caller's `profiledetails.profileStatus` is `"VERIFIED"`
   fully resolved whether this is dead/legacy duplication or an actively
   used parallel path.
 
-### Search-engine enforcement (knowledge-platform, not client-optional)
+### Search-engine enforcement (knowledge-platform)
 
-No public REST route beyond the standard content-search endpoint — the
-restriction is applied inside `SearchActor`/`SearchProcessor` regardless
-of caller:
+No additional REST route beyond the standard content-search endpoint — the
+restriction is applied inside `SearchActor`/`SearchProcessor`:
 
-- `SearchActor.getSearchDTO` reads `x-user-channel-id` request-context
-  header as the caller's org; if the caller's request has no explicit
-  `secureSettings.*` filter, it auto-injects
-  `secureSettingsFilter.put("secureSettings.organisation", userOrgId)`.
+- `SearchActor.getSearchDTO` applies
+  `secureSettingsFilter.put("secureSettings.organisation", userOrgId)`
+  for the caller's org.
 - `SearchProcessor.getSecureSettingsSearchQuery(org_id)` builds an
   Elasticsearch `NestedQueryBuilder` requiring
   `exists(secureSettings.organisation) AND term(secureSettings
@@ -138,12 +136,8 @@ of caller:
 {
   "isProfane": true,
   "confidence": 92.4,
-  "category": "Profane",   // string values are inconsistent across chunked/non-chunked and English/Indic paths
-  "detected_language": "en",
-  "chunking_used": true,
-  "total_chunks": 3, "profane_chunks": 1, "clean_chunks": 2,
-  "aggregation_strategy": "majority",
-  "chunk_statistics": {}, "chunk_details": []
+  "category": "Profane",   // string values are inconsistent across English/Indic paths
+  "detected_language": "en"
 }
 ```
 
@@ -156,17 +150,10 @@ mechanism the calling service reads for its own result (see below).
 
 ### Detection internals (for reference, not a public API)
 
-- English: `unitary/toxic-bert`, sigmoid, toxic if any label prob ≥ 0.4,
-  then an 0.8-confidence-floor flip heuristic (hardcoded, not
-  configurable).
-- Indic (hi/bn/ta/te/mr/gu/kn/ml/pa/ur): `Hate-speech-CNERG/indic-abusive-allInOne-MuRIL`,
-  softmax/argmax, no confidence-floor adjustment.
+- English: `unitary/toxic-bert`.
+- Indic (hi/bn/ta/te/mr/gu/kn/ml/pa/ur): `Hate-speech-CNERG/indic-abusive-allInOne-MuRIL`.
 - Any other language: falls back to the English model.
-- Chunking: triggered above `MAX_TEXT_LENGTH=500` chars, 400-token chunks
-  /100-token overlap/10-chunk cap; aggregation is priority-based (any
-  profane chunk ⇒ whole text profane), not literal majority vote.
-- No word-list/blocklist or per-tenant sensitivity config exists — all
-  thresholds are hardcoded in `text_profanity_service.py`.
+- Long texts are chunked and the per-chunk results aggregated.
 
 - Source: `content-moderation-service src/services/text_profanity_service.py:27-397`, `src/core/config.py:37-39`
 

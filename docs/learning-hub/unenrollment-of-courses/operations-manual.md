@@ -39,9 +39,7 @@ check in isolation.
 is a fresh enroll, not a state restore.
 
 **Admin-forced unenroll**: `POST /v1/course/admin/unenroll` exists and uses
-the identical actor logic, but no traced UI calls it. If this route is
-used operationally, it must be invoked directly (e.g. via an internal
-tool or script) — the same precondition chain (including "already
+the identical actor logic, but no traced UI calls it; the same precondition chain (including "already
 completed") still applies.
 
 **Web support requests**: since web has no plain-course unenroll UI, any

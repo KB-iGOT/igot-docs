@@ -43,10 +43,7 @@ is sent with the update.
 ### UC-5 · Activate or deactivate a volunteer organisation (SPV Admin)
 
 A confirmation dialog sets the organisation's status to `0` (inactive) or `1`
-(active). The dialog claims users of a deactivated organisation can no longer
-sign in; no code enforcing that was found in the repos read. The button is not
-role-gated in the UI, but the gateway allows only SPV Admin, so State Admin
-gets a 403.
+(active).
 
 - API: `PATCH apis/proxies/v8/org/v1/status/update`
 
@@ -78,9 +75,7 @@ mail is sent.
 ### UC-8 · Create a user from the State-users page (State Admin / SPV Admin)
 
 A dialog creates the user, assigns roles, then patches the profile to
-`VERIFIED` with `mandatoryFieldsExists: true` in three sequential calls. For
-an SPV Admin the third call is refused by the gateway, so the user exists with
-roles but the dialog reports "User created but profile update failed".
+`VERIFIED` with `mandatoryFieldsExists: true` in three sequential calls.
 
 - APIs: `POST apis/protected/v8/user/profileDetails/createUser` ·
   `POST apis/proxies/v8/user/v1/role/assign` ·
@@ -122,8 +117,7 @@ organisation or the designation; an admin does that separately.
 ### UC-12 · Approve an email domain (SPV Admin)
 
 Same screens with service `domain`. Approval inserts the domain into
-`sunbird.master_data` as `userRegistrationPreApprovedDomain`; from then on
-registrations from that domain are auto-created without approval.
+`sunbird.master_data` as `userRegistrationPreApprovedDomain`.
 
 - APIs: `POST apis/proxies/v8/workflow/domain/search` ·
   `POST apis/proxies/v8/workflow/domain/update`

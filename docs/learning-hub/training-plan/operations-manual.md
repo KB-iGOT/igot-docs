@@ -18,7 +18,7 @@ table the plan actually lives in.
 | Storage | 4 generations, 2 repos, non-overlapping table sets (v3 and v4 share one table; v1 and v2 do not) | A plan "missing" from one screen may simply be in a different generation's table than the screen queries |
 | Assignment fan-out | Rebuilt entirely on every publish, per generation's own lookup table(s) | Learner-side "not seeing my plan" issues are usually a lookup-table problem, not a plan-row problem |
 | Content-request loop | Async, email-only, no confirmed close-the-loop write-back into the same table | Don't expect a status field on the request row to reflect provider action — it may never be updated |
-| AICBP bulk pipeline | Bypasses uiproxy and the Org Portal UI entirely; calls `cb-ext-course-service` directly with a human bearer token | RBAC/whitelist issues never explain a bulk-pipeline failure — check the pipeline's own auth/token refresh instead |
+| AICBP bulk pipeline | Runs outside the Org Portal UI; calls `cb-ext-course-service` directly | Check the pipeline's own logs and retry state when a bulk run fails |
 | Comprehensive Assessment gating | A plan's `isApar`/`calinkedid` fields double as a gate for an unrelated feature | An "assessment won't unlock" ticket may actually be a Training Plan data issue, not a CAP issue |
 
 ## Important fields
@@ -66,11 +66,11 @@ both the create and publish calls actually succeeded upstream.
 |---|---|---|
 | POST | `cbplan/v1/create` / `v2/create` / `v3/create` / `v4/create` | Diagnose which generation a reported plan actually belongs to |
 | POST | `cbplan/vN/update` | Check save failures and field-allow-list rejections (v3/v4: `cbplan.allowed.fields.update`) |
-| GET | `cbplan/v1/read/{id}` / `v3/read/{id}` / `v4/read/{id}` / `v4/admin/read/{id}` | Confirm stored metadata per generation; `admin/read` bypasses the LIVE-only restriction on v4 |
+| GET | `cbplan/v1/read/{id}` / `v3/read/{id}` / `v4/read/{id}` / `v4/admin/read/{id}` | Confirm stored metadata per generation; `admin/read` returns plans of any status on v4 |
 | POST | `cbplan/vN/publish` | Confirm the fan-out actually ran |
 | DELETE | `cbplan/vN/archive` | Retire/delete support |
 | POST | `cbplan/v1/list` / `v2/search` / `v3/search` / `v4/search` | Validate listing/search behaviour per generation |
-| GET | `cbplan/v1/user/list` / `v1/private/user/list` | Legacy learner-list support |
+| GET | `cbplan/v1/user/list` | Legacy learner-list support |
 | POST | `cbplan/v3/user/dictionary` / `v4/user/dictionary` | Learner-side "my plans" diagnostics |
 | GET | `cbplan/v4/user/assessment/eligibility/{doId}` | Investigate a Comprehensive Assessment unlock issue traced back to Training Plan |
 | POST | `cbplan/v1/admin/requestcontent` | Content-request support |
@@ -134,9 +134,6 @@ backend failure.
   plan.
 - No admin tool to force-rebuild fan-out rows outside a normal publish
   call.
-- The AI bulk pipeline authenticates as a human user, not a service
-  account — token expiry/rotation is an operational dependency on that
-  specific approver's credentials.
 
 **Operating model**: treat Training Plan as four parallel, versioned
 implementations of the same concept rather than one system with an
