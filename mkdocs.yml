@@ -161,6 +161,7 @@ nav:
           - LLD: learning-hub/bharat-kalp/lld.md
           - Operations Manual: learning-hub/bharat-kalp/operations-manual.md
           - As-Built Requirements: learning-hub/bharat-kalp/as-built-requirements.md
+          - Context Diagram: learning-hub/bharat-kalp/context-diagram.md
       - Peer Validation:
           - learning-hub/peer-validation/index.md
           - Use Cases: learning-hub/peer-validation/use-cases.md
