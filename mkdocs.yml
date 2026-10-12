@@ -82,6 +82,7 @@ nav:
           - HLD: learning-hub/chs/hld.md
           - LLD: learning-hub/chs/lld.md
           - Operations Manual: learning-hub/chs/operations-manual.md
+          - Context Diagram: learning-hub/chs/context-diagram.md
       - AI CBP Tool:
           - learning-hub/ai-cbp-tool/index.md
           - Use Cases: learning-hub/ai-cbp-tool/use-cases.md
