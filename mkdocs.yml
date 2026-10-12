@@ -188,6 +188,7 @@ nav:
           - LLD: learning-hub/unenrollment-of-courses/lld.md
           - Operations Manual: learning-hub/unenrollment-of-courses/operations-manual.md
           - As-Built Requirements: learning-hub/unenrollment-of-courses/as-built-requirements.md
+          - Context Diagram: learning-hub/unenrollment-of-courses/context-diagram.md
       - Marketplace:
           - learning-hub/marketplace/index.md
           - Use Cases: learning-hub/marketplace/use-cases.md
