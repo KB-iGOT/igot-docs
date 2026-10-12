@@ -52,7 +52,7 @@ flowchart LR
 | Learner (web and mobile) | Opens the Passbook, browses by competency, self-attests current and desired competencies | [use-cases.md](use-cases.md) |
 | MDO admin | Bulk-uploads designation-to-competency mappings and maps competencies onto Work Allocation roles | [use-cases.md](use-cases.md) |
 | FRAC reviewer and content author | Reviewers approve nodes through L1 and L2; authors tag content with competencies | [use-cases.md](use-cases.md) |
-| Public visitor | Browses the unauthenticated FRAC dictionary site | [use-cases.md](use-cases.md) |
+| Public visitor | Browses the public read-only FRAC dictionary site | [use-cases.md](use-cases.md) |
 | Karmayogi gateway and Kong | Routes client calls, two hand-written FRAC routers plus pass-through routes | [apis.md](apis.md) |
 | Knowledge Platform Framework API | Hosts the separate `kcmfinal_fw` taxonomy read by most clients and written by ODCS processing | [hld.md](hld.md) |
 | Certificate-generator jobs | Raise `COMPETENCY_ACQUIRED` events on certificate issuance | [apis.md](apis.md) |

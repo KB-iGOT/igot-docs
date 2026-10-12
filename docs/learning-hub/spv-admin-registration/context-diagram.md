@@ -15,7 +15,7 @@ service, and the Postgres, Cassandra, Elasticsearch and Kafka stores those servi
 flowchart LR
     SPVA["SPV Admin"]
     STA["State Admin"]
-    REQR["Requester<br/>(public)"]
+    REQR["Requester"]
 
     UP["Karmayogi gateway<br/>(sunbird-cb-uiproxy) and Kong"]
     EXT["cb-ext<br/>(sunbird-cb-ext)"]
@@ -53,7 +53,7 @@ flowchart LR
 | SPV & Admin Registration (`sunbird-cb-adminportal`) | Central system: Angular super-admin portal for organisation, first-admin, registration-link and request-review screens | [hld.md](hld.md) |
 | SPV Admin | Creates organisations and users, works the Requests queue, manages volunteer organisations | [use-cases.md](use-cases.md) |
 | State Admin | Same screens scoped to their own state | [use-cases.md](use-cases.md) |
-| Requester | Raises organisation, designation or domain requests through public workflow endpoints | [apis.md](apis.md) |
+| Requester | Raises organisation, designation or domain requests through the approval workflow | [apis.md](apis.md) |
 | Karmayogi gateway and Kong | Session, path-based role allow-list and routing to the backend services | [apis.md](apis.md) |
 | cb-ext (`sunbird-cb-ext`) | Organisation create/update orchestration, registration link and QR, designation-master upsert | [hld.md](hld.md) |
 | Core user service (`sunbird-lms-service`) | Organisation record, users and role assignment | [hld.md](hld.md) |
