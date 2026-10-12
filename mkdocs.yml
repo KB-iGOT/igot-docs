@@ -99,6 +99,7 @@ nav:
           - LLD: learning-hub/ai-assessment-tool/lld.md
           - Operations Manual: learning-hub/ai-assessment-tool/operations-manual.md
           - As-Built Requirements: learning-hub/ai-assessment-tool/as-built-requirements.md
+          - Context Diagram: learning-hub/ai-assessment-tool/context-diagram.md
   - Learning Hub:
       - learning-hub/index.md
       - Blended Program:
