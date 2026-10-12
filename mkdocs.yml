@@ -176,6 +176,7 @@ nav:
           - HLD: learning-hub/peer-validation/hld.md
           - LLD: learning-hub/peer-validation/lld.md
           - Operations Manual: learning-hub/peer-validation/operations-manual.md
+          - Context Diagram: learning-hub/peer-validation/context-diagram.md
       - Unenrollment of Courses:
           - learning-hub/unenrollment-of-courses/index.md
           - Use Cases: learning-hub/unenrollment-of-courses/use-cases.md
