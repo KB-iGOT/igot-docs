@@ -18,7 +18,7 @@ flowchart LR
 
     POR["Portal<br/>(search box, Explore menu)"]
     PX["sunbird-cb-uiproxy<br/>(session, whitelist)"]
-    KONG["Kong<br/>(jwt, cors, acl)"]
+    KONG["Kong"]
     MW["knowledge-mw-service<br/>(legacy v1 search)"]
     PUB["Publish pipeline jobs"]
 
@@ -47,7 +47,7 @@ flowchart LR
 | Author (Creation Portal) | Searches drafts and published content while authoring | [use-cases.md](use-cases.md) |
 | Portal | Search UI, facet rail and Explore menu | [hld.md](hld.md) |
 | sunbird-cb-uiproxy | Session-to-token handling, API whitelist, path mapping | [hld.md](hld.md) |
-| Kong | Routes composite calls to upstreams; applies jwt, cors and acl | [apis.md](apis.md) |
+| Kong | Routes composite calls to upstreams | [apis.md](apis.md) |
 | knowledge-mw-service | Upstream for the legacy v1 search used by older strips | [apis.md](apis.md) |
 | Elasticsearch (`compositesearch`) | Read-side index holding denormalised content | [hld.md](hld.md) |
 | Publish pipeline jobs | Update the index after content goes live (eventual consistency) | [hld.md](hld.md) |

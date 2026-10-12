@@ -22,7 +22,7 @@ flowchart LR
     PLAT(["Platform<br/>gateway and content lifecycle"])
 
     UIP["uiproxy<br/>session auth, whitelist, proxy"]
-    KNG["Kong API Manager<br/>jwt, cors, acl"]
+    KNG["Kong API Manager"]
     BE["Feature backend services<br/>search, middleware and others"]
     KC["Keycloak<br/>session and tokens"]
     PIPE["Publish pipeline jobs<br/>(separate repo)"]
@@ -55,7 +55,7 @@ flowchart LR
 | Portals | Browser front ends whose calls leave on one of two prefixes | [api-gateway.md](api-gateway.md) |
 | Nginx | Splits traffic between the `/apis` and `/api` prefixes | [api-gateway.md](api-gateway.md) |
 | uiproxy | Browser-facing proxy: session to tokens, route whitelist, forwards to Kong | [api-gateway.md](api-gateway.md) |
-| Kong API Manager | Maps public URIs to internal services with jwt, cors and acl plugins | [api-gateway.md](api-gateway.md) |
+| Kong API Manager | Maps public URIs to internal services | [api-gateway.md](api-gateway.md) |
 | Feature backend services | Services behind Kong routes, such as search and the legacy middleware relay | [api-gateway.md](api-gateway.md) |
 | Keycloak | Source of the session that uiproxy turns into tokens | [api-gateway.md](api-gateway.md) |
 | Publish pipeline jobs | Consume instruction events to carry out publish; not attached to the docs | [content-lifecycle.md](content-lifecycle.md) |

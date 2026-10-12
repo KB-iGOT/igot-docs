@@ -52,7 +52,7 @@ flowchart LR
 | Karmayogi learner | Picks a batch, requests a seat, withdraws, learns, attends, submits assignments | [use-cases.md](use-cases.md) |
 | MDO admin and Program Coordinator | Approve requests, nominate learners, mark attendance, pull reports | [use-cases.md](use-cases.md) |
 | Author, reviewer, publisher | Build the program and move it through review to publish | [use-cases.md](use-cases.md) |
-| Gateway layer (Nginx, uiproxy, Kong) | Route map, role whitelist and JWT/ACL checks in front of the services | [apis.md](apis.md) |
+| Gateway layer (Nginx, uiproxy, Kong) | Route map in front of the services | [apis.md](apis.md) |
 | Knowledge platform | Generic content lifecycle and search; the program is an ordinary course collection | [hld.md](hld.md) |
 | Notification service | Delivers approval and attendance emails | [hld.md](hld.md) |
 | Nightly Spark report (`cb-core-data`) | Produces the Blended Program report per MDO / provider and a warehouse table | [hld.md](hld.md) |
