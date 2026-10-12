@@ -120,6 +120,7 @@ nav:
           - HLD: learning-hub/course/hld.md
           - LLD: learning-hub/course/lld.md
           - Operations Manual: learning-hub/course/operations-manual.md
+          - Context Diagram: learning-hub/course/context-diagram.md
       - Curated Program:
           - learning-hub/curated-program/index.md
           - Use Cases: learning-hub/curated-program/use-cases.md
