@@ -158,6 +158,7 @@ nav:
           - HLD: learning-hub/learning-pathway/hld.md
           - LLD: learning-hub/learning-pathway/lld.md
           - Operations Manual: learning-hub/learning-pathway/operations-manual.md
+          - Context Diagram: learning-hub/learning-pathway/context-diagram.md
       - Bharat Kalp:
           - learning-hub/bharat-kalp/index.md
           - Use Cases: learning-hub/bharat-kalp/use-cases.md
