@@ -18,6 +18,7 @@ nav:
   - Platform:
       - API Gateway: platform/api-gateway.md
       - Content Lifecycle: platform/content-lifecycle.md
+      - Context Diagram: platform/context-diagram.md
   - Competency Hub:
       - competency-hub/index.md
       - Use Cases: competency-hub/use-cases.md
