@@ -208,6 +208,7 @@ nav:
           - LLD: learning-hub/moderated-content/lld.md
           - Operations Manual: learning-hub/moderated-content/operations-manual.md
           - As-Built Requirements: learning-hub/moderated-content/as-built-requirements.md
+          - Context Diagram: learning-hub/moderated-content/context-diagram.md
   - Event Hub:
       - learning-hub/events-hub/index.md
       - Use Cases: learning-hub/events-hub/use-cases.md
