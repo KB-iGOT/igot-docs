@@ -48,7 +48,6 @@ flowchart LR
     PGW -->|"queries"| BIU
     BQ -->|"queries"| BIU
     RED -->|"reads counters"| DASH
-    RED -->|"ZIP password"| NOTIF
     GCS -->|"downloads ZIP"| MDO
     DASH -->|"shows metrics"| MDO
     DASH -->|"shows points, rank"| LRN
@@ -69,10 +68,10 @@ flowchart LR
 | Druid | Metrics source for several Stage 2 jobs | [apis.md](apis.md) |
 | Framework / FRAC REST API | The one REST call: org hierarchy | [apis.md](apis.md) |
 | Postgres warehouse / BigQuery mirror | BI tables, rebuilt by full truncate-and-reload | [apis.md](apis.md) |
-| Redis | Live dashboard keys, profile snapshots, ZIP passwords | [apis.md](apis.md) |
+| Redis | Live dashboard keys, profile snapshots | [apis.md](apis.md) |
 | Cloud storage | Password-protected per-org report ZIPs | [apis.md](apis.md) |
 | Cassandra output | Leaderboards, karma ledger, notification feeds | [apis.md](apis.md) |
-| Notification / portal layer | Retrieves ZIP passwords, delivers feeds and nudges | [use-cases.md](use-cases.md) |
+| Notification / portal layer | Delivers feeds and nudges | [use-cases.md](use-cases.md) |
 | Live platform dashboard | Reads Redis keys for near-real-time counters | [use-cases.md](use-cases.md) |
 
 > **Verification boundary:** every element and interaction is taken from the feature's own
