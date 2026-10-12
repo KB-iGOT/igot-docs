@@ -136,6 +136,7 @@ nav:
           - HLD: learning-hub/my-assigned-courses/hld.md
           - LLD: learning-hub/my-assigned-courses/lld.md
           - Operations Manual: learning-hub/my-assigned-courses/operations-manual.md
+          - Context Diagram: learning-hub/my-assigned-courses/context-diagram.md
       - Standalone Assessment:
           - learning-hub/standalone-assessment/index.md
           - Use Cases: learning-hub/standalone-assessment/use-cases.md
