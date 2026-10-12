@@ -148,6 +148,7 @@ nav:
           - HLD: learning-hub/comprehensive-assessment-program/hld.md
           - LLD: learning-hub/comprehensive-assessment-program/lld.md
           - Operations Manual: learning-hub/comprehensive-assessment-program/operations-manual.md
+          - Context Diagram: learning-hub/comprehensive-assessment-program/context-diagram.md
       - Learning Pathway:
           - learning-hub/learning-pathway/index.md
           - Use Cases: learning-hub/learning-pathway/use-cases.md
