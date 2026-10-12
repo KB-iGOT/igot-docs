@@ -59,6 +59,7 @@ nav:
               - LLD: learning-hub/bulk-registration/lld.md
               - Operations Manual: learning-hub/bulk-registration/operations-manual.md
               - As-Built Requirements: learning-hub/bulk-registration/as-built-requirements.md
+              - Context Diagram: learning-hub/bulk-registration/context-diagram.md
       - Weekly Claps:
           - learning-hub/weekly-claps/index.md
           - Use Cases: learning-hub/weekly-claps/use-cases.md
