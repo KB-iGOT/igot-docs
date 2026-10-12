@@ -214,6 +214,7 @@ nav:
       - LLD: learning-hub/events-hub/lld.md
       - Operations Manual: learning-hub/events-hub/operations-manual.md
       - As-Built Requirements: learning-hub/events-hub/as-built-requirements.md
+      - Context Diagram: learning-hub/events-hub/context-diagram.md
   - Discussion Hub:
       - learning-hub/discussion-hub/index.md
       - Use Cases: learning-hub/discussion-hub/use-cases.md
