@@ -145,6 +145,7 @@ nav:
           - HLD: learning-hub/standalone-assessment/hld.md
           - LLD: learning-hub/standalone-assessment/lld.md
           - Operations Manual: learning-hub/standalone-assessment/operations-manual.md
+          - Context Diagram: learning-hub/standalone-assessment/context-diagram.md
       - Comprehensive Assessment Program:
           - learning-hub/comprehensive-assessment-program/index.md
           - Use Cases: learning-hub/comprehensive-assessment-program/use-cases.md
