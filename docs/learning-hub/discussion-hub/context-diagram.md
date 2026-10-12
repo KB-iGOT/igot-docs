@@ -38,7 +38,7 @@ flowchart LR
     MOD -->|"review, hide, restore reports"| OP
     LP -->|"API calls"| GW
     OP -->|"API calls"| GW
-    GW -->|"proxies, applies role whitelist"| DH
+    GW -->|"proxies requests"| DH
     OPS -->|"runs services and shared stores"| DH
 
     DH -->|"language and profanity checks"| MODS
@@ -62,7 +62,7 @@ flowchart LR
 | Platform operator | Runs the services and the shared datastores | [index.md](index.md) |
 | Learner portal | Hosts the discussion route; the UI itself is an unvendored external widget | [index.md](index.md) |
 | Org portal | Community create/publish and moderation queue screens | [use-cases.md](use-cases.md) |
-| Karmayogi gateway and Kong | Pass-through proxy with the role whitelist for the live route family | [hld.md](hld.md) |
+| Karmayogi gateway and Kong | Pass-through proxy for the live route family | [hld.md](hld.md) |
 | Content moderation and service registry | External language and profanity verdicts | [hld.md](hld.md) |
 | Notification service | Receives best-effort author notifications | [hld.md](hld.md) |
 | Workflow comment services | Separate comment feature for content review; shares only a table between its own two services | [hld.md](hld.md) |

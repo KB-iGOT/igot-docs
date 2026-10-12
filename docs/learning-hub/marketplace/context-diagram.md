@@ -55,7 +55,7 @@ flowchart LR
 | Marketplace / CBP Admin | Onboards partners; configures licensing, SSO and certificate templates | [use-cases.md](use-cases.md) |
 | Content Curator | Reviews ingested courses, tags competencies, sets enrollment metadata, publishes | [use-cases.md](use-cases.md) |
 | Portal, Admin Portal and Creation Portal | Learner, admin and curator front ends | [hld.md](hld.md) |
-| Gateway layer (`sunbird-cb-uiproxy`, Kong) | Passthrough proxy with role whitelist; Kong routes each path prefix to a backend | [apis.md](apis.md) |
+| Gateway layer (`sunbird-cb-uiproxy`, Kong) | Passthrough proxy; Kong routes each path prefix to a backend | [apis.md](apis.md) |
 | Native course service (`sunbird-course-service`) | Separate external-course enrollment and badge-merge path; searches partner content | [hld.md](hld.md) |
 | Partner LMS systems | External systems whose progress is synced back by scheduler jobs | [apis.md](apis.md) |
 | Postgres and Elasticsearch | Partner records, registrations and ingested catalog (separate stores per service) | [hld.md](hld.md) |
