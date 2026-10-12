@@ -2053,7 +2053,7 @@
           <div class="fp-step"><b>2 &middot; POST</b><p>Ask a Question inside a joined community</p></div>
           <div class="fp-step"><b>3 &middot; ANSWER</b><p>Others reply with Answer Posts and nested Answer Post Replies</p></div>
           <div class="fp-step"><b>4 &middot; MODERATE</b><p>5 reports auto-suspend; a moderator hides/restores via the "admin" endpoints</p></div>
-          <div class="fp-step"><b>5 &middot; SYNC</b><p>Community counters update asynchronously via Kafka, with no idempotency or optimistic locking</p></div>
+          <div class="fp-step"><b>5 &middot; SYNC</b><p>Community counters update asynchronously via Kafka</p></div>
         </div>
       </div>
       <div class="fp-side">
@@ -2084,7 +2084,7 @@
           <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-5 &middot; Vote, bookmark, report</b><p>Members vote, bookmark and report posts at any thread level.</p><div class="api">POST <code>v1/discussion/report</code></div></div>
           <div class="uc-card"><div class="who">MDO Leader</div><b class="t">UC-7 &middot; Create and publish a community</b><p>Draft &rarr; publish, emailing every listed moderator on success.</p><div class="api">POST <code>community/v1/create</code> &rarr; POST <code>community/v1/publish</code></div></div>
           <div class="uc-card"><div class="who">MDO Leader / Moderator</div><b class="t">UC-9 &middot; Review and moderate reported content</b><p>Hide/restore via "admin" endpoints with no backend role check; the Manage screen's own error callbacks are dead code &mdash; a failed action fails silently.</p><div class="api">POST <code>feedDiscussion/admin/removePost</code></div></div>
-          <div class="uc-card"><div class="who">Platform Ops</div><b class="t">UC-10 &middot; Community counters update</b><p>Async Kafka consumer with no idempotency/dedup and a casing bug that can silently no-op an increment.</p><div class="api">Kafka: <code>community.discusion.post.count</code></div></div>
+          <div class="uc-card"><div class="who">Platform Ops</div><b class="t">UC-10 &middot; Community counters update</b><p>Async Kafka consumer that updates the community counters.</p><div class="api">Kafka: <code>community.discusion.post.count</code></div></div>
         </div>
       </div>
     </div>
