@@ -51,6 +51,7 @@ nav:
               - LLD: learning-hub/spv-admin-registration/lld.md
               - Operations Manual: learning-hub/spv-admin-registration/operations-manual.md
               - As-Built Requirements: learning-hub/spv-admin-registration/as-built-requirements.md
+              - Context Diagram: learning-hub/spv-admin-registration/context-diagram.md
           - Bulk Registration:
               - learning-hub/bulk-registration/index.md
               - Use Cases: learning-hub/bulk-registration/use-cases.md
