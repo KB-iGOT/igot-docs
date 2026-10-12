@@ -191,6 +191,7 @@ nav:
           - LLD: learning-hub/marketplace/lld.md
           - Operations Manual: learning-hub/marketplace/operations-manual.md
           - As-Built Requirements: learning-hub/marketplace/as-built-requirements.md
+          - Context Diagram: learning-hub/marketplace/context-diagram.md
       - Search:
           - learning-hub/search/index.md
           - Use Cases: learning-hub/search/use-cases.md
