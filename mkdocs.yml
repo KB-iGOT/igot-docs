@@ -35,6 +35,7 @@ nav:
           - HLD: explore-content/hld.md
           - LLD: explore-content/lld.md
           - Operations Manual: explore-content/operations-manual.md
+          - Context Diagram: explore-content/context-diagram.md
       - Registration:
           - User Registration:
               - learning-hub/user-onboarding/index.md
