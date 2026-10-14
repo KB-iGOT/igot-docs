@@ -338,7 +338,7 @@
       Competency Hub<span class="sub">feature</span>
     </button>
     <button class="bub hub" style="left:355px; top:339px; width:140px; height:140px; font-size:15px; font-weight:900; flex-direction:column; gap:3px" onclick="openHub(this, 'v-features')">
-      Features<span class="sub">9 features</span>
+      Features<span class="sub">10 features</span>
     </button>
     <button class="bub item" style="left:945px; top:531px; width:140px; height:140px; font-size:14px; font-weight:900; flex-direction:column; gap:3px" onclick="openFeature('agk')">
       Amrit Gyaan Kosh<span class="sub">feature</span>
@@ -435,6 +435,7 @@
       <line x1="720" y1="505" x2="720" y2="205" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="955" y2="318" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="1012" y2="572" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="955" y2="692" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="850" y2="775" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="590" y2="775" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <line x1="720" y1="505" x2="428" y2="572" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
@@ -445,12 +446,13 @@
     <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Features</div>
-      <div class="sub">9 features</div>
+      <div class="sub">10 features</div>
     </div>
 
     <button class="bub item" style="left:654px; top:139px; width:132px; height:132px; font-size:15px;" onclick="openFeature('explore')">Explore Content</button>
     <button class="bub hub" style="left:886px; top:249px; width:138px; height:138px; font-size:15px; flex-direction:column; gap:3px" onclick="openSubHub('v-registration')">Registration<span class="sub">3 features</span></button>
     <button class="bub item" style="left:946px; top:506px; width:132px; height:132px; font-size:13px;" onclick="openFeature('weeklyclaps')">Weekly Claps</button>
+    <button class="bub item" style="left:895px; top:632px; width:120px; height:120px; font-size:14px;" onclick="openFeature('karmapoints')">Karma Points</button>
     <button class="bub item" style="left:784px; top:709px; width:132px; height:132px; font-size:14px;" onclick="openFeature('trainingplan')">Training Plan</button>
     <button class="bub item" style="left:524px; top:709px; width:132px; height:132px; font-size:14px;" onclick="openFeature('chs')">CHS</button>
     <button class="bub item" style="left:362px; top:506px; width:132px; height:132px; font-size:14px;" onclick="openFeature('aicbp')">AI CBP Tool</button>
@@ -667,7 +669,7 @@
           </div>
           <div class="uc-card">
             <div class="who">Program Coordinator</div><b class="t">UC-14 &middot; Mark attendance</b>
-            <p>Enabled from the session&rsquo;s start date until batch end + 7 days (a Creation Portal rule). Present writes 2 / 100%, absent 0 / 0%; the learner is emailed. The server itself checks no role, owner or date.</p>
+            <p>Enabled from the session&rsquo;s start date until batch end + 7 days (a Creation Portal rule). Present writes 2 / 100%, absent 0 / 0%; the learner is emailed.</p>
             <div class="api">POST <code>blendedprogram/v1/update/progress</code></div>
           </div>
           <div class="uc-card">
@@ -1251,7 +1253,7 @@
           <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-19 &middot; Reject a request, or one item</b><p>Rejects an entire pending request with a required comment, or a single item &mdash; recomputing the parent request's status from whatever remains.</p><div class="api">POST <code>ai-cbp-mdo-service v1/mdo/approval-requests/reject</code></div></div>
           <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-22 &middot; Approve a designation name</b><p>Creates the designation in iGOT's master list first; only marks the request approved once that succeeds (an "already present" response still counts as approved).</p><div class="api">POST <code>ai-cbp-mdo-service v1/designation/approval-requests/approve</code></div></div>
           <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-24 &middot; The step-by-step wizard (unverified)</b><p>Document management, role-mapping review, course selection and CBP export ship inside a private library not present in any of the three traced repos.</p></div>
-          <div class="uc-card"><div class="who">Operator</div><b class="t">UC-25 &middot; Bulk-onboard a state/ministry</b><p>A fixed six-stage offline pipeline &mdash; copy documents, summarize, generate, recommend &amp; save, submit for approval, publish &mdash; run stage by stage from a jumphost, bypassing ai-cbp-mdo-service entirely.</p></div>
+          <div class="uc-card"><div class="who">Operator</div><b class="t">UC-25 &middot; Bulk-onboard a state/ministry</b><p>A fixed six-stage offline pipeline &mdash; copy documents, summarize, generate, recommend &amp; save, submit for approval, publish &mdash; run stage by stage by an operator.</p></div>
         </div>
       </div>
     </div>
@@ -1291,7 +1293,7 @@
         <div class="note-banner"><strong>Honest gap:</strong> two backends never call each other, and are stitched together only client-side, only in two of five clients. Kong's own routing config &mdash; what host <code>/nlp/search</code> and <code>/search/*</code> actually resolve to &mdash; lives outside all ten traced repos. See the HLD tab for the full topology and the rest of the honest gaps.</div>
         <div class="fp-cards">
           <div class="fp-card"><b>Two backends, stitched only client-side</b><p><code>nlp-search</code> (LLM keyword extraction) and <code>search-service</code> (Elasticsearch) never call each other &mdash; confirmed by a repo-wide grep for "nlp" turning up zero hits in either <code>knowledge-platform</code> repo.</p></div>
-          <div class="fp-card"><b>NLP is opt-in per client, not a platform rule</b><p>Only the web portal's <code>search-v3</code> and the mobile app call <code>nlp-search</code> first. The three admin-facing portals search on raw text &mdash; there's no server-side gate either way.</p></div>
+          <div class="fp-card"><b>NLP is opt-in per client, not a platform rule</b><p>Only the web portal's <code>search-v3</code> and the mobile app call <code>nlp-search</code> first. The three admin-facing portals search on raw text.</p></div>
           <div class="fp-card"><b>Indexing is a separate pipeline entirely</b><p><code>search-service</code> is read-only against Elasticsearch. A Kafka-driven Flink job in <code>knowledge-platform-jobs</code> does all the writing, on a completely independent failure/retry path.</p></div>
         </div>
         <h2 class="fp-h2">How a learner experiences it (web / mobile)</h2>
@@ -1362,7 +1364,6 @@
         <div class="fp-cards">
           <div class="fp-card"><b>Three enrollment paths, one button</b><p>"Enroll" can mean <code>/v1/event/enroll</code> (generic Course actor), <code>/v2/event/enroll</code> (Event-specific), or <code>/v1/eventset/enroll</code> (fans out to child events) &mdash; three different tables, three different rule sets.</p></div>
           <div class="fp-card"><b>EventSet children are full content nodes</b><p>An EventSet's occurrences aren't a lightweight schedule table &mdash; each one is a complete Event graph node, created and torn down synchronously on every EventSet write.</p></div>
-          <div class="fp-card"><b>Certification never checks completion</b><p>All four certificate-issuance trigger points hard-code 100% completion; none of them queries actual attendance/consumption data first.</p></div>
         </div>
         <h2 class="fp-h2">How a Karmayogi experiences it</h2>
         <div class="fp-steps">
@@ -1401,7 +1402,7 @@
           <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-5 &middot; Attend/consume the event</b><p>Attendance is written to the same Cassandra table used for course content consumption &mdash; there is no event-specific consumption table on the write path.</p><div class="api">POST <code>v1/user/event/state/update</code></div></div>
           <div class="uc-card"><div class="who">Org Admin</div><b class="t">UC-7 &middot; Create and publish an event</b><p>A single-page form that immediately publishes on submit &mdash; only "Webinar" is enabled as an event type; other types exist in code but are disabled.</p><div class="api">POST <code>event/v4/create</code> &rarr; POST <code>event/v4/publish</code></div></div>
           <div class="uc-card"><div class="who">CBP Admin</div><b class="t">UC-9 &middot; Review new event submissions</b><p>A queue split into "New Requests" (status SentToPublish) and "Past Requests" (status Live) &mdash; see the Overview tab's honest gap.</p><div class="api">POST <code>sunbirdigot/search</code></div></div>
-          <div class="uc-card"><div class="who">Platform Ops</div><b class="t">UC-11 &middot; Bulk-onboard a CSV of attendees</b><p>Resolves emails to user IDs, enrolls/completes them, and (unless publicCert) awards karma points and issues a certificate per row &mdash; no idempotency check before re-awarding points.</p><div class="api">POST <code>user/event/bulkOnboard</code></div></div>
+          <div class="uc-card"><div class="who">Platform Ops</div><b class="t">UC-11 &middot; Bulk-onboard a CSV of attendees</b><p>Resolves emails to user IDs, enrolls/completes them, and (unless publicCert) awards karma points and issues a certificate per row.</p><div class="api">POST <code>user/event/bulkOnboard</code></div></div>
           <div class="uc-card"><div class="who">Platform Ops</div><b class="t">UC-13 &middot; Reconcile post-event completion (ops tool)</b><p>A manual, on-demand CSV upload that recomputes true completion from the batch's end time and always re-pushes a karma-point event &mdash; a second, independently-written copy of the same Kafka-publish logic used elsewhere.</p><div class="api">POST <code>user/event/postConsumption</code></div></div>
         </div>
       </div>
@@ -1602,7 +1603,6 @@
         <div class="fp-cards">
           <div class="fp-card"><b>A request first, an account later</b><p>Submitting the form answers "accepted" and stores a registration record; the account, organisation, role and activation email are produced afterwards in the background.</p></div>
           <div class="fp-card"><b>A link is a pass</b><p>A department's registration link replaces both the email-domain check and the approval step &mdash; and each department has only one active link at a time.</p></div>
-          <div class="fp-card"><b>Verification is the app's job</b><p>The web page and the mobile app both insist on verified email and mobile codes, but the server does not re-check them when the registration arrives.</p></div>
         </div>
         <h2 class="fp-h2">How a Karmayogi experiences it</h2>
         <div class="fp-steps">
@@ -1637,7 +1637,7 @@
     <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
       <div>
         <div class="uc-grid">
-          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Self-register on the public sign-up page</b><p>Two-step form with email and mobile OTPs; Register stays disabled until both are verified &mdash; a browser-side gate only.</p><div class="api">POST <code>/api/user/registration/v1/register</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Self-register on the public sign-up page</b><p>Two-step form with email and mobile OTPs; Register stays disabled until both are verified.</p><div class="api">POST <code>/api/user/registration/v1/register</code></div></div>
           <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 &middot; Verify the email (domain-checked)</b><p>Public sign-up and mobile direct registration use the domain-validated OTP generate; link flows use the plain one.</p><div class="api">POST <code>/api/otp/ext/v1/generate</code></div></div>
           <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-5 &middot; Register through a department link or QR</b><p>The link is checked for activity, the organisation's designations are loaded, and the registration auto-creates the account.</p><div class="api">POST <code>/api/customselfregistration/isregistrationqractive</code></div></div>
           <div class="uc-card"><div class="who">System</div><b class="t">UC-6/7 &middot; Wait for approval, or auto-create</b><p>Link or pre-approved domain &rarr; account created at once; otherwise a workflow holds the request. Either way a welcome email with a set-password link follows account creation.</p><div class="api">Kafka <code>user.register.event</code> / <code>user.register.createUser.event</code></div></div>
@@ -1680,9 +1680,8 @@
       <div>
         <h2 class="fp-h2">What it is</h2>
         <p class="fp-p">An SPV admin opens the <strong>Directory</strong>, chooses <strong>Create new</strong>, and enters a name, a category (state, ministry or, for volunteer organisations, autonomous), a description and a logo. The organisation is created and recorded in the platform's hierarchy. Because it starts with no users, the admin then creates its first administrator from the <strong>Create user</strong> screen; from there the organisation's own admin takes over. The same directory publishes registration links and QR codes, switches volunteer organisations on and off, and the <strong>Requests</strong> screens let the admin approve or reject what others have asked for &mdash; a new organisation, a new designation, or an email domain to be trusted.</p>
-        <div class="note-banner"><strong>Honest gap:</strong> the portal shows buttons by role from configuration the repositories don't contain, while the gateway applies its own role list &mdash; and the two disagree in several places (for example Dashboard Admin sees <em>Create new</em> but is refused). Several legacy screens also call routes that nothing serves.</div>
+        <div class="note-banner"><strong>Honest gap:</strong> the portal shows buttons by role from configuration the repositories don't contain, Several legacy screens also call routes that nothing serves.</div>
         <div class="fp-cards">
-          <div class="fp-card"><b>No role checks in the portal's routes</b><p>The only hard check is the gateway's allow-list, which looks at the URL path and ignores the HTTP method.</p></div>
           <div class="fp-card"><b>A new organisation has no admin</b><p>The Add-admin picker only searches existing users of the organisation, so the first administrator has to be created, not picked.</p></div>
           <div class="fp-card"><b>Approving a request creates nothing</b><p>Approving an organisation or designation request only changes its status; approving an email domain is the one that has an effect &mdash; it lets that domain skip manual approval.</p></div>
         </div>
@@ -1720,7 +1719,7 @@
       <div>
         <div class="uc-grid">
           <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-2/3 &middot; Create a state, ministry or volunteer organisation</b><p>Name, category, description and logo; a State Admin's category and state are pre-set. The organisation, its hierarchy row and an event are created.</p><div class="api">POST <code>apis/proxies/v8/org/ext/v1/create</code></div></div>
-          <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-5 &middot; Activate or deactivate a volunteer organisation</b><p>Sets status 0 or 1; allowed for SPV Admin only at the gateway, though the button is shown to all.</p><div class="api">PATCH <code>apis/proxies/v8/org/v1/status/update</code></div></div>
+          <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-5 &middot; Activate or deactivate a volunteer organisation</b><p>Sets status 0 or 1.</p><div class="api">PATCH <code>apis/proxies/v8/org/v1/status/update</code></div></div>
           <div class="uc-card"><div class="who">SPV / State Admin</div><b class="t">UC-7 &middot; Create the first administrator</b><p>Choose organisation, name, email, mobile and role; one MDO Leader per organisation; set-password link and welcome mail follow.</p><div class="api">POST <code>apis/protected/v8/user/profileDetails/createUser</code></div></div>
           <div class="uc-card"><div class="who">SPV / State Admin</div><b class="t">UC-9 &middot; Make an existing person an administrator</b><p>Grants MDO Admin (or State Admin for a state organisation); blocks people who already hold either.</p><div class="api">POST <code>apis/proxies/v8/user/v1/role/assign</code></div></div>
           <div class="uc-card"><div class="who">SPV / State Admin</div><b class="t">UC-10 &middot; Publish a registration link and QR</b><p>Needs imported designations; generating a new link expires the previous one first.</p><div class="api">POST <code>apis/proxies/v8/customselfregistration</code></div></div>
@@ -1765,7 +1764,6 @@
         <div class="fp-cards">
           <div class="fp-card"><b>Three separate content stores</b><p><code>cb-pores-service</code> (partner master data), <code>cios-content-service</code> (ingested catalog) and <code>cb_external_enrollment_service</code> (a third local mirror) each keep their own copy of "CIOS content," with no shared code between them.</p></div>
           <div class="fp-card"><b>Licensing fields validated but unenforced at ingest</b><p><code>courseEnrolLimit</code> and <code>requiredKarmaPoints</code> are validated and indexed by <code>cios-content-service</code> on ingest but never read by any business logic in that repo &mdash; enforcement (if any) happens elsewhere.</p></div>
-          <div class="fp-card"><b>No client-side route guards</b><p>Neither the Admin Portal's marketplace-provider routes nor the Creation Portal's curation routes carry an Angular <code>canActivate</code> guard, unlike sibling routes in the same files.</p></div>
         </div>
         <h2 class="fp-h2">How a Karmayogi experiences it</h2>
         <div class="fp-steps">
@@ -1843,7 +1841,6 @@
         <p class="fp-p">A user holding the <code>AI_ASSESSMENT_CREATOR</code> role &mdash; granted only after an SPV Publisher approves their request in a separate workflow service &mdash; calls the generate API through the Karmayogi gateway. The service validates the caller's JWT and role, checks a Postgres-backed cache for an identical prior request (returning it instantly, or cloning another user's matching result), and otherwise queues a Kafka job. A worker fetches the course's PDFs and video captions, builds one large Gemini prompt combining the source content with a cached Karmayogi Competency Model reference dataset, and calls Vertex AI with a strict JSON schema. The result can be downloaded as JSON, one of two CSV schemas, a font-embedded PDF, or a DOCX.</p>
         <div class="note-banner"><strong>Honest gap:</strong> no UI trigger for this service was found in the platform's own authoring app (<code>sunbird-cb-creationportal</code>) or in <code>cbp-ai-ui</code> &mdash; both were checked and confirmed to have no code-level connection to this feature. The only client-side code found is this repo's own bundled Streamlit reference UI.</div>
         <div class="fp-cards">
-          <div class="fp-card"><b>Access is a role claim, not a live check</b><p>This service never calls the workflow that grants <code>AI_ASSESSMENT_CREATOR</code> &mdash; the two are connected only by a JWT claim issued by a shared SSO realm.</p></div>
           <div class="fp-card"><b>Identical requests are cloned, not regenerated</b><p>A matching request from a different user returns that user's already-generated content instantly &mdash; a deliberate cost-saving design, not a bug.</p></div>
           <div class="fp-card"><b>One prompt template drives 25 combinations</b><p>All 5 assessment types &times; 5 question types share a single template, with type-specific behavior expressed as conditionally-included instruction blocks.</p></div>
         </div>
@@ -1971,7 +1968,7 @@
           <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-11 &middot; Processing writes new terms into kcmfinal_fw</b><p>The async worker validates every row, then creates or updates Terms in Knowledge Platform's Framework API and publishes the framework &mdash; not <code>frac-backend</code>, which has no "framework"/"term" concept at all.</p><div class="api">Kafka <code>competency.designation.bulk.upload</code></div></div>
           <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-13 &middot; Map competencies onto a Work Allocation role</b><p>Attaches competencies (with a proficiency level) to a role/activity, verified/created against <code>frac-backend</code> &mdash; the real one &mdash; before the document saves.</p><div class="api">GET <code>frac/COMPETENCY/{query}</code></div></div>
           <div class="uc-card"><div class="who">FRAC Reviewer</div><b class="t">UC-16 &middot; Review a new or edited node</b><p>Every node starts UNVERIFIED. An L1 "technical review" approves it into the L2 queue or rejects it outright; an L2 "review board" gives final sign-off &mdash; or bounces a rejection back to L1, not to a dead end.</p><div class="api">POST <code>frac/verifyDataNode</code></div></div>
-          <div class="uc-card"><div class="who">Public</div><b class="t">UC-20 &middot; Browse the FRAC Dictionary, no login</b><p>Anyone can browse Competencies/Roles/Activities/Positions on a public static site &mdash; reading Elasticsearch directly, never <code>frac-backend</code>'s REST API.</p><div class="api">frac-dictionary &middot; no auth anywhere in the codebase</div></div>
+          <div class="uc-card"><div class="who">Public</div><b class="t">UC-20 &middot; Browse the FRAC Dictionary</b><p>Anyone can browse Competencies/Roles/Activities/Positions on a public static site.</p><div class="api">frac-dictionary</div></div>
           <div class="uc-card"><div class="who">Author</div><b class="t">UC-15 &middot; Tag content with a competency while authoring</b><p>Autocomplete search against the taxonomy; a "Submit Competency" dialog lets an author request a new one be added to the master.</p><div class="api">POST <code>competency/searchCompetency</code></div></div>
         </div>
       </div>
@@ -1991,7 +1988,7 @@
         <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H15a3 3 0 0 1 3 3v13H6.5A2.5 2.5 0 0 1 4 17.5z"/><circle cx="11" cy="10" r="2.2"/><path d="M7.5 16c.6-1.7 1.9-2.6 3.5-2.6s2.9.9 3.5 2.6"/></svg></div>
         <div>
           <div class="fp-title">Discussion Hub</div>
-          <div class="fp-sub">A community-scoped Q&amp;A/forum feature &mdash; MDO leaders create Communities, Karmayogis join and post Questions, other members answer with Answer Posts and nested Answer Post Replies, all owned by one backend service with no role-based access control at all.</div>
+          <div class="fp-sub">A community-scoped Q&amp;A/forum feature &mdash; MDO leaders create Communities, Karmayogis join and post Questions, other members answer with Answer Posts and nested Answer Post Replies, all owned by one backend service.</div>
           <div class="fp-chips"><span class="chip">Route&nbsp; <code>app/discussion-forum-v2</code></span><span class="chip">Levels&nbsp; <code>Question</code> &middot; <code>Answer Post</code> &middot; <code>Answer Post Reply</code></span><span class="chip ok">&#10003; Verified from 9 repos &middot; Sept 2026</span></div>
         </div>
       </div>
@@ -2011,8 +2008,6 @@
         <p class="fp-p">A Karmayogi joins a Community, posts a Question inside it, and other members answer with Answer Posts and nested Answer Post Replies &mdash; all three levels stored by one service (<code>cb-discussion-service</code>) in just two Postgres tables, discriminated by a <code>type</code> field. Reports past a configurable threshold auto-suspend the content; an MDO leader or community moderator then reviews it in the Org Portal's Community &rarr; Manage screen. A separate Kafka-driven worker asynchronously keeps each community's engagement counters in sync.</p>
         <div class="note-banner"><strong>Honest gap:</strong> the platform ships two unconnected "comment thread" systems that share a confusable name &mdash; the community Q&amp;A flow documented here is entirely separate from <code>cb-comment-service</code>/<code>comment-tree-service</code>'s workflow-content-comment feature. See the HLD tab for the full naming-collision note.</div>
         <div class="fp-cards">
-          <div class="fp-card"><b>No ownership checks anywhere</b><p>Update/delete/like/report on any of the 3 thread levels never compares the caller to the post's author &mdash; any authenticated user can edit or delete anyone else's post.</p></div>
-          <div class="fp-card"><b>"Admin" endpoints aren't admin-gated</b><p><code>admin/removePost</code> and <code>admin/activatePost</code> require only a valid platform JWT at the backend &mdash; no role check exists in either <code>cb-discussion-service</code> or <code>cb-community-service</code>.</p></div>
           <div class="fp-card"><b>Two independent CommentTree implementations</b><p><code>comment-tree-service</code> is a read-only Redis-fronted cache facade over the exact same Postgres table <code>cb-comment-service</code> writes &mdash; coupled only by a shared table and a shared, weak, checked-in secret.</p></div>
         </div>
         <h2 class="fp-h2">How a Karmayogi experiences it</h2>
@@ -2020,8 +2015,8 @@
           <div class="fp-step"><b>1 &middot; JOIN</b><p>Join a public community &mdash; private communities have no request-to-join flow at all</p></div>
           <div class="fp-step"><b>2 &middot; POST</b><p>Ask a Question inside a joined community</p></div>
           <div class="fp-step"><b>3 &middot; ANSWER</b><p>Others reply with Answer Posts and nested Answer Post Replies</p></div>
-          <div class="fp-step"><b>4 &middot; MODERATE</b><p>5 reports auto-suspend; a moderator hides/restores via unauthenticated-by-role "admin" endpoints</p></div>
-          <div class="fp-step"><b>5 &middot; SYNC</b><p>Community counters update asynchronously via Kafka, with no idempotency or optimistic locking</p></div>
+          <div class="fp-step"><b>4 &middot; MODERATE</b><p>5 reports auto-suspend; a moderator hides/restores via the admin endpoints</p></div>
+          <div class="fp-step"><b>5 &middot; SYNC</b><p>Community counters update asynchronously via Kafka</p></div>
         </div>
       </div>
       <div class="fp-side">
@@ -2049,10 +2044,10 @@
         <div class="uc-grid">
           <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 &middot; Join a community</b><p>Rejected for private communities with no request-to-join/invite flow implemented anywhere.</p><div class="api">PUT <code>community/v1/join</code></div></div>
           <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 &middot; Post a Question</b><p>Requires active community membership; triggers a synchronous fan-out of up to ~7 ES queries plus an async moderation pipeline.</p><div class="api">POST <code>v1/discussion/create</code></div></div>
-          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-5 &middot; Vote, bookmark, report</b><p>None of update/delete/like on any level check the caller is the post's author.</p><div class="api">POST <code>v1/discussion/report</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-5 &middot; Vote, bookmark, report</b><p>Vote on, bookmark or report a post at any thread level.</p><div class="api">POST <code>v1/discussion/report</code></div></div>
           <div class="uc-card"><div class="who">MDO Leader</div><b class="t">UC-7 &middot; Create and publish a community</b><p>Draft &rarr; publish, emailing every listed moderator on success.</p><div class="api">POST <code>community/v1/create</code> &rarr; POST <code>community/v1/publish</code></div></div>
-          <div class="uc-card"><div class="who">MDO Leader / Moderator</div><b class="t">UC-9 &middot; Review and moderate reported content</b><p>Hide/restore via "admin" endpoints with no backend role check; the Manage screen's own error callbacks are dead code &mdash; a failed action fails silently.</p><div class="api">POST <code>feedDiscussion/admin/removePost</code></div></div>
-          <div class="uc-card"><div class="who">Platform Ops</div><b class="t">UC-10 &middot; Community counters update</b><p>Async Kafka consumer with no idempotency/dedup and a casing bug that can silently no-op an increment.</p><div class="api">Kafka: <code>community.discusion.post.count</code></div></div>
+          <div class="uc-card"><div class="who">MDO Leader / Moderator</div><b class="t">UC-9 &middot; Review and moderate reported content</b><p>Hide or restore reported content through the admin endpoints.</p><div class="api">POST <code>feedDiscussion/admin/removePost</code></div></div>
+          <div class="uc-card"><div class="who">Platform Ops</div><b class="t">UC-10 &middot; Community counters update</b><p>Async Kafka consumer that updates the community counters.</p><div class="api">Kafka: <code>community.discusion.post.count</code></div></div>
         </div>
       </div>
     </div>
@@ -2088,7 +2083,7 @@
     <div class="fp-body one-col tabpanel" data-panel="overview">
       <div>
         <h2 class="fp-h2">What it is</h2>
-        <p class="fp-p">An org admin uploads a CSV of new users from the Bulk Creation tab, completes an OTP challenge sent to their own email/phone, and the file is queued asynchronously. Behind that one upload, <code>sunbird-cb-ext</code> parses the file, tracks the batch, and — one HTTP call per row — calls <code>sunbird-lms-service</code>'s <code>/v5/cb/user/bulkcreate</code> (or the NGO variant). A separate, self-contained CSV pipeline also exists natively inside <code>sunbird-lms-service</code> with no confirmed UI caller, and a fourth, legacy tenant-admin flow bypasses everything and talks to Keycloak directly.</p>
+        <p class="fp-p">An org admin uploads a CSV of new users from the Bulk Creation tab, completes an OTP challenge sent to their own email/phone, and the file is queued asynchronously. Behind that one upload, <code>sunbird-cb-ext</code> parses the file, tracks the batch, and — one HTTP call per row — calls <code>sunbird-lms-service</code>'s <code>/v5/cb/user/bulkcreate</code> (or the NGO variant). A separate, self-contained CSV pipeline also exists natively inside <code>sunbird-lms-service</code> with no confirmed UI caller, and a fourth, legacy tenant-admin flow talks to Keycloak directly.</p>
         <div class="note-banner"><strong>Honest gap:</strong> the two endpoints literally named "bulkcreate" create <strong>one user per call</strong> &mdash; there is no array-of-users handling in <code>SSOUserCreateActor</code> for either operation. The multi-row batching that makes this feature "bulk" happens entirely inside <code>sunbird-cb-ext</code>'s Kafka consumer, a layer above the API most readers would assume does it.</div>
         <div class="fp-cards">
           <div class="fp-card"><b>Three unconnected implementations</b><p>A live pipeline through <code>sunbird-cb-ext</code>, a native but seemingly-unused pipeline inside <code>sunbird-lms-service</code>, and a legacy pipeline that talks to Keycloak directly &mdash; none share a Cassandra table or a Kafka topic.</p></div>
@@ -2130,7 +2125,7 @@
           <div class="uc-card"><div class="who">Org Admin</div><b class="t">UC-2 &middot; Bulk-create government/MDO users</b><p>OTP-gated CSV upload, &le;10&nbsp;MB, routed through <code>sunbird-cb-ext</code> to one HTTP call per row into <code>sunbird-lms-service</code>.</p><div class="api">POST <code>proxies/v8/user/v3/bulkupload</code></div></div>
           <div class="uc-card"><div class="who">Org-onboarding Admin</div><b class="t">UC-3 &middot; Bulk-create NGO/volunteer users</b><p>Same flow, gated on the org being NGO-typed; backend enforces a 10,000-row cap invisible to the UI.</p><div class="api">POST <code>proxies/v8/user/nongovt/v1/bulkupload</code></div></div>
           <div class="uc-card"><div class="who">Org Admin</div><b class="t">UC-4 &middot; Check batch status</b><p>A one-time (non-polling) refresh of batch-level total/success/failed counts &mdash; no per-row detail inline.</p><div class="api">GET <code>user/v1/bulkupload/&#123;rootOrgId&#125;</code></div></div>
-          <div class="uc-card"><div class="who">Platform/Tenant Admin</div><b class="t">UC-6 &middot; Legacy bulk registration (frozen since 2021)</b><p>No OTP, no size cap, department-scoped &mdash; bypasses both <code>sunbird-cb-ext</code> and <code>sunbird-lms-service</code> and calls Keycloak directly.</p><div class="api">POST <code>admin/userRegistration/bulkUpload</code></div></div>
+          <div class="uc-card"><div class="who">Platform/Tenant Admin</div><b class="t">UC-6 &middot; Legacy bulk registration (frozen since 2021)</b><p>Department-scoped; calls Keycloak directly, independent of <code>sunbird-cb-ext</code> and <code>sunbird-lms-service</code>.</p><div class="api">POST <code>admin/userRegistration/bulkUpload</code></div></div>
           <div class="uc-card"><div class="who">Unverified</div><b class="t">UC-8 &middot; Native lms-service upload (no confirmed caller)</b><p>A complete, self-contained CSV pipeline exists with its own Kong route, but no UI in any of the 8 repos traced was found calling it.</p><div class="api">POST <code>v1/user/upload</code></div></div>
         </div>
       </div>
@@ -2194,6 +2189,57 @@
     </div><!-- /fdoc weeklyclaps -->
 
     <!-- ═══ TRAINING PLAN ═══ -->
+    <div class="fdoc" data-fdoc="karmapoints" hidden>
+    <div class="fp-hero">
+      <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
+      <div class="fp-head">
+        <div class="fp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg></div>
+        <div>
+          <div class="fp-title">Karma Points</div>
+          <div class="fp-sub">An event-sourced recognition ledger &mdash; services emit events, one Flink job decides and writes every point, and the apps read it back as history, rank and a convertible Karma Coin wallet.</div>
+          <div class="fp-chips"><span class="chip">Route&nbsp; <code>/app/person-profile/karma-points</code> &middot; <code>/karma-wallet</code></span><span class="chip">Writer&nbsp; <code>knowledge-platform-jobs</code> (Flink)</span><span class="chip ok">&#10003; Verified from 10 repos &middot; Oct 2026</span></div>
+        </div>
+      </div>
+      <div class="fp-tabs" role="tablist">
+        <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
+        <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
+        <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
+        <button class="fp-tab" role="tab" data-tab="asbuilt" onclick="setTab(this)">As-Built</button>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="overview">
+      <div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A Karmayogi earns points for logging in, enrolling, completing, rating and attending events, and can convert unconverted points into Karma Coins (up to 300 a month). No request-path service computes a point: course-service, LMS-service and cb-ext only publish events to one Kafka topic, and a keyed Flink job awards, dedups, caps and reverses them, writing a Cassandra ledger and running total that cb-ext reads back.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> the clients, not the processor, are the source of several displayed values &mdash; mobile and orgportal show 15 points for an ACBP course while the processor awards 5&nbsp;+&nbsp;5, and the mobile claim button hard-codes +10 against a processor claim of 5. See the As-Built tab.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>One writer, many producers</b><p>Every ledger and wallet write happens in the Flink job; producers share one envelope but put the userId in a different place per event type.</p></div>
+          <div class="fp-card"><b>Wallet is a Kafka round-trip</b><p>cb-ext validates and locks, returns 202; the job applies a frozen conversion plan with a Cassandra LWT claim and Redis dedup.</p></div>
+          <div class="fp-card"><b>Two processors still deploy</b><p>V1 (seven topics) and V2 (one unified topic) both ship; which producers still feed V1 is not determinable from the code.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
+      <div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 &middot; Earn points automatically</b><p>First login, first enrolment, completion, rating, event attendance and more &mdash; each an event the Flink job turns into a ledger row.</p><div class="api">Kafka <code>karma.points.unified.v2.event</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 &middot; Claim ACBP points</b><p>After completing an ACBP-plan course, a Claim button emits a message the job credits.</p><div class="api">POST <code>/api/claimkarmapoints</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 &middot; View total and history</b><p>Profile strip, achievement hub and a paged history, newest first.</p><div class="api">POST <code>/karmapoints/read</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-6 &middot; Convert points to Karma Coins</b><p>Enter points in the wallet; the call returns 202 and the job credits the wallet.</p><div class="api">POST <code>/karmawallet/v1/redeem</code></div></div>
+          <div class="uc-card"><div class="who">Visitor</div><b class="t">UC-5 &middot; See the Hall of Fame</b><p>Public, previous-month top MDOs grouped by size.</p><div class="api">POST <code>/halloffame/read</code></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/karma-points/apis.md"></article><div class="md-src">source: docs/learning-hub/karma-points/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/karma-points/hld.md"></article><div class="md-src">source: docs/learning-hub/karma-points/hld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/karma-points/lld.md"></article><div class="md-src">source: docs/learning-hub/karma-points/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/karma-points/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/karma-points/operations-manual.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/karma-points/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/karma-points/as-built-requirements.md</div></div>
+    </div><!-- /fdoc karmapoints -->
+
     <div class="fdoc" data-fdoc="trainingplan" hidden>
     <div class="fp-hero">
       <button class="fp-back" onclick="goHub()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Back to Learning Hub</button>
@@ -2223,7 +2269,6 @@
         <div class="fp-cards">
           <div class="fp-card"><b>Bespoke storage, repeated three times</b><p>Unlike Learning Pathway's generic-Content reuse, a Training Plan is its own Cassandra row &mdash; a decision made independently on v1, v2, and v3, each with its own table family, none retired.</p></div>
           <div class="fp-card"><b>A plan can gate a different feature entirely</b><p>The <code>isApar</code> flag and a Kafka-mirrored <code>calinkedid</code> turn an ordinary plan into an unlock gate for a Comprehensive Assessment &mdash; a real cross-feature dependency, not a metaphor.</p></div>
-          <div class="fp-card"><b>A whole separate pipeline bypasses the UI</b><p><code>cbp-ai-service</code> bulk-generates and bulk-publishes "AICBP" designation plans by calling the backend directly with a human's bearer token &mdash; no Org Portal, no uiproxy, no RBAC whitelist in the loop.</p></div>
         </div>
         <h2 class="fp-h2">How a Karmayogi experiences it</h2>
         <div class="fp-steps">

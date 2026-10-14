@@ -67,6 +67,14 @@ nav:
           - LLD: learning-hub/weekly-claps/lld.md
           - Operations Manual: learning-hub/weekly-claps/operations-manual.md
           - As-Built Requirements: learning-hub/weekly-claps/as-built-requirements.md
+      - Karma Points:
+          - learning-hub/karma-points/index.md
+          - Use Cases: learning-hub/karma-points/use-cases.md
+          - APIs: learning-hub/karma-points/apis.md
+          - HLD: learning-hub/karma-points/hld.md
+          - LLD: learning-hub/karma-points/lld.md
+          - Operations Manual: learning-hub/karma-points/operations-manual.md
+          - As-Built Requirements: learning-hub/karma-points/as-built-requirements.md
       - Training Plan:
           - learning-hub/training-plan/index.md
           - Use Cases: learning-hub/training-plan/use-cases.md
