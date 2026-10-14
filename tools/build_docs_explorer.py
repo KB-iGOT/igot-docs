@@ -45,7 +45,9 @@ def main():
             if m.group(2).startswith(("http:", "https:", "data:")) or not _register(target):
                 return m.group(0)
             return m.group(1) + target.as_posix() + m.group(3)
-        return re.sub(r"(!\[[^\]]*\]\()([^)\s]+\.(?:%s))(\))" % IMG_EXT, sub, text)
+        text = re.sub(r"(!\[[^\]]*\]\()([^)\s]+\.(?:%s))(\))" % IMG_EXT, sub, text)
+        # raw <img src="..."> tags (used where an image needs an explicit width)
+        return re.sub(r'(<img\b[^>]*?\bsrc=")([^"\s]+\.(?:%s))(")' % IMG_EXT, sub, text)
 
     for p in sorted(docs.rglob("*.md")):
         store[p.relative_to(docs).as_posix()] = _md_images(p, p.read_text(encoding="utf-8"))

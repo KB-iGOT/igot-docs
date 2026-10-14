@@ -1,182 +1,151 @@
-# Events Hub — HLD
+# Events Hub — High-Level Design
 
-Reverse-engineered from `sunbird-cb-portal`, `sunbird-cb-orgportal`,
-`sunbird-cb-creationportal`, `sunbird-cb-uiproxy`, `sunbird-cb-ext`,
-`sunbird-course-service`, `knowledge-platform`, `knowledge-platform-jobs`.
+## 1. Purpose and scope
 
-## A naming collision worth flagging up front
+The Event Hub is the synchronous and interactive virtual learning subsystem of the iGOT Karmayogi platform. It covers the lifecycle of a virtual session: authoring and scheduling, editorial moderation, publication, live and recorded streaming, in-session chat, watch-time telemetry, verifiable certificates and post-event reporting. This page describes the architecture at component level. The requirements are in the [SRS](srs.md), the end-to-end business flow is in the [Overview](index.md), and the mechanics are in the [LLD](lld.md).
 
-The three portal frontends each contain **two unrelated features** that
-share a similarly-named folder:
+**In scope:** the Learner web and mobile apps, the MDO and SPV/CBP portals, the Event Hub microservice domain, its persistence, stream pipeline and credential components, and its integrations with the shared platform services.
 
-- **"Event Hub" proper** (`app/event-hub`, `pageId: 'app/event-hub'`) — the
-  content-type-driven system this document covers: search/browse,
-  enroll, consume, certify, plus role-split authoring/review.
-- **`app-event` ("meetup")** — a small, single-external-API microsite
-  (`event-external` proxy, `<EXTERNAL_SITE>`) with no enrollment and no
-  data-model relationship to Event/EventSet content. It is not called
-  "Event Hub" anywhere in its own code, and in two of the three portals
-  its route is either unreachable (Org Portal — shadowed by a duplicate
-  route declaration) or disabled outright (Creation Portal — commented
-  out). **Out of scope** for the rest of this documentation set.
+**Out of scope:** physical venue management, direct unmoderated publishing by MDOs, and the internals of the shared platform services the Event Hub calls.
 
-## Topology
+## 2. Architecture overview
 
-```mermaid
-flowchart TB
-    subgraph Learner["Learner Web - sunbird-cb-portal"]
-        EVH["events module - see-all, view-all, my-events, event-detail, event-player"]
-        CEH["card-event-hub / event-card-v2 widgets"]
-    end
+<img src="images/hld-architecture.jpg" alt="Figure 1: Event Hub high-level architecture" style="display:block;margin:1em auto;max-width:100%;width:1100px">
 
-    subgraph OrgAdmin["Org Admin - sunbird-cb-orgportal"]
-        CreateE["create-event.component.ts"]
-        ListE["list-event / view-event"]
-    end
+*Figure 1. High-level architecture of the Event Hub on the iGOT Karmayogi platform (Q2–Q14).*
 
-    subgraph CBPAdmin["CBP Review - sunbird-cb-creationportal"]
-        Dash["events-v2 dashboard - review queue"]
-        EventDetails["event-details wizard - publish/reject"]
-    end
+Figure 1 has five layers, drawn top to bottom, with the external services on the right.
 
-    GW["uiproxy /proxies/v8/... (Kong-routed pass-through)"]
+1. **User surfaces and clients.** The Learner Web App, the Mobile App (Android and iOS), the MDO Portal and the SPV/CBP Portal.
+2. **Security layer.** All clients call the platform over HTTPS and REST through **Kong**, the API gateway, with **Keycloak IAM** providing authentication and authorization.
+3. **Event Hub microservice domain.** Six services: Event Entity Manager, Access Control Engine, Discuss Hub Adapter, Competency Connector, Pre/Post Event Service and Media Stream Relay.
+4. **Data and infrastructure.** A persistence layer (PostgreSQL, Cassandra, Elasticsearch), a stream pipeline (Apache Kafka, Apache Flink and the telemetry service) and a credentials group (Sunbird RC, QR generator and LMS progress).
+5. **External interfaces and services.** Sunbird Content Service, the Competency Service, Keycloak, Elasticsearch, the Notification Service, the LMS Progress Service, Sunbird RC and Discuss Hub, connected to the Event Hub domain by two-way data flow.
 
-    subgraph KP["knowledge-platform (Scala/Akka/Play)"]
-        EA["EventActor - extends ContentActor"]
-        ESA["EventSetActor - extends ContentActor, fans out to children"]
-    end
+The band at the bottom of the figure lists the key business capabilities, the tech stack and the external dependencies.
 
-    subgraph CS["sunbird-course-service"]
-        EMA["EventManagementActor - read/query/discard only"]
-        ESMA["EventSetManagementActor - update/discard only"]
-        EventsActor["EventsActor - batch create + Event enroll"]
-        ESEA["EventSetEnrolmentActor (Scala) - fans out to child events"]
-        ECA["EventConsumptionActor (Scala)"]
-        CourseEnrollActor["CourseEnrollmentActor (generic, reused for /v1/event/enroll)"]
-        CertActor["CertificateActor / EventBatchCertificateActor"]
-    end
+## 3. Layers and components
 
-    subgraph Ext["sunbird-cb-ext"]
-        EUS["EventUtilityService - thin HTTP client to knowledge-platform"]
-        CalBulk["CalendarBulkUploadService/Consumer"]
-        PubBulk["PublicUserEventBulkonboardService/Consumer"]
-        PostConsump["UserEventPostConsumptionService"]
-        KarmaClaim["ClaimEventKarmaPointsServiceImpl"]
-    end
+### 3.1 User surfaces and clients
 
-    subgraph Jobs["knowledge-platform-jobs (Flink)"]
-        PubPipe["content-publish: PublishEventRouter -> EventPublishFunction"]
-        PostPub["post-publish-processor: BatchCreation, SamuhikCharchaEventLinkCourse"]
-        CertGen["event-cert-generator (standalone job)"]
-    end
+| Client | Role |
+|---|---|
+| Learner Web App | Primary surface for event discovery, calendar, playback, chat and certificate download. |
+| Mobile App (Android / iOS) | Responsive mobile experience with the same discovery, calendar, playback, chat and certificate features. |
+| MDO Portal | Event authoring for MDO Admins and Leaders: drafts, agendas, handouts, competency mapping and post-event data entry. |
+| SPV / CBP Portal | Moderation queues (New Requests and Past Requests) for SPV Publishers, and direct publishing for SPV Admins. |
 
-    Neo4j[("Neo4j content graph")]
-    Cass[("Cassandra: event_batch, user_entity_enrolments, user_content_consumption, public_user_event_bulkonboard, calendar_event_bulk_upload")]
-    Redis[("Redis: extended-read cache, trending/featured event ID lists")]
-    Kafka[("Kafka: dev.publish.job.request, dev.karma.points.unified.v2.event, dev.issue.certificate.request, dev.public.user.event.bulk.onboard, dev.calendar.event.bulk.upload")]
+### 3.2 Security layer
 
-    EVH -->|REST search/read/enroll| GW
-    CEH -.->|"server-config-driven, not statically wired"| EVH
-    CreateE -->|REST create/publish| GW
-    Dash -->|REST search/update/publish/reject| GW
-    EventDetails -->|REST update/publish/reject| GW
-    GW --> EA & ESA
-    GW --> EMA & ESMA & EventsActor & ESEA & ECA & CourseEnrollActor & CertActor
-    EA -->|writes + Kafka publish trigger| Neo4j
-    EA -->|"publish trigger"| Kafka
-    ESA -->|"spawns/tears down child Event nodes"| Neo4j
-    ESA -->|"read hierarchy live, no Cassandra cache"| Neo4j
-    EventsActor --> Cass
-    ESEA -->|"writes course enrolment table per child event"| Cass
-    ECA --> Cass
-    EventsActor -->|"enrolment alert + cert issue"| Kafka
-    CertActor -->|"issue-event-certificate"| Kafka
-    EMA -->|"HTTP to content service"| KP
-    ESMA -->|"HTTP to content service"| KP
-    EUS -->|HTTP| KP
-    CalBulk --> EUS
-    CalBulk --> Kafka
-    PubBulk --> Cass
-    PubBulk --> Kafka
-    KarmaClaim --> Kafka
-    PostConsump --> Cass
-    PostConsump --> Kafka
-    Kafka -.->|"dev.publish.job.request"| PubPipe
-    PubPipe --> PostPub
-    PostPub -->|"batch creation"| Cass
-    PostPub -->|"cross-links Event to Course"| KP
-    Kafka -.->|"certificate triggers"| CertGen
-    EMA -.->|"trending/featured ID lists"| Redis
-```
+| Component | Role |
+|---|---|
+| Kong (API gateway) | Unified routing, rate limiting and SSL termination; inspects token roles before a request reaches a service. |
+| Keycloak IAM | OAuth2 authentication and role assertion (MDO Admin, SPV Publisher, Learner); resolves the organisation of the user. |
 
-## Responsibilities
+### 3.3 Event Hub microservice domain
 
-| Component | Owns | Repo |
+| Service | Responsibility |
+|---|---|
+| Event Entity Manager | Create, update and lifecycle of event entities: Draft, Sent_to_Publisher, Live, Rejected, Cancelled and Past. |
+| Access Control Engine | Cohorts and permissions. Evaluates Public or Custom access using Boolean Canonical Form rules and the catalog visibility toggle. |
+| Discuss Hub Adapter | Comments and discussions: in-session chat with replies, likes and sorting, and linked discussion threads. |
+| Competency Connector | Validates and links hierarchical `competencies_v6` tags to events. |
+| Pre/Post Event Service | Notifications and metadata: agendas, handouts, speakers, reminders, and post-event attendee count, duration, recording link and summary. |
+| Media Stream Relay | Live and video-on-demand streaming: uploaded MP4 files and external YouTube streams. |
+
+### 3.4 Persistence layer
+
+| Store | Holds |
+|---|---|
+| PostgreSQL | Event metadata (relational). |
+| Cassandra | Telemetry state and learner progress. |
+| Elasticsearch | Catalog search and indexing for published events. |
+
+### 3.5 Stream pipeline
+
+| Component | Role |
+|---|---|
+| Apache Kafka | Event streaming; decouples client telemetry from database writes. |
+| Apache Flink | Stream processing: aggregates cumulative watch time against event duration, and runs post-publish jobs such as bidirectional course linkage. |
+| Telemetry Service | Ingestion of standardized client telemetry (start, play, heartbeat, pause, end). |
+
+### 3.6 Credentials
+
+| Component | Role |
+|---|---|
+| Sunbird RC | Generates cryptographically verifiable certificates. |
+| QR Generator | Adds the verification QR code to each certificate. |
+| LMS Progress | Records completion once the watch-time threshold is met. |
+
+### 3.7 External interfaces and services
+
+| Service | Provides |
+|---|---|
+| Sunbird Content Service | Content repository: event entities, DO IDs (`do_...`) and uploaded attachments. |
+| Competency Service | Taxonomy validation against the Karmayogi Competency Model. |
+| Keycloak | Identity provider. |
+| Elasticsearch | Search. |
+| Notification Service | Email and in-app notifications. |
+| LMS Progress Service | Progress tracking. |
+| Sunbird RC | Certificates. |
+| Discuss Hub | Community discussion threads. |
+
+## 4. End-to-end flow
+
+1. An MDO Admin or Leader drafts an event in the MDO Portal. Drafts auto-save with validation bypassed.
+2. On submit, the Event Entity Manager checks the mandatory fields and sets the status to Sent_to_Publisher.
+3. The event appears in the SPV/CBP Portal's New Requests queue. The SPV Publisher inspects the media, agenda and handouts, and edits the competency tags.
+4. The publisher approves or rejects. Approval sets the status to Live, indexes the event in Elasticsearch and triggers the background Flink jobs. Rejection requires remarks and returns the event to the MDO's Rejected tab. An SPV Admin can publish directly without review.
+5. Learners find the event through search, the calendar strip or the curated feeds. The Access Control Engine checks eligibility, and the learner enrolls.
+6. During playback the client emits telemetry. Kafka carries it to Flink, which aggregates watch time and updates progress in Cassandra.
+7. When the watch percentage meets the configured threshold, progress is marked complete and Sunbird RC issues a verifiable certificate with a QR code.
+8. After the session, the MDO Admin records the attendee count, duration, recording link and summary.
+
+## 5. Interfaces
+
+| Interface | Protocol | Purpose |
 |---|---|---|
-| `EventActor` | Event content CRUD/publish; enforces "can't modify an Event that belongs to an EventSet" | `knowledge-platform` |
-| `EventSetActor` | EventSet CRUD/publish, cascading to child Event nodes it owns | `knowledge-platform` |
-| `EventManagementActor` | Read/query/discard *only* — no create or publish; discard is an HTTP call to the content service, not local persistence | `sunbird-course-service` |
-| `EventsActor` | Event batch creation + the "v2" plain-Event enrollment path (`user_entity_enrolments`) | `sunbird-course-service` |
-| `EventSetEnrolmentActor` | EventSet enrollment — fans out to every child event, writes the **Course** enrolment table, not the Event one | `sunbird-course-service` |
-| `EventConsumptionActor` | Attendance/progress tracking, shared Cassandra table with Course consumption | `sunbird-course-service` |
-| `CertificateActor` / `EventBatchCertificateActor` | Certificate issuance trigger + template management for event batches | `sunbird-course-service` |
-| `EventUtilityService` | Thin HTTP client wrapper — the only way `sunbird-cb-ext` talks to the content service for events | `sunbird-cb-ext` |
-| `PublicUserEventBulkonboardConsumer` | Kafka-driven bulk CSV onboarding: enroll, certify, award karma points per row | `sunbird-cb-ext` |
-| `UserEventPostConsumptionServiceImpl` | On-demand ops reconciliation of completion/certificates/karma points | `sunbird-cb-ext` |
-| `PublishEventRouter` / `EventPublishFunction` | Flink consumer of the publish-instruction Kafka topic; lightweight Event publish side-effects (no ecar packaging, unlike Course) | `knowledge-platform-jobs` |
-| `BatchCreation` (post-publish) | Auto-creates the Event's default batch and links cert templates after publish | `knowledge-platform-jobs` |
-| `SamuhikCharchaEventLinkCourse` | iGOT-specific: cross-links a published Event back to its linked Course | `knowledge-platform-jobs` |
-| `event-cert-generator` | Standalone Flink job dedicated to Event certificate generation | `knowledge-platform-jobs` |
-| Event Hub browsing UI (`events` module) | Search/browse/enroll/consume UX | `sunbird-cb-portal` |
-| `create-event.component.ts` | Org-admin authoring, auto-publishes on submit | `sunbird-cb-orgportal` |
-| `events-v2` dashboard + `event-details` wizard | CBP review queue, publish/reject, course cross-linking | `sunbird-cb-creationportal` |
+| Clients to Kong | HTTPS, REST + JSON | All learner, MDO and SPV requests; real-time chat uses WebSocket (WSS). |
+| Kong to Event Hub services | HTTPS (internal) | Routing of authenticated requests with verified roles. |
+| Keycloak | OAuth2 / JWT bearer tokens | Authentication, role assertion and organisation resolution. |
+| Client to Kafka (via telemetry) | Event streaming | Playback and interaction telemetry. |
+| Event Hub to platform services | HTTPS REST | Content, competency, notification, progress and certificate calls. |
 
-## Three parallel enrollment paths
+## 6. Key design decisions
 
-The single biggest architectural fact about this feature: **"enrolling in
-an event" has three independent implementations**, not one:
+| Decision | Rationale |
+|---|---|
+| Federated authoring with central moderation | MDOs author sessions; SPV Publishers keep taxonomy and quality standards; SPV Admins can bypass review. |
+| Authorization enforced at the gateway and the service | Kong inspects token roles; services re-check the role and ownership. |
+| Boolean Canonical Form for cohorts | Rules combine with OR and conditions with AND, which makes audience rules simple to evaluate and explain. |
+| Asynchronous telemetry pipeline | Kafka and Flink decouple high-volume playback telemetry from database updates, keeping the portal responsive during mass campaigns. |
+| Completion gated by watch percentage | Certificates reflect verified consumption, not just attendance. |
+| Reuse of shared platform services | Identity, content, competency, notifications, certificates and discussions come from existing services. |
+| Streaming through existing providers | Live sessions use YouTube broadcasts or meeting links; there is no in-platform streaming bridge. |
 
-1. `POST /v1/event/enroll` → generic `CourseEnrollmentController` /
-   `CourseEnrollmentActor` — an Event enrolled exactly like a Course.
-2. `POST /v2/event/enroll` → `EventsActor.eventEnroll` — Event-specific,
-   writes `UserEventsDao`/`user_entity_enrolments`, carries iGOT-specific
-   rules (Bharat Kalp eligibility, Samuhik Charcha linked-course checks, a
-   hard-coded campaign end-date cutoff).
-3. `POST /v1/eventset/enroll` → `EventSetEnrolmentActor` — fans out to
-   every child Event of an EventSet, but writes into the **Course**
-   enrolment table (`UserCoursesDao`) per child, not the Event one.
+## 7. Technology stack
 
-Each has different validation, different tables, and different
-side-effects (only path 2 emits a Kafka enrolment alert). "Is this user
-enrolled in this event" therefore has no single query — which table to
-check depends on which path was used to enroll them.
+| Area | Technology |
+|---|---|
+| Runtime | Java / J2EE (OpenJDK 11 / 17), Node.js, Angular, Python (AI services) |
+| Infrastructure | Kubernetes (cloud / data centre) |
+| Data | PostgreSQL, Cassandra, Elasticsearch |
+| Streaming | Apache Kafka, Apache Flink |
+| Clients | Web browsers (Chrome, Firefox, Edge); Android and iOS |
 
-## Key design decisions
+## 8. Quality attributes
 
-- **Event/EventSet are content nodes, not a separate service.** Both
-  extend `ContentActor` and persist through the same Neo4j
-  `DataNode`/`GraphService` machinery as Course/Collection — there is no
-  bespoke Event datastore in `knowledge-platform`.
-- **EventSet's children are full Event nodes, materialized synchronously
-  at create/update time**, connected via the same `hasSequenceMember`
-  relation type Course→CourseUnit uses — not a lightweight batch/schedule
-  table. Every `EventSetActor.update()` tears down and fully re-creates
-  all children rather than diffing them.
-- **EventSet hierarchy bypasses the Cassandra hierarchy cache** that
-  Course/Collection rely on — `getHierarchy` always reads Neo4j relations
-  live. A deliberate simplification, not parity with Course.
-- **Enrollment, consumption, and certification are each split across
-  multiple non-shared implementations** (three enroll paths; two
-  independently-written karma-point Kafka producers; two Kafka mechanisms
-  for certificate issuance — Course uses the shared `InstructionEvent`
-  enum/model, Event hand-builds a JSON string). This is the feature's
-  dominant maintenance risk, not a one-off gap.
-- **Authoring and review are two unrelated implementations, not
-  role-gated views of one flow.** Org Portal's create form and Creation
-  Portal's review dashboard were independently written, share only the
-  backend `event/v4/*` API family, and disagree on what status a
-  freshly-created event should have.
+| Attribute | Approach |
+|---|---|
+| Performance | Standard read endpoints and search respond within the SRS targets; lazy loading and consolidated payloads on listing feeds. |
+| Scalability | Services run on Kubernetes; Kafka buffers telemetry bursts. |
+| Availability | High-availability targets and recovery objectives defined in the SRS. |
+| Security | HTTPS everywhere, JWT validation, role-based access, audit trails on every state change. |
+| Auditability | Every lifecycle status change is recorded with a timestamp and the acting user. |
 
-See [LLD](lld.md) for storage detail, state machines, and sequence flows,
-and the [Operations Manual](operations-manual.md) for how these decisions
-surface in day-2 support.
+## 9. External dependencies
+
+- **Google Meet to YouTube streaming bridge:** not automated; live sessions use direct YouTube broadcast links or meeting links.
+- **cbp-ai-service:** produces the post-session AI summary for Samuhik Charcha.
+- **Kafka and Flink:** telemetry collection and completion processing need healthy brokers and stream consumers.
+- **SMTP / SMS gateways:** delivery of email notifications.
