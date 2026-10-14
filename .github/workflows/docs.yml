@@ -31,6 +31,8 @@ jobs:
         run: |
           mkdir -p site
           python3 tools/build_docs_explorer.py --out site/index.html
+          # also serve the explorer under its real filename so links from other pages resolve
+          cp site/index.html site/karmayogi-docs-explorer.html
           cp igot-architecture-overview.html site/
       - uses: actions/upload-pages-artifact@v3
         with:
