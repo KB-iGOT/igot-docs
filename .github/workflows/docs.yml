@@ -9,6 +9,7 @@ on:
       - 'docs/**'
       - 'tools/**'
       - 'karmayogi-docs-explorer.template.html'
+      - 'igot-architecture-overview.html'
       - '.github/workflows/docs.yml'
   workflow_dispatch:
 
@@ -30,6 +31,7 @@ jobs:
         run: |
           mkdir -p site
           python3 tools/build_docs_explorer.py --out site/index.html
+          cp igot-architecture-overview.html site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
