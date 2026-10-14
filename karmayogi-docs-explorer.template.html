@@ -34,6 +34,9 @@
     position: absolute; top: 0; left: 0; right: 0; z-index: 6;
     display: flex; align-items: center; gap: 14px; padding: 16px 32px;
   }
+  .brand-logo { display: block; height: 40px; width: auto; flex: none; }
+  .brand-logo.sm { height: 32px; }
+  .brand-tag { padding-left: 14px; border-left: 1px solid #00000024; line-height: 1.2; }
   .wordmark b { display: block; font-weight: 900; font-size: 17px; letter-spacing: -0.02em; }
   .wordmark b em { font-style: normal; color: #EF951E; }
   .wordmark span { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #767E8C; }
@@ -351,12 +354,8 @@
   <!-- ══════════ VIEW 1 · LANDING ══════════ -->
   <section class="view" id="v-land">
     <div class="topbar">
-      <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
-        <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#EF951E" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M8 20c2 8 7 12 12 12s10-4 12-12" stroke="#1B4CA1" stroke-width="2.6" stroke-linecap="round"/>
-        <circle cx="20" cy="24" r="2.6" fill="#EF951E"/>
-      </svg>
-      <div class="wordmark"><b><em>Karmayogi</em> Bharat</b><span>Platform documentation</span></div>
+      <img class="brand-logo" src="docs/assets/karmayogi-logo.svg" alt="Karmayogi Bharat">
+      <div class="wordmark brand-tag"><span>Platform documentation</span></div>
       <label class="search">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
         <input type="search" class="search-input" placeholder="Search a feature&hellip;" autocomplete="off" spellcheck="false" aria-label="Search a feature">
@@ -411,12 +410,8 @@
   <!-- ══════════ VIEW 2 · LEARNING HUB ══════════ -->
   <section class="view hidden" data-gone id="v-hub" data-hub-name="Learning Hub">
     <div class="topbar">
-      <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
-        <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#EF951E" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M8 20c2 8 7 12 12 12s10-4 12-12" stroke="#1B4CA1" stroke-width="2.6" stroke-linecap="round"/>
-        <circle cx="20" cy="24" r="2.6" fill="#EF951E"/>
-      </svg>
-      <div class="wordmark"><b><em>Karmayogi</em> Bharat</b><span>Platform documentation</span></div>
+      <img class="brand-logo" src="docs/assets/karmayogi-logo.svg" alt="Karmayogi Bharat">
+      <div class="wordmark brand-tag"><span>Platform documentation</span></div>
       <label class="search">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
         <input type="search" class="search-input" placeholder="Search a feature&hellip;" autocomplete="off" spellcheck="false" aria-label="Search a feature">
@@ -475,12 +470,8 @@
 
   <section class="view hidden" data-gone id="v-features" data-hub-name="Features">
     <div class="topbar">
-      <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
-        <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#EF951E" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M8 20c2 8 7 12 12 12s10-4 12-12" stroke="#1B4CA1" stroke-width="2.6" stroke-linecap="round"/>
-        <circle cx="20" cy="24" r="2.6" fill="#EF951E"/>
-      </svg>
-      <div class="wordmark"><b><em>Karmayogi</em> Bharat</b><span>Platform documentation</span></div>
+      <img class="brand-logo" src="docs/assets/karmayogi-logo.svg" alt="Karmayogi Bharat">
+      <div class="wordmark brand-tag"><span>Platform documentation</span></div>
       <label class="search">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
         <input type="search" class="search-input" placeholder="Search a feature&hellip;" autocomplete="off" spellcheck="false" aria-label="Search a feature">
@@ -528,12 +519,8 @@
   <!-- ══════════ VIEW 2b · REGISTRATION (sub-hub of Features) ══════════ -->
   <section class="view hidden" data-gone id="v-registration" data-hub-name="Registration">
     <div class="topbar">
-      <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
-        <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#EF951E" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M8 20c2 8 7 12 12 12s10-4 12-12" stroke="#1B4CA1" stroke-width="2.6" stroke-linecap="round"/>
-        <circle cx="20" cy="24" r="2.6" fill="#EF951E"/>
-      </svg>
-      <div class="wordmark"><b><em>Karmayogi</em> Bharat</b><span>Platform documentation</span></div>
+      <img class="brand-logo" src="docs/assets/karmayogi-logo.svg" alt="Karmayogi Bharat">
+      <div class="wordmark brand-tag"><span>Platform documentation</span></div>
       <label class="search">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
         <input type="search" class="search-input" placeholder="Search a feature&hellip;" autocomplete="off" spellcheck="false" aria-label="Search a feature">
@@ -572,12 +559,8 @@
   <!-- ══════════ VIEW 3 · FEATURE PAGE ══════════ -->
   <section class="view hidden" data-gone id="v-feat">
     <div class="fp-top">
-      <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
-        <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#EF951E" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M8 20c2 8 7 12 12 12s10-4 12-12" stroke="#1B4CA1" stroke-width="2.6" stroke-linecap="round"/>
-        <circle cx="20" cy="24" r="2.6" fill="#EF951E"/>
-      </svg>
-      <div style="font-weight:900; font-size:15px; letter-spacing:-0.02em"><span style="color:#EF951E">Karmayogi</span> Bharat <span style="font-weight:700; color:#767E8C; font-size:12px">&middot; Platform documentation</span></div>
+      <img class="brand-logo sm" src="docs/assets/karmayogi-logo.svg" alt="Karmayogi Bharat">
+      <div class="wordmark brand-tag"><span>Platform documentation</span></div>
     </div>
 
     <div class="fdoc" data-fdoc="blended">
@@ -1273,15 +1256,16 @@
       </div>
       <div class="fp-tabs" role="tablist">
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
-        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="srs" onclick="setTab(this)">SRS</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
         <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context Diagrams</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
+        <button class="fp-tab" role="tab" data-tab="oldlld" hidden style="display:none" onclick="setTab(this)">Old LLD</button>
         <button class="fp-tab" role="tab" data-tab="sdd" onclick="setTab(this)">SDD</button>
-        <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
-        <button class="fp-tab" role="tab" data-tab="asbuilt" onclick="setTab(this)">As-Built</button>
+        <button class="fp-tab" role="tab" data-tab="ops" hidden style="display:none" onclick="setTab(this)">Operations Manual</button>
+        <button class="fp-tab" role="tab" data-tab="asbuilt" hidden style="display:none" onclick="setTab(this)">As-Built</button>
+        <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">User Manual</button>
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="overview">
@@ -1296,27 +1280,6 @@
 <div class="uc-bar"><span></span><span class="uc-btns"><button type="button" class="uc-btn" data-ug-all="open">Expand all</button><button type="button" class="uc-btn" data-ug-all="close">Collapse all</button></span></div>
 <div class="uc-grid"><details class="uc-card uc-acc" id="ovs-1"><summary><div class="who">Step 1</div><b class="t">Secure login &amp; context setting</b><p>Sign in with Keycloak SSO and choose the organisation the work is scoped to.</p><span class="uc-more"></span></summary><div class="uc-body"><ul class="ov-list"><li><strong>Single Sign-On:</strong> The author signs into the AI CBP Portal via Keycloak SSO.</li><li><strong>Scoping:</strong> The author selects their organizational context: Centre or State → Ministry / Department → Organization (MDO).</li><li><strong>Persistent State:</strong> All subsequent documents, mappings and plans are scoped to this selected entity.</li></ul></div></details><details class="uc-card uc-acc" id="ovs-2"><summary><div class="who">Step 2</div><b class="t">Document ingestion &amp; template standardization</b><p>Download the template, upload one or more orders, and watch roles accumulate with their sources.</p><span class="uc-more"></span></summary><div class="uc-body"><ul class="ov-list"><li><strong>Template Guidance:</strong> Under Manage Documents, the author can download a standardized Word or PDF template showing how roles, responsibilities, activities and competencies should be formatted.</li><li><strong>Cumulative Uploads:</strong> The author uploads one or more files, for example Work Allocation Orders, Gazette notifications and internal office orders.</li><li><strong>No Data Overwrite:</strong> Unlike earlier versions, a new upload does not clear previous results: newly extracted roles are appended to the existing session records, with clear document-source tags for traceability.</li></ul></div></details><details class="uc-card uc-acc" id="ovs-3"><summary><div class="who">Step 3</div><b class="t">AI-driven role &amp; competency generation</b><p>The AI extracts designations, weights Work Allocation Orders first and keeps competencies inside KCM.</p><span class="uc-more"></span></summary><div class="uc-body"><ul class="ov-list"><li><strong>Designation Extraction:</strong> The AI extracts all designations without conflating titles; "Under Secretary" is not merged with "Deputy Secretary".</li><li><strong>Priority Weighting:</strong> The author sees the system prioritize duties extracted from official Work Allocation Orders over generic competency frameworks.</li><li><strong>KCM Validation:</strong> Competencies appear structured under Behavioural, Functional and Domain. Out-of-model suggestions are blocked, ensuring standardization against Karmayogi master standards.</li><li><strong>Hierarchy Sorting:</strong> The author configures administrative seniority levels (L1 through L4), dictating the hierarchy of the final training plan.</li></ul></div></details><details class="uc-card uc-acc" id="ovs-4"><summary><div class="who">Step 4</div><b class="t">iGOT master designation matching &amp; handling exceptions</b><p>Every extracted role gets a match status; the author overrides it or asks the SPV to add the designation.</p><span class="uc-more"></span></summary><div class="uc-body"><ul class="ov-list"><li><strong>Classification:</strong> For every extracted role, the author sees a classification status.</li><li><strong>Exact / High Confidence Match:</strong> Marked in green. The role is directly linked to an official iGOT Designation Master ID.</li><li><strong>Unmatched / Low Confidence:</strong> <ul><li><strong>Option A (Manual Override):</strong> the author opens a searchable dropdown containing the iGOT master list and selects the matching canonical title.</li><li><strong>Option B (Raise SPV Request):</strong> if the designation is unique or newly created, the author clicks "Request Designation Addition", which sends an approval request to the central SPV Admin. Once the SPV approves it, the designation becomes available for mapping.</li></ul></li></ul></div></details><details class="uc-card uc-acc" id="ovs-5"><summary><div class="who">Step 5</div><b class="t">Course recommendation review &amp; curation</b><p>A balanced Top-15 set per designation, with explainable scores, provider priority and a 50-hour cap.</p><span class="uc-more"></span></summary><div class="uc-body"><ul class="ov-list"><li><strong>Balanced Recommendations:</strong> Opening the course recommendation screen for a designation shows a balanced Top-15 set tailored to the employee grade, not a random list of soft-skill modules.<ul><li>Senior officers (Group A / B) receive about 50% strategic domain courses.</li><li>Operational staff (Group C / D) receive about 40% operational domain courses.</li></ul></li><li><strong>Explainable Scores:</strong> Every course card shows why it was selected: competency alignment, domain fit and provider credibility.</li><li><strong>Provider Prioritization:</strong> Courses published by the author's own ministry or by relevant apex institutes (for example ISTM, LBSNAA) rank higher.</li><li><strong>Editing &amp; Adding Courses:</strong> <ul><li>The author can delete irrelevant courses or search the iGOT catalogue to add modules manually.</li><li>Any manually added course automatically receives a 90% relevance score, so it never shows 0%.</li><li>The system enforces a 50-hour total learning cap; if it is exceeded, the author is prompted to trim course durations before proceeding.</li><li>After saving or editing inline, the UI scrolls back to the active section.</li></ul></li></ul></div></details><details class="uc-card uc-acc" id="ovs-6"><summary><div class="who">Step 6</div><b class="t">Plan preview, language selection &amp; submission</b><p>Preview the CBP in any of 12 languages, then send finalized designations for approval.</p><span class="uc-more"></span></summary><div class="uc-body"><ul class="ov-list"><li><strong>Check Validation:</strong> Checkboxes next to designations become active only after course recommendations are generated and saved.</li><li><strong>Multilingual Export:</strong> The author can preview the CBP report and choose from 11 Indic languages (Hindi, Telugu, Kannada, Marathi, Tamil, Gujarati, Malayalam, Odia, Punjabi, Bengali, Assamese) or English, with clean KPI numbering and deduplicated competencies.</li><li><strong>Send for Approval:</strong> <ul><li>The author checks off finalized designations and clicks "Send for Approval".</li><li>A modal asks for a mandatory Request Name (alphanumeric with - or _) and a searchable dropdown to select the designated MDO Leader / Admin.</li><li>On submission, a unique Request ID is generated, timestamped in IST, and set to Pending Approval.</li></ul></li></ul></div></details><details class="uc-card uc-acc" id="ovs-7"><summary><div class="who">Step 7</div><b class="t">MDO approval &amp; revision loop</b><p>Track the request, revoke it while pending, and resubmit after a rejection with the reviewer's remarks.</p><span class="uc-more"></span></summary><div class="uc-body"><ul class="ov-list"><li><strong>Author Tracking:</strong> The author tracks progress in the Approval Requests Dashboard: Draft, Pending Approval, Approved, Rejected, Partially Published.</li><li><strong>Revocation:</strong> If the author notices a mistake while the request is still Pending Approval, they can revoke the submission, with confirmation.</li><li><strong>Approver Interaction:</strong> <ul><li>If the MDO Leader approves, they define the official Training Plan Name and Target Completion Date (for example 31 March 2027).</li><li>If the MDO Leader rejects, the author receives an email notification with specific rejection remarks, and can adjust competencies or courses and resubmit.</li></ul></li></ul></div></details><details class="uc-card uc-acc" id="ovs-8"><summary><div class="who">Step 8</div><b class="t">Publishing &amp; monitoring impact</b><p>Approved plans reach myiGOT within about 6 hours; the dashboard tracks coverage and training gaps.</p><span class="uc-more"></span></summary><div class="uc-body"><ul class="ov-list"><li><strong>Pushed to iGOT:</strong> Once approved, the training plan is published to the MDO Portal and the Learner Portal (myiGOT). Within about 6 hours, mapped government officials see the CBP prominently on their myiGOT home screen.</li><li><strong>Executive Dashboard:</strong> The author visits the AI CBP Dashboard to track:<ul><li>Total CBPs created across their department.</li><li>Gap Analysis: competencies without matching iGOT courses, highlighting training deficits where new courses should be commissioned.</li><li>Unique designations mapped versus remaining departmental roles.</li></ul></li></ul></div></details></div>
 </div>
-<div class="fp-side">
-<div class="side-box">
-<div class="lbl">On this tab</div>
-<div class="side-links">
-<div>Overview of the CBP Tool</div>
-<div>Key pillars</div>
-<div>The author journey</div>
-</div>
-</div>
-<div class="side-box blue">
-<div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
-<div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">Use Cases</b> tab follows the user guide screen by screen; the <b style="color:#1B4CA1">HLD</b> tab shows the architecture; <b style="color:#1B4CA1">LLD</b> covers storage, state machines and sequence flows.</div>
-</div>
-<div class="side-box">
-<div class="lbl">Related bubbles</div>
-<div class="side-pills">
-<span class="side-pill">Course</span>
-<span class="side-pill">Comprehensive Assessment Program</span>
-</div>
-</div>
-</div>
 </div>
     <div class="fp-body one-col tabpanel" data-panel="usecases" hidden>
       <div>
@@ -1325,21 +1288,6 @@
 <h2 class="fp-h2">MDO Admin / Leader</h2><div class="uc-grid"><details class="uc-card uc-acc"><summary><div class="who">Step 17 &middot; MDO Admin / Leader</div><b class="t">Review role mapping approval requests (MDO Portal)</b><p>In the MDO Admin Portal, open AI CBP Requests, review the submitted role mappings and approve or reject them.</p><span class="uc-more"></span></summary><div class="uc-body"><h4>Steps</h4><ol><li>Log in to the MDO Admin Portal and open <strong>AI CBP Requests</strong> from the left navigation.</li><li>The dashboard lists each request with Request ID, Request Name, Submitted By, Submitted On and a live status badge; search or filter by Pending, Approved or Rejected.</li><li>Tap <strong>View</strong> to open the review screen: submitted role mappings, mapped competencies and linked course recommendations side by side.</li><li><strong>Approve</strong>: pick a training plan and a target completion date and confirm; the mapping is marked Approved and Published to iGOT.</li><li><strong>Reject</strong>: enter the mandatory reason so the Nodal Officer knows what to fix.</li><li><strong>View Non Matching Designations</strong> (top right) lists the designations the author flagged as unmatched with their SPV approval status.</li><li>Both actions email the Nodal Officer and update the status at once.</li></ol></div></details></div>
 <h2 class="fp-h2">SPV Admin</h2><div class="uc-grid"><details class="uc-card uc-acc"><summary><div class="who">Step 18 &middot; SPV Admin</div><b class="t">Approve new designation requests (SPV Portal)</b><p>In the SPV Admin Portal, review requests to add a designation and approve or reject them.</p><span class="uc-more"></span></summary><div class="uc-body"><h4>Steps</h4><ol><li>Log in to the SPV Admin Portal and open <strong>Manage Designation Approval Requests</strong>.</li><li>Switch between the Pending, Approved and Rejected tabs, each with a live count.</li><li>Narrow the list with search, the Division/Wing filter (Apex, Directorate, District, Block, Field) or the Organisation filter.</li><li>Each row shows Created On, Designation Name, Organisation, Division, Requested By and Email.</li><li><strong>Approve</strong> (green tick): the designation is added to the iGOT Designation Master and the requester's unmatched row moves to Matched Role Mapping.</li><li><strong>Reject</strong> (red cross): give a clear reason so the MDO can resubmit if needed.</li><li>Only SPV Admins can act; actions are logged and the requester is emailed.</li></ol></div></details></div>
 <h2 class="fp-h2">Guidance</h2><div class="uc-grid"><details class="uc-card uc-acc"><summary><div class="who">All users</div><b class="t">Dos and Don'ts</b><p>What to always do and never do when using the tool.</p><span class="uc-more"></span></summary><div class="uc-body"><h4>Guidance</h4><ul><li><strong>Do:</strong> upload only official, publicly available PDFs under 25 MB each; guard login credentials; treat the AI draft as a starting point; blend AI-suggested courses with hand-picked ones; keep every competency within the KCM framework; save and securely store the final CBP and course recommendations; double-check before Send for Approval, because submitted role mappings lock.</li><li><strong>Never:</strong> upload confidential, classified or sensitive documents; treat AI output as final without the Competent Authority's review; add competencies outside KCM without proper approval; share login credentials with colleagues or outsiders; upload files that are too large, corrupted or not text-searchable.</li></ul></div></details><details class="uc-card uc-acc"><summary><div class="who">All users</div><b class="t">Next steps</b><p>Gather documents, generate and review the CBP, roll out training plans, and plan courses for remaining gaps.</p><span class="uc-more"></span></summary><div class="uc-body"><h4>Steps</h4><ol><li>Pull together guidelines, toolkits, annual reports and Work Allocation Orders before starting.</li><li>Generate the department-wise CBP, review every mapping carefully and get formal sign-off from the Competent Authority.</li><li>Roll out the approved CBP by creating and assigning designation-wise MyiGOT training plans for the team.</li><li>Identify remaining competency gaps and plan new course development to close them.</li></ol></div></details></div>
-<h2 class="fp-h2">Where the guide and the code differ</h2><table class="ug-diff"><thead><tr><th>Topic</th><th>The guide says</th><th>The code shows</th></tr></thead><tbody><tr><td>File size</td><td>Each PDF under 25 MB</td><td>A separate, larger configurable per-file cap, plus 10 files per upload</td></tr><tr><td>Hierarchy screen</td><td>Rearranged with dropdowns</td><td>The reorder call is verified; the earlier docs described drag-and-drop</td></tr><tr><td>MDO approval</td><td>Approve role mapping by role mapping</td><td>One publish call over the request's pending items, each reported separately</td></tr><tr><td>SPV reject reason</td><td>A clear reason is expected</td><td>The comment is optional in the service</td></tr><tr><td>Spreadsheet export</td><td>Final CBP exportable as PDF or CSV</td><td>The screen offers Download as Excel and Download as PDF; PDF routes exist in <code>cbp-ai-service</code>, no spreadsheet route does</td></tr><tr><td>Division/Wing filter</td><td>Filter on the SPV list</td><td>Search covers wing/division text; no dedicated filter parameter found</td></tr></tbody></table>
-<h2 class="fp-h2">Backend use cases traced from source</h2><p class="fp-p">The services behind each step, traced from the code. Steps above cite these by number.</p>
-<div class="uc-grid">
-          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-1 &middot; Upload &amp; summarize source documents</b><p>Uploads up to 10 typed PDFs (Work Allocation Order, Annual Reports, Other), then triggers a background Gemini summary per document.</p><div class="api">POST <code>v1/files</code> &middot; POST <code>v1/files/{id}/summary</code></div></div>
-          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-4 &middot; Generate role mappings</b><p>One call kicks off a background job producing a full designation hierarchy with role/competency data &mdash; v1, v2 and v3 differ materially in source data, call shape, and retry behaviour.</p><div class="api">POST <code>v{1,2,3}/role-mapping/generate</code></div></div>
-          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-5 &middot; Reconcile against iGOT</b><p>Exact match via iGOT's designation search, falling back to a Gemini-embedding + pgvector semantic match &mdash; automatic in v3, manual in v1, absent in v2.</p><div class="api">POST <code>v1/role-mapping/match-designations</code></div></div>
-          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-10 &middot; Generate AI course recommendations</b><p>A background job hybrid-searches a pgvector course table, reranks with Gemini, and keeps only courses above an 80-relevancy floor.</p><div class="api">POST <code>v1/course-recommendations/generate</code></div></div>
-          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-13 &middot; Build the CBP Plan</b><p>Merges AI-recommended, iGOT-searched, and manually-added courses into one saved plan per role mapping &mdash; requires a recommendation to already exist.</p><div class="api">POST <code>v1/cbp-plan/save</code></div></div>
-          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-14 &middot; Send for approval</b><p>Bundles completed role mappings (with saved plans) into one request, snapshots them, and emails the assigned MDO admin a review link.</p><div class="api">POST <code>v1/approval-requests/send</code></div></div>
-          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-17 &middot; Approve and publish a CBP plan</b><p>Per designation, calls iGOT's create-then-publish API on the admin's behalf; the request is approved as soon as one item succeeds, even if others fail and need an individual retry.</p><div class="api">POST <code>ai-cbp-mdo-service v1/mdo/approval-requests/publish</code></div></div>
-          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-19 &middot; Reject a request, or one item</b><p>Rejects an entire pending request with a required comment, or a single item &mdash; recomputing the parent request's status from whatever remains.</p><div class="api">POST <code>ai-cbp-mdo-service v1/mdo/approval-requests/reject</code></div></div>
-          <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-22 &middot; Approve a designation name</b><p>Creates the designation in iGOT's master list first; only marks the request approved once that succeeds (an "already present" response still counts as approved).</p><div class="api">POST <code>ai-cbp-mdo-service v1/designation/approval-requests/approve</code></div></div>
-          <div class="uc-card"><div class="who">CBP author</div><b class="t">UC-24 &middot; The step-by-step wizard (unverified)</b><p>Document management, role-mapping review, course selection and CBP export ship inside a private library not present in any of the three traced repos.</p></div>
-          <div class="uc-card"><div class="who">Operator</div><b class="t">UC-25 &middot; Bulk-onboard a state/ministry</b><p>A fixed six-stage offline pipeline &mdash; copy documents, summarize, generate, recommend &amp; save, submit for approval, publish &mdash; run stage by stage by an operator.</p></div>
-        </div>
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="srs" hidden><article class="mdwrap" data-md="learning-hub/ai-cbp-tool/srs.md"></article><div class="md-src">source: docs/learning-hub/ai-cbp-tool/srs.md</div></div>
@@ -1348,6 +1296,7 @@
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/ai-cbp-tool/apis.md"></article><div class="md-src">source: docs/learning-hub/ai-cbp-tool/apis.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/ai-cbp-tool/hld.md"></article><div class="md-src">source: docs/learning-hub/ai-cbp-tool/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/ai-cbp-tool/lld.md"></article><div class="md-src">source: docs/learning-hub/ai-cbp-tool/lld.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="oldlld" hidden><article class="mdwrap" data-md="learning-hub/ai-cbp-tool/lld-old.md"></article><div class="md-src">source: docs/learning-hub/ai-cbp-tool/lld-old.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/ai-cbp-tool/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/ai-cbp-tool/operations-manual.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="asbuilt" hidden><article class="mdwrap" data-md="learning-hub/ai-cbp-tool/as-built-requirements.md"></article><div class="md-src">source: docs/learning-hub/ai-cbp-tool/as-built-requirements.md</div></div>
     </div><!-- /fdoc aicbp -->
