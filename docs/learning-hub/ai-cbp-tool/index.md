@@ -209,5 +209,5 @@ flowchart LR
     training deficits where new courses should be commissioned.
   - Unique designations mapped versus remaining departmental roles.
 
-See [Use Cases](use-cases.md), [APIs](apis.md), [HLD](hld.md), [LLD](lld.md) and the
+See the [User Manual](use-cases.md), [APIs](apis.md), [HLD](hld.md), [LLD](lld.md) and the
 [Operations Manual](operations-manual.md) for the detail behind each of these.

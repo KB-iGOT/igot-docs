@@ -7,7 +7,7 @@ Building Plan (CBP): designation-wise roles and competencies, matched course
 recommendations, and a saved plan that an MDO Admin or Leader reviews and
 publishes to iGOT. This page describes the architecture at component level.
 Mechanics are in the [LLD](lld.md), endpoints in [APIs](apis.md) and the
-screens in [Use Cases](use-cases.md).
+screens in the [User Manual](use-cases.md).
 
 **In scope:** the CBP-AI UI, the CBP-AI Service (`cbp-ai-service`) and the
 approval service that works beside it (`ai-cbp-mdo-service`).

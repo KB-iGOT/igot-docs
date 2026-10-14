@@ -101,7 +101,7 @@ nav:
           - Context Diagram: learning-hub/chs/context-diagram.md
       - AI CBP Tool:
           - learning-hub/ai-cbp-tool/index.md
-          - Use Cases: learning-hub/ai-cbp-tool/use-cases.md
+          - User Manual: learning-hub/ai-cbp-tool/use-cases.md
           - SRS: learning-hub/ai-cbp-tool/srs.md
           - APIs: learning-hub/ai-cbp-tool/apis.md
           - Context Diagrams: learning-hub/ai-cbp-tool/context-diagram.md

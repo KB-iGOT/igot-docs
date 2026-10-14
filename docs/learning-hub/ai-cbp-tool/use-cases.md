@@ -1,4 +1,4 @@
-# AI CBP Tool — Use Cases
+# AI CBP Tool — User Manual and Use Cases
 
 Traced across three repos: `cbp-ai-service` (`origin/cbrelease-4.8.39`,
 commit `70d7175`), `ai-cbp-mdo-service` (`origin/cbrelease-4.8.39`, commit
