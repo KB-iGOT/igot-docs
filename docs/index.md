@@ -36,6 +36,7 @@ Each feature folder carries the same six files (newer features also add an
 - [CHS](learning-hub/chs/index.md) — backend batch pipeline feeding karma points, leaderboards, BI warehouse
 - [AI CBP Tool](learning-hub/ai-cbp-tool/index.md) — AI-assisted competency-based program authoring
 - [AI Assessment Tool](learning-hub/ai-assessment-tool/index.md) — Gemini-generated assessments from course content or KCM competency selections
+- [AI Tutor](learning-hub/ai-tutor/index.md)
 
 ## Hubs
 

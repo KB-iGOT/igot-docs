@@ -23,7 +23,7 @@ enrolments in the LMS, per-node progress state — and each type adds one twist:
 Some folders under `learning-hub/` are no longer part of the Learning Hub and
 are listed elsewhere. Under **Features**: [Weekly Claps](weekly-claps/index.md),
 [Training Plan](training-plan/index.md), [CHS](chs/index.md), [AI CBP Tool](ai-cbp-tool/index.md),
-[AI Assessment Tool](ai-assessment-tool/index.md) and the **Registration** group —
+[AI Assessment Tool](ai-assessment-tool/index.md), [AI Tutor](ai-tutor/index.md) and the **Registration** group —
 [User Registration](user-onboarding/index.md),
 [SPV & Admin Registration](spv-admin-registration/index.md) and
 [Bulk Registration](bulk-registration/index.md). [Events Hub](events-hub/index.md)
