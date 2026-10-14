@@ -32,7 +32,6 @@ Functional requirements, validation rules, interfaces, quality attributes and ac
 - 9. Error handling and audit requirements
 - 10. Acceptance criteria and test scenarios
 - 11. Assumptions, dependencies and open questions
-- Appendix A. Requirements traceability
 
 ## 1. Introduction
 
@@ -470,32 +469,3 @@ The following acceptance scenarios provide a baseline for QA/UAT. Final test dat
 | OQ-14 | What are response-time, availability, RPO/RTO and pilot capacity targets? | Product owner / operations |
 | OQ-15 | Which proposed API endpoints map to actual POC routes? | Engineering; inspect repository |
 | OQ-16 | Which storage, queue/worker, monitoring and deployment platforms are selected? | Architecture / DevOps |
-
-## Appendix A. Requirements traceability
-
-| Workflow / feature | Requirement IDs | Primary acceptance coverage |
-|---|---|---|
-| Login and platform access | FR-AUTH-001–004; NFR-SEC-001–003 | AC-01, AC-02 |
-| Organization selection | FR-ORG-001–003; NFR-SEC-002 | AC-02 |
-| Document management | FR-DOC-001–007; BR-001–004 | AC-03–05 |
-| Initial CBP generation | FR-CBP-001–006; BR-005 | AC-05–07 |
-| Role mapping / designation master | FR-ROLE-001–004; FR-MASTER-001–003; BR-006 | AC-08 |
-| Designation requests and hierarchy | FR-DES-001–005; FR-HIER-001–004; FR-SPV-001–004 | AC-12 |
-| CBP editing / competency alignment | FR-EDIT-001–005; BR-007 | AC-06, AC-14 |
-| Course recommendations and lists | FR-COURSE-001–005; FR-CLIST-001–003; BR-008 | AC-13 |
-| Approval submit / review / tracking | FR-APP-001–005; FR-TRACK-001–004; FR-MDO-REV-001–005 | AC-09–11, AC-18 |
-| Exports / localization / finalization | FR-EXPORT-001–003; FR-LANG-001–004; FR-FINAL-001–004 | AC-14, AC-16 |
-| Notifications / administration / audit | FR-CROSS-001–005; NFR-OBS-001–002 | AC-15, AC-18 |
-
-## Appendix B. Sign-off
-
-| Role | Name | Decision / comments | Date |
-|---|---|---|---|
-| Product owner |  |  |  |
-| Business / process owner |  |  |  |
-| Solution architect |  |  |  |
-| Engineering lead |  |  |  |
-| QA lead |  |  |  |
-| Security / operations |  |  |  |
-
-*End of document*
