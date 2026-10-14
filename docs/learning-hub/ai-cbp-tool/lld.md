@@ -1,361 +1,692 @@
-# AI CBP Tool — LLD
+# AI CBP Tool — Low-Level Design
 
-Reverse-engineered from code: `cbp-ai-service` (`origin/cbrelease-4.8.39`,
-commit `70d7175`), `ai-cbp-mdo-service` (`origin/cbrelease-4.8.39`, commit
-`88040de`), `cbp-ai-ui` (`origin/cbrelease-4.8.39`, commit `15a3b9a`). Neither
-backend has Alembic or any other migration tool — both create their schema
-idempotently via `Base.metadata.create_all` on startup
-(`cbp-ai-service:src/main.py:24`, `ai-cbp-mdo-service:src/main.py:21-26`), so
-there is no migration history to trace; everything below is read from the
-current model files only.
+This page details the design below the architecture level: the validation flow of each step, the data model, the main sequences, the state machines and the rules the services enforce. For the architecture see the [HLD](hld.md); for endpoints see [APIs](apis.md). Endpoint paths are relative to the service's `/api` prefix.
 
-## Storage reality — `cbp-ai-service`
+## 1. Feature validation and API flows
 
-**Postgres, async (SQLAlchemy 2.0 + `asyncpg`)**, engine configured in
-`src/core/database.py` (`pool_size=20, max_overflow=40, pool_recycle=1800`).
-`CREATE EXTENSION IF NOT EXISTS vector` also runs at startup
-(`src/main.py:23`).
+One subsection per step of the CBP-AI Tool: the validation flow, its decision points, the validation checklist and the endpoints involved. At every decision diamond, YES continues on the success path and NO validates, corrects or stops. Endpoints are served by `cbp-ai-service`, except steps 17 and 18, which are served by `ai-cbp-mdo-service`.
 
-| Table | Model | Key columns | Notes |
-|---|---|---|---|
-| `users` | `src/models/user.py` | `user_id` PK, `username`/`email` unique, `role_id` FK, `organization_ids` ARRAY | **Same table name** `ai-cbp-mdo-service` mirrors read-only, minus most columns |
-| `roles` | `src/models/role.py` | `role_id` PK, `role_name` unique, `permissions` JSONB | |
-| `user_sessions` | `src/models/user_session.py` | `id` PK, `user_id` FK (cascade), `access_token_jti`/`refresh_token_jti` unique | Login-session records for `cbp-ai-service`; `ai-cbp-mdo-service` has no equivalent table |
-| `designation_embeddings` | `src/models/designation_embedding.py` | `id` (String PK, iGOT designation id), `designation`, `content`, **`embedding` `Vector(768)`** | Populated **offline only**, by `scripts/ingest_designation_embeddings.py` — not by the live app |
-| `role_mappings` | `src/models/role_mapping.py` | `id` PK, `user_id`, `state_center_id`, `department_id`, `designation_name`, `role_responsibilities`/`activities`/`competencies` JSONB, `status` (`ProcessingStatus`), `igot_designation_name`/`igot_designation_id`, `sort_order` | Cascades to recommendations, CBP plans, suggestions, user-added courses. **No SQLAlchemy model exists for this table in `ai-cbp-mdo-service`** — that service only ever reads it via raw `sqlalchemy.text()` SQL, confirming `cbp-ai-service` is its sole owner |
-| `recommended_courses` | `src/models/course_recommendation.py` | `id` PK, `role_mapping_id` FK (cascade), `status` (`RecommendationStatus`), `vector_query` text, **`embedding` JSONB** (not pgvector — audit only), `actual_courses`/`filtered_courses` JSONB | |
-| `suggested_courses` | `src/models/course_suggestion.py` | `id` PK, `role_mapping_id` FK (cascade), `course_identifiers` JSONB | Plain iGOT-searched list, no scoring |
-| `cbp_plans` | `src/models/cbp_plan.py` | `id` PK, `role_mapping_id` FK (cascade), `recommended_course_id` FK (SET NULL), `selected_courses` JSONB | **No status/lifecycle column at all** — its data is copied wholesale into `approval_request_items.cbp_plan_data` at submission time (see below), and *that* copy is what `ai-cbp-mdo-service` actually mutates |
-| `user_added_courses` | `src/models/user_added_course.py` | `id` PK, `role_mapping_id` FK (cascade), `identifier` unique, `name`, `platform`, `public_link`, `relevancy`, `competencies` JSONB | |
-| `designation_approvals` | `src/models/designation_approval.py` | `id` PK, `rolemapping_id` FK, `user_id`, `designation_name`, `status` (plain `String(20)`), `actioned_by` | **The same table `ai-cbp-mdo-service` owns and writes to** — `actioned_by` is added here but never written by any code path in *this* repo; it's `ai-cbp-mdo-service`'s approve/reject endpoints that populate it |
-| `approval_requests` | `src/models/approval_request.py` | `id` PK, `user_id` FK (cascade), `mdo_id`, `designation_count`, `status` (native Postgres `Enum(ApprovalStatus, name="approval_status_enum")`), `published_by` | `items` relationship, cascade + selectin. **Also mirrored (`extend_existing=True`) by `ai-cbp-mdo-service`**, which reads and updates `status`/`published_by`/`rejected_at`/`revoked_at`/`updated_at`/`reviewer_comments` on it |
-| `approval_request_items` | `src/models/approval_request.py` | `id` PK, `approval_request_id` FK (cascade), `source_role_mapping_id`, `designation_name`, `role_responsibilities`/`activities`/`competencies` JSONB, `cbp_plan_data` JSON, `status` (native `Enum(..., name="approval_request_item_status_enum")`) | A **frozen snapshot** of a role mapping + its CBP plan at submission time, not a live reference. **Also mirrored by `ai-cbp-mdo-service`**, which is the only code path anywhere that actually writes a non-`PENDING` value to this `status` column |
-| `documents` | `src/models/document.py` | `file_id` PK, `state_center_id`, `department_id`, `uploader_id`, `stored_path`, `document_type`, `summary_status`, `summary_text`/`summary_error` | |
-| `meta_summaries` | `src/models/meta_summary.py` | `id` PK, `request_id` unique, `file_ids` JSONB, `status`, `summary_text` | |
-| `state_center_data` | `src/models/state_center_data.py` | `id` PK, `state_center_id`, `department_id`, `acbp_plan_summary`, `work_allocation_order_summary`, `status` | Legacy, feeds v1 role-mapping generation only |
+### 1.1 Login & Authentication
 
-**Two more pgvector-backed tables exist but have no SQLAlchemy model** —
-they're populated and queried entirely via raw `sqlalchemy.text()` SQL, and
-are **not** created by `Base.metadata.create_all`:
+Validate credentials and establish an authenticated session.
 
-- `public.course_metadata_weightage` — created by
-  `scripts/course_embedding_pipeline.py`; columns include
-  `keywords_embedding`, `description_embedding`, `combined_embedding`
-  (`vector(N)`, `N = EMBEDDING_OUTPUT_DIMENSIONALITY`, default 1536),
-  `competencies_v6`, `duration`, `organisation`. This is the primary
-  course-recommendation search table (`src/crud/course_recommendation.py:212-360`).
-- `public.course_metadata_v3` — legacy, single `embedding` column, queried
-  only as a fallback path that is not actually called from
-  `process_recommendation_task` (`src/crud/course_recommendation.py:304-315`).
+![Validation flow for Login & Authentication](images/lld-01-login-authentication.jpg)
 
-## Storage reality — `ai-cbp-mdo-service`
+**Decision points**
 
-**Postgres, async (SQLAlchemy 2.0 + `asyncpg`)**, `pool_size=20,
-max_overflow=40, pool_timeout=30, pool_recycle=1800`
-(`src/core/database.py:40-47`), `async_sessionmaker(autoflush=False,
-expire_on_commit=False)`.
+1. Credentials entered?
+2. JWT valid?
 
-| Table | Model | Key columns | Notes |
-|---|---|---|---|
-| `approval_requests` | `src/models/mdo_approval.py:14-82` (`ApprovalRequestRead`) | Same columns as `cbp-ai-service`'s model — `mdo_id`, `status`, `published_by`, `rejected_at`, `revoked_at`, `reviewer_comments`, plus `items`/`user` relationships | `extend_existing=True` — documented in its own docstring as a **read/partial-write mirror** of a table this service does not own |
-| `approval_request_items` | `src/models/mdo_approval.py:85-149` (`ApprovalRequestItemRead`) | Same base columns as `cbp-ai-service`'s model, plus this service writes `status`, `cbp_plan_data`, `igot_designation_name`, `igot_designation_id`, `reviewer_comments`, `rejected_at`, and role-mapping fields | Also `extend_existing=True` |
-| `mdo_approval` | `src/models/mdo_approval.py:152-183` | `id` PK, `approval_request_id` FK (cascade), `approval_request_item_id` FK (cascade), `plan_name`, `due_date`, `igot_cbp_plan_id` (nullable — set only on a successful publish), `created_at` (nullable — set only alongside `igot_cbp_plan_id`) | **Fully owned by this service.** One row per (request, item) publish attempt; `igot_cbp_plan_id IS NULL` marks a failed attempt eligible for retry |
-| `designation_approvals` | `src/models/designation_approval.py:18-52` | `id` PK, `user_id` FK (SET NULL), `rolemapping_id` FK (SET NULL, **no local model** — same table `cbp-ai-service` owns), `designation_name`, `wing_division_section`, `status` (plain `String(20)`, default `PENDING`), `reviewer_comments`, `actioned_by`, timestamps | **Fully owned by this service** — unlike the two tables above, this one is not documented as a mirror, even though `cbp-ai-service` also has a model pointed at a table of the same name |
-| `users` | `src/models/user.py:8-16` | `user_id` PK, `username`, `email` unique | A **minimal** mirror (3 columns) of the same `users` table `cbp-ai-service` owns; never written to, only joined for email lookups |
+**Validation checklist**
 
-`role_mappings` is referenced (by `state_center_name`/`department_name`
-ILIKE search and by id) **only via raw SQL** in
-`crud/designation_approval.py:45-61,106-108` — there is no ORM model for it
-in this repo, confirming `cbp-ai-service` is its sole owner even from this
-service's perspective.
+- Required fields present
+- Credentials valid
+- Account active
+- JWT signature / expiry valid
+
+**API calls**
+
+- `POST /v1/auth/login`
+- `POST /v1/auth/refresh`
+- `POST /v1/auth/logout`
+- `GET /v1/users/me`
+
+### 1.2 Select Ministry / Department
+
+Resolve organisation context before document management.
+
+![Validation flow for Select Ministry / Department](images/lld-02-select-ministry-department.jpg)
+
+**Decision points**
+
+1. Centre or State selected?
+2. State required?
+3. Department selected?
+
+**Validation checklist**
+
+- Organisation type is valid
+- State required only for State
+- Department belongs to selected organisation
+- User is authorised for organisation
+
+**API calls**
+
+- `GET /v1/state-center/`
+- `GET /v1/department/state-center/{state_center_id}`
+
+### 1.3 Manage Documents
+
+Upload official, searchable PDFs and track AI summary status.
+
+![Validation flow for Manage Documents](images/lld-03-manage-documents.jpg)
+
+**Decision points**
+
+1. PDF valid and searchable?
+2. Within 25 MB and ≤10 files?
+3. Work Allocation Order?
+
+**Validation checklist**
+
+- PDF only; text-searchable
+- Each file <25 MB
+- Maximum 10 PDFs
+- Official/public; no confidential content
+- Work Allocation Order flagged mandatory
+
+**API calls**
+
+- `POST /v1/files`
+- `GET /v1/files`
+- `GET /v1/files/{file_id}`
+- `POST /v1/files/{file_id}/summary`
+- `GET /v1/files/{file_id}/download`
+- `PATCH /v1/files/document-type`
+- `DELETE /v1/files/{file_id}`
+
+### 1.4 Generate Initial CBP
+
+Extract designations, match master roles and build draft CBP.
+
+![Validation flow for Generate Initial CBP](images/lld-04-generate-initial-cbp.jpg)
+
+**Decision points**
+
+1. Work Allocation Order uploaded?
+2. Existing CBP found?
+3. Master match found?
+
+**Validation checklist**
+
+- Mandatory Work Allocation Order exists
+- Confirm overwrite before regeneration
+- Persist matched and unmatched rows
+- KCM mapping result is traceable
+
+**API calls**
+
+- `POST /v3/role-mapping/generate`
+- `POST /v1/role-mapping/search`
+- `POST /v1/role-mapping/match-designations`
+
+### 1.5 Manage Unmatched Role Mapping
+
+Manually resolve unmatched designation records.
+
+![Validation flow for Manage Unmatched Role Mapping](images/lld-05-manage-unmatched-role-mapping.jpg)
+
+**Decision points**
+
+1. Designation chosen from master?
+
+**Validation checklist**
+
+- Master designation exists
+- Mapping belongs to current CBP
+- Prevent duplicate mapping
+- Update matched/unmatched status transactionally
+
+**API calls**
+
+- `POST /v1/role-mapping/search`
+- `PUT /v1/role-mapping/{role_mapping_id}`
+- `POST /v1/role-mapping/match-designations`
+- `POST /v1/kb/designation/search`
+
+### 1.6 Request New Designation
+
+Send designation to SPV Admin for approval.
+
+![Validation flow for Request New Designation](images/lld-06-request-new-designation.jpg)
+
+**Decision points**
+
+1. Already in master?
+2. SPV decision: approve?
+
+**Validation checklist**
+
+- Reject duplicate request if master already contains designation
+- Only authorised SPV Admin can decide
+- Rejection reason required
+- Audit decision + notify requester
+
+**API calls**
+
+- `POST /v1/designation-approval/create`
+- `GET /v1/designation-approval/search`
+
+### 1.7 Manage Designation Hierarchy
+
+Update the organisation's designation hierarchy.
+
+![Validation flow for Manage Designation Hierarchy](images/lld-07-manage-designation-hierarchy.jpg)
+
+**Decision points**
+
+1. Hierarchy values valid?
+2. Conflict detected?
+
+**Validation checklist**
+
+- Parent-child links valid
+- No circular hierarchy
+- User authorised to edit
+- Handle concurrent updates
+
+**API calls**
+
+- `GET /v1/role-mapping/reorder/list`
+- `PUT /v1/role-mapping/reorder`
+
+### 1.8 Add Designations from Master
+
+Add missing designations and create role mappings.
+
+![Validation flow for Add Designations from Master](images/lld-08-add-designations-from-master.jpg)
+
+**Decision points**
+
+1. Designation in master?
+2. Role/responsibility details valid?
+
+**Validation checklist**
+
+- Selected designation must exist in master
+- Required role/responsibility fields present
+- No duplicate designation in same CBP
+
+**API calls**
+
+- `POST /v1/kb/designation/search`
+- `POST /v2/role-mapping/add-designation`
+- `POST /v1/role-mapping/search`
+
+### 1.9 Edit CBP
+
+Edit roles and competencies with KCM validation.
+
+![Validation flow for Edit CBP](images/lld-09-edit-cbp.jpg)
+
+**Decision points**
+
+1. Required fields valid?
+2. Competencies align with KCM?
+
+**Validation checklist**
+
+- Validate designations, responsibilities, wings/divisions
+- Competency IDs exist in KCM
+- Record editor and update timestamp
+
+**API calls**
+
+- `GET /v1/role-mapping/{role_mapping_id}`
+- `PUT /v1/role-mapping/{role_mapping_id}`
+- `DELETE /v1/role-mapping/{role_mapping_id}`
+
+### 1.10 Course Recommendations
+
+Generate AI recommendations and allow manual course curation.
+
+![Validation flow for Course Recommendations](images/lld-10-course-recommendations.jpg)
+
+**Decision points**
+
+1. Role mapping + competencies saved?
+2. Course selected and valid?
+
+**Validation checklist**
+
+- Mapping and competency gaps exist
+- Course IDs exist in catalogue
+- Apply filters safely
+- User confirms selected courses before save
+
+**API calls**
+
+- `POST /v1/course-recommendations/generate`
+- `GET /v1/course-recommendations`
+- `POST /v1/course/suggestions`
+- `POST /v1/course/suggestions/save`
+- `POST /v1/user-added-courses`
+- `POST /v1/cbp-plan/save`
+
+### 1.11 Send Role Mappings for Approval
+
+Submit eligible mappings and lock them while pending.
+
+![Validation flow for Send Role Mappings for Approval](images/lld-11-send-role-mappings-for-approval.jpg)
+
+**Decision points**
+
+1. Courses saved for every mapping?
+2. Reviewer + request name provided?
+
+**Validation checklist**
+
+- At least one mapping selected
+- Each selected mapping has saved courses
+- Reviewer and request name required
+- Atomic submission + lock; status Pending Approval
+
+**API calls**
+
+- `POST /v1/approval-requests/mdo-admins`
+- `POST /v1/approval-requests/send`
+
+### 1.12 Track / Revoke Approval Requests
+
+View request status and revoke only pending requests.
+
+![Validation flow for Track / Revoke Approval Requests](images/lld-12-track-revoke-approval-requests.jpg)
+
+**Decision points**
+
+1. Request accessible to user?
+2. Status still Pending?
+
+**Validation checklist**
+
+- Requester or authorised reviewer only
+- Revoke only while pending
+- Unlock mappings after successful revoke
+- Status transitions audited
+
+**API calls**
+
+- `GET /v1/approval-requests/list`
+- `GET /v1/approval-requests/{request_id}`
+- `POST /v1/approval-requests/revoke`
+
+### 1.13 View / Download Course List
+
+Review course recommendations and export PDF.
+
+![Validation flow for View / Download Course List](images/lld-13-view-download-course-list.jpg)
+
+**Decision points**
+
+1. Course belongs to this mapping?
+2. Delete unwanted course?
+
+**Validation checklist**
+
+- Prevent deleting courses outside mapping
+- Confirm destructive action
+- Export reflects saved course list
+
+**API calls**
+
+- `GET /v1/reports/course-recommendations/download`
+- `DELETE /v1/course-recommendations/{role_mapping_id}/course/{course_id}`
+
+### 1.14 Download Combined CBP + Courses
+
+Join final role mappings and course recommendations.
+
+![Validation flow for Download Combined CBP + Courses](images/lld-14-download-combined-cbp-courses.jpg)
+
+**Decision points**
+
+1. CBP finalisable?
+
+**Validation checklist**
+
+- Required role mappings reviewed
+- Unmatched designations clearly flagged
+- Export format allowlisted
+
+**API calls**
+
+- `GET /v1/reports/cbp-plan/download`
+- `GET /v1/reports/acbp-plan/download`
+
+### 1.15 Download in Multiple Languages
+
+Produce a language-specific final export.
+
+![Validation flow for Download in Multiple Languages](images/lld-15-download-in-multiple-languages.jpg)
+
+**Decision points**
+
+1. Language supported?
+2. Translation complete?
+
+**Validation checklist**
+
+- Locale on supported allowlist
+- Preserve designation IDs and competency meaning
+- Do not silently omit untranslated content
+
+**API calls**
+
+- `GET /v1/reports/cbp-plan/download?language={code}`
+- `GET /v1/reports/acbp-plan/download?language={code}`
+
+### 1.16 Finalize & Download CBP
+
+Download official artefacts after review.
+
+![Validation flow for Finalize & Download CBP](images/lld-16-finalize-download-cbp.jpg)
+
+**Decision points**
+
+1. Competent Authority cleared?
+2. Files generated successfully?
+
+**Validation checklist**
+
+- Authority sign-off recorded according to policy
+- Both exports correspond to same CBP version
+- Secure download links expire
+
+**API calls**
+
+- `GET /v1/reports/cbp-plan/download`
+- `GET /v1/reports/acbp-plan/download`
+- `GET /v1/reports/course-recommendations/download`
+
+### 1.17 MDO Review Role Mapping Requests
+
+Approve and publish mappings, or reject with a reason.
+
+![Validation flow for MDO Review Role Mapping Requests](images/lld-17-mdo-review-role-mapping-requests.jpg)
+
+**Decision points**
+
+1. Request pending and accessible?
+2. Approve or Reject?
+3. Approve: plan + target date set?
+
+**Validation checklist**
+
+- Only authorised MDO Admin/Leader
+- Approve requires Training Plan and Target Completion Date
+- Reject requires reason
+- Audit and email requester
+
+**API calls**
+
+- `GET /v1/mdo/approval-requests/list`
+- `GET /v1/mdo/approval-requests/read/{request_id}`
+- `POST /v1/mdo/approval-requests/publish`
+- `POST /v1/mdo/approval-requests/publish/retry`
+- `POST /v1/mdo/approval-requests/reject`
+- `POST /v1/mdo/approval-requests/items/reject`
+- `PUT /v1/mdo/approval-requests/items/update`
+- `POST /v1/mdo/approval-requests/course/add`
+- `POST /v1/mdo/approval-requests/course/remove`
+
+### 1.18 SPV Approve New Designation
+
+Approve or reject designation-master change requests.
+
+![Validation flow for SPV Approve New Designation](images/lld-18-spv-approve-new-designation.jpg)
+
+**Decision points**
+
+1. Request pending?
+2. Approve or Reject?
+
+**Validation checklist**
+
+- Only SPV Admin can decide
+- Reject requires reason
+- Approval adds designation to master and remaps eligible row
+- Log reviewer + timestamp; email requester
+
+**API calls**
+
+- `GET /v1/designation/approval-requests/list`
+- `POST /v1/designation/approval-requests/approve`
+- `POST /v1/designation/approval-requests/reject`
+
+## 2. Data design
+
+### 2.1 CBP-AI Service tables
+
+PostgreSQL with the pgvector extension. Two course-search tables built by an offline embedding pipeline sit alongside the application tables.
+
+| Table | Key columns | Notes |
+|---|---|---|
+| `users` | `user_id` PK, `username` and `email` unique, `role_id` FK, `organization_ids` | The approval service mirrors a minimal read-only view of it |
+| `roles` | `role_id` PK, `role_name` unique, `permissions` JSONB | |
+| `user_sessions` | `id` PK, `user_id` FK, access and refresh token identifiers | Login-session records |
+| `designation_embeddings` | `id` (the iGOT designation id), `designation`, `content`, `embedding` vector | Populated offline by an ingestion script; read by designation matching |
+| `role_mappings` | `id` PK, `user_id`, `state_center_id`, `department_id`, `designation_name`, `role_responsibilities`, `activities` and `competencies` JSONB, `status`, `igot_designation_name` and `igot_designation_id`, `sort_order` | Parent of recommendations, plans, suggestions and user-added courses (cascade) |
+| `recommended_courses` | `id` PK, `role_mapping_id` FK, `status`, `vector_query`, `embedding` JSONB, `actual_courses` and `filtered_courses` JSONB | One record per role mapping; `filtered_courses` is the scored list |
+| `suggested_courses` | `id` PK, `role_mapping_id` FK, `course_identifiers` JSONB | Courses found through iGOT search, unscored |
+| `user_added_courses` | `id` PK, `role_mapping_id` FK, `identifier` unique, `name`, `platform`, `public_link`, `relevancy`, `competencies` JSONB | Manually entered external courses |
+| `cbp_plans` | `id` PK, `role_mapping_id` FK, `recommended_course_id` FK, `selected_courses` JSONB | The merged plan; copied into the approval items at submission |
+| `documents` | `file_id` PK, `state_center_id`, `department_id`, `uploader_id`, `stored_path`, `document_type`, `summary_status`, `summary_text`, `summary_error` | Uploaded PDFs and their summaries |
+| `meta_summaries` | `id` PK, `request_id` unique, `file_ids` JSONB, `status`, `summary_text` | Cross-document summaries |
+| `state_center_data` | `id` PK, `state_center_id`, `department_id`, `acbp_plan_summary`, `work_allocation_order_summary`, `status` | Older document source, used by v1 role-mapping generation |
+| `designation_approvals` | `id` PK, `rolemapping_id` FK, `user_id`, `designation_name`, `wing_division_section`, `status`, `actioned_by` | The same table the approval service updates when an SPV Admin decides |
+| `approval_requests` | `id` PK, `user_id` FK, `mdo_id`, `designation_count`, `status` (enum), `published_by` | The approval service mirrors this table and updates its status columns |
+| `approval_request_items` | `id` PK, `approval_request_id` FK, `source_role_mapping_id`, `designation_name`, `role_responsibilities`, `activities` and `competencies` JSONB, `cbp_plan_data` JSON, `status` (enum) | A frozen snapshot of a role mapping and its plan at submission time |
+| `course_metadata_weightage` | keyword, description and combined embedding vectors, `competencies_v6`, `duration`, `organisation` | The primary course-recommendation search table |
+
+### 2.2 Approval service tables
+
+| Table | Key columns | Notes |
+|---|---|---|
+| `approval_requests` | As above, plus `rejected_at`, `revoked_at`, `reviewer_comments` | Shared table, declared in the approval service as a mirror |
+| `approval_request_items` | As above, plus `igot_designation_name`, `igot_designation_id`, `reviewer_comments`, `rejected_at` | Shared table; the approval service writes the item `status` |
+| `mdo_approval` | `id` PK, `approval_request_id` FK, `approval_request_item_id` FK, `plan_name`, `due_date`, `igot_cbp_plan_id`, `created_at` | Owned by the approval service. One row per publish attempt per item; `igot_cbp_plan_id` is set when the publish succeeds |
+| `designation_approvals` | `id` PK, `user_id` FK, `rolemapping_id` FK, `designation_name`, `wing_division_section`, `status`, `reviewer_comments`, `actioned_by`, timestamps | Owned by the approval service |
+| `users` | `user_id` PK, `username`, `email` | A three-column view used for email lookups |
+
+### 2.3 How the records relate
 
 ```mermaid
 flowchart TB
-    RM["role_mappings row (cbp-ai-service) - id, status, designation_name, igot_designation_id, competencies JSONB"]
-    RC["recommended_courses (cbp-ai-service) - one per role_mapping"]
-    SC["suggested_courses (cbp-ai-service)"]
-    UAC["user_added_courses (cbp-ai-service)"]
-    CBPP["cbp_plans (cbp-ai-service) - selected_courses JSONB = union of the three sources above"]
-    AReq["approval_requests - written by cbp-ai-service AR.py, read+updated by ai-cbp-mdo-service"]
-    ARI["approval_request_items - written by cbp-ai-service (frozen snapshot), read+updated by ai-cbp-mdo-service"]
-    MdoRow["mdo_approval (ai-cbp-mdo-service only) - one row per publish attempt per item"]
-    DesigApp["designation_approvals - row created by cbp-ai-service, status/actioned_by written by ai-cbp-mdo-service"]
+    RM["role_mappings"]
+    RC["recommended_courses"]
+    SC["suggested_courses"]
+    UAC["user_added_courses"]
+    CBPP["cbp_plans - selected_courses merges the three sources"]
+    AReq["approval_requests"]
+    ARI["approval_request_items - frozen snapshot"]
+    MdoRow["mdo_approval - one row per publish attempt"]
+    DesigApp["designation_approvals"]
 
-    RM -->|FK cascade| RC
-    RM -->|FK cascade| SC
-    RM -->|FK cascade| UAC
+    RM -->|cascade| RC
+    RM -->|cascade| SC
+    RM -->|cascade| UAC
     RC -.->|read at save time| CBPP
     SC -.->|read at save time| CBPP
     UAC -.->|read at save time| CBPP
-    RM -.->|snapshotted, not FK'd live| ARI
-    CBPP -.->|snapshotted, not FK'd live| ARI
-    AReq -->|FK cascade| ARI
-    ARI -->|referenced, not FK'd across services| MdoRow
-    RM -.->|raw SQL join only, no FK| DesigApp
+    RM -.->|snapshotted at submit| ARI
+    CBPP -.->|snapshotted at submit| ARI
+    AReq -->|cascade| ARI
+    ARI -.->|referenced by| MdoRow
+    RM -.->|looked up by| DesigApp
 ```
 
-Dashed arrows are resolved by application code at a point in time (save, or
-submit-for-approval), not maintained as a live relationship. The
-`AReq`/`ARI` rows are the one place two *different services'* SQLAlchemy
-metadata both describe the same physical table — there is no database-level
-mechanism (no FK from `mdo_approval` back into `cbp-ai-service`'s schema,
-no shared migration) keeping the two models' understanding of that table in
-sync; they simply happen to agree today.
+Solid lines are database relationships. Dashed lines are resolved by application code at one point in time, when a plan is saved or a request is submitted, and are not kept as live links.
 
-## Sequence: role mapping generation (v3, the current three-pass pipeline)
+## 3. Sequence flows
+
+### 3.1 Role mapping generation (v3)
 
 ```mermaid
 flowchart TD
-    Start(["POST /v3/role-mapping/generate"]) --> Placeholder["Create IN_PROGRESS placeholder row (locks scope)"]
-    Placeholder --> BG["Background task: generate_role_mapping (v3)"]
-    BG --> Pass1["PASS 1: extract designation hierarchy - Gemini Flash, Work Allocation Order summaries only, structured output (DesignationExtractionResponse)"]
-    Pass1 --> Pass2["PASS 2: generate FRAC competencies per designation batch, in parallel (asyncio.gather) - Gemini Pro, all document summaries, structured output (FRACBatchResponse)"]
-    Pass2 --> Pass3["PASS 3: reconcile Behavioral/Functional competencies against data/withidentifier_competencies.json by competency_id or (type,theme,sub_theme) - Domain competencies pass through unchanged"]
-    Pass3 --> Persist["Persist: update placeholder with first result, insert remaining as new role_mappings rows, status=COMPLETED"]
-    Persist --> AutoMatch["Auto-run designation matching for every new, unmatched designation (fire-and-forget, failures logged not fatal)"]
-    Pass1 -->|exception| Fail["status=FAILED, error_message set (propagates to outer handler - no inner swallow, unlike v1/v2)"]
-    Pass2 -->|exception| Fail
-    Pass3 -->|exception| Fail
+    Start(["Generate role mappings"]) --> Placeholder["Create an in-progress placeholder row for the scope"]
+    Placeholder --> BG["Background task starts"]
+    BG --> Pass1["Pass 1: extract the designation hierarchy from Work Allocation Order summaries"]
+    Pass1 --> Pass2["Pass 2: generate competencies per designation batch, in parallel"]
+    Pass2 --> Pass3["Pass 3: reconcile Behavioural and Functional competencies against the KCM catalogue"]
+    Pass3 --> Persist["Save the first result into the placeholder and the rest as new rows, status completed"]
+    Persist --> AutoMatch["Match every new designation to the iGOT master in the background"]
+    Pass1 -->|error| Fail["Status failed, error recorded"]
+    Pass2 -->|error| Fail
+    Pass3 -->|error| Fail
 ```
 
-v1 and v2 use a single Gemini call each (no PASS 1/2/3 split), swallow
-exceptions inside the background task itself (setting `FAILED` with a
-generic message rather than the real error), and auto-retry a prior
-`FAILED` state instead of returning it as-is. `cbp-ai-ui`'s shipped client
-calls this v3 endpoint for generation (`generateRoleMapping()`,
-`shared.service.ts:298-361`).
+Domain competencies pass through the reconcile pass unchanged. Versions v1 and v2 use a single generation call instead of the three passes and retry a failed scope automatically on the next generate call. The shipped UI generates with v3.
 
-## Sequence: designation matching
+### 3.2 Designation matching
 
 ```mermaid
 flowchart TD
-    Start(["match(designation_names)"]) --> Exact["match_exact(): proxy to iGOT /api/designation/search, case-insensitive name lookup - NOT a local DB query"]
-    Exact --> Remaining{"Names not exact-matched?"}
-    Remaining -- none --> Done["Return merged results"]
-    Remaining -- some --> Embed["_get_embeddings(): Redis cache lookup (cbp_desig_emb:*) first, batch-miss calls Gemini gemini-embedding-2, cached back with no TTL"]
-    Embed --> Query["Per name: SELECT id, designation, 1 - (embedding <=> vec) AS similarity_score FROM designation_embeddings ORDER BY embedding <=> vec LIMIT 1"]
-    Query --> Threshold{"similarity_score >= DESIGNATION_SIMILARITY_THRESHOLD? (config default 0.93, docs say 0.92)"}
-    Threshold -- yes --> Matched["Accepted as a semantic match"]
-    Threshold -- no --> Unmatched["Left unmatched - no error, name simply absent from result set"]
+    Start(["Match designation names"]) --> Exact["Exact match through the iGOT designation search, case-insensitive"]
+    Exact --> Remaining{"Names left unmatched?"}
+    Remaining -- no --> Done["Return the merged results"]
+    Remaining -- yes --> Embed["Embed the names with Gemini, using the Redis cache first"]
+    Embed --> Query["Find the nearest designation in pgvector by cosine similarity"]
+    Query --> Threshold{"Similarity above the threshold?"}
+    Threshold -- yes --> Matched["Accept as a semantic match"]
+    Threshold -- no --> Unmatched["Leave unmatched for the author"]
     Matched --> Done
     Unmatched --> Done
 ```
 
-`designation_embeddings` is populated entirely offline
-(`scripts/ingest_designation_embeddings.py`), indexed with an HNSW index
-(`vector_cosine_ops`, `m=16, ef_construction=64`) — the live app only
-reads it.
+The designation embeddings are loaded offline and indexed for nearest-neighbour search; the live service only reads them.
 
-## Sequence: course recommendation background task
+### 3.3 Course recommendation
 
 ```mermaid
 flowchart TD
-    Start(["process_recommendation_task(role_mapping_id)"]) --> Ctx["Build user_profile text from role mapping fields"]
-    Ctx --> Q1["Gemini Pro: generate_contextual_queries -> keyword/description/combined queries + search_keywords"]
-    Q1 --> Q2["Build functional/behavioral competency queries (zero-cost, mechanical from stored competencies JSONB)"]
-    Q2 --> Embed["Embed all 5 queries in parallel (asyncio.gather)"]
-    Embed --> Search["4 DB searches in parallel: hybrid weighted vector (0.4/0.2/0.4), keyword search, functional-typed, behavioral-typed"]
-    Search --> Merge["Merge/dedupe candidates - keyword bonus up to +0.15, functional/behavioral-typed bonus flat +0.10"]
-    Merge --> Meta["Fetch full metadata for all candidates, build LLM prompt with Own-Org flag per course"]
-    Meta --> LLM["Gemini Pro: get_filtered_courses_by_llm - relevancy 0-100 per course + rationale"]
-    LLM --> Filter["Keep only relevancy >= COURSE_RECOMMENDATION_MIN_RELEVANCY (80), sort desc"]
-    Filter --> Persist["Persist filtered_courses, status=COMPLETED"]
-    Q1 -->|exception anywhere| FailC["status=FAILED, error_message set"]
+    Start(["Generate recommendations"]) --> Ctx["Build a profile from the role mapping"]
+    Ctx --> Q1["Gemini writes keyword, description and combined search queries"]
+    Q1 --> Q2["Competency queries are built from the stored Functional and Behavioural competencies"]
+    Q2 --> Embed["Embed the queries in parallel"]
+    Embed --> Search["Run the vector, keyword and competency-typed searches in parallel"]
+    Search --> Merge["Merge and de-duplicate the candidates"]
+    Merge --> Meta["Fetch each candidate's metadata, flagging the author's own organisation"]
+    Meta --> LLM["Gemini scores each course 0 to 100 with a rationale"]
+    LLM --> Filter["Keep courses above the relevancy floor, highest first"]
+    Filter --> Persist["Save the filtered list, status completed"]
+    Q1 -->|error| FailC["Status failed, error recorded"]
 ```
 
-`get_general_courses_from_gemini` (a Google-Search-tool-based general course
-fetch) is called in parallel with the LLM filter step but is currently
-disabled in code (`return []` immediately) — flagged in its own inline
-comment as temporary. The designation-group-based Domain/Behavioral/
-Functional mix ratio (AB vs. CD groups) is computed as a rule in code but
-the classification call feeding it is commented out, so it is currently
-unused (`designation_group` is hardcoded `None`).
-
-## Sequence: CBP Plan save (the three-pool merge)
+### 3.4 CBP plan save
 
 ```mermaid
 flowchart TD
-    Start(["POST /cbp-plan/save {role_mapping_id, course_identifiers[]}"]) --> Val["Validate role mapping exists + belongs to caller"]
-    Val --> Rec["Require an existing RecommendedCourse for this role mapping (404 'generate recommendations first' if none)"]
-    Rec --> Match["Match each requested identifier against recommendation.filtered_courses (dict by identifier)"]
-    Match --> Left{"Any identifier not found there?"}
-    Left -- yes --> IGOT["iGOT content/v1/search for do_*-style ids -> tag relevancy = DEFAULT_RELEVANCY_SCORE (90)"]
-    Left -- yes --> UAC["crud_user_added_course lookup for the rest"]
+    Start(["Save plan with the chosen course identifiers"]) --> Val["Check the role mapping exists and belongs to the caller"]
+    Val --> Rec["Require an existing recommendation for the role mapping"]
+    Rec --> Match["Match each identifier against the recommended courses"]
+    Match --> Left{"Any identifier not found?"}
+    Left -- yes --> IGOT["Look it up through iGOT content search and set the default relevancy"]
+    Left -- yes --> UAC["Look up the user-added courses"]
     IGOT --> Concat
     UAC --> Concat
-    Left -- no --> Concat["Concatenate: recommendation matches + iGOT/suggestion matches + user-added matches"]
-    Concat --> Save["Persist as a brand-new cbp_plans row (save creates - a separate PUT updates in place)"]
+    Left -- no --> Concat["Combine the matches from the three sources"]
+    Concat --> Save["Save as a new plan row; a separate update call changes an existing plan"]
 ```
 
-## Sequence: send for approval (`cbp-ai-service`)
+### 3.5 Send for approval
 
 ```mermaid
 flowchart TD
-    Start(["POST /approval-requests/send"]) --> Gate1["All target role mappings: owned by caller, status=COMPLETED"]
-    Gate1 --> Gate2["All target role mappings have a saved CBP plan (404 otherwise)"]
-    Gate2 --> Snap["Snapshot each role mapping + its cbp_plans into one ApprovalRequestItem (frozen copy, not a live reference)"]
-    Snap --> Create["Create ApprovalRequest, status=PENDING"]
-    Create --> Email["Background task: email the assigned mdo_id a review-portal deep link"]
-    Email --> Wait["Row now sits in the shared approval_requests/approval_request_items tables, waiting for ai-cbp-mdo-service to act on it"]
+    Start(["Send for approval"]) --> Gate1["Role mappings are the caller's and completed"]
+    Gate1 --> Gate2["Every role mapping has a saved CBP plan"]
+    Gate2 --> Snap["Snapshot each role mapping and its plan into one approval item"]
+    Snap --> Create["Create the approval request, status pending"]
+    Create --> Email["Email the assigned MDO Admin or Leader a review link in the background"]
+    Email --> Wait["The request waits in the shared approval tables for the approval service"]
 ```
 
-## Sequence: MDO publish (`ai-cbp-mdo-service`) — the other half of the chain above
+### 3.6 MDO publish (approval service)
 
 ```mermaid
 flowchart TD
-    Start(["POST /v1/mdo/approval-requests/publish {request_id, plan_name, due_date}"]) --> Lock["Row-lock the request: SELECT ... FOR UPDATE WHERE id=request_id AND mdo_id=caller, status=PENDING (404 otherwise)"]
-    Lock --> OrgId["org_id = department_id if present else state_center_id"]
-    OrgId --> Loop["For every item still status=PENDING (skip already approved/rejected/failed)"]
-    Loop --> Extract["extract_content_ids(item.cbp_plan_data): pull selected_courses[].identifier"]
-    Extract --> HasIds{"Any content ids found?"}
-    HasIds -- no --> LocalFail["Mark item result = failed, 'No CBP Plan found for this item.' - no iGOT call made"]
-    HasIds -- yes --> Create["POST KB_BASE_URL/api/cbplan/v2/create - orgIdList, contentList, contentType=Course, planType='AI CBP-Non APAR', accessControl by designation+rootOrgId"]
-    Create --> Publish["POST KB_BASE_URL/api/cbplan/v2/publish {id: plan_id, comment}"]
-    Publish -->|success| ItemOk["Mark item result = success, capture igot_cbp_plan_id"]
-    Create -->|HTTP/network error or missing result.id| ItemFail["Mark item result = failed - caught, not fatal to the request"]
-    Publish -->|HTTP/network error| ItemFail
+    Start(["Publish with plan name and due date"]) --> Lock["Lock the request: it must belong to the caller and be pending"]
+    Lock --> Loop["For every item still pending"]
+    Loop --> Extract["Read the course identifiers from the item's plan data"]
+    Extract --> HasIds{"Any course found?"}
+    HasIds -- no --> LocalFail["Item fails locally, no iGOT call"]
+    HasIds -- yes --> Create["Create the plan in iGOT"]
+    Create --> Publish["Publish the plan in iGOT"]
+    Publish -->|success| ItemOk["Item succeeds, iGOT plan id kept"]
+    Create -->|error| ItemFail["Item fails, the others continue"]
+    Publish -->|error| ItemFail
     LocalFail --> Tally
     ItemOk --> Tally
     ItemFail --> Tally
-    Tally{"At least one item succeeded?"}
-    Tally -- "none eligible at all" --> Err400["400: No items in PENDING status to publish"]
-    Tally -- "all eligible items failed" --> Err502["502: All items failed to publish - request stays PENDING, nothing persisted"]
-    Tally -- "at least one succeeded" --> Persist["persist_approval_per_item: request.status=APPROVED, published_by=mdo_id - per item: insert mdo_approval audit row + set item.status=APPROVED or FAILED"]
-    Persist --> Email["Background task: email the original requester (via mirrored users table) the outcome"]
+    Tally{"Outcome"}
+    Tally -- "no pending items" --> Err400["400: nothing to publish"]
+    Tally -- "every item failed" --> Err502["502: request stays pending, nothing saved"]
+    Tally -- "at least one succeeded" --> Persist["Request approved, one audit row and one item status per item"]
+    Persist --> Email["Email the requester the outcome in the background"]
 ```
 
-## Sequence: SPV designation approval (`ai-cbp-mdo-service`) — order of operations matters
+### 3.7 SPV designation approval (approval service)
 
 ```mermaid
 flowchart TD
-    Start(["POST /v1/designation/approval-requests/approve {id}"]) --> Get["get_pending(id): must exist and be status=PENDING, else 404"]
-    Get --> IGOTCall["POST KB_BASE_URL/api/designation/create {designation, description=''}"]
-    IGOTCall -->|"errmsg == 'Already Present'"| AlreadyOk["Treated as SUCCESS - already_present=True, no designation_id"]
-    IGOTCall -->|other error| Fail502["502 - DB record left untouched, still PENDING"]
-    IGOTCall -->|success| NewId["designation_id = result.id"]
+    Start(["Approve a designation request"]) --> Get["The request must exist and be pending"]
+    Get --> IGOTCall["Create the designation in the iGOT master"]
+    IGOTCall -->|already present| AlreadyOk["Treated as success, no new id"]
+    IGOTCall -->|other error| Fail502["502: the request stays pending, unchanged"]
+    IGOTCall -->|success| NewId["New designation id received"]
     AlreadyOk --> DbWrite
-    NewId --> DbWrite["ONLY NOW: row-locked update - status=APPROVED, actioned_by=approver_id"]
-    DbWrite --> Email["Background task: email the original requester (fresh DB session, re-fetches user relationship)"]
+    NewId --> DbWrite["Only now: mark approved and record the approver"]
+    DbWrite --> Email["Email the requester in the background"]
 ```
 
-iGOT is called **before** the database is touched, and a failure leaves the
-record exactly as it was — this is the inverse order from the MDO publish
-flow above, where DB persistence happens once, after every item's iGOT
-outcome (success or failure) is already known.
+The SPV flow calls iGOT first and writes to the database only afterwards, while the MDO publish writes once, after every item's iGOT outcome is known.
 
-## State machines
+## 4. State machines
 
-**`RoleMapping.status`** (`ProcessingStatus`,
-`cbp-ai-service:src/models/role_mapping.py:13-17`):
+**Role mapping status**
 
 ```mermaid
 stateDiagram-v2
     [*] --> PENDING
-    PENDING --> IN_PROGRESS: placeholder created on /generate
-    IN_PROGRESS --> COMPLETED: AI generation succeeds
-    IN_PROGRESS --> FAILED: AI generation throws (v3) or is swallowed internally (v1/v2)
-    FAILED --> IN_PROGRESS: v1/v2 auto-retry on next /generate call
-    FAILED --> FAILED: v3 does NOT auto-retry - returned as-is
+    PENDING --> IN_PROGRESS: placeholder created on generate
+    IN_PROGRESS --> COMPLETED: generation succeeds
+    IN_PROGRESS --> FAILED: generation fails
+    FAILED --> IN_PROGRESS: generate again
 ```
 
-**`RecommendedCourse.status`** (`RecommendationStatus`,
-`cbp-ai-service`) — same PENDING → IN_PROGRESS → COMPLETED/FAILED shape, no
-auto-retry logic found for this one; a `FAILED`/`IN_PROGRESS` record is
-returned as-is by `GET /course-recommendations`, and must be explicitly
-deleted before regenerating.
+Recommendation status follows the same shape (pending, in progress, completed or failed); a failed or in-progress record is returned as it is and is deleted before regenerating.
 
-**`ApprovalRequest.status`** (`ApprovalStatus`: `DRAFT, PENDING, APPROVED,
-REJECTED` — `cbp-ai-service:src/schemas/comman.py:14-19`, mirrored by
-`ai-cbp-mdo-service:src/schemas/comman.py:4-17`). **Corrected from the
-single-repo trace**: `cbp-ai-service`'s own live API never performs the
-`PENDING → APPROVED`/`REJECTED` transitions, but `ai-cbp-mdo-service`'s does
-— against the identical Postgres row:
+**Approval request status** (`DRAFT`, `PENDING`, `APPROVED`, `REJECTED`): the CBP-AI Service creates and revokes the request, and the approval service decides it, against the same database row.
 
 ```mermaid
 stateDiagram-v2
-    [*] --> PENDING: cbp-ai-service /approval-requests/send creates it directly as PENDING
-    PENDING --> DRAFT: cbp-ai-service /approval-requests/revoke (cbp-ai-service only - ai-cbp-mdo-service never reads or writes revoked_at)
-    PENDING --> APPROVED: ai-cbp-mdo-service /v1/mdo/approval-requests/publish, as soon as >= 1 item succeeds
-    PENDING --> REJECTED: ai-cbp-mdo-service /v1/mdo/approval-requests/reject, or every item individually rejected via items/reject
+    [*] --> PENDING: created by send for approval
+    PENDING --> DRAFT: revoked by the author
+    PENDING --> APPROVED: publish, as soon as one item succeeds
+    PENDING --> REJECTED: rejected, or every item rejected one by one
 ```
 
-`ai-cbp-mdo-service`'s live API is also the only place that ever sets
-`ApprovalRequestItem.status` to `APPROVED`, `REJECTED`, or `FAILED` — the
-`cbp-ai-service`-only trace's claim that "nothing in this repo's live API
-ever marks one APPROVED or REJECTED" is correct as written (about that one
-repo) but was previously read as if the transition didn't exist anywhere.
-It does; it's just owned by a different service.
-
-The offline `bulk_scripts/bulk_training_plan_approval.py` in `cbp-ai-service`
-independently sets these same enum values by writing directly to the shared
-database — a **third** code path (alongside `ai-cbp-mdo-service`'s live API)
-that can transition this row, targeting a different downstream publish
-service (`CB_EXT_COURSE_SERVICE_URL`, not `ai-cbp-mdo-service`'s
-`KB_BASE_URL`) whose relationship to `ai-cbp-mdo-service`'s target is
-unconfirmed. The script's own comments additionally note the **actual
-Postgres enum it targets has no `FAILED` value** in at least one deployment
-it was written against — not independently re-verified against
-`ai-cbp-mdo-service`'s or `cbp-ai-service`'s current enum definitions,
-which both do include values beyond `DRAFT/PENDING/APPROVED/REJECTED`
-(`ApprovalItemStatus` adds `FAILED`).
-
-**`ApprovalRequestItem.status`** (`ApprovalItemStatus`: `PENDING, APPROVED,
-REJECTED, FAILED`):
+**Approval request item status** (`PENDING`, `APPROVED`, `REJECTED`, `FAILED`):
 
 ```mermaid
 stateDiagram-v2
-    [*] --> PENDING: created as part of the frozen snapshot on send
-    PENDING --> APPROVED: ai-cbp-mdo-service publish, this item's iGOT create+publish succeeded
-    PENDING --> FAILED: ai-cbp-mdo-service publish, this item's iGOT call failed or no CBP plan data existed
-    FAILED --> APPROVED: ai-cbp-mdo-service publish/retry, using the stored mdo_approval row's plan_name/due_date
-    PENDING --> REJECTED: ai-cbp-mdo-service items/reject (single item), or reject (whole request)
+    [*] --> PENDING: created in the snapshot on send
+    PENDING --> APPROVED: iGOT create and publish succeed
+    PENDING --> FAILED: iGOT call fails or no plan data
+    FAILED --> APPROVED: publish retry
+    PENDING --> REJECTED: item rejected, or whole request rejected
 ```
 
-**`DesignationApproval.status`** (plain string,
-`pending`/`approved`/`rejected` per
-`cbp-ai-service:src/models/designation_approval.py:12-15` and
-`ai-cbp-mdo-service:src/models/designation_approval.py:12-15`, same table).
-**Corrected from the single-repo trace**: `cbp-ai-service`'s own code never
-assigns `approved`/`rejected` and never writes `actioned_by` — true, but
-`ai-cbp-mdo-service`'s approve/reject endpoints do exactly that, against the
-same row:
+**Designation approval status** (`pending`, `approved`, `rejected`): the CBP-AI Service creates the request and the approval service decides it.
 
 ```mermaid
 stateDiagram-v2
-    [*] --> pending: cbp-ai-service /designation-approval/create
-    pending --> approved: ai-cbp-mdo-service /v1/designation/approval-requests/approve (only after iGOT designation-create succeeds or reports Already Present)
-    pending --> rejected: ai-cbp-mdo-service /v1/designation/approval-requests/reject
+    [*] --> pending: created by designation-approval create
+    pending --> approved: SPV Admin approves after the iGOT create succeeds
+    pending --> rejected: SPV Admin rejects
 ```
 
-## Validation reality
+## 5. Rules enforced by the services
 
-| Rule | Enforced | Where |
-|---|---|---|
-| Course identifiers required (non-empty) on CBP plan save | Backend | `cbp-ai-service:src/api/v1/cbp_plan.py:97-101` |
-| Recommendation must exist before CBP plan creation | Backend | `cbp-ai-service:src/api/v1/cbp_plan.py:104-110` |
-| Role mappings must be `COMPLETED` + have a CBP plan before sending for approval | Backend | `cbp-ai-service:src/api/v1/approval_requests.py:77,103-109` |
-| Revoke only allowed from `PENDING` | Backend (route + CRUD `WHERE` both) | `cbp-ai-service:src/api/v1/approval_requests.py:368-373`, `src/crud/approval_request.py:156,165` |
-| Publish/reject only allowed on a request the caller's `mdo_id` owns, and only while `PENDING` | Backend, row-locked (`SELECT ... FOR UPDATE`) | `ai-cbp-mdo-service:crud/mdo_approval_request.py:157-175` |
-| Item edit (`items/update`) requires the *item itself* to be `PENDING` | Backend | `ai-cbp-mdo-service:crud/mdo_approval_request.py:636-638` |
-| Course add/remove on an item requires only the *parent request* to be `PENDING` — **not** the item's own status | Backend, asymmetric vs. the rule above | `ai-cbp-mdo-service:crud/mdo_approval_request.py:447-593` |
-| SPV designation approval DB write only happens after the iGOT create call succeeds (or reports "Already Present") | Backend | `ai-cbp-mdo-service:controller/designation_approval.py:69-108` |
-| Designation-approval creation blocked once a role mapping has an iGOT match | Backend | `cbp-ai-service:src/api/v1/designation_approval.py:52-57` |
-| Duplicate designation-approval request | Backend, keyed on `(rolemapping_id, user_id, designation_name, wing_division_section)` excluding `REJECTED` | `cbp-ai-service:src/crud/designation_approval.py:13-32` |
-| Designation similarity threshold | Backend, but the effective value is ambiguous — config default `0.93` vs. documented `0.92` | `cbp-ai-service:src/core/configs.py:35` vs. `.env.example:26` |
-| PDF-only, ≤10 files, ≤50MB each | Backend | `cbp-ai-service:src/api/v1/document_routes.py:78-103` |
-| Meta-summary requires all input documents already `COMPLETED` | **Not actually enforced as a hard precondition — silently fails instead** (see missing-`await` bug) | `cbp-ai-service:src/api/v1/meta_summary_routes.py:47,49` |
-| `cbp_plans` schema/shape | **Not enforced** — `selected_courses` is unvalidated JSONB, merged from three differently-shaped sources | `cbp-ai-service:src/models/cbp_plan.py` |
-| `cbp_plan_data` schema/shape on `approval_request_items` | **Not enforced across the service boundary** — `ai-cbp-mdo-service` reads/mutates this JSON with its own assumptions about its shape (`records[0]`, `selected_courses[].identifier`), with no shared schema definition between the two repos | `ai-cbp-mdo-service:crud/mdo_approval_request.py:410-593` |
+| Rule | Service |
+|---|---|
+| Course identifiers are required when saving a CBP plan | `cbp-ai-service` |
+| A recommendation must exist before a CBP plan is created | `cbp-ai-service` |
+| Role mappings must be completed and have a saved CBP plan before they are sent for approval | `cbp-ai-service` |
+| A request can be revoked only while pending | `cbp-ai-service` |
+| Publish and reject act only on a pending request owned by the caller's `mdo_id`, under a row lock | `ai-cbp-mdo-service` |
+| Editing an item needs the item to be pending; adding or removing a course needs the parent request to be pending | `ai-cbp-mdo-service` |
+| An SPV approval is saved only after the iGOT create succeeds or reports the designation already present | `ai-cbp-mdo-service` |
+| A designation request is blocked once the role mapping has an iGOT match, and a duplicate request is rejected | `cbp-ai-service` |
+| Uploads are PDF only, up to 10 files, within a per-file size cap | `cbp-ai-service` |
+| A document cannot be deleted while its summary is in progress; a role mapping cannot be deleted, and the hierarchy cannot be reordered, while a mapping is in progress | `cbp-ai-service` |
 
-> **Verification boundary:** facts above are read from `cbp-ai-service`
-> (`origin/cbrelease-4.8.39`, `70d7175`) and `ai-cbp-mdo-service`
-> (`origin/cbrelease-4.8.39`, `88040de`). Not analysed from source: the
-> MDO/SPV admin's own frontend (not present in any of the three traced
-> repos — only the API it must be driving is visible), the private
-> `@sunbird-cb/cbp-ai` library behind `cbp-ai-ui`'s `/ai` route, and
-> whether `CB_EXT_COURSE_SERVICE_URL` (used only by `cbp-ai-service`'s
-> offline bulk script) is the same physical service as
-> `ai-cbp-mdo-service`'s `KB_BASE_URL`. Also unconfirmed: which enum values
-> the live `approval_status_enum`/`approval_request_item_status_enum`
-> Postgres types actually contain in a given deployed environment, versus
-> what each repo's own Python enum declares.
