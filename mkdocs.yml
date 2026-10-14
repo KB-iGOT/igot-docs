@@ -119,6 +119,16 @@ nav:
           - Operations Manual: learning-hub/ai-assessment-tool/operations-manual.md
           - As-Built Requirements: learning-hub/ai-assessment-tool/as-built-requirements.md
           - Context Diagram: learning-hub/ai-assessment-tool/context-diagram.md
+      - AI Tutor:
+          - learning-hub/ai-tutor/index.md
+          - Key Links: learning-hub/ai-tutor/key-links.md
+          - SRS: learning-hub/ai-tutor/srs.md
+          - APIs: learning-hub/ai-tutor/apis.md
+          - Context Diagrams: learning-hub/ai-tutor/context-diagram.md
+          - HLD: learning-hub/ai-tutor/hld.md
+          - LLD: learning-hub/ai-tutor/lld.md
+          - SDD: learning-hub/ai-tutor/sdd.md
+          - User Manual: learning-hub/ai-tutor/user-manual.md
   - Learning Hub:
       - learning-hub/index.md
       - Blended Program:

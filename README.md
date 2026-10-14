@@ -63,6 +63,7 @@ same six files (newer features also add an `as-built-requirements.md`):
 - [CHS](docs/learning-hub/chs/index.md) — backend batch pipeline feeding karma points, leaderboards, BI warehouse
 - [AI CBP Tool](docs/learning-hub/ai-cbp-tool/index.md) — AI-assisted competency-based program authoring
 - [AI Assessment Tool](docs/learning-hub/ai-assessment-tool/index.md) — Gemini-generated assessments from a course's PDFs/captions or KCM competency selections alone
+- [AI Tutor](docs/learning-hub/ai-tutor/index.md)
 
 These sit under the explorer's **Features** bubble (Registration is a nested
 bubble holding its three children). Their Markdown folders still live under
