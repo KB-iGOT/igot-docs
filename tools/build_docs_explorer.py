@@ -12,7 +12,7 @@ Usage (from the iGOT-Doc folder):
         [--docs docs] [--marked tools/marked.min.js] \
         [--out karmayogi-docs-explorer.html]
 """
-import argparse, json, pathlib, sys
+import argparse, base64, json, mimetypes, pathlib, re, sys
 
 def main():
     ap = argparse.ArgumentParser()
@@ -27,8 +27,28 @@ def main():
     tpl = pathlib.Path(a.template).read_text(encoding="utf-8")
     docs = pathlib.Path(a.docs)
     store = {}
+    images = {}  # repo-relative path -> data URI, one entry per image however often it is used
+    IMG_EXT = r"png|jpe?g|webp|gif|svg"
+
+    def _register(path):
+        if not path.is_file():
+            return False
+        mime = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
+        images[path.as_posix()] = "data:%s;base64,%s" % (mime, base64.b64encode(path.read_bytes()).decode("ascii"))
+        return True
+
+    def _md_images(md_path, text):
+        # markdown images are written relative to their .md file (so MkDocs and
+        # GitHub render them); rewrite them to repo-relative paths in the embedded copy
+        def sub(m):
+            target = (md_path.parent / m.group(2))
+            if m.group(2).startswith(("http:", "https:", "data:")) or not _register(target):
+                return m.group(0)
+            return m.group(1) + target.as_posix() + m.group(3)
+        return re.sub(r"(!\[[^\]]*\]\()([^)\s]+\.(?:%s))(\))" % IMG_EXT, sub, text)
+
     for p in sorted(docs.rglob("*.md")):
-        store[p.relative_to(docs).as_posix()] = p.read_text(encoding="utf-8")
+        store[p.relative_to(docs).as_posix()] = _md_images(p, p.read_text(encoding="utf-8"))
     if not store:
         sys.exit(f"no .md files found under {docs}/")
 
@@ -39,6 +59,24 @@ def main():
     if "__MD_STORE__" not in out:
         sys.exit("template is missing the __MD_STORE__ placeholder")
     out = out.replace("__MD_STORE__", payload, 1)
+
+    # images the hand-written template references as src="docs/..." share the same store
+    for m in re.finditer(r'src="(docs/[^"]+\.(?:%s))"' % IMG_EXT, out):
+        _register(pathlib.Path(m.group(1)))
+    if images:
+        img_json = json.dumps(images).replace("</", "<\\/")
+        hook = (
+            '<script id="img-store" type="application/json">' + img_json + '</script>\n'
+            '<script>(function(){var S=JSON.parse(document.getElementById("img-store").textContent);'
+            'function fix(i){var s=i.getAttribute("src");if(s&&S[s])i.src=S[s];}'
+            'function all(r){(r.querySelectorAll?r.querySelectorAll("img"):[]).forEach(fix);}'
+            'all(document);new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(function(n){'
+            'if(n.nodeType===1){if(n.tagName==="IMG")fix(n);else all(n);}});'
+            'if(m.type==="attributes")fix(m.target);});}).observe(document.documentElement,'
+            '{childList:true,subtree:true,attributes:true,attributeFilter:["src"]});})();</script>\n'
+        )
+        i = out.rfind("</body>")
+        out = out[:i] + hook + out[i:] if i != -1 else out + hook
 
     if a.mermaid:
         mm = pathlib.Path(a.mermaid).read_text(encoding="utf-8")
