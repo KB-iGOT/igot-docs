@@ -18,6 +18,7 @@ nav:
   - Platform:
       - API Gateway: platform/api-gateway.md
       - Content Lifecycle: platform/content-lifecycle.md
+      - Context Diagram: platform/context-diagram.md
   - Competency Hub:
       - competency-hub/index.md
       - Use Cases: competency-hub/use-cases.md
@@ -26,6 +27,7 @@ nav:
       - LLD: competency-hub/lld.md
       - Operations Manual: competency-hub/operations-manual.md
       - As-Built Requirements: competency-hub/as-built-requirements.md
+      - Context Diagram: competency-hub/context-diagram.md
   - Features:
       - Explore Content:
           - explore-content/index.md
@@ -34,6 +36,7 @@ nav:
           - HLD: explore-content/hld.md
           - LLD: explore-content/lld.md
           - Operations Manual: explore-content/operations-manual.md
+          - Context Diagram: explore-content/context-diagram.md
       - Registration:
           - User Registration:
               - learning-hub/user-onboarding/index.md
@@ -43,6 +46,7 @@ nav:
               - LLD: learning-hub/user-onboarding/lld.md
               - Operations Manual: learning-hub/user-onboarding/operations-manual.md
               - As-Built Requirements: learning-hub/user-onboarding/as-built-requirements.md
+              - Context Diagram: learning-hub/user-onboarding/context-diagram.md
           - SPV & Admin Registration:
               - learning-hub/spv-admin-registration/index.md
               - Use Cases: learning-hub/spv-admin-registration/use-cases.md
@@ -51,6 +55,7 @@ nav:
               - LLD: learning-hub/spv-admin-registration/lld.md
               - Operations Manual: learning-hub/spv-admin-registration/operations-manual.md
               - As-Built Requirements: learning-hub/spv-admin-registration/as-built-requirements.md
+              - Context Diagram: learning-hub/spv-admin-registration/context-diagram.md
           - Bulk Registration:
               - learning-hub/bulk-registration/index.md
               - Use Cases: learning-hub/bulk-registration/use-cases.md
@@ -59,6 +64,7 @@ nav:
               - LLD: learning-hub/bulk-registration/lld.md
               - Operations Manual: learning-hub/bulk-registration/operations-manual.md
               - As-Built Requirements: learning-hub/bulk-registration/as-built-requirements.md
+              - Context Diagram: learning-hub/bulk-registration/context-diagram.md
       - Weekly Claps:
           - learning-hub/weekly-claps/index.md
           - Use Cases: learning-hub/weekly-claps/use-cases.md
@@ -67,6 +73,7 @@ nav:
           - LLD: learning-hub/weekly-claps/lld.md
           - Operations Manual: learning-hub/weekly-claps/operations-manual.md
           - As-Built Requirements: learning-hub/weekly-claps/as-built-requirements.md
+          - Context Diagram: learning-hub/weekly-claps/context-diagram.md
       - Karma Points:
           - learning-hub/karma-points/index.md
           - Use Cases: learning-hub/karma-points/use-cases.md
@@ -83,6 +90,7 @@ nav:
           - LLD: learning-hub/training-plan/lld.md
           - Operations Manual: learning-hub/training-plan/operations-manual.md
           - As-Built Requirements: learning-hub/training-plan/as-built-requirements.md
+          - Context Diagram: learning-hub/training-plan/context-diagram.md
       - CHS:
           - learning-hub/chs/index.md
           - Use Cases: learning-hub/chs/use-cases.md
@@ -90,6 +98,7 @@ nav:
           - HLD: learning-hub/chs/hld.md
           - LLD: learning-hub/chs/lld.md
           - Operations Manual: learning-hub/chs/operations-manual.md
+          - Context Diagram: learning-hub/chs/context-diagram.md
       - AI CBP Tool:
           - learning-hub/ai-cbp-tool/index.md
           - Use Cases: learning-hub/ai-cbp-tool/use-cases.md
@@ -109,6 +118,7 @@ nav:
           - LLD: learning-hub/ai-assessment-tool/lld.md
           - Operations Manual: learning-hub/ai-assessment-tool/operations-manual.md
           - As-Built Requirements: learning-hub/ai-assessment-tool/as-built-requirements.md
+          - Context Diagram: learning-hub/ai-assessment-tool/context-diagram.md
   - Learning Hub:
       - learning-hub/index.md
       - Blended Program:
@@ -119,6 +129,7 @@ nav:
           - LLD: learning-hub/blended-program/lld.md
           - Operations Manual: learning-hub/blended-program/operations-manual.md
           - As-Built Requirements: learning-hub/blended-program/as-built-requirements.md
+          - Context Diagram: learning-hub/blended-program/context-diagram.md
       - Course:
           - learning-hub/course/index.md
           - Use Cases: learning-hub/course/use-cases.md
@@ -126,6 +137,7 @@ nav:
           - HLD: learning-hub/course/hld.md
           - LLD: learning-hub/course/lld.md
           - Operations Manual: learning-hub/course/operations-manual.md
+          - Context Diagram: learning-hub/course/context-diagram.md
       - Curated Program:
           - learning-hub/curated-program/index.md
           - Use Cases: learning-hub/curated-program/use-cases.md
@@ -133,6 +145,7 @@ nav:
           - HLD: learning-hub/curated-program/hld.md
           - LLD: learning-hub/curated-program/lld.md
           - Operations Manual: learning-hub/curated-program/operations-manual.md
+          - Context Diagram: learning-hub/curated-program/context-diagram.md
       - My Assigned Courses:
           - learning-hub/my-assigned-courses/index.md
           - Use Cases: learning-hub/my-assigned-courses/use-cases.md
@@ -140,6 +153,7 @@ nav:
           - HLD: learning-hub/my-assigned-courses/hld.md
           - LLD: learning-hub/my-assigned-courses/lld.md
           - Operations Manual: learning-hub/my-assigned-courses/operations-manual.md
+          - Context Diagram: learning-hub/my-assigned-courses/context-diagram.md
       - Standalone Assessment:
           - learning-hub/standalone-assessment/index.md
           - Use Cases: learning-hub/standalone-assessment/use-cases.md
@@ -147,6 +161,7 @@ nav:
           - HLD: learning-hub/standalone-assessment/hld.md
           - LLD: learning-hub/standalone-assessment/lld.md
           - Operations Manual: learning-hub/standalone-assessment/operations-manual.md
+          - Context Diagram: learning-hub/standalone-assessment/context-diagram.md
       - Comprehensive Assessment Program:
           - learning-hub/comprehensive-assessment-program/index.md
           - Use Cases: learning-hub/comprehensive-assessment-program/use-cases.md
@@ -154,6 +169,7 @@ nav:
           - HLD: learning-hub/comprehensive-assessment-program/hld.md
           - LLD: learning-hub/comprehensive-assessment-program/lld.md
           - Operations Manual: learning-hub/comprehensive-assessment-program/operations-manual.md
+          - Context Diagram: learning-hub/comprehensive-assessment-program/context-diagram.md
       - Learning Pathway:
           - learning-hub/learning-pathway/index.md
           - Use Cases: learning-hub/learning-pathway/use-cases.md
@@ -161,6 +177,7 @@ nav:
           - HLD: learning-hub/learning-pathway/hld.md
           - LLD: learning-hub/learning-pathway/lld.md
           - Operations Manual: learning-hub/learning-pathway/operations-manual.md
+          - Context Diagram: learning-hub/learning-pathway/context-diagram.md
       - Bharat Kalp:
           - learning-hub/bharat-kalp/index.md
           - Use Cases: learning-hub/bharat-kalp/use-cases.md
@@ -169,6 +186,7 @@ nav:
           - LLD: learning-hub/bharat-kalp/lld.md
           - Operations Manual: learning-hub/bharat-kalp/operations-manual.md
           - As-Built Requirements: learning-hub/bharat-kalp/as-built-requirements.md
+          - Context Diagram: learning-hub/bharat-kalp/context-diagram.md
       - Peer Validation:
           - learning-hub/peer-validation/index.md
           - Use Cases: learning-hub/peer-validation/use-cases.md
@@ -176,6 +194,7 @@ nav:
           - HLD: learning-hub/peer-validation/hld.md
           - LLD: learning-hub/peer-validation/lld.md
           - Operations Manual: learning-hub/peer-validation/operations-manual.md
+          - Context Diagram: learning-hub/peer-validation/context-diagram.md
       - Unenrollment of Courses:
           - learning-hub/unenrollment-of-courses/index.md
           - Use Cases: learning-hub/unenrollment-of-courses/use-cases.md
@@ -184,6 +203,7 @@ nav:
           - LLD: learning-hub/unenrollment-of-courses/lld.md
           - Operations Manual: learning-hub/unenrollment-of-courses/operations-manual.md
           - As-Built Requirements: learning-hub/unenrollment-of-courses/as-built-requirements.md
+          - Context Diagram: learning-hub/unenrollment-of-courses/context-diagram.md
       - Marketplace:
           - learning-hub/marketplace/index.md
           - Use Cases: learning-hub/marketplace/use-cases.md
@@ -192,6 +212,7 @@ nav:
           - LLD: learning-hub/marketplace/lld.md
           - Operations Manual: learning-hub/marketplace/operations-manual.md
           - As-Built Requirements: learning-hub/marketplace/as-built-requirements.md
+          - Context Diagram: learning-hub/marketplace/context-diagram.md
       - Search:
           - learning-hub/search/index.md
           - Use Cases: learning-hub/search/use-cases.md
@@ -200,6 +221,7 @@ nav:
           - LLD: learning-hub/search/lld.md
           - Operations Manual: learning-hub/search/operations-manual.md
           - As-Built Requirements: learning-hub/search/as-built-requirements.md
+          - Context Diagram: learning-hub/search/context-diagram.md
       - Moderated Content:
           - learning-hub/moderated-content/index.md
           - Use Cases: learning-hub/moderated-content/use-cases.md
@@ -208,6 +230,7 @@ nav:
           - LLD: learning-hub/moderated-content/lld.md
           - Operations Manual: learning-hub/moderated-content/operations-manual.md
           - As-Built Requirements: learning-hub/moderated-content/as-built-requirements.md
+          - Context Diagram: learning-hub/moderated-content/context-diagram.md
   - Event Hub:
       - learning-hub/events-hub/index.md
       - Use Cases: learning-hub/events-hub/use-cases.md
@@ -216,6 +239,7 @@ nav:
       - LLD: learning-hub/events-hub/lld.md
       - Operations Manual: learning-hub/events-hub/operations-manual.md
       - As-Built Requirements: learning-hub/events-hub/as-built-requirements.md
+      - Context Diagram: learning-hub/events-hub/context-diagram.md
   - Discussion Hub:
       - learning-hub/discussion-hub/index.md
       - Use Cases: learning-hub/discussion-hub/use-cases.md
@@ -224,6 +248,7 @@ nav:
       - LLD: learning-hub/discussion-hub/lld.md
       - Operations Manual: learning-hub/discussion-hub/operations-manual.md
       - As-Built Requirements: learning-hub/discussion-hub/as-built-requirements.md
+      - Context Diagram: learning-hub/discussion-hub/context-diagram.md
   - Amrit Gyaan Kosh:
       - learning-hub/amrit-gyaan-kosh/index.md
       - Use Cases: learning-hub/amrit-gyaan-kosh/use-cases.md
@@ -232,3 +257,4 @@ nav:
       - LLD: learning-hub/amrit-gyaan-kosh/lld.md
       - Operations Manual: learning-hub/amrit-gyaan-kosh/operations-manual.md
       - As-Built Requirements: learning-hub/amrit-gyaan-kosh/as-built-requirements.md
+      - Context Diagram: learning-hub/amrit-gyaan-kosh/context-diagram.md

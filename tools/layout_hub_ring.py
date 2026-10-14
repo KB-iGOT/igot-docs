@@ -64,19 +64,19 @@ TEMPLATE = Path(__file__).resolve().parent.parent / "karmayogi-docs-explorer.tem
 # i/N * 360 degrees) -- appending at the end keeps the *relative* order
 # of everything else the same, even though the ring itself regrows.
 FEATURES = [
-    ("bharatkalp",     "Bharat Kalp",                       128, 14,   ""),
-    ("blended",        "Blended Program",                   136, None, 'id="blended"'),
-    ("assigned",       "My Assigned Courses",               136, 13.5, ""),
-    ("standalone",     "Standalone Assessment",             136, 13.5, "assess"),
-    ("peervalidation", "Peer Validation",                   132, 14,   ""),
-    ("cap",            "Comprehensive Assessment Program",  136, 13,   "assess"),
-    ("pathway",        "Learning Pathway",                  128, 14,   ""),
-    ("course",         "Course",                            130, 15,   ""),
-    ("search",         "Search",                             128, 15,   ""),
-    ("curated",        "Curated Program",                   132, None, ""),
-    ("marketplace",    "Marketplace",                        128, 14,   ""),
-    ("unenroll",       "Unenrollment of Courses",            132, 12,   ""),
-    ("moderatedcontent", "Moderated Content",                 95, 13,   ""),
+    ("bharatkalp",      "Bharat Kalp",                         124, 13.5, ""),
+    ("blended",         "Blended Program",                     124, 13.5, 'id="blended"'),
+    ("assigned",        "My Assigned Courses",                 124, 13.5, ""),
+    ("standalone",      "Standalone Assessment",               124, 13.5, "assess"),
+    ("peervalidation",  "Peer Validation",                     124, 13.5, ""),
+    ("cap",             "Comprehensive Assessment Program",    124, 12.5, "assess"),
+    ("pathway",         "Learning Pathway",                    124, 13.5, ""),
+    ("course",          "Course",                              124, 13.5, ""),
+    ("search",          "Search",                              124, 13.5, ""),
+    ("curated",         "Curated Program",                     124, 13.5, ""),
+    ("marketplace",     "Marketplace",                         124, 13.5, ""),
+    ("unenroll",        "Unenrollment of Courses",             124, 12.5, ""),
+    ("moderatedcontent","Moderated Content",                   124, 13.5, ""),
 ]
 
 # ─── Geometry constants ──────────────────────────────────────────────
@@ -263,12 +263,13 @@ SIMPLE_DEFAULT_R = 310                                  # the original pentagon'
 #   (leaf_count is shown as the sub-hub bubble's "N features" caption)
 SIMPLE_RINGS = {
     "features": dict(
-        title="Features", icon=BOOK_ICON, r=300,   # 7 bubbles: 310 would push the bottom pair past SAFE_Y
+        title="Features", icon=BOOK_ICON, r=276,   # 8 bubbles: the one straight down must clear SAFE_Y (505+r+66 <= 848)
         landing_re=re.compile(r'(Features<span class="sub">)\d+( features</span>)'),
         items=[
             ("feature", "explore",          "Explore Content",         132, 15,   1),
             ("subhub",  "v-registration",   "Registration",            138, None, 3),
             ("feature", "weeklyclaps",      "Weekly Claps",            132, 13,   1),
+            ("feature", "karmapoints",      "Karma Points",            132, 14,   1),
             ("feature", "trainingplan",     "Training Plan",           132, 14,   1),
             ("feature", "chs",              "CHS",                     132, 14,   1),
             ("feature", "aicbp",            "AI CBP Tool",             132, 14,   1),

@@ -38,11 +38,26 @@
   .wordmark b em { font-style: normal; color: #EF951E; }
   .wordmark span { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #767E8C; }
   .search {
-    margin-left: auto; display: flex; align-items: center; gap: 10px;
+    position: relative; margin-left: auto; display: flex; align-items: center; gap: 10px;
     background: #FFFFFF; border: 1px solid #00000014; border-radius: 99px;
     padding: 9px 18px; width: 300px; color: #767E8C; font-size: 13px;
-    box-shadow: 0 1px 3px #1b214312;
+    box-shadow: 0 1px 3px #1b214312; cursor: text;
   }
+  .search:focus-within { border-color: #1B4CA1; box-shadow: 0 0 0 3px #1B4CA122; }
+  .search-input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 13px; color: #1F2430; }
+  .search-input::placeholder { color: #767E8C; }
+  .search-input::-webkit-search-cancel-button { -webkit-appearance: none; }
+  .search-results {
+    position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 20;
+    background: #FFFFFF; border: 1px solid #00000014; border-radius: 14px;
+    box-shadow: 0 14px 40px -14px #1b214355; padding: 6px; max-height: 360px; overflow: auto; cursor: default;
+  }
+  .search-results .sr { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 9px; cursor: pointer; font-size: 13px; color: #1F2430; }
+  .search-results .sr:hover, .search-results .sr.active { background: #E8EEF9; }
+  .search-results .sr b { font-weight: 700; }
+  .search-results .sr .kind { margin-left: auto; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #767E8C; }
+  .search-results .sr .kind.hub { color: #1B4CA1; }
+  .search-results .none { padding: 10px 12px; font-size: 12.5px; color: #767E8C; }
   .backpill {
     position: absolute; top: 84px; left: 32px; z-index: 6;
     display: flex; align-items: center; gap: 8px;
@@ -71,9 +86,16 @@
   .bub .sub { font-size: 10.5px; font-weight: 700; color: #767E8C; letter-spacing: .06em; margin-top: 3px; }
 
   .bub.center {
-    background: #1B4CA1; color: #FFFFFF; cursor: default;
+    background: #1B4CA1; color: #FFFFFF; cursor: pointer; text-decoration: none;
     box-shadow: 0 16px 38px -12px #1B4CA199; z-index: 3; gap: 2px;
   }
+  .bub.center:hover { filter: brightness(1.08); box-shadow: 0 20px 44px -12px #1B4CA1CC; }
+  .bub.center .arch-pill {
+    margin-top: 9px; padding: 5px 11px; border-radius: 999px;
+    background: #EF951E; color: #FFFFFF; font-size: 11px; font-weight: 900;
+    letter-spacing: .04em; white-space: nowrap; transition: background .2s;
+  }
+  .bub.center:hover .arch-pill { background: #F3AE55; }
   .bub.center .sub { color: #FFFFFFB0; text-transform: uppercase; letter-spacing: .1em; font-size: 10.5px; }
   .bub.hub {
     background: #FFFFFF; border: 3px solid #1B4CA1; color: #1B4CA1;
@@ -335,24 +357,25 @@
         <circle cx="20" cy="24" r="2.6" fill="#EF951E"/>
       </svg>
       <div class="wordmark"><b><em>Karmayogi</em> Bharat</b><span>Platform documentation</span></div>
-      <div class="search">
+      <label class="search">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
-        Search a feature&hellip;
-      </div>
+        <input type="search" class="search-input" placeholder="Search a feature&hellip;" autocomplete="off" spellcheck="false" aria-label="Search a feature">
+        <div class="search-results" hidden></div>
+      </label>
     </div>
 
-    <!-- pentagon: 4 hubs + 1 main-page feature -->
+    <!-- hexagon: 4 hubs + 2 landing features, 60° apart on the orbit -->
     <svg class="orbitbg" width="1440" height="900" fill="none">
       <line x1="720" y1="505" x2="720" y2="195" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="1015" y2="409" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="902" y2="756" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="538" y2="756" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="425" y2="409" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="1015" y2="601" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="988" y2="350" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="988" y2="660" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="720" y2="815" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="452" y2="660" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="452" y2="350" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
       <circle cx="720" cy="505" r="310" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
-    <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
+    <a class="bub center" href="igot-architecture-overview.html" title="Open the platform architecture (bird's-eye HLD)" style="left:618px; top:403px; width:204px; height:204px;">
       <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
         <path d="M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12" stroke="#F3AE55" stroke-width="2.2" stroke-linecap="round"/>
         <path d="M8 20c2 8 7 12 12 12s10-4 12-12" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"/>
@@ -360,28 +383,29 @@
       </svg>
       <div style="font-weight:900; font-size:17px; letter-spacing:-0.02em">iGOT Karmayogi</div>
       <div class="sub">4 hubs &middot; 2 features</div>
-    </div>
+      <div class="arch-pill">Architecture &#8599;</div>
+    </a>
 
     <button class="bub hub" id="learn-hub" style="left:646px; top:121px; width:148px; height:148px;" onclick="openHub(this)">
       Learning Hub<span class="sub">13 features</span>
     </button>
-    <button class="bub hub" style="left:941px; top:335px; width:148px; height:148px;" onclick="openFeature('discussionhub')">
-      Discussion Hub<span class="sub">1 feature</span>
+    <button class="bub hub" style="left:914px; top:276px; width:148px; height:148px;" onclick="openFeature('discussionhub')">
+      Discussion Hub
     </button>
-    <button class="bub hub" style="left:828px; top:682px; width:148px; height:148px;" onclick="openFeature('eventshub')">
-      Event Hub<span class="sub">1 feature</span>
+    <button class="bub hub" style="left:646px; top:741px; width:148px; height:148px;" onclick="openFeature('eventshub')">
+      Event Hub
     </button>
-    <button class="bub item" style="left:464px; top:682px; width:148px; height:148px; font-size:15px; font-weight:900; flex-direction:column; gap:3px" onclick="openFeature('competencyhub')">
-      Competency Hub<span class="sub">feature</span>
+    <button class="bub item" style="left:378px; top:586px; width:148px; height:148px; font-size:15px; font-weight:900; flex-direction:column; gap:3px" onclick="openFeature('competencyhub')">
+      Competency Hub
     </button>
-    <button class="bub hub" style="left:355px; top:339px; width:140px; height:140px; font-size:15px; font-weight:900; flex-direction:column; gap:3px" onclick="openHub(this, 'v-features')">
+    <button class="bub hub" style="left:382px; top:280px; width:140px; height:140px; font-size:15px; font-weight:900; flex-direction:column; gap:3px" onclick="openHub(this, 'v-features')">
       Features<span class="sub">10 features</span>
     </button>
-    <button class="bub item" style="left:945px; top:531px; width:140px; height:140px; font-size:14px; font-weight:900; flex-direction:column; gap:3px" onclick="openFeature('agk')">
-      Amrit Gyaan Kosh<span class="sub">feature</span>
+    <button class="bub item" style="left:918px; top:590px; width:140px; height:140px; font-size:14px; font-weight:900; flex-direction:column; gap:3px" onclick="openFeature('agk')">
+      Amrit Gyaan Kosh
     </button>
 
-    <div class="hint">Click a hub to open its features &mdash; Competency Hub, Discussion Hub, Event Hub and Amrit Gyaan Kosh open directly</div>
+    <div class="hint">Click a hub to open its features &mdash; Competency Hub, Discussion Hub, Event Hub and Amrit Gyaan Kosh open directly &middot; the centre opens the platform architecture</div>
   </section>
 
   <!-- ══════════ VIEW 2 · LEARNING HUB ══════════ -->
@@ -393,10 +417,11 @@
         <circle cx="20" cy="24" r="2.6" fill="#EF951E"/>
       </svg>
       <div class="wordmark"><b><em>Karmayogi</em> Bharat</b><span>Platform documentation</span></div>
-      <div class="search">
+      <label class="search">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
-        Search a feature&hellip;
-      </div>
+        <input type="search" class="search-input" placeholder="Search a feature&hellip;" autocomplete="off" spellcheck="false" aria-label="Search a feature">
+        <div class="search-results" hidden></div>
+      </label>
     </div>
 
     <button class="backpill" onclick="goLanding()">
@@ -408,41 +433,41 @@
          To add/remove a feature, edit the FEATURES list in that script and re-run it;
          it rewrites everything between these two markers (lines + buttons + count). -->
     <svg class="orbitbg" width="1440" height="900" fill="none">
-      <line x1="720" y1="454" x2="1043" y2="454" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="1006" y2="604" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="903" y2="720" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="759" y2="775" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="606" y2="756" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="478" y2="668" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="407" y2="532" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="407" y2="377" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="478" y2="241" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="606" y2="153" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="759" y2="134" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="903" y2="189" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="454" x2="1006" y2="305" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <circle cx="720" cy="454" r="323" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
+      <line x1="720" y1="456" x2="1043" y2="456" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="456" x2="1006" y2="606" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="456" x2="903" y2="722" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="456" x2="759" y2="777" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="456" x2="606" y2="758" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="456" x2="478" y2="670" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="456" x2="407" y2="534" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="456" x2="407" y2="379" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="456" x2="478" y2="243" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="456" x2="606" y2="155" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="456" x2="759" y2="136" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="456" x2="903" y2="191" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="456" x2="1006" y2="307" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <circle cx="720" cy="456" r="323" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
-    <div class="bub center" style="left:618px; top:352px; width:204px; height:204px;">
+    <div class="bub center" style="left:618px; top:354px; width:204px; height:204px;">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z"/><path d="M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z"/></svg>
       <div style="font-weight:900; font-size:18px; letter-spacing:-0.02em">Learning Hub</div>
       <div class="sub">13 features</div>
     </div>
 
-    <button class="bub item" style="left:979px; top:390px; width:128px; height:128px; font-size:14px" onclick="openFeature('bharatkalp')">Bharat Kalp</button>
-    <button class="bub item" id="blended" style="left:938px; top:536px; width:136px; height:136px;" onclick="openFeature('blended')">Blended Program</button>
-    <button class="bub item" style="left:835px; top:652px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('assigned')">My Assigned Courses</button>
-    <button class="bub item assess" style="left:691px; top:707px; width:136px; height:136px; font-size:13.5px" onclick="openFeature('standalone')">Standalone Assessment</button>
-    <button class="bub item" style="left:540px; top:690px; width:132px; height:132px; font-size:14px" onclick="openFeature('peervalidation')">Peer Validation</button>
-    <button class="bub item assess" style="left:410px; top:600px; width:136px; height:136px; font-size:13px" onclick="openFeature('cap')">Comprehensive Assessment Program</button>
-    <button class="bub item" style="left:343px; top:468px; width:128px; height:128px; font-size:14px" onclick="openFeature('pathway')">Learning Pathway</button>
-    <button class="bub item" style="left:342px; top:312px; width:130px; height:130px; font-size:15px" onclick="openFeature('course')">Course</button>
-    <button class="bub item" style="left:414px; top:177px; width:128px; height:128px; font-size:15px" onclick="openFeature('search')">Search</button>
-    <button class="bub item" style="left:540px; top:87px; width:132px; height:132px;" onclick="openFeature('curated')">Curated Program</button>
-    <button class="bub item" style="left:695px; top:70px; width:128px; height:128px; font-size:14px" onclick="openFeature('marketplace')">Marketplace</button>
-    <button class="bub item" style="left:837px; top:123px; width:132px; height:132px; font-size:12px" onclick="openFeature('unenroll')">Unenrollment of Courses</button>
-    <button class="bub item" style="left:958px; top:257px; width:95px; height:95px; font-size:13px" onclick="openFeature('moderatedcontent')">Moderated Content</button>
+    <button class="bub item" style="left:981px; top:394px; width:124px; height:124px; font-size:13.5px" onclick="openFeature('bharatkalp')">Bharat Kalp</button>
+    <button class="bub item" id="blended" style="left:944px; top:544px; width:124px; height:124px; font-size:13.5px" onclick="openFeature('blended')">Blended Program</button>
+    <button class="bub item" style="left:841px; top:660px; width:124px; height:124px; font-size:13.5px" onclick="openFeature('assigned')">My Assigned Courses</button>
+    <button class="bub item assess" style="left:697px; top:715px; width:124px; height:124px; font-size:13.5px" onclick="openFeature('standalone')">Standalone Assessment</button>
+    <button class="bub item" style="left:544px; top:696px; width:124px; height:124px; font-size:13.5px" onclick="openFeature('peervalidation')">Peer Validation</button>
+    <button class="bub item assess" style="left:416px; top:608px; width:124px; height:124px; font-size:12.5px" onclick="openFeature('cap')">Comprehensive Assessment Program</button>
+    <button class="bub item" style="left:345px; top:472px; width:124px; height:124px; font-size:13.5px" onclick="openFeature('pathway')">Learning Pathway</button>
+    <button class="bub item" style="left:345px; top:317px; width:124px; height:124px; font-size:13.5px" onclick="openFeature('course')">Course</button>
+    <button class="bub item" style="left:416px; top:181px; width:124px; height:124px; font-size:13.5px" onclick="openFeature('search')">Search</button>
+    <button class="bub item" style="left:544px; top:93px; width:124px; height:124px; font-size:13.5px" onclick="openFeature('curated')">Curated Program</button>
+    <button class="bub item" style="left:697px; top:74px; width:124px; height:124px; font-size:13.5px" onclick="openFeature('marketplace')">Marketplace</button>
+    <button class="bub item" style="left:841px; top:129px; width:124px; height:124px; font-size:12.5px" onclick="openFeature('unenroll')">Unenrollment of Courses</button>
+    <button class="bub item" style="left:944px; top:245px; width:124px; height:124px; font-size:13.5px" onclick="openFeature('moderatedcontent')">Moderated Content</button>
     <!-- HUB-RING:END -->
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
@@ -456,10 +481,11 @@
         <circle cx="20" cy="24" r="2.6" fill="#EF951E"/>
       </svg>
       <div class="wordmark"><b><em>Karmayogi</em> Bharat</b><span>Platform documentation</span></div>
-      <div class="search">
+      <label class="search">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
-        Search a feature&hellip;
-      </div>
+        <input type="search" class="search-input" placeholder="Search a feature&hellip;" autocomplete="off" spellcheck="false" aria-label="Search a feature">
+        <div class="search-results" hidden></div>
+      </label>
     </div>
 
     <button class="backpill" onclick="goLanding()">
@@ -469,15 +495,15 @@
 
     <!-- RING:features:BEGIN -- generated by tools/layout_hub_ring.py, do not hand-edit. Edit SIMPLE_RINGS and re-run. -->
     <svg class="orbitbg" width="1440" height="900" fill="none">
-      <line x1="720" y1="505" x2="720" y2="205" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="955" y2="318" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="1012" y2="572" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="955" y2="692" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="850" y2="775" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="590" y2="775" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="428" y2="572" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <line x1="720" y1="505" x2="485" y2="318" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
-      <circle cx="720" cy="505" r="300" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
+      <line x1="720" y1="505" x2="720" y2="229" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="915" y2="310" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="996" y2="505" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="915" y2="700" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="720" y2="781" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="525" y2="700" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="444" y2="505" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <line x1="720" y1="505" x2="525" y2="310" stroke="#1B4CA138" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <circle cx="720" cy="505" r="276" stroke="#1B4CA126" stroke-width="1.5" stroke-dasharray="5 7"/>
     </svg>
 
     <div class="bub center" style="left:618px; top:403px; width:204px; height:204px;">
@@ -486,14 +512,14 @@
       <div class="sub">10 features</div>
     </div>
 
-    <button class="bub item" style="left:654px; top:139px; width:132px; height:132px; font-size:15px;" onclick="openFeature('explore')">Explore Content</button>
-    <button class="bub hub" style="left:886px; top:249px; width:138px; height:138px; font-size:15px; flex-direction:column; gap:3px" onclick="openSubHub('v-registration')">Registration<span class="sub">3 features</span></button>
-    <button class="bub item" style="left:946px; top:506px; width:132px; height:132px; font-size:13px;" onclick="openFeature('weeklyclaps')">Weekly Claps</button>
-    <button class="bub item" style="left:895px; top:632px; width:120px; height:120px; font-size:14px;" onclick="openFeature('karmapoints')">Karma Points</button>
-    <button class="bub item" style="left:784px; top:709px; width:132px; height:132px; font-size:14px;" onclick="openFeature('trainingplan')">Training Plan</button>
-    <button class="bub item" style="left:524px; top:709px; width:132px; height:132px; font-size:14px;" onclick="openFeature('chs')">CHS</button>
-    <button class="bub item" style="left:362px; top:506px; width:132px; height:132px; font-size:14px;" onclick="openFeature('aicbp')">AI CBP Tool</button>
-    <button class="bub item" style="left:419px; top:252px; width:132px; height:132px; font-size:13px;" onclick="openFeature('aiassessment')">AI Assessment Tool</button>
+    <button class="bub item" style="left:654px; top:163px; width:132px; height:132px; font-size:15px;" onclick="openFeature('explore')">Explore Content</button>
+    <button class="bub hub" style="left:846px; top:241px; width:138px; height:138px; font-size:15px; flex-direction:column; gap:3px" onclick="openSubHub('v-registration')">Registration<span class="sub">3 features</span></button>
+    <button class="bub item" style="left:930px; top:439px; width:132px; height:132px; font-size:13px;" onclick="openFeature('weeklyclaps')">Weekly Claps</button>
+    <button class="bub item" style="left:849px; top:634px; width:132px; height:132px; font-size:14px;" onclick="openFeature('karmapoints')">Karma Points</button>
+    <button class="bub item" style="left:654px; top:715px; width:132px; height:132px; font-size:14px;" onclick="openFeature('trainingplan')">Training Plan</button>
+    <button class="bub item" style="left:459px; top:634px; width:132px; height:132px; font-size:14px;" onclick="openFeature('chs')">CHS</button>
+    <button class="bub item" style="left:378px; top:439px; width:132px; height:132px; font-size:14px;" onclick="openFeature('aicbp')">AI CBP Tool</button>
+    <button class="bub item" style="left:459px; top:244px; width:132px; height:132px; font-size:13px;" onclick="openFeature('aiassessment')">AI Assessment Tool</button>
     <!-- RING:features:END -->
 
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
@@ -508,10 +534,11 @@
         <circle cx="20" cy="24" r="2.6" fill="#EF951E"/>
       </svg>
       <div class="wordmark"><b><em>Karmayogi</em> Bharat</b><span>Platform documentation</span></div>
-      <div class="search">
+      <label class="search">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
-        Search a feature&hellip;
-      </div>
+        <input type="search" class="search-input" placeholder="Search a feature&hellip;" autocomplete="off" spellcheck="false" aria-label="Search a feature">
+        <div class="search-results" hidden></div>
+      </label>
     </div>
 
     <button class="backpill" onclick="goParentHub()">
@@ -578,6 +605,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -691,7 +719,7 @@
           </div>
           <div class="uc-card">
             <div class="who">MDO Admin</div><b class="t">UC-11 &middot; Act as MDO admin</b>
-            <p>The workflow endpoints and the gateway role list for MDO exist (<code>update/mdo</code>, <code>searchV2/mdo</code>, <code>admin/enrol</code>, <code>remove/mdo</code>), but no screen in the attached UI repos calls them. <strong>Verification boundary:</strong> the MDO-side UI, if any, is outside the attached repos.</p>
+            <p>The workflow endpoints for MDO exist (<code>update/mdo</code>, <code>searchV2/mdo</code>, <code>admin/enrol</code>, <code>remove/mdo</code>), but no screen in the attached UI repos calls them. <strong>Verification boundary:</strong> the MDO-side UI, if any, is outside the attached repos.</p>
             <div class="api">POST <code>workflow/blendedprogram/update/mdo</code> &middot; <code>admin/enrol</code></div>
           </div>
           <div class="uc-card">
@@ -756,12 +784,10 @@
           <tbody>
             <tr><td>Learner in another Blended Program with overlapping dates</td><td>The web client check only sees the program being viewed, so it never fires. The server rejects at enrol, and runs the same check on every approve / withdraw, where a hit silently becomes a <strong>REJECT</strong>. An existing batch that fully encloses the new one is not detected.</td></tr>
             <tr><td>Batch full</td><td>Requests are allowed up to size + 20%; approval and nomination are hard-capped at size. <code>currentBatchSize</code> of 0, missing or a JSON number reads as full.</td></tr>
-            <tr><td>Enrolment window</td><td>Clients hide batches after <code>enrollmentEndDate</code>; the course service&rsquo;s single-user enrol ignores it and closes at the end of the batch start date (IST).</td></tr>
             <tr><td>Batch already started</td><td>Approvals are refused ("This batch is already in progress") except <code>REJECT</code>/<code>WITHDRAW</code>; removal is refused too.</td></tr>
             <tr><td>Withdrawal after approval</td><td>Not offered by web or mobile. A withdrawn or rejected row never un-enrols.</td></tr>
-            <tr><td>Duplicate request</td><td>The workflow service has no duplicate guard on the ordinary learner enrol (admin enrol and QR do).</td></tr>
             <tr><td>Reject without a reason</td><td>Blocked in the Creation Portal; the server does not require one.</td></tr>
-            <tr><td>Attendance</td><td>No server-side role, owner or time check. Mobile adds a live-session window and a 1 km fence; a batch with no <code>latlong</code> cannot mark attendance on mobile.</td></tr>
+            <tr><td>Attendance</td><td>Mobile adds a live-session window and a 1 km fence; a batch with no <code>latlong</code> cannot mark attendance on mobile.</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -771,6 +797,7 @@
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/blended-program/apis.md"></article><div class="md-src">source: docs/learning-hub/blended-program/apis.md</div></div>
 
     <!-- HLD -->
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/blended-program/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/blended-program/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/blended-program/hld.md"></article><div class="md-src">source: docs/learning-hub/blended-program/hld.md</div></div>
 
     <!-- LLD -->
@@ -795,6 +822,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -822,6 +850,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/course/apis.md"></article><div class="md-src">source: docs/learning-hub/course/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/course/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/course/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/course/hld.md"></article><div class="md-src">source: docs/learning-hub/course/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/course/lld.md"></article><div class="md-src">source: docs/learning-hub/course/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/course/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/course/operations-manual.md</div></div>
@@ -843,6 +872,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -870,6 +900,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/curated-program/apis.md"></article><div class="md-src">source: docs/learning-hub/curated-program/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/curated-program/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/curated-program/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/curated-program/hld.md"></article><div class="md-src">source: docs/learning-hub/curated-program/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/curated-program/lld.md"></article><div class="md-src">source: docs/learning-hub/curated-program/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/curated-program/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/curated-program/operations-manual.md</div></div>
@@ -891,6 +922,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -918,6 +950,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/my-assigned-courses/apis.md"></article><div class="md-src">source: docs/learning-hub/my-assigned-courses/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/my-assigned-courses/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/my-assigned-courses/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/my-assigned-courses/hld.md"></article><div class="md-src">source: docs/learning-hub/my-assigned-courses/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/my-assigned-courses/lld.md"></article><div class="md-src">source: docs/learning-hub/my-assigned-courses/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/my-assigned-courses/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/my-assigned-courses/operations-manual.md</div></div>
@@ -939,6 +972,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -966,6 +1000,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/standalone-assessment/apis.md"></article><div class="md-src">source: docs/learning-hub/standalone-assessment/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/standalone-assessment/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/standalone-assessment/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/standalone-assessment/hld.md"></article><div class="md-src">source: docs/learning-hub/standalone-assessment/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/standalone-assessment/lld.md"></article><div class="md-src">source: docs/learning-hub/standalone-assessment/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/standalone-assessment/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/standalone-assessment/operations-manual.md</div></div>
@@ -987,6 +1022,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -1010,6 +1046,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/comprehensive-assessment-program/apis.md"></article><div class="md-src">source: docs/learning-hub/comprehensive-assessment-program/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/comprehensive-assessment-program/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/comprehensive-assessment-program/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/comprehensive-assessment-program/hld.md"></article><div class="md-src">source: docs/learning-hub/comprehensive-assessment-program/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/comprehensive-assessment-program/lld.md"></article><div class="md-src">source: docs/learning-hub/comprehensive-assessment-program/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/comprehensive-assessment-program/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/comprehensive-assessment-program/operations-manual.md</div></div>
@@ -1031,6 +1068,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -1059,6 +1097,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/learning-pathway/apis.md"></article><div class="md-src">source: docs/learning-hub/learning-pathway/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/learning-pathway/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/learning-pathway/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/learning-pathway/hld.md"></article><div class="md-src">source: docs/learning-hub/learning-pathway/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/learning-pathway/lld.md"></article><div class="md-src">source: docs/learning-hub/learning-pathway/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/learning-pathway/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/learning-pathway/operations-manual.md</div></div>
@@ -1079,6 +1118,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -1110,6 +1150,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/bharat-kalp/apis.md"></article><div class="md-src">source: docs/learning-hub/bharat-kalp/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/bharat-kalp/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/bharat-kalp/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/bharat-kalp/hld.md"></article><div class="md-src">source: docs/learning-hub/bharat-kalp/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/bharat-kalp/lld.md"></article><div class="md-src">source: docs/learning-hub/bharat-kalp/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/bharat-kalp/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/bharat-kalp/operations-manual.md</div></div>
@@ -1132,6 +1173,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -1159,6 +1201,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/peer-validation/apis.md"></article><div class="md-src">source: docs/learning-hub/peer-validation/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/peer-validation/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/peer-validation/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/peer-validation/hld.md"></article><div class="md-src">source: docs/learning-hub/peer-validation/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/peer-validation/lld.md"></article><div class="md-src">source: docs/learning-hub/peer-validation/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/peer-validation/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/peer-validation/operations-manual.md</div></div>
@@ -1180,6 +1223,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -1209,6 +1253,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/chs/apis.md"></article><div class="md-src">source: docs/learning-hub/chs/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/chs/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/chs/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/chs/hld.md"></article><div class="md-src">source: docs/learning-hub/chs/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/chs/lld.md"></article><div class="md-src">source: docs/learning-hub/chs/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/chs/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/chs/operations-manual.md</div></div>
@@ -1323,6 +1368,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -1371,6 +1417,7 @@
     </div>
     <div class="fp-body one-col tabpanel" data-panel="usecases" hidden><article class="mdwrap" data-md="learning-hub/search/use-cases.md"></article><div class="md-src">source: docs/learning-hub/search/use-cases.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/search/apis.md"></article><div class="md-src">source: docs/learning-hub/search/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/search/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/search/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/search/hld.md"></article><div class="md-src">source: docs/learning-hub/search/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/search/lld.md"></article><div class="md-src">source: docs/learning-hub/search/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/search/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/search/operations-manual.md</div></div>
@@ -1393,6 +1440,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -1451,6 +1499,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/events-hub/apis.md"></article><div class="md-src">source: docs/learning-hub/events-hub/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/events-hub/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/events-hub/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/events-hub/hld.md"></article><div class="md-src">source: docs/learning-hub/events-hub/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/events-hub/lld.md"></article><div class="md-src">source: docs/learning-hub/events-hub/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/events-hub/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/events-hub/operations-manual.md</div></div>
@@ -1473,6 +1522,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -1526,11 +1576,12 @@
           <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 &middot; Give a reason (mandatory)</b><p>At least one of five fixed reasons must be selected before "Yes, un-enroll" is enabled; comment is optional, &le;500 chars.</p><div class="api">n/a &mdash; captured client-side, sent with the call</div></div>
           <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-4 &middot; The call itself</b><p>Reasons/comments travel in the same request as the unenroll call &mdash; the backend validator/actor never reads either field.</p><div class="api">POST <code>/api/course/v2/unenroll</code></div></div>
           <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-6 &middot; "Withdraw" a pending blended-program request (web's only unenroll-labelled action)</b><p>Only offered pre-approval; disables mid-flight in a two-step MDO&#8596;PC chain &mdash; a different feature from UC-1&ndash;5, same endpoint mobile uses for its own blended withdraw.</p><div class="api">POST <code>apis/proxies/v8/workflow/blendedprogram/unenrol</code></div></div>
-          <div class="uc-card"><div class="who">Admin</div><b class="t">UC-8 &middot; Admin force-unenrolls a learner</b><p>Identical actor path, skips the requestedBy/context-derived userId step &mdash; no confirmed UI caller in any traced repo.</p><div class="api">POST <code>/v1/course/admin/unenroll</code></div></div>
+          <div class="uc-card"><div class="who">Admin</div><b class="t">UC-8 &middot; Admin force-unenrolls a learner</b><p>Admin variant of the same actor path &mdash; no confirmed UI caller in any traced repo.</p><div class="api">POST <code>/v1/course/admin/unenroll</code></div></div>
         </div>
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/unenrollment-of-courses/apis.md"></article><div class="md-src">source: docs/learning-hub/unenrollment-of-courses/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/unenrollment-of-courses/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/unenrollment-of-courses/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/unenrollment-of-courses/hld.md"></article><div class="md-src">source: docs/learning-hub/unenrollment-of-courses/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/unenrollment-of-courses/lld.md"></article><div class="md-src">source: docs/learning-hub/unenrollment-of-courses/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/unenrollment-of-courses/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/unenrollment-of-courses/operations-manual.md</div></div>
@@ -1552,6 +1603,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -1611,6 +1663,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/moderated-content/apis.md"></article><div class="md-src">source: docs/learning-hub/moderated-content/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/moderated-content/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/moderated-content/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/moderated-content/hld.md"></article><div class="md-src">source: docs/learning-hub/moderated-content/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/moderated-content/lld.md"></article><div class="md-src">source: docs/learning-hub/moderated-content/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/moderated-content/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/moderated-content/operations-manual.md</div></div>
@@ -1632,6 +1685,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -1692,6 +1746,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/user-onboarding/apis.md"></article><div class="md-src">source: docs/learning-hub/user-onboarding/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/user-onboarding/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/user-onboarding/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/user-onboarding/hld.md"></article><div class="md-src">source: docs/learning-hub/user-onboarding/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/user-onboarding/lld.md"></article><div class="md-src">source: docs/learning-hub/user-onboarding/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/user-onboarding/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/user-onboarding/operations-manual.md</div></div>
@@ -1713,6 +1768,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -1723,7 +1779,7 @@
       <div>
         <h2 class="fp-h2">What it is</h2>
         <p class="fp-p">An SPV admin opens the <strong>Directory</strong>, chooses <strong>Create new</strong>, and enters a name, a category (state, ministry or, for volunteer organisations, autonomous), a description and a logo. The organisation is created and recorded in the platform's hierarchy. Because it starts with no users, the admin then creates its first administrator from the <strong>Create user</strong> screen; from there the organisation's own admin takes over. The same directory publishes registration links and QR codes, switches volunteer organisations on and off, and the <strong>Requests</strong> screens let the admin approve or reject what others have asked for &mdash; a new organisation, a new designation, or an email domain to be trusted.</p>
-        <div class="note-banner"><strong>Honest gap:</strong> the portal shows buttons by role from configuration the repositories don't contain, Several legacy screens also call routes that nothing serves.</div>
+        <div class="note-banner"><strong>Honest gap:</strong> several legacy screens call routes that nothing serves.</div>
         <div class="fp-cards">
           <div class="fp-card"><b>A new organisation has no admin</b><p>The Add-admin picker only searches existing users of the organisation, so the first administrator has to be created, not picked.</p></div>
           <div class="fp-card"><b>Approving a request creates nothing</b><p>Approving an organisation or designation request only changes its status; approving an email domain is the one that has an effect &mdash; it lets that domain skip manual approval.</p></div>
@@ -1772,6 +1828,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/spv-admin-registration/apis.md"></article><div class="md-src">source: docs/learning-hub/spv-admin-registration/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/spv-admin-registration/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/spv-admin-registration/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/spv-admin-registration/hld.md"></article><div class="md-src">source: docs/learning-hub/spv-admin-registration/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/spv-admin-registration/lld.md"></article><div class="md-src">source: docs/learning-hub/spv-admin-registration/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/spv-admin-registration/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/spv-admin-registration/operations-manual.md</div></div>
@@ -1793,6 +1850,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -1806,7 +1864,6 @@
         <div class="note-banner"><strong>Honest gap:</strong> no single service owns "is this user enrolled in this partner course." At least three independently-implemented enrollment/entitlement code paths exist &mdash; <code>cb_external_enrollment_service</code> (the one the UI actually calls), a parallel "external course" subsystem inside <code>sunbird-course-service</code> with its own Cassandra table, and the native Course enrollment pipeline underneath &mdash; with no code path found that calls between them.</div>
         <div class="fp-cards">
           <div class="fp-card"><b>Three separate content stores</b><p><code>cb-pores-service</code> (partner master data), <code>cios-content-service</code> (ingested catalog) and <code>cb_external_enrollment_service</code> (a third local mirror) each keep their own copy of "CIOS content," with no shared code between them.</p></div>
-          <div class="fp-card"><b>Licensing fields validated but unenforced at ingest</b><p><code>courseEnrolLimit</code> and <code>requiredKarmaPoints</code> are validated and indexed by <code>cios-content-service</code> on ingest but never read by any business logic in that repo &mdash; enforcement (if any) happens elsewhere.</p></div>
         </div>
         <h2 class="fp-h2">How a Karmayogi experiences it</h2>
         <div class="fp-steps">
@@ -1851,6 +1908,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/marketplace/apis.md"></article><div class="md-src">source: docs/learning-hub/marketplace/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/marketplace/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/marketplace/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/marketplace/hld.md"></article><div class="md-src">source: docs/learning-hub/marketplace/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/marketplace/lld.md"></article><div class="md-src">source: docs/learning-hub/marketplace/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/marketplace/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/marketplace/operations-manual.md</div></div>
@@ -1872,6 +1930,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -1934,6 +1993,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/ai-assessment-tool/apis.md"></article><div class="md-src">source: docs/learning-hub/ai-assessment-tool/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/ai-assessment-tool/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/ai-assessment-tool/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/ai-assessment-tool/hld.md"></article><div class="md-src">source: docs/learning-hub/ai-assessment-tool/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/ai-assessment-tool/lld.md"></article><div class="md-src">source: docs/learning-hub/ai-assessment-tool/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/ai-assessment-tool/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/ai-assessment-tool/operations-manual.md</div></div>
@@ -1956,6 +2016,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -2017,6 +2078,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="competency-hub/apis.md"></article><div class="md-src">source: docs/competency-hub/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="competency-hub/context-diagram.md"></article><div class="md-src">source: docs/competency-hub/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="competency-hub/hld.md"></article><div class="md-src">source: docs/competency-hub/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="competency-hub/lld.md"></article><div class="md-src">source: docs/competency-hub/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="competency-hub/operations-manual.md"></article><div class="md-src">source: docs/competency-hub/operations-manual.md</div></div>
@@ -2039,6 +2101,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -2095,6 +2158,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/discussion-hub/apis.md"></article><div class="md-src">source: docs/learning-hub/discussion-hub/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/discussion-hub/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/discussion-hub/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/discussion-hub/hld.md"></article><div class="md-src">source: docs/learning-hub/discussion-hub/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/discussion-hub/lld.md"></article><div class="md-src">source: docs/learning-hub/discussion-hub/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/discussion-hub/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/discussion-hub/operations-manual.md</div></div>
@@ -2117,6 +2181,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -2168,12 +2233,13 @@
           <div class="uc-card"><div class="who">Org Admin</div><b class="t">UC-2 &middot; Bulk-create government/MDO users</b><p>OTP-gated CSV upload, &le;10&nbsp;MB, routed through <code>sunbird-cb-ext</code> to one HTTP call per row into <code>sunbird-lms-service</code>.</p><div class="api">POST <code>proxies/v8/user/v3/bulkupload</code></div></div>
           <div class="uc-card"><div class="who">Org-onboarding Admin</div><b class="t">UC-3 &middot; Bulk-create NGO/volunteer users</b><p>Same flow, gated on the org being NGO-typed; backend enforces a 10,000-row cap invisible to the UI.</p><div class="api">POST <code>proxies/v8/user/nongovt/v1/bulkupload</code></div></div>
           <div class="uc-card"><div class="who">Org Admin</div><b class="t">UC-4 &middot; Check batch status</b><p>A one-time (non-polling) refresh of batch-level total/success/failed counts &mdash; no per-row detail inline.</p><div class="api">GET <code>user/v1/bulkupload/&#123;rootOrgId&#125;</code></div></div>
-          <div class="uc-card"><div class="who">Platform/Tenant Admin</div><b class="t">UC-6 &middot; Legacy bulk registration (frozen since 2021)</b><p>Department-scoped; calls Keycloak directly, independent of <code>sunbird-cb-ext</code> and <code>sunbird-lms-service</code>.</p><div class="api">POST <code>admin/userRegistration/bulkUpload</code></div></div>
+          <div class="uc-card"><div class="who">Platform/Tenant Admin</div><b class="t">UC-6 &middot; Legacy bulk registration (frozen since 2021)</b><p>Department-scoped legacy path that calls Keycloak directly.</p><div class="api">POST <code>admin/userRegistration/bulkUpload</code></div></div>
           <div class="uc-card"><div class="who">Unverified</div><b class="t">UC-8 &middot; Native lms-service upload (no confirmed caller)</b><p>A complete, self-contained CSV pipeline exists with its own Kong route, but no UI in any of the 8 repos traced was found calling it.</p><div class="api">POST <code>v1/user/upload</code></div></div>
         </div>
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/bulk-registration/apis.md"></article><div class="md-src">source: docs/learning-hub/bulk-registration/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/bulk-registration/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/bulk-registration/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/bulk-registration/hld.md"></article><div class="md-src">source: docs/learning-hub/bulk-registration/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/bulk-registration/lld.md"></article><div class="md-src">source: docs/learning-hub/bulk-registration/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/bulk-registration/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/bulk-registration/operations-manual.md</div></div>
@@ -2188,13 +2254,14 @@
         <div>
           <div class="fp-title">Weekly Claps</div>
           <div class="fp-sub">A rolling engagement counter &mdash; a &ldquo;clap&rdquo; is earned for a week once a Karmayogi spends enough time on the platform in it &mdash; surfaced as a small stats widget rather than a page of its own, five times over, across web and mobile.</div>
-          <div class="fp-chips"><span class="chip">Route&nbsp; none of its own &mdash; embedded widget</span><span class="chip">Access&nbsp; per-surface visibility flag, no membership gate</span><span class="chip ok">&#10003; Verified from 6 repos &middot; Sept 2026</span></div>
+          <div class="fp-chips"><span class="chip">Route&nbsp; none of its own &mdash; embedded widget</span><span class="chip">Access&nbsp; per-surface visibility flag</span><span class="chip ok">&#10003; Verified from 6 repos &middot; Sept 2026</span></div>
         </div>
       </div>
       <div class="fp-tabs" role="tablist">
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -2225,6 +2292,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/weekly-claps/apis.md"></article><div class="md-src">source: docs/learning-hub/weekly-claps/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/weekly-claps/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/weekly-claps/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/weekly-claps/hld.md"></article><div class="md-src">source: docs/learning-hub/weekly-claps/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/weekly-claps/lld.md"></article><div class="md-src">source: docs/learning-hub/weekly-claps/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/weekly-claps/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/weekly-claps/operations-manual.md</div></div>
@@ -2298,6 +2366,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -2360,6 +2429,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/training-plan/apis.md"></article><div class="md-src">source: docs/learning-hub/training-plan/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/training-plan/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/training-plan/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/training-plan/hld.md"></article><div class="md-src">source: docs/learning-hub/training-plan/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/training-plan/lld.md"></article><div class="md-src">source: docs/learning-hub/training-plan/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/training-plan/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/training-plan/operations-manual.md</div></div>
@@ -2380,6 +2450,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -2439,6 +2510,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="learning-hub/amrit-gyaan-kosh/apis.md"></article><div class="md-src">source: docs/learning-hub/amrit-gyaan-kosh/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="learning-hub/amrit-gyaan-kosh/context-diagram.md"></article><div class="md-src">source: docs/learning-hub/amrit-gyaan-kosh/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="learning-hub/amrit-gyaan-kosh/hld.md"></article><div class="md-src">source: docs/learning-hub/amrit-gyaan-kosh/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="learning-hub/amrit-gyaan-kosh/lld.md"></article><div class="md-src">source: docs/learning-hub/amrit-gyaan-kosh/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="learning-hub/amrit-gyaan-kosh/operations-manual.md"></article><div class="md-src">source: docs/learning-hub/amrit-gyaan-kosh/operations-manual.md</div></div>
@@ -2461,6 +2533,7 @@
         <button class="fp-tab active" role="tab" data-tab="overview" onclick="setTab(this)">Overview</button>
         <button class="fp-tab" role="tab" data-tab="usecases" onclick="setTab(this)">Use Cases</button>
         <button class="fp-tab" role="tab" data-tab="apis" onclick="setTab(this)">APIs</button>
+        <button class="fp-tab" role="tab" data-tab="context" onclick="setTab(this)">Context</button>
         <button class="fp-tab" role="tab" data-tab="hld" onclick="setTab(this)">HLD</button>
         <button class="fp-tab" role="tab" data-tab="lld" onclick="setTab(this)">LLD</button>
         <button class="fp-tab" role="tab" data-tab="ops" onclick="setTab(this)">Operations Manual</button>
@@ -2502,6 +2575,7 @@
       </div>
     </div>
     <div class="fp-body one-col tabpanel" data-panel="apis" hidden><article class="mdwrap" data-md="explore-content/apis.md"></article><div class="md-src">source: docs/explore-content/apis.md</div></div>
+    <div class="fp-body one-col tabpanel" data-panel="context" hidden><article class="mdwrap" data-md="explore-content/context-diagram.md"></article><div class="md-src">source: docs/explore-content/context-diagram.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="hld" hidden><article class="mdwrap" data-md="explore-content/hld.md"></article><div class="md-src">source: docs/explore-content/hld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="lld" hidden><article class="mdwrap" data-md="explore-content/lld.md"></article><div class="md-src">source: docs/explore-content/lld.md</div></div>
     <div class="fp-body one-col tabpanel" data-panel="ops" hidden><article class="mdwrap" data-md="explore-content/operations-manual.md"></article><div class="md-src">source: docs/explore-content/operations-manual.md</div></div>
@@ -2826,6 +2900,53 @@
     if (e.key !== 'Enter' && e.key !== ' ') return;
     var p = e.target.closest && e.target.closest('[data-ov-open]');
     if (p) { e.preventDefault(); p.click(); }
+  });
+})();
+</script>
+
+<script>
+/* ── search: indexes every feature / hub bubble in the explorer and opens the match ── */
+(function () {
+  var items = [], seen = {};
+  function add(id, label, kind, open) { var k = kind + ':' + id; if (seen[k] || !label) return; seen[k] = 1; items.push({ id: id, label: label, kind: kind, open: open }); }
+  document.querySelectorAll('[onclick^="openFeature("]').forEach(function (b) {
+    var m = b.getAttribute('onclick').match(/openFeature\('([^']+)'\)/); if (!m) return;
+    var label = (b.cloneNode(true)); var sub = label.querySelector('.sub'); if (sub) sub.remove();
+    add(m[1], label.textContent.trim().replace(/\s+/g, ' '), 'feature', function () { window.openFeature(m[1]); });
+  });
+  document.querySelectorAll('[onclick^="openHub("]').forEach(function (b) {
+    var label = b.cloneNode(true); var sub = label.querySelector('.sub'); if (sub) sub.remove();
+    var name = label.textContent.trim().replace(/\s+/g, ' ');
+    add(name, name, 'hub', function () { if (document.getElementById('v-land').hasAttribute('data-gone')) window.goLanding(); b.click(); });
+  });
+  add('architecture', 'Platform architecture', 'page', function () { window.location.href = 'igot-architecture-overview.html'; });
+
+  document.querySelectorAll('.search').forEach(function (box) {
+    var input = box.querySelector('.search-input'), list = box.querySelector('.search-results'), active = -1, hits = [];
+    function render() {
+      var q = input.value.trim().toLowerCase();
+      if (!q) { list.hidden = true; list.innerHTML = ''; return; }
+      hits = items.filter(function (it) { return it.label.toLowerCase().indexOf(q) >= 0 || it.id.toLowerCase().indexOf(q) >= 0; }).slice(0, 12);
+      active = hits.length ? 0 : -1;
+      list.innerHTML = hits.length
+        ? hits.map(function (it, i) { return '<div class="sr' + (i === active ? ' active' : '') + '" data-i="' + i + '"><b>' + it.label.replace(/</g, '&lt;') + '</b><span class="kind ' + it.kind + '">' + it.kind + '</span></div>'; }).join('')
+        : '<div class="none">No feature or hub matches “' + input.value.replace(/</g, '&lt;') + '”</div>';
+      list.hidden = false;
+    }
+    function go(i) { if (i < 0 || !hits[i]) return; var it = hits[i]; input.value = ''; list.hidden = true; it.open(); }
+    input.addEventListener('input', render);
+    input.addEventListener('focus', render);
+    input.addEventListener('keydown', function (e) {
+      if (list.hidden) return;
+      if (e.key === 'ArrowDown') { e.preventDefault(); active = Math.min(hits.length - 1, active + 1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); active = Math.max(0, active - 1); }
+      else if (e.key === 'Enter') { e.preventDefault(); go(active); return; }
+      else if (e.key === 'Escape') { list.hidden = true; input.blur(); return; }
+      else return;
+      list.querySelectorAll('.sr').forEach(function (el, i) { el.classList.toggle('active', i === active); });
+    });
+    list.addEventListener('mousedown', function (e) { var sr = e.target.closest('.sr'); if (sr) { e.preventDefault(); go(+sr.getAttribute('data-i')); } });
+    input.addEventListener('blur', function () { setTimeout(function () { list.hidden = true; }, 120); });
   });
 })();
 </script>
