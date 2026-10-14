@@ -16,6 +16,308 @@ note to a cross-repo-verified fact. No client in any of the three repos
 calls `ai-cbp-mdo-service` directly by host or under a discoverable gateway
 prefix; its gateway path is unverified.
 
+## User guide walkthrough (steps 01 to 18)
+
+This section follows the AI CBP Tool How-to-Use Guide step by step, for a
+CBP author, an MDO Admin/Leader and an SPV Admin. The code-traced use cases
+further down (UC-1 to UC-26) are the reference for the services.
+
+### Step 01 · Log in to the platform (CBP author)
+
+**What the user does**
+
+- Open the iGOT AI CBP Tool in the browser.
+- Enter the credentials issued to the department.
+- Sign in to reach the dashboard.
+
+![The AI CBP Tool sign-in screen](images/s01-login.jpg)
+
+### Step 02 · Select ministry / department (CBP author)
+
+**What the user does**
+
+- Pick whether the organisation is Centre or State.
+- For a State, choose the State name, then the Department from the dropdown.
+- Tap **Manage Documents** to continue.
+
+![Choose Centre or State, then the ministry or department](images/s02-select-ministry.jpg)
+
+### Step 03 · Manage relevant documents (CBP author)
+
+**What the user does**
+
+- Upload the mandatory **Work Allocation Order** first; a live badge shows
+  progress.
+- Add optional supporting documents such as Annual Reports or other
+  supporting documents to improve accuracy; download the sample formats
+  before preparing files.
+- Use **Upload Document**, choose the document type, then drag and drop or
+  browse for the PDF.
+- Preview, download or delete any file from the table, and search by name or
+  type.
+- Keep to up to 10 PDFs, each under 25 MB, official, publicly available and
+  text-searchable; avoid confidential files.
+- Watch the AI summary status go Pending, In Progress, then Completed.
+
+![State and department chosen, with the Manage Documents button](images/s03-select-state-department.jpg)
+
+![The CBP Document Library with each summary status](images/s03-document-library.jpg)
+
+![Download Sample Document: the sample formats and the PDF-only, 25 MB note](images/s03-sample-documents.jpg)
+
+![The Upload Document dialog with the confidentiality disclaimer](images/s03-upload-document.jpg)
+
+### Step 04 · Generate CBP: initial draft (CBP author)
+
+**What the user does**
+
+- Generate CBP reads every designation in the uploaded Work Allocation
+  Order; without that document the action is disabled.
+- Each designation is matched against the iGOT Designation Master; matches
+  go to **Matched Role Mapping** with a live count and the rest to
+  **Unmatched Role Mapping**.
+- Roles and competencies are mapped with the KCM framework, giving the
+  initial draft CBP.
+- If a CBP already exists, Generate CBP opens a prompt: **View Existing
+  CBP** opens the last one, **Yes** starts a new generation that overwrites
+  the previous data.
+- Treat the draft as a starting point and check both tabs.
+
+![The generated role mappings, with the Matched and Unmatched tabs and their counts](images/s04-role-mappings.jpg)
+
+### Step 05 · Manage unmatched role mapping (CBP author)
+
+**What the user does**
+
+- Open the **Unmatched Role Mapping** tab to see designations that were not
+  auto-matched.
+- Use the 3-dot menu on a row and choose **Edit Role Mapping**.
+- Pick the correct designation from the iGOT Designation Master dropdown and
+  tap **Add and Update**.
+- The row moves to Matched Role Mapping and the counts update at once.
+- Clearing unmatched rows enables **View Final CBP** and **Send for
+  Approval**.
+
+### Step 06 · Request a new designation in the iGOT master (CBP author)
+
+**What the user does**
+
+- Request a new designation only when it genuinely does not exist in the
+  iGOT Designation Master.
+- From Unmatched Role Mapping, select the designation and tap **Send
+  Designation Approval**; SPV Admins get an automatic email.
+- The SPV Admin approves it or rejects it with a reason.
+- On approval the designation joins the master and its row moves to Matched
+  Role Mapping on its own.
+- Follow the status under Unmatched Role Mapping; an email arrives when the
+  SPV acts.
+
+### Step 07 · Manage designation hierarchy (CBP author)
+
+**What the user does**
+
+- Tap the profile icon at the top right.
+- Choose **Update Designation Hierarchy**.
+- Rearrange the hierarchy with the dropdowns as needed.
+
+![The profile menu: Update Hierarchy, Manage Documents and Logout](images/s07-profile-menu.jpg)
+
+![The Update Designation Hierarchy drawer, with a position dropdown per designation](images/s07-hierarchy-drawer.jpg)
+
+### Step 08 · Add new designations from the iGOT Designation Master (CBP author)
+
+**What the user does**
+
+- From the role-mapping page use **Add More Designation** to add any
+  designation the AI missed from the iGOT Designation Master.
+- Fill in roles, responsibilities and details for each, and tap Save after
+  each addition.
+- Role mappings are generated for the newly added designations as well.
+
+![Add New Designation, searching the iGOT Designation Master](images/s08-add-designation.jpg)
+
+### Step 09 · Edit the CBP (CBP author)
+
+**What the user does**
+
+- Edit designations, responsibilities, wings or divisions in the built-in
+  editor.
+- Update Behavioural and Functional competencies so they align with KCM, and
+  fine-tune Domain competencies for the role.
+- Tap **Save CBP** when done.
+
+![The row menu: Edit Role Mapping, View Role Mapping, course recommendation and delete](images/s09-row-menu.jpg)
+
+![The Edit Role Mapping dialog](images/s09-edit-role-mapping.jpg)
+
+### Step 10 · Generate course recommendations (CBP author)
+
+**What the user does**
+
+- Open a role mapping and tap **Generate Course Recommendation**, or use the
+  3-dot menu on a row.
+- The tool suggests best-fit courses from the iGOT catalogue for the role's
+  competency gaps.
+- Narrow the list with Competencies, Ratings, Language, Duration and
+  Provider filters, or search.
+- Open each course on the iGOT platform to review it before adding it.
+- Use **Add More Courses from iGOT** for relevant courses the AI missed.
+- Tick the chosen courses and tap **Save Courses** to finalise the
+  recommendation for that role.
+- Blend AI suggestions with hand-picked courses.
+
+![Generate Course Recommendation from the row menu](images/s10-generate-menu.jpg)
+
+![Save Courses: filters, recommended courses and Suggest More Course From iGOT](images/s10-save-courses.jpg)
+
+![Suggest Courses from iGOT](images/s10-suggest-from-igot.jpg)
+
+### Step 11 · Send role mappings for approval (CBP author)
+
+**What the user does**
+
+- Tick each role mapping to submit; the checkbox appears only after its
+  course recommendations are saved.
+- The **Send for Approval** button shows a live count, for example Send for
+  Approval (3).
+- Choose the MDO Admin or Leader who will review, give the request a clear
+  **Request Name**, and tap Submit.
+- A unique **Request ID** is generated at once and the status starts as
+  **Pending Approval**; note the ID.
+- Submitted role mappings lock for editing, so check everything first.
+
+### Step 12 · Track role mapping approval requests (CBP author)
+
+**What the user does**
+
+- Open **Approval Requests** from the profile menu.
+- Find a request by Request ID or use search and filters.
+- Read the badge: Pending (yellow), Approved and Published (green) or
+  Rejected (red).
+- Tap **View** to see the submitted role mappings and course
+  recommendations.
+- Revoke a request while it is pending; this unlocks its role mappings for
+  editing.
+- Statuses update after the MDO acts; refresh if the latest badge is not
+  showing.
+
+### Step 13 · View and download the course list (CBP author)
+
+**What the user does**
+
+- Tap **View Course Recommendation** to see the full list.
+- Remove any course with the delete icon.
+- Export the list as a PDF with the Download button.
+
+![View Course Recommendation from the row menu](images/s13-view-menu.jpg)
+
+![The View Course Recommendation dialog](images/s13-course-list.jpg)
+
+### Step 14 · Download combined CBP and courses (CBP author)
+
+**What the user does**
+
+- Tap **View Final CBP** to review all role mappings with their courses.
+- Export as a PDF, or as a spreadsheet: the guide says CSV, while the screen
+  and the app's own help text say **Download as Excel**.
+
+![View Final ACBP, with Download as Excel and Download as PDF](images/s14-final-cbp.jpg)
+
+### Step 15 · Download in multiple languages (CBP author)
+
+**What the user does**
+
+- In the **View Final CBP** pop-up open the Language dropdown.
+- Pick the preferred language and download.
+
+![The Language dropdown in the final CBP pop-up](images/s15-language.jpg)
+
+### Step 16 · Finalise and download the CBP (CBP author)
+
+**What the user does**
+
+- Download the Final CBP with all designations and competency mappings.
+- Download the Final Course Recommendations alongside it.
+- Save as PDF for records and official submission, after the Competent
+  Authority has reviewed and cleared everything.
+
+### Step 17 · Review role mapping approval requests (MDO Portal) (MDO Admin / Leader)
+
+**What the user does**
+
+- Log in to the MDO Admin Portal and open **AI CBP Requests** from the left
+  navigation.
+- The dashboard lists each request with Request ID, Request Name, Submitted
+  By, Submitted On and a live status badge; search or filter by Pending,
+  Approved or Rejected.
+- Tap **View** to open the review screen: submitted role mappings, mapped
+  competencies and linked course recommendations side by side.
+- **Approve**: pick a training plan and a target completion date and
+  confirm; the mapping is marked Approved and Published to iGOT.
+- **Reject**: enter the mandatory reason so the Nodal Officer knows what to
+  fix.
+- **View Non Matching Designations** (top right) lists the designations the
+  author flagged as unmatched with their SPV approval status.
+- Both actions email the Nodal Officer and update the status at once.
+
+### Step 18 · Approve new designation requests (SPV Portal) (SPV Admin)
+
+**What the user does**
+
+- Log in to the SPV Admin Portal and open **Manage Designation Approval
+  Requests**.
+- Switch between the Pending, Approved and Rejected tabs, each with a live
+  count.
+- Narrow the list with search, the Division/Wing filter (Apex, Directorate,
+  District, Block, Field) or the Organisation filter.
+- Each row shows Created On, Designation Name, Organisation, Division,
+  Requested By and Email.
+- **Approve** (green tick): the designation is added to the iGOT Designation
+  Master and the requester's unmatched row moves to Matched Role Mapping.
+- **Reject** (red cross): give a clear reason so the MDO can resubmit if
+  needed.
+- Only SPV Admins can act; actions are logged and the requester is emailed.
+
+### Dos and Don'ts (All users)
+
+**What the user does**
+
+- **Do:** upload only official, publicly available PDFs under 25 MB each;
+  guard login credentials; treat the AI draft as a starting point; blend
+  AI-suggested courses with hand-picked ones; keep every competency within
+  the KCM framework; save and securely store the final CBP and course
+  recommendations; double-check before Send for Approval, because submitted
+  role mappings lock.
+- **Never:** upload confidential, classified or sensitive documents; treat
+  AI output as final without the Competent Authority's review; add
+  competencies outside KCM without proper approval; share login credentials
+  with colleagues or outsiders; upload files that are too large, corrupted
+  or not text-searchable.
+
+### Next steps (All users)
+
+**What the user does**
+
+- Pull together guidelines, toolkits, annual reports and Work Allocation
+  Orders before starting.
+- Generate the department-wise CBP, review every mapping carefully and get
+  formal sign-off from the Competent Authority.
+- Roll out the approved CBP by creating and assigning designation-wise
+  MyiGOT training plans for the team.
+- Identify remaining competency gaps and plan new course development to
+  close them.
+
+### Where the guide and the code differ
+
+| Topic | The guide says | The code shows |
+|---|---|---|
+| File size | Each PDF under 25 MB | A separate, larger configurable per-file cap, plus 10 files per upload |
+| Hierarchy screen | Rearranged with dropdowns | The reorder call is verified; the earlier docs described drag-and-drop |
+| MDO approval | Approve role mapping by role mapping | One publish call over the request's pending items, each reported separately |
+| SPV reject reason | A clear reason is expected | The comment is optional in the service |
+| Spreadsheet export | Final CBP exportable as PDF or CSV | The screen offers Download as Excel and Download as PDF; PDF routes exist in `cbp-ai-service`, no spreadsheet route does |
+| Division/Wing filter | Filter on the SPV list | Search covers wing/division text; no dedicated filter parameter found |
+
 ## Document journeys (`cbp-ai-service`, author-facing)
 
 ### UC-1 · Upload source documents
