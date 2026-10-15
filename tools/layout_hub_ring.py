@@ -275,6 +275,7 @@ SIMPLE_RINGS = {
             ("feature", "aicbp",            "AI CBP Tool",             132, 14,   1),
             ("feature", "aiassessment",     "AI Assessment Tool",      132, 13,   1),
             ("feature", "aitutor",          "AI Tutor",                132, 14,   1),
+            ("feature", "orghierarchy",     "Organisation Hierarchy",  132, 12.5, 1),
         ]),
     "registration": dict(
         title="Registration", icon=USER_PLUS_ICON, landing_re=None,

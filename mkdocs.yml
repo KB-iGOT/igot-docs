@@ -129,6 +129,15 @@ nav:
           - LLD: learning-hub/ai-tutor/lld.md
           - SDD: learning-hub/ai-tutor/sdd.md
           - User Manual: learning-hub/ai-tutor/user-manual.md
+      - Organisation Hierarchy:
+          - org-hierarchy/index.md
+          - Use Cases: org-hierarchy/use-cases.md
+          - APIs: org-hierarchy/apis.md
+          - HLD: org-hierarchy/hld.md
+          - LLD: org-hierarchy/lld.md
+          - Operations Manual: org-hierarchy/operations-manual.md
+          - As-Built Requirements: org-hierarchy/as-built-requirements.md
+          - Context Diagram: org-hierarchy/context-diagram.md
   - Learning Hub:
       - learning-hub/index.md
       - Blended Program:

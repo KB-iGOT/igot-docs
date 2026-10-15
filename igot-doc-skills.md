@@ -67,6 +67,42 @@ Useful grep patterns: `API_END_POINTS`, `apis/proxies/v8`, `@PostMapping`,
 `primaryCategory`, the feature's display name. Record file paths as you go —
 they become the "verified from" citations.
 
+**A use case must have a portal caller.** Before an API goes into
+`use-cases.md` (or a UC card in the explorer), confirm it is called from at
+least one of the six frontend repos: `sunbird-cb-portal`,
+`sunbird-cb-orgportal`, `sunbird-cb-adminportal`, `sunbird-cb-creationportal`,
+`sunbird-cb-multitenant-staticweb`, `sb-cb-ui-components`. Grep the endpoint
+path in each (`API_END_POINTS` constants, `*.service.ts`, mobile-app services
+when the mobile repo is attached) **and then confirm a component actually
+invokes the service method** — portals carry dead `API_END_POINTS`
+constants and wrapper methods nobody calls (e.g. `org/v1/list` in the
+learner portal's sign-up, welcome and profile services). A constant or
+wrapper with no `*.component.ts` caller is not a caller; record it as a
+DEV item instead. Cite the invoking component (file:lines) on a
+`- Portal caller:` line under the UC. An endpoint that exists in a backend
+controller or Kong but has no caller in those repos is **not a use case** —
+leave it out of `use-cases.md` and, if worth recording, list it in
+`as-built-requirements.md` as a DEV/boundary item ("no confirmed caller") or
+in `apis.md` under internal calls. Background consumers triggered by a
+portal-called API (a Kafka job behind an upload) stay in, cited to the
+triggering caller. If one of the six repos is not attached, say so in the
+use-cases preamble rather than assuming coverage.
+
+**Trace the calls *around* a framework/taxonomy API, not just the API.**
+When a feature drives the Sunbird framework APIs (`framework/v1/term/*`,
+`publish`, `copy`, `retire`) or any other generic platform API, the feature's
+real behaviour is usually in what the portal calls immediately **before** and
+**after** — an `org/v1/read` to decide whether the tree exists, an
+`org/ext/v2/update` / `v1/org/update` that writes attributes onto the
+organisation (or user) record, a re-read after publish. Document each action
+as an ordered call list and state explicitly whether the org/user record is
+touched and with which keys. Attribute writes on the organisation object are
+load-bearing for other features (sign-up pickers, reports, role scoping), so
+"no record update" is itself a finding worth a DEV item. For the organisation
+record specifically, check learner-service's
+`cassandratablecolumn.properties` for which attributes exist and remember
+that `org/update` is a pass-through — whoever PATCHes an attribute owns it.
+
 **Verify the gateway path for every API you document.** Portal calls leave on
 two prefixes and the docs must state the full chain
 (see `docs/platform/api-gateway.md`):
@@ -184,6 +220,8 @@ convention) rather than inventing procedures.
 ### 4 · Verify before delivering
 
 - Every endpoint in the docs exists in a file you actually read this session.
+- Every endpoint in `use-cases.md` has a `Portal caller:` line pointing at a
+  file in one of the six frontend repos (see research step 1).
 - Mermaid parses: **no semicolons inside node/note text** (they terminate
   statements and break the diagram — this bit us once).
 - Rebuild ran clean; if a browser check is possible, confirm the new tabs
@@ -209,7 +247,13 @@ convention) rather than inventing procedures.
   blue `#1B4CA1`, orange `#EF951E`, Lato, tint `#E8EDF6`. Amber = feature/
   learner-facing accents, indigo = service/technical, green = verified.
 - Diagrams in the explorer get the Zoom popup automatically; author them at
-  natural size and don't add zoom UI yourself.
+  natural size and don't add zoom UI yourself. **Keep a single diagram under
+  ~2000 px natural width** (check with a local Mermaid render: viewBox width);
+  a topology that needs five LR subgraphs and twenty cross-subgraph edges
+  renders at 4000 px with 16 px labels and is unreadable at any zoom. Split it
+  — request path (clients → gateway → services) in one diagram, services →
+  async/stores in another — and let the Responsibilities table be the
+  authoritative list.
 
 ## Maintaining this skill (important)
 
@@ -221,6 +265,63 @@ is how the whole team's output stays consistent. When in doubt whether a
 one-off request is a new convention, ask: "should this become the standard?"
 
 ### Changelog
+
+- **2026-10-15** · Diagram width rule (above) and a popup fix: the zoom popup
+  now pins the freshly rendered SVG to its viewBox size (Mermaid emits
+  `width=100%` + `max-width`, which collapsed inside the `max-content` box so
+  "100%" was a fraction of natural size), zoom ceiling 400% → 800%, fit floor
+  0.3 → 0.15. Triggered by the Organisation Hierarchy HLD topology being
+  unreadable at 400%; it was split into two diagrams (1240×304 and 1265×799).
+
+- **2026-10-14 (5)** · When a feature's org-record writes go through a
+  service's generic controller (here `sunbird-cb-ext` `ExtendedOrgController`),
+  document the **whole controller** — every route, its Kong mapping, its
+  verified behaviour and its web caller — in a dedicated `apis.md` section,
+  since the unrelated-looking siblings are where the surprises sit (a POST to
+  a PATCH route, a Kong URI pointing at a different service, an allow-list
+  that differs between repo and Helm env). Triggered by Organisation
+  Hierarchy DEV-013..017.
+
+- **2026-10-14 (4)** · New research rule: when a feature uses framework /
+  generic platform APIs, trace the portal's before/after calls around them
+  (org read, org update, re-read) and record per action whether the org or
+  user record is written and with which keys. Triggered by Organisation
+  Hierarchy: the tree view's add/rename flows never update the org record,
+  its retire flow only clears `parentPathId`, and `hierarchyLevel` has no
+  writer anywhere — while the public sign-up pickers filter on both
+  (DEV-011/012, CON-006/007).
+
+- **2026-10-14 (3)** · Sharpened the portal-caller rule: a service-file
+  constant or wrapper method does not count — the invoking component must be
+  found and cited. Triggered by Organisation Hierarchy UC-12 having been
+  attributed to the learner portal's public sign-up on the strength of
+  `signup.service.ts` constants that no component calls; the live sign-up
+  uses `org/hierarchy/{ministry,state,}/search` (learner-service → ES
+  `parentPathId` wildcard), now UC-13. Also: `sunbird-cb-multitenant-staticweb`
+  is a tenant landing page with no feature APIs (only `form/read`), so a zero
+  hit there is expected, not a gap.
+
+- **2026-10-14 (2)** · Use-case admission rule: an API is a use case only if a
+  caller exists in one of the six portal repos (`sunbird-cb-portal`,
+  `sunbird-cb-orgportal`, `sunbird-cb-adminportal`, `sunbird-cb-creationportal`,
+  `sunbird-cb-multitenant-staticweb`, `sb-cb-ui-components`); every UC now
+  carries a `Portal caller:` line and the verify checklist checks for it.
+  Applies to all features going forward. Triggered by Organisation Hierarchy's
+  UC-11/UC-12 having been admitted on backend evidence alone (both turned out
+  to have callers — reports filter and public sign-up — and were re-cited).
+
+- **2026-10-14** · Added Organisation Hierarchy (`docs/org-hierarchy/`, top-level
+  folder per the non-learning-hub convention) to the **Features** ring via
+  `SIMPLE_RINGS` (9 bubbles, r=276 still passes `--check`). Scope decision by
+  the owner: the page documents the **production path only** — cb-pores
+  framework creation, cb-ext bulk upload + the two Kafka consumers,
+  `org_hierarchy_v4` / `mdo_children_lookup` / `org/level/hierarchy` — and
+  deliberately excludes the unwired `cb-org-hierarchy-service` repo
+  (standalone Neo4j+APOC service on branch `cbrelease-4.8.34`, Helm chart but
+  no Kong route or portal caller); it also carries no code-review findings,
+  as-built divergences only. First feature whose index.md lists three
+  unreconciled stores for the same question — recorded as DEV items, not
+  prose.
 
 - **2026-10-05** · Hub restructure. AI CBP Tool and AI Assessment Tool moved
   from the Learning Hub to **Features**; Events Hub moved out of the Learning
