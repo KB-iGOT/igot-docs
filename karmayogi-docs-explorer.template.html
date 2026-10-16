@@ -62,7 +62,7 @@
   .search-results .sr .kind.hub { color: #1B4CA1; }
   .search-results .none { padding: 10px 12px; font-size: 12.5px; color: #767E8C; }
   .backpill {
-    position: absolute; top: 84px; left: 32px; z-index: 6;
+    position: absolute; top: 24px; left: 32px; z-index: 6;
     display: flex; align-items: center; gap: 8px;
     background: #FFFFFF; border: 1px solid #00000014; border-radius: 99px;
     padding: 8px 18px; font-size: 13px; font-weight: 700; color: #1B4CA1;
@@ -357,10 +357,7 @@
   background: #FFFFFF; border-right: 1px solid #0000000F;
   display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; padding: 14px 12px 22px;
 }
-#stagewrap { box-sizing: border-box; padding-left: 240px; }
-.sb-brand { display: flex; align-items: center; gap: 8px; padding: 4px 2px 16px 6px; margin-bottom: 10px; border-bottom: 1px solid #0000000F; text-decoration: none; }
-.sb-brand img { height: 26px; width: auto; display: block; flex: none; }
-.sb-brand span { font-size: 8.5px; font-weight: 700; letter-spacing: .07em; white-space: nowrap; text-transform: uppercase; color: #767E8C; line-height: 1.25; padding-left: 10px; border-left: 1px solid #00000024; }
+#stagewrap { box-sizing: border-box; }
 .sb-item {
   display: flex; align-items: center; gap: 11px; width: 100%; padding: 8px 11px; margin: 1px 0;
   border: 0; background: transparent; border-radius: 9px; cursor: pointer; text-align: left;
@@ -379,51 +376,121 @@
 .sb-head .chev { margin-left: auto; transition: transform .2s; color: #767E8C; }
 .sb-group.collapsed .chev { transform: rotate(-90deg); }
 .sb-group.collapsed .sb-sub { display: none; }
-@media (max-width: 1023px) {
+@media (max-width: 767px) {
   #sidebar { display: none; }
-  #stagewrap { padding-left: 0; }
 }
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   /* the sidebar carries the brand, so the per-view logo strip is dropped */
   .view .topbar .brand-logo, .view .topbar .brand-tag { display: none; }
   .fp-top { display: none; }
 }
 
+/* ── top header and footer ──────────────────────── */
+#topnav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 45; height: 64px;
+  display: flex; align-items: center; gap: 24px; padding: 0 24px 0 18px;
+  background: #FFFFFF; border-bottom: 1px solid #0000000F;
+}
+.tn-brand { display: flex; align-items: center; gap: 10px; flex: none; text-decoration: none; width: 210px; }
+.tn-brand img { height: 30px; width: auto; display: block; flex: none; }
+.tn-brand span { font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #767E8C; line-height: 1.25; padding-left: 10px; border-left: 1px solid #00000024; white-space: nowrap; }
+.search.tn-search { margin: 0 auto; width: auto; flex: 0 1 640px; min-width: 0; border-radius: 10px; padding: 9px 14px; background: #F7F9FC; box-shadow: none; }
+.search.tn-search:focus-within { background: #FFFFFF; }
+.tn-kbd { flex: none; font-family: inherit; font-size: 10.5px; font-weight: 700; color: #767E8C; border: 1px solid #00000020; border-radius: 6px; padding: 2px 6px; background: #FFFFFF; }
+.tn-go { flex: none; display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 700; color: #1B4CA1; text-decoration: none; white-space: nowrap; }
+.tn-go:hover { text-decoration: underline; }
+#sitefoot {
+  position: fixed; bottom: 0; right: 0; left: 0; z-index: 30; height: 34px;
+  display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 16px;
+  background: #FFFFFF; border-top: 1px solid #0000000F; font-size: 12px; color: #767E8C; white-space: nowrap; overflow: hidden;
+}
+#sitefoot .sf-sep { color: #B5BAC4; }
+#sidebar { top: 64px; }
+@media (max-width: 767px) {
+  .tn-brand { width: auto; } .tn-brand span, .tn-kbd { display: none; } #topnav { gap: 12px; padding: 0 12px; }
+  #sitefoot span:not(:first-child) { display: none; }
+}
+
+/* ── home dashboard ─────────────────────────────── */
+#v-home { overflow-y: auto; }
+.hm { padding: 28px 40px 40px; }
+.hm-hero {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  background: linear-gradient(120deg, #EDF2FB 0%, #F7F9FD 100%); border: 1px solid #0000000D;
+  border-radius: 18px; padding: 26px 30px; margin-bottom: 30px;
+}
+.hm-pill { display: inline-block; font-size: 11.5px; font-weight: 700; color: #1B4CA1; background: #DCE6F7; border-radius: 99px; padding: 4px 12px; }
+.hm-title { font-size: 40px; font-weight: 900; letter-spacing: -0.03em; color: #13213F; margin: 10px 0 4px; line-height: 1.1; }
+.hm-lead { font-size: 16px; color: #4E5562; margin: 0 0 20px; }
+.hm-stats { display: flex; gap: 12px; flex-wrap: wrap; }
+.hm-stat { display: flex; align-items: center; gap: 10px; background: #FFFFFF; border: 1px solid #00000010; border-radius: 12px; padding: 11px 16px; min-width: 132px; }
+.hm-stat svg { color: #1B4CA1; flex: none; }
+.hm-stat b { display: block; font-size: 17px; font-weight: 900; color: #13213F; line-height: 1.1; }
+.hm-stat span { font-size: 11.5px; color: #767E8C; }
+.hm-art { flex: none; }
+.hm-sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin: 0 0 14px; }
+.hm-h2 { font-size: 22px; font-weight: 900; letter-spacing: -0.02em; color: #13213F; margin: 0; }
+.hm-sub { font-size: 13px; color: #767E8C; margin: 3px 0 0; }
+.hm-more { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 700; color: #1B4CA1; text-decoration: none; white-space: nowrap; }
+.hm-more:hover { text-decoration: underline; }
+.hm-hubs { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 14px; margin-bottom: 30px; }
+.hm-hub {
+  display: flex; flex-direction: column; text-align: left; background: #FFFFFF; border: 1px solid #00000014;
+  border-radius: 14px; padding: 16px; box-shadow: 0 1px 3px #1b214310; cursor: pointer; font-family: inherit; color: inherit;
+  transition: border-color .15s, box-shadow .15s;
+}
+.hm-hub:hover { border-color: #1B4CA166; box-shadow: 0 10px 24px -14px #1B4CA166; }
+.hm-hub-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+.hm-ic { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex: none; }
+.hm-badge { font-size: 11px; font-weight: 700; color: #4E5562; background: #F1F3F7; border-radius: 99px; padding: 3px 9px; }
+.hm-hub b { font-size: 15.5px; font-weight: 900; color: #13213F; margin-bottom: 5px; }
+.hm-hub p { font-size: 12.5px; color: #4E5562; line-height: 1.5; margin: 0 0 14px; flex: 1; }
+.hm-hub .go { font-size: 12.5px; font-weight: 700; color: #1B4CA1; display: inline-flex; align-items: center; gap: 6px; border-top: 1px solid #0000000D; padding-top: 11px; }
+.hm-feats { background: #FFFFFF; border: 1px solid #00000014; border-radius: 14px; box-shadow: 0 1px 3px #1b214310; overflow: hidden; }
+.hm-feat {
+  display: flex; align-items: center; gap: 16px; width: 100%; padding: 12px 18px; text-align: left;
+  background: transparent; border: 0; border-bottom: 1px solid #0000000D; cursor: pointer; font-family: inherit; color: inherit;
+}
+.hm-feat:last-child { border-bottom: 0; }
+.hm-feat:hover { background: #F4F7FD; }
+.hm-feat .hm-ic { width: 40px; height: 40px; border-radius: 10px; }
+.hm-feat-txt { flex: 1; min-width: 0; }
+.hm-feat-txt b { display: block; font-size: 14.5px; font-weight: 900; color: #13213F; }
+.hm-feat-txt span { display: block; font-size: 12.5px; color: #767E8C; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hm-docs { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #767E8C; white-space: nowrap; flex: none; width: 110px; }
+.hm-feat .chev { color: #767E8C; flex: none; }
+.ic-blue { background: #E3EBFA; color: #1B4CA1; } .ic-violet { background: #EEE8FB; color: #6B46C1; }
+.ic-green { background: #E3F5EA; color: #1D8923; } .ic-orange { background: #FDEFDF; color: #D9730D; }
+.ic-pink { background: #FBE6EC; color: #C2185B; } .ic-teal { background: #E0F4F4; color: #0E8A8A; }
+
 /* ── feature page: breadcrumb, header chips, related documentation ── */
-.fp-hero { background: #FFFFFF; }
+.fp-hero { background: linear-gradient(180deg, #F3F7FD 0%, #F7F9FD 100%); padding: 22px 40px 0; }
+.fp-head { align-items: center; gap: 20px; }
+.fp-icon { width: 72px; height: 72px; box-shadow: 0 0 0 9px #1B4CA114, 0 12px 26px -12px #1B4CA199; margin: 4px 6px 4px 4px; }
+.fp-title { color: #13213F; font-size: 30px; }
+.fp-sub { color: #4E5562; }
+.fp-chips { gap: 10px; margin-top: 14px; }
+.fp-tabs { margin-top: 24px; gap: 2px; border-bottom: 1px solid #0000000F; }
+.fp-tab { color: #2F3645; padding: 12px 18px; }
+.fp-tab.active { color: #1B4CA1; }
 .fp-back { display: none; }
 .fp-crumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; font-size: 12.5px; color: #767E8C; margin-bottom: 16px; }
 .fp-crumbs a { color: #2F3645; font-weight: 700; text-decoration: none; cursor: pointer; }
 .fp-crumbs a:hover { color: #1B4CA1; text-decoration: underline; }
 .fp-crumbs .sep { color: #A3A9B4; }
-.fp-crumbs .cur { color: #1B4CA1; font-weight: 700; }
-.chip.meta { display: inline-flex; align-items: center; gap: 6px; color: #2F3645; padding: 5px 13px; }
+.fp-crumbs a:nth-last-of-type(1) { color: #1B4CA1; }
+.fp-crumbs .cur { color: #2F3645; font-weight: 700; }
+.chip.meta { display: inline-flex; align-items: center; gap: 8px; color: #2F3645; padding: 7px 15px; font-size: 12.5px; background: #FFFFFF; border-color: #0000001A; }
 .chip.meta svg { color: #1B4CA1; flex: none; }
-.rd { margin: 0 0 26px; }
-.rd-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
-.rd-card {
-  display: flex; align-items: flex-start; gap: 14px; text-align: left; width: 100%;
-  background: #FFFFFF; border: 1px solid #00000014; border-radius: 12px; padding: 16px;
-  box-shadow: 0 1px 3px #1b214310; cursor: pointer; font-family: inherit; color: inherit;
-  transition: border-color .15s, box-shadow .15s;
-}
-.rd-card:hover { border-color: #1B4CA166; box-shadow: 0 8px 20px -12px #1B4CA166; }
-.rd-ic { flex: none; width: 42px; height: 42px; border-radius: 50%; background: #E8EEF9; color: #1B4CA1; display: flex; align-items: center; justify-content: center; }
-.rd-txt { flex: 1; min-width: 0; }
-.rd-txt b { display: block; font-size: 13.5px; font-weight: 900; color: #1F2430; margin-bottom: 3px; }
-.rd-txt span { display: block; font-size: 12.5px; color: #4E5562; line-height: 1.45; }
-.rd-card .chev { flex: none; color: #767E8C; margin-top: 2px; }
-@media (max-width: 900px) { .rd-grid { grid-template-columns: 1fr; } }
+/* the header shows only the page-level chips (hub, documents, last updated) */
+.fp-chips .chip:not(.meta) { display: none; }
+
 </style>
 </head>
 <body>
 
 <!-- ══════════ LEFT SIDEBAR · platform navigation (items are wired by the sidebar script) ══════════ -->
 <nav id="sidebar" aria-label="Platform navigation">
-  <a class="sb-brand" href="#" data-nav="home" aria-label="Karmayogi Bharat platform documentation home">
-    <img src="docs/assets/karmayogi-logo.svg" alt="Karmayogi Bharat">
-    <span>Platform<br>documentation</span>
-  </a>
   <button type="button" class="sb-item" data-nav="home"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>Home</button>
   <a class="sb-item" href="igot-architecture-overview.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg>Platform Overview</a>
   <div class="sb-group" id="sb-hubs">
@@ -436,21 +503,71 @@
   </div>
 </nav>
 
+<!-- ══════════ TOP HEADER · brand, global search, link to the platform ══════════ -->
+<header id="topnav">
+  <a class="tn-brand" href="#" data-nav="home" aria-label="Karmayogi Bharat platform documentation home">
+    <img src="docs/assets/karmayogi-logo.svg" alt="Karmayogi Bharat">
+    <span>Platform<br>documentation</span>
+  </a>
+  <label class="search tn-search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+    <input type="search" class="search-input" placeholder="Search features, hubs, APIs, diagrams, guides&hellip;" autocomplete="off" spellcheck="false" aria-label="Search the documentation">
+    <kbd class="tn-kbd">Ctrl&nbsp;K</kbd>
+    <div class="search-results" hidden></div>
+  </label>
+  <a class="tn-go" href="https://igotkarmayogi.gov.in/" target="_blank" rel="noopener noreferrer">Go to iGOT <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+</header>
+
+<footer id="sitefoot">
+  <span>&copy; <span id="sf-year">2026</span> Karmayogi Bharat. All rights reserved.</span>
+  <span class="sf-sep">&middot;</span>
+  <span>iGOT Karmayogi platform documentation</span>
+</footer>
+
 
 <div id="stagewrap">
 <div id="stage">
 
-  <!-- ══════════ VIEW 1 · LANDING ══════════ -->
-  <section class="view" id="v-land">
-    <div class="topbar">
-      <img class="brand-logo" src="docs/assets/karmayogi-logo.svg" alt="Karmayogi Bharat">
-      <div class="wordmark brand-tag"><span>Platform documentation</span></div>
-      <label class="search">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
-        <input type="search" class="search-input" placeholder="Search a feature&hellip;" autocomplete="off" spellcheck="false" aria-label="Search a feature">
-        <div class="search-results" hidden></div>
-      </label>
+  <!-- ══════════ VIEW 0 · HOME (dashboard; filled in by the sidebar script from the feature pages) ══════════ -->
+  <section class="view" id="v-home">
+    <div class="hm">
+      <div class="hm-hero">
+        <div class="hm-hero-txt">
+          <span class="hm-pill">Platform Documentation</span>
+          <h1 class="hm-title">iGOT Karmayogi</h1>
+          <p class="hm-lead">Explore platform hubs, features and technical documentation.</p>
+          <div class="hm-stats" id="hm-stats"></div>
+        </div>
+        <svg class="hm-art" width="250" height="170" viewBox="0 0 250 170" fill="none" aria-hidden="true">
+          <circle cx="170" cy="70" r="62" fill="#E3EBFA"/>
+          <rect x="52" y="30" width="150" height="98" rx="10" fill="#1B4CA1"/>
+          <rect x="60" y="38" width="134" height="82" rx="5" fill="#FFFFFF"/>
+          <rect x="70" y="50" width="36" height="5" rx="2.5" fill="#C9D6EE"/><rect x="70" y="60" width="26" height="5" rx="2.5" fill="#C9D6EE"/>
+          <rect x="70" y="74" width="40" height="34" rx="4" fill="#E8EEF9"/>
+          <rect x="126" y="86" width="10" height="22" rx="2" fill="#4F7BD1"/><rect x="141" y="74" width="10" height="34" rx="2" fill="#4F7BD1"/><rect x="156" y="80" width="10" height="28" rx="2" fill="#4F7BD1"/>
+          <path d="M38 128h178l-10 12H48z" fill="#C9D6EE"/>
+          <rect x="182" y="96" width="44" height="44" rx="10" fill="#FFFFFF" stroke="#E3EBFA"/>
+          <circle cx="204" cy="118" r="10" stroke="#1B4CA1" stroke-width="4"/><circle cx="204" cy="118" r="3" fill="#1B4CA1"/>
+          <rect x="168" y="44" width="20" height="26" rx="4" fill="#EF951E"/>
+        </svg>
+      </div>
+
+      <div class="hm-sec-head">
+        <div><h2 class="hm-h2">Platform Hubs</h2><p class="hm-sub">Explore the main hubs of the iGOT platform and access detailed documentation.</p></div>
+        <a href="#" class="hm-more" data-nav="hub" data-target="v-land">View all hubs <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div class="hm-hubs" id="hm-hubs"></div>
+
+      <div class="hm-sec-head">
+        <div><h2 class="hm-h2">Platform Features</h2><p class="hm-sub">Browse key platform features with user guides, APIs, diagrams and operational details.</p></div>
+        <a href="#" class="hm-more" data-nav="hub" data-target="v-features">View all features <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div class="hm-feats" id="hm-feats"></div>
     </div>
+  </section>
+
+  <!-- ══════════ VIEW 1 · LANDING (hub map, "View all hubs") ══════════ -->
+  <section class="view hidden" data-gone id="v-land">
 
     <!-- hexagon: 4 hubs + 2 landing features, 60° apart on the orbit -->
     <svg class="orbitbg" width="1440" height="900" fill="none">
@@ -498,15 +615,6 @@
 
   <!-- ══════════ VIEW 2 · LEARNING HUB ══════════ -->
   <section class="view hidden" data-gone id="v-hub" data-hub-name="Learning Hub">
-    <div class="topbar">
-      <img class="brand-logo" src="docs/assets/karmayogi-logo.svg" alt="Karmayogi Bharat">
-      <div class="wordmark brand-tag"><span>Platform documentation</span></div>
-      <label class="search">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
-        <input type="search" class="search-input" placeholder="Search a feature&hellip;" autocomplete="off" spellcheck="false" aria-label="Search a feature">
-        <div class="search-results" hidden></div>
-      </label>
-    </div>
 
     <button class="backpill" onclick="goLanding()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
@@ -558,15 +666,6 @@
   </section>
 
   <section class="view hidden" data-gone id="v-features" data-hub-name="Features">
-    <div class="topbar">
-      <img class="brand-logo" src="docs/assets/karmayogi-logo.svg" alt="Karmayogi Bharat">
-      <div class="wordmark brand-tag"><span>Platform documentation</span></div>
-      <label class="search">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
-        <input type="search" class="search-input" placeholder="Search a feature&hellip;" autocomplete="off" spellcheck="false" aria-label="Search a feature">
-        <div class="search-results" hidden></div>
-      </label>
-    </div>
 
     <button class="backpill" onclick="goLanding()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
@@ -611,15 +710,6 @@
 
   <!-- ══════════ VIEW 2b · REGISTRATION (sub-hub of Features) ══════════ -->
   <section class="view hidden" data-gone id="v-registration" data-hub-name="Registration">
-    <div class="topbar">
-      <img class="brand-logo" src="docs/assets/karmayogi-logo.svg" alt="Karmayogi Bharat">
-      <div class="wordmark brand-tag"><span>Platform documentation</span></div>
-      <label class="search">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#767E8C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
-        <input type="search" class="search-input" placeholder="Search a feature&hellip;" autocomplete="off" spellcheck="false" aria-label="Search a feature">
-        <div class="search-results" hidden></div>
-      </label>
-    </div>
 
     <button class="backpill" onclick="goParentHub()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
@@ -651,10 +741,6 @@
 
   <!-- ══════════ VIEW 3 · FEATURE PAGE ══════════ -->
   <section class="view hidden" data-gone id="v-feat">
-    <div class="fp-top">
-      <img class="brand-logo sm" src="docs/assets/karmayogi-logo.svg" alt="Karmayogi Bharat">
-      <div class="wordmark brand-tag"><span>Platform documentation</span></div>
-    </div>
 
     <div class="fdoc" data-fdoc="blended">
     <div class="fp-hero">
@@ -2772,8 +2858,22 @@
   var stage = document.getElementById('stage');
   var wrap = document.getElementById('stagewrap');
   function fit() {
-    var sb = document.getElementById('sidebar');
-    var w = window.innerWidth - 8 - (sb ? sb.offsetWidth : 0), h = window.innerHeight, s;
+    /* the sidebar scales with the window (and browser zoom) like the stage does, so it
+       never dwarfs the content; it reserves exactly its scaled width on the left */
+    var k = Math.max(0.62, Math.min(1, window.innerWidth / 1600));
+    var sb = document.getElementById('sidebar'), hd = document.getElementById('topnav'), ft = document.getElementById('sitefoot');
+    var sbw = 0, hh = 0, fh = 0;
+    if (hd) { hd.style.zoom = k; hh = hd.getBoundingClientRect().height; }
+    if (ft) { ft.style.zoom = k; fh = ft.getBoundingClientRect().height; }
+    if (sb) {
+      sb.style.zoom = k;
+      sb.style.top = (hh / k) + 'px'; sb.style.bottom = (fh / k) + 'px'; /* zoomed element: offsets are in its own units */
+      sbw = sb.getBoundingClientRect().width;
+    }
+    wrap.style.paddingLeft = sbw + 'px';
+    wrap.style.paddingTop = hh + 'px';
+    document.body.style.paddingBottom = fh + 'px';
+    var w = window.innerWidth - 8 - sbw, h = window.innerHeight - hh - fh, s;
     if (window.innerWidth >= 1024) {
       /* desktop: fit BOTH dimensions so home/hub views fill the screen with no scroll */
       s = Math.min(w / 1440, h / 960);
@@ -2783,11 +2883,12 @@
       document.body.style.overflowY = '';
     }
     stage.style.transform = 'scale(' + s + ')';
-    wrap.style.height = Math.floor(960 * s) + 'px';
+    wrap.style.height = Math.floor(960 * s + hh) + 'px'; /* border-box: include the header offset */
   }
   window.addEventListener('resize', fit);
   fit();
 
+  var vHome = document.getElementById('v-home');
   var vLand = document.getElementById('v-land');
   var vHub = document.getElementById('v-hub');
   var vFeat = document.getElementById('v-feat');
@@ -2842,12 +2943,12 @@
   function visibleView() {
     var vs = document.querySelectorAll('#stage > .view');
     for (var i = 0; i < vs.length; i++) if (!vs[i].hasAttribute('data-gone')) return vs[i];
-    return vLand;
+    return vHome;
   }
   window.goLanding = function () { var c = visibleView(); if (c !== vLand) swap(c, vLand); };
 
   /* sidebar / breadcrumb navigation: go straight to a view from wherever the user is */
-  window.navLanding = window.goLanding;
+  window.navLanding = function () { var c = visibleView(); if (c !== vHome) swap(c, vHome); };
   window.navHub = function (targetId) {
     var target = document.getElementById(targetId);
     if (!target) return;
@@ -3121,17 +3222,40 @@
     add(name, name, 'hub', function () { window.navHub(tgt); });
   });
   add('architecture', 'Platform architecture', 'page', function () { window.location.href = 'igot-architecture-overview.html'; });
+  /* every feature's documentation tabs, e.g. "AI CBP Tool · HLD" */
+  document.querySelectorAll('.fdoc').forEach(function (d) {
+    var t = d.querySelector('.fp-title'); if (!t) return;
+    var name = t.textContent.trim(), id = d.dataset.fdoc;
+    d.querySelectorAll('.fp-tab').forEach(function (b) {
+      if (b.hidden || b.dataset.tab === 'overview') return;
+      add(id + ':' + b.dataset.tab, name + ' \u00b7 ' + b.textContent.trim(), 'doc', function () {
+        window.openFeature(id);
+        var btn = document.querySelector('.fdoc[data-fdoc="' + id + '"] .fp-tab[data-tab="' + b.dataset.tab + '"]');
+        if (btn) window.setTab(btn);
+      });
+    });
+  });
+  /* Ctrl+K (or /) focuses the header search */
+  document.addEventListener('keydown', function (e) {
+    var tag = (e.target.tagName || '').toLowerCase(), typing = tag === 'input' || tag === 'textarea' || e.target.isContentEditable;
+    if (((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) || (e.key === '/' && !typing)) {
+      var box = document.querySelector('#topnav .search-input');
+      if (box) { e.preventDefault(); box.focus(); box.select(); }
+    }
+  });
 
   document.querySelectorAll('.search').forEach(function (box) {
     var input = box.querySelector('.search-input'), list = box.querySelector('.search-results'), active = -1, hits = [];
     function render() {
       var q = input.value.trim().toLowerCase();
       if (!q) { list.hidden = true; list.innerHTML = ''; return; }
-      hits = items.filter(function (it) { return it.label.toLowerCase().indexOf(q) >= 0 || it.id.toLowerCase().indexOf(q) >= 0; }).slice(0, 12);
+      hits = items.filter(function (it) { return it.label.toLowerCase().indexOf(q) >= 0 || it.id.toLowerCase().indexOf(q) >= 0; });
+      var RANK = { hub: 0, feature: 1, page: 2, doc: 3 };
+      hits = hits.sort(function (a, b) { return RANK[a.kind] - RANK[b.kind]; }).slice(0, 12);
       active = hits.length ? 0 : -1;
       list.innerHTML = hits.length
         ? hits.map(function (it, i) { return '<div class="sr' + (i === active ? ' active' : '') + '" data-i="' + i + '"><b>' + it.label.replace(/</g, '&lt;') + '</b><span class="kind ' + it.kind + '">' + it.kind + '</span></div>'; }).join('')
-        : '<div class="none">No feature or hub matches “' + input.value.replace(/</g, '&lt;') + '”</div>';
+        : '<div class="none">No results for “' + input.value.replace(/</g, '&lt;') + '”</div>';
       list.hidden = false;
     }
     function go(i) { if (i < 0 || !hits[i]) return; var it = hits[i]; input.value = ''; list.hidden = true; it.open(); }
@@ -3191,6 +3315,8 @@
     asbuilt: ['check', 'Requirements as they are implemented']
   };
 
+  var DATES = {};
+  try { DATES = JSON.parse((document.getElementById('doc-dates') || {}).textContent || '{}'); } catch (e) { DATES = {}; }
   function label(btn) { var c = btn.cloneNode(true); var s = c.querySelector('.sub'); if (s) s.remove(); return c.textContent.trim().replace(/\s+/g, ' '); }
   function featId(btn) { var m = (btn.getAttribute('onclick') || '').match(/openFeature\('([^']+)'\)/); return m && m[1]; }
 
@@ -3233,6 +3359,9 @@
     else if (kind === 'hub') window.navHub(target);
     else if (kind === 'feature') window.openFeature(target);
   }
+  var tn = document.getElementById('topnav');
+  if (tn) tn.querySelector('.tn-brand').addEventListener('click', function (e) { e.preventDefault(); go('home'); });
+  var yr = document.getElementById('sf-year'); if (yr) yr.textContent = new Date().getFullYear();
   sb.addEventListener('click', function (e) {
     var head = e.target.closest('.sb-head');
     if (head) { var g = head.closest('.sb-group'); g.classList.toggle('collapsed'); head.setAttribute('aria-expanded', String(!g.classList.contains('collapsed'))); return; }
@@ -3242,6 +3371,73 @@
     go(it.getAttribute('data-nav'), it.getAttribute('data-target'));
   });
 
+  /* ── home dashboard: stats, hub cards and the feature list, read from the feature pages ── */
+  var home = document.getElementById('v-home');
+  function docTabs(id) {
+    var d = document.querySelector('.fdoc[data-fdoc="' + id + '"]');
+    return d ? [].filter.call(d.querySelectorAll('.fp-tab'), function (b) { return !b.hidden && b.dataset.tab !== 'overview'; }).length : 0;
+  }
+  function firstSentence(id) {
+    var d = document.querySelector('.fdoc[data-fdoc="' + id + '"] .fp-sub');
+    if (!d) return '';
+    var s = d.textContent.replace(/\s+/g, ' ').trim();
+    var m = s.match(/^.*?[.!?](\s|$)/);
+    return (m ? m[0] : s).trim();
+  }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  if (home) {
+    var HUBCARD = {
+      'v-hub': 'Documentation for learning content: courses, programs, assessments and pathways.',
+      discussionhub: 'Documentation for communities, questions, answers and discussions.',
+      competencyhub: 'Documentation for the competency framework and competency mapping.',
+      eventshub: 'Documentation for virtual events: authoring, review, attendance and certificates.',
+      agk: 'Documentation for knowledge resources: documents, videos, audio and links.'
+    };
+    var TONES = ['ic-blue', 'ic-violet', 'ic-green', 'ic-orange', 'ic-pink', 'ic-teal'];
+    var hubIcons = ['learning', 'discussion', 'competency', 'event', 'book'];
+    var nLearning = document.querySelectorAll('#v-hub [onclick^="openFeature("]').length;
+    document.getElementById('hm-hubs').innerHTML = hubDefs.map(function (h, i) {
+      var target = h[2].match(/data-target="([^"]+)"/)[1];
+      if (target !== 'v-hub' && !document.querySelector('.fdoc[data-fdoc="' + target + '"]')) return '';
+      var n = target === 'v-hub' ? nLearning : docTabs(target);
+      var tip = target === 'v-hub' ? n + ' features' : n + ' documents';
+      return '<button type="button" class="hm-hub"' + h[2] + '><span class="hm-hub-top"><span class="hm-ic ' + TONES[i % TONES.length] + '">' + svg(IC[hubIcons[i]], 22) + '</span>' +
+             '<span class="hm-badge" title="' + tip + '">' + n + '</span></span><b>' + esc(h[0]) + '</b><p>' + esc(HUBCARD[target] || '') + '</p>' +
+             '<span class="go">View documentation ' + svg('<path d="M5 12h14M13 6l6 6-6 6"/>', 14) + '</span></button>';
+    }).join('');
+
+    var rows = '', k = 0;
+    if (fv) fv.querySelectorAll('button.bub[onclick]').forEach(function (b) {
+      var oc = b.getAttribute('onclick'), id = featId(b), sub = oc.match(/openSubHub\('([^']+)'\)/), tone = TONES[k++ % TONES.length];
+      var name = label(b), desc, docs, attrs, icon;
+      if (id) { desc = firstSentence(id); docs = docTabs(id) + ' Documents'; attrs = ' data-nav="feature" data-target="' + id + '"'; icon = 'doc'; }
+      else if (sub) {
+        var kids = [].map.call(document.querySelectorAll('#' + sub[1] + ' [onclick^="openFeature("]'), label);
+        desc = kids.join(', '); docs = kids.length + ' Features'; attrs = ' data-nav="hub" data-target="' + sub[1] + '"'; icon = 'users';
+      } else return;
+      rows += '<button type="button" class="hm-feat"' + attrs + '><span class="hm-ic ' + tone + '">' + svg(IC[icon], 20) + '</span>' +
+              '<span class="hm-feat-txt"><b>' + esc(name) + '</b><span>' + esc(desc) + '</span></span>' +
+              '<span class="hm-docs">' + svg(IC.doc, 15) + docs + '</span>' + svg(IC.chevR, 16).replace('<svg', '<svg class="chev"') + '</button>';
+    });
+    document.getElementById('hm-feats').innerHTML = rows;
+
+    /* stats: counted from what the explorer actually contains */
+    var hubCount = document.querySelectorAll('#hm-hubs .hm-hub').length;
+    var allDocs = document.querySelectorAll('.fdoc');
+    var featCount = allDocs.length - (hubCount - 1); /* the hub pages themselves are not features */
+    var docCount = 0; allDocs.forEach(function (d) { docCount += docTabs(d.dataset.fdoc); });
+    var diagCount = document.querySelectorAll('.tabpanel[data-panel="context"] .mdwrap img, .tabpanel[data-panel="hld"] .mdwrap img, .tabpanel[data-panel="lld"] .mdwrap img, .mdwrap .mermaid, .mdwrap .mermaid-fallback, .mdwrap pre code.language-mermaid').length;
+    var stats = [[hubCount, 'Platform Hubs', 'layers'], [featCount, 'Features', 'doc'], [docCount, 'Documents', 'guide'], [diagCount, 'Diagrams', 'tree']];
+    document.getElementById('hm-stats').innerHTML = stats.map(function (s) {
+      return '<div class="hm-stat">' + svg(IC[s[2]], 22) + '<div><b>' + s[0] + '</b><span>' + s[1] + '</span></div></div>';
+    }).join('');
+
+    home.addEventListener('click', function (e) {
+      var it = e.target.closest('[data-nav]'); if (!it || !home.contains(it)) return;
+      e.preventDefault(); go(it.getAttribute('data-nav'), it.getAttribute('data-target'));
+    });
+  }
+
   /* ── feature page: breadcrumb, meta chips, Related Documentation ── */
   function crumb(text, kind, target) { return '<a href="#" data-nav="' + kind + '"' + (target ? ' data-target="' + target + '"' : '') + '>' + text + '</a><span class="sep">&rsaquo;</span>'; }
   document.querySelectorAll('.fdoc').forEach(function (doc) {
@@ -3250,10 +3446,10 @@
     if (!hero || !titleEl) return;
     var title = titleEl.textContent.trim(), pv = parentOf[id];
     var trail = crumb('Home', 'home');
-    if (pv === 'v-hub') trail += crumb('Platform Hubs', 'home') + crumb('Learning Hub', 'hub', 'v-hub');
+    if (pv === 'v-hub') trail += crumb('Platform Hubs', 'hub', 'v-land') + crumb('Learning Hub', 'hub', 'v-hub');
     else if (pv === 'v-features') trail += crumb('Features', 'hub', 'v-features');
     else if (pv === 'v-registration') trail += crumb('Features', 'hub', 'v-features') + crumb('Registration', 'hub', 'v-registration');
-    else trail += crumb('Platform Hubs', 'home');
+    else trail += crumb('Platform Hubs', 'hub', 'v-land');
     var nav = document.createElement('nav');
     nav.className = 'fp-crumbs'; nav.setAttribute('aria-label', 'Breadcrumb');
     nav.innerHTML = trail + '<span class="cur">' + title.replace(/</g, '&lt;') + '</span>';
@@ -3272,27 +3468,14 @@
     if (!chips) { chips = document.createElement('div'); chips.className = 'fp-chips'; titleEl.parentNode.appendChild(chips); }
     var meta = '<span class="chip meta">' + svg(IC[pv === 'v-hub' ? 'learning' : 'layers'], 14) + where + '</span>' +
                '<span class="chip meta">' + svg(IC.doc, 14) + tabs.length + ' Documents</span>';
+    /* last commit date of the feature's docs folder (written by the build) */
+    var mdEl = doc.querySelector('.mdwrap[data-md]'), when = mdEl && DATES[mdEl.getAttribute('data-md').replace(/\/[^\/]*$/, '')];
+    if (when) {
+      var dt = new Date(when + 'T00:00:00');
+      meta += '<span class="chip meta">' + svg(IC.event, 14) + 'Last Updated: ' +
+              dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + '</span>';
+    }
     chips.insertAdjacentHTML('afterbegin', meta);
-
-    /* Related Documentation: one card per documentation tab, opening that tab */
-    var panel = doc.querySelector('.tabpanel[data-panel="overview"]');
-    if (!panel || !tabs.length) return;
-    var sec = document.createElement('section');
-    sec.className = 'rd';
-    sec.innerHTML = '<h2 class="fp-h2">Related Documentation</h2><div class="rd-grid">' + tabs.map(function (b) {
-      var d = TABDOC[b.dataset.tab] || ['doc', 'Open the ' + b.textContent.trim() + ' documentation'];
-      return '<button type="button" class="rd-card" data-tab="' + b.dataset.tab + '"><span class="rd-ic">' + svg(IC[d[0]], 20) + '</span>' +
-             '<span class="rd-txt"><b>' + b.textContent.trim() + '</b><span>' + d[1] + '</span></span>' + svg(IC.chevR, 16).replace('<svg', '<svg class="chev"') + '</button>';
-    }).join('') + '</div>';
-    sec.addEventListener('click', function (e) {
-      var c = e.target.closest('.rd-card'); if (!c) return;
-      var btn = doc.querySelector('.fp-tab[data-tab="' + c.getAttribute('data-tab') + '"]');
-      if (btn) { window.setTab(btn); btn.scrollIntoView({ block: 'nearest' }); }
-    });
-    /* top of the main column; in a two-column overview the side column is left alone */
-    var main = panel.firstElementChild;
-    if (main && !main.classList.contains('mdwrap') && !main.classList.contains('fp-side')) main.insertBefore(sec, main.firstChild);
-    else panel.insertBefore(sec, panel.firstChild);
   });
 
   /* ── highlight where the user is ── */
@@ -3301,7 +3484,7 @@
     for (var i = 0; i < vs.length; i++) if (!vs[i].hasAttribute('data-gone')) { v = vs[i]; break; }
     if (!v) return null;
     if (v.id === 'v-feat') { var d = document.querySelector('.fdoc:not([hidden])'); return d ? ['feature', d.dataset.fdoc] : null; }
-    if (v.id === 'v-land') return ['home', null];
+    if (v.id === 'v-home') return ['home', null];
     return ['hub', v.id];
   }
   function mark() {
