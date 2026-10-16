@@ -28,6 +28,8 @@
   .view { position: absolute; inset: 0; opacity: 1; transition: opacity .35s ease; }
   .view.hidden { opacity: 0; pointer-events: none; }
   .view[data-gone] { display: none; }
+  /* bubble hub maps are laid out on a 1440-wide grid: keep them that size, centred on a wider stage */
+  .view.ring { left: 50%; right: auto; width: 1440px; margin-left: -720px; }
 
   /* ── shared chrome ──────────────────────────────── */
   .topbar {
@@ -169,7 +171,7 @@
     box-shadow: 0 10px 24px -10px #1B4CA180;
   }
   .fp-title { font-size: 30px; font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; }
-  .fp-sub { font-size: 14.5px; color: #4E5562; margin-top: 5px; max-width: 720px; }
+  .fp-sub { font-size: 14.5px; color: #4E5562; margin-top: 5px; max-width: 1100px; }
   .fp-chips { display: flex; gap: 8px; margin-top: 13px; flex-wrap: wrap; }
   .chip {
     font-size: 11.5px; font-weight: 700; background: #FFFFFF; border: 1px solid #00000014;
@@ -187,7 +189,7 @@
   .fp-tab.active { font-weight: 900; color: #1B4CA1; border-bottom-color: #1B4CA1; }
   .fp-body { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 28px; padding: 26px 40px; }
   .fp-h2 { font-size: 18px; font-weight: 900; letter-spacing: -0.02em; margin: 0 0 10px; }
-  .fp-p { font-size: 14.5px; color: #4E5562; line-height: 1.65; max-width: 66ch; margin: 0 0 20px; }
+  .fp-p { font-size: 14.5px; color: #4E5562; line-height: 1.65; max-width: none; margin: 0 0 20px; }
   .fp-cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 22px; }
   .fp-card {
     background: #FFFFFF; border: 1px solid #00000014; border-radius: 12px;
@@ -306,7 +308,7 @@
 
 <style>
 /* ── markdown-rendered tech tabs (APIs · HLD · LLD) ─── */
-.mdwrap { max-width: 900px; }
+.mdwrap { max-width: none; }
 .mdwrap h1 { font-size: 21px; font-weight: 900; letter-spacing: -0.02em; margin: 0 0 14px; }
 .mdwrap h2 { font-size: 18px; font-weight: 900; letter-spacing: -0.02em; margin: 26px 0 10px; padding-top: 18px; border-top: 1px solid #00000010; }
 .mdwrap h1 + h2, .mdwrap h2:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
@@ -567,7 +569,7 @@
   </section>
 
   <!-- ══════════ VIEW 1 · LANDING (hub map, "View all hubs") ══════════ -->
-  <section class="view hidden" data-gone id="v-land">
+  <section class="view ring hidden" data-gone id="v-land">
 
     <!-- hexagon: 4 hubs + 2 landing features, 60° apart on the orbit -->
     <svg class="orbitbg" width="1440" height="900" fill="none">
@@ -614,7 +616,7 @@
   </section>
 
   <!-- ══════════ VIEW 2 · LEARNING HUB ══════════ -->
-  <section class="view hidden" data-gone id="v-hub" data-hub-name="Learning Hub">
+  <section class="view ring hidden" data-gone id="v-hub" data-hub-name="Learning Hub">
 
     <button class="backpill" onclick="goLanding()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
@@ -665,7 +667,7 @@
     <div class="hint">Every feature is documented &mdash; click any bubble to open it</div>
   </section>
 
-  <section class="view hidden" data-gone id="v-features" data-hub-name="Features">
+  <section class="view ring hidden" data-gone id="v-features" data-hub-name="Features">
 
     <button class="backpill" onclick="goLanding()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
@@ -709,7 +711,7 @@
   </section>
 
   <!-- ══════════ VIEW 2b · REGISTRATION (sub-hub of Features) ══════════ -->
-  <section class="view hidden" data-gone id="v-registration" data-hub-name="Registration">
+  <section class="view ring hidden" data-gone id="v-registration" data-hub-name="Registration">
 
     <button class="backpill" onclick="goParentHub()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B4CA1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
@@ -2874,14 +2876,20 @@
     wrap.style.paddingTop = hh + 'px';
     document.body.style.paddingBottom = fh + 'px';
     var w = window.innerWidth - 8 - sbw, h = window.innerHeight - hh - fh, s;
+    var sw = 1440;
     if (window.innerWidth >= 1024) {
-      /* desktop: fit BOTH dimensions so home/hub views fill the screen with no scroll */
+      /* desktop: fit BOTH dimensions so home/hub views fill the screen with no scroll,
+         then widen the canvas so wide screens are filled instead of leaving side gutters
+         (the bubble hub maps stay 1440 wide and centred; see .view.ring) */
+      w += 8;
       s = Math.min(w / 1440, h / 960);
+      sw = Math.max(1440, Math.floor(w / s));
       document.body.style.overflowY = 'hidden';
     } else {
       s = Math.min(1, w / 1440);
       document.body.style.overflowY = '';
     }
+    stage.style.width = sw + 'px';
     stage.style.transform = 'scale(' + s + ')';
     wrap.style.height = Math.floor(960 * s + hh) + 'px'; /* border-box: include the header offset */
   }
