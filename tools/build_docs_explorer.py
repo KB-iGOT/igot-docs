@@ -12,7 +12,7 @@ Usage (from the iGOT-Doc folder):
         [--docs docs] [--marked tools/marked.min.js] \
         [--out karmayogi-docs-explorer.html]
 """
-import argparse, base64, json, mimetypes, pathlib, re, sys
+import argparse, base64, json, mimetypes, pathlib, re, subprocess, sys
 
 def main():
     ap = argparse.ArgumentParser()
@@ -79,6 +79,19 @@ def main():
         )
         i = out.rfind("</body>")
         out = out[:i] + hook + out[i:] if i != -1 else out + hook
+
+    # last-commit date of each feature's docs folder, shown as "Last Updated" on its page
+    dates = {}
+    for d in sorted({pathlib.PurePosixPath(k).parent.as_posix() for k in store if "/" in k}):
+        try:
+            r = subprocess.run(["git", "log", "-1", "--format=%cs", "--", (docs / d).as_posix()],
+                               capture_output=True, text=True, timeout=20)
+            if r.returncode == 0 and r.stdout.strip():
+                dates[d] = r.stdout.strip()
+        except (OSError, subprocess.SubprocessError):
+            break  # no git: pages simply show no date
+    tag = '<script id="doc-dates" type="application/json">' + json.dumps(dates) + '</script>\n'
+    out = out.replace('<script id="md-store"', tag + '<script id="md-store"', 1)
 
     if a.mermaid:
         mm = pathlib.Path(a.mermaid).read_text(encoding="utf-8")
