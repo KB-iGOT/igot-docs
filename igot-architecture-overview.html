@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>iGOT Karmayogi — Platform Architecture</title>
-<meta name="description" content="Bird's-eye high-level design of the iGOT Karmayogi platform as five concentric rings: data stores at the core, the Sunbird-ED learning core, the Karmayogi service layer, gateways, and the portals.">
+<meta name="description" content="Bird's-eye high-level design of the iGOT Karmayogi platform: portals, gateways, the iGOT service layer beside the Sunbird Knowlg and Lern building blocks, and the data stores.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
@@ -137,7 +137,7 @@
   .flow li{position:relative;padding-left:30px;margin:6px 0;font-size:13.5px;color:var(--ink-2);counter-increment:s}
   .flow li::before{content:counter(s);position:absolute;left:0;top:1px;width:20px;height:20px;border-radius:50%;background:var(--paper);border:1.5px solid var(--blue-line);font-size:11px;font-weight:900;color:var(--blue);display:flex;align-items:center;justify-content:center}
   .rg{display:inline-block;font-size:10px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;margin-right:4px;vertical-align:1px}
-  .rg.d{background:#EEF0F4;color:#3E4654} .rg.s{background:#E6F4EF;color:var(--sb)} .rg.i{background:#E8EEF9;color:var(--blue)} .rg.g{background:#F0F1F4;color:var(--gw)} .rg.c{background:#FDF1E0;color:#9A5E07}
+  .rg.d{background:#EEF0F4;color:#3E4654} .rg.s{background:#E6F4EF;color:var(--sb)} .rg.l{background:#FDF3E7;color:#B45309} .rg.i{background:#E8EEF9;color:var(--blue)} .rg.g{background:#F0F1F4;color:var(--gw)} .rg.c{background:#FDF1E0;color:#9A5E07}
 
 
   /* architects */
@@ -178,9 +178,9 @@
   <div class="hero">
     <div class="kicker">High-level design · bird's-eye view</div>
     <h1>iGOT Karmayogi platform architecture</h1>
-    <p class="lede">Four portals and a mobile app reach, through <b>two gateway front doors</b>, a Karmayogi-specific service layer that <b>extends — never forks —</b> the open-source Sunbird-ED learning core. Everything persists in a set of purpose-built stores, talks asynchronously over Kafka, and is mined nightly into a BI warehouse — all running on Kubernetes in Google Cloud.</p>
+    <p class="lede">Four portals and a mobile app reach, through <b>two gateway front doors</b>, a Karmayogi-specific service layer that <b>extends — never forks —</b> the open-source Sunbird building blocks (Knowlg and Lern). Everything persists in a set of purpose-built stores, talks asynchronously over Kafka, and is mined nightly into a BI warehouse — all running on Kubernetes in Google Cloud.</p>
     <div class="chips">
-      <span class="chip">Scope: whole platform, incl. Sunbird-ED</span>
+      <span class="chip">Scope: whole platform, incl. Sunbird Knowlg + Lern</span>
       <span class="chip">No APIs · no use cases · no data models</span>
       <span class="chip ok">✓ Components traced in the feature HLDs · Oct 2026</span>
       <span class="chip">◌ = documented from contracts / config only</span>
@@ -189,11 +189,11 @@
 
   <section id="layers">
     <h2>The platform in four layers</h2>
-    <p class="h2sub">Read left to right the way a request travels: people → gateways → services → data. iGOT services and the Sunbird-ED core sit <b>shoulder to shoulder</b> in the services layer — Kong routes to either directly, and iGOT calls into Sunbird sideways. <b>Click a layer</b> to focus it — unrelated layers slim down to bars and the connections to its neighbours flow across the gaps. <b>Click a component</b> to see everything it talks to, wherever it sits. Click the focused layer again (or Reset) to go back.</p>
+    <p class="h2sub">Read left to right the way a request travels: people → gateways → services → data. iGOT services and the two upstream Sunbird building blocks — <b>Knowlg</b> and <b>Lern</b> — sit <b>shoulder to shoulder</b> in the services layer: Kong routes to any of them directly, and iGOT calls into the Sunbird blocks sideways. <b>Click a layer</b> to focus it — unrelated layers slim down to bars and the connections to its neighbours flow across the gaps. <b>Click a component</b> to see everything it talks to, wherever it sits. Click the focused layer again (or Reset) to go back.</p>
     <div class="stagecard" id="stagecard">
       <div class="stage-tools"><span id="stageHint">Nothing open — click any layer</span><span><button type="button" id="resetStage" hidden>Reset</button> <button type="button" id="fsStage" title="Full screen">⤢ Full screen</button></span></div>
       <div class="stage" id="stage"><svg class="wires" id="wires"></svg></div>
-      <div class="legend"><span><i style="background:#EF951E"></i>from portals</span><span><i style="background:#4E5562"></i>from gateways</span><span><i style="background:#1B4CA1"></i>from iGOT services</span><span><i style="background:#0F7A5E"></i>from Sunbird-ED</span><span><i style="background:#5B6472"></i>live stores</span><span><i style="background:#7B3FA0"></i>messaging</span><span><i style="background:#0E7490"></i>analytics stores</span><span><i style="background:#C8933A;border-top:2px dashed #C8933A;height:0"></i>external</span><span>◌ documented from contracts / config only</span></div>
+      <div class="legend"><span><i style="background:#EF951E"></i>from portals</span><span><i style="background:#4E5562"></i>from gateways</span><span><i style="background:#1B4CA1"></i>from iGOT services</span><span><i style="background:#0F7A5E"></i>from Sunbird Knowlg</span><span><i style="background:#B45309"></i>from Sunbird Lern</span><span><i style="background:#5B6472"></i>live stores</span><span><i style="background:#7B3FA0"></i>messaging</span><span><i style="background:#0E7490"></i>analytics stores</span><span><i style="background:#C8933A;border-top:2px dashed #C8933A;height:0"></i>external</span><span>◌ documented from contracts / config only</span></div>
       <div class="detail" id="detail"></div>
     </div>
     <div class="infra"><b>Runs on</b> Kubernetes (GKE) · Google Cloud asia-south1 &nbsp;·&nbsp; <b>defined by</b> <code>sunbird-devops</code> (Ansible · Helm · Kong route map) &nbsp;·&nbsp; <b>built &amp; deployed by</b> Jenkins CI/CD ◌</div>
@@ -205,21 +205,21 @@
     <div class="flows">
       <div class="flow"><h3>Learn <small>a Karmayogi takes a course</small></h3><ol>
         <li><span class="rg c">Portals</span><span class="rg g">Gateway</span> portal or mobile enters via <code>/apis</code> → Kong</li>
-        <li><span class="rg s">Sunbird</span> search-service to discover; course-service to enrol and track progress</li>
+        <li><span class="rg s">Knowlg</span> search-service to discover; <span class="rg l">Lern</span> course-service to enrol and track progress</li>
         <li><span class="rg d">Data</span> state in Cassandra; completion event on Kafka</li>
-        <li><span class="rg i">iGOT</span><span class="rg s">Sunbird</span> karma points, certificates react to the event</li>
+        <li><span class="rg i">iGOT</span><span class="rg l">Lern</span> karma points, certificates react to the event</li>
         <li><span class="rg i">iGOT</span><span class="rg d">Data</span> next nightly run refreshes leaderboards and the warehouse</li></ol></div>
       <div class="flow"><h3>Create &amp; publish <small>content reaches learners</small></h3><ol>
         <li><span class="rg c">Portals</span><span class="rg g">Gateway</span> creation portal → gateway</li>
-        <li><span class="rg s">Sunbird</span> knowledge-platform: Draft → Review → Live</li>
+        <li><span class="rg s">Knowlg</span> knowledge-platform: Draft → Review → Live</li>
         <li><span class="rg d">Data</span> publish event on Kafka</li>
-        <li><span class="rg s">Sunbird</span> Flink publish &amp; indexer jobs</li>
+        <li><span class="rg s">Knowlg</span> Flink publish &amp; indexer jobs</li>
         <li><span class="rg d">Data</span> Elasticsearch / Neo4j / GCS updated; visible to learners</li></ol></div>
       <div class="flow"><h3>Onboard <small>a user or a department joins</small></h3><ol>
         <li><span class="rg c">Portals</span> public sign-up, admin portal or CSV upload</li>
         <li><span class="rg g">Gateway</span> Keycloak identity</li>
         <li><span class="rg i">iGOT</span> sunbird-cb-ext orchestrates; workflow approvals where required</li>
-        <li><span class="rg s">Sunbird</span> sunbird-lms-service creates the account</li>
+        <li><span class="rg l">Lern</span> sunbird-lms-service creates the account</li>
         <li><span class="rg i">iGOT</span><span class="rg d">Data</span> notification mail; user directory in Cassandra / Elasticsearch</li></ol></div>
       <div class="flow"><h3>Measure <small>the platform reports on itself</small></h3><ol>
         <li><span class="rg i">iGOT</span><span class="rg d">Data</span> cb-core-data extracts nightly from the live stores</li>
@@ -251,10 +251,11 @@
             <tr><td><code>notification-service</code></td><td>iGOT</td><td>Email / notification dispatch, with <code>cb-notification-wrapper-service</code> in front</td><td>—</td><td class="repo"><a href="https://github.com/KB-iGOT/notification-service">notification-service</a></td></tr>
             <tr><td>AI services</td><td>iGOT</td><td><code>nlp-search</code> keyword extraction, <code>ai-assessment-service</code>, AI CBP authoring, profanity model</td><td>Gemini / Vertex AI</td><td class="repo"><a href="https://github.com/KB-iGOT/nlp-search">nlp-search</a> · <a href="https://github.com/KB-iGOT/ai-assessment-service">ai-assessment-service</a></td></tr>
             <tr><td><code>cb-core-data</code></td><td>iGOT</td><td>Nightly Spark / DuckDB stages: extract → pre-join → reports, warehouse, cache, karma, leaderboards</td><td>Postgres warehouse · BigQuery · Redis · Cassandra · GCS</td><td class="repo"><a href="https://github.com/KB-iGOT/cb-core-data">cb-core-data</a></td></tr>
-            <tr><td><code>knowledge-platform</code></td><td>Sunbird</td><td>content-service (lifecycle), search-service (Elasticsearch read), taxonomy / framework API, <code>knowledge-mw-service</code> relay</td><td>Neo4j · Elasticsearch · Cassandra · Redis</td><td class="repo"><a href="https://github.com/KB-iGOT/knowledge-platform">knowledge-platform</a></td></tr>
-            <tr><td><code>sunbird-lms-service</code></td><td>Sunbird</td><td>User accounts, organisations, roles, OTP, SSO user creation</td><td>Cassandra · Elasticsearch</td><td class="repo"><a href="https://github.com/KB-iGOT/sunbird-lms-service">sunbird-lms-service</a></td></tr>
-            <tr><td><code>sunbird-course-service</code></td><td>Sunbird</td><td>Batches, enrolments, content-state progress, external-course enrolment path</td><td>Cassandra · Redis</td><td class="repo"><a href="https://github.com/KB-iGOT/sunbird-course-service">sunbird-course-service</a></td></tr>
-            <tr><td><code>knowledge-platform-jobs</code></td><td>Sunbird</td><td>Flink jobs: search indexer, publish pipeline</td><td>Kafka → Elasticsearch · Neo4j</td><td class="repo"><a href="https://github.com/KB-iGOT/knowledge-platform-jobs">knowledge-platform-jobs</a></td></tr>
+            <tr><td><code>knowledge-platform</code></td><td>Knowlg</td><td>content-service (lifecycle), search-service (Elasticsearch read), taxonomy / framework API</td><td>Neo4j · Elasticsearch · Cassandra · Redis</td><td class="repo"><a href="https://github.com/KB-iGOT/knowledge-platform">knowledge-platform</a></td></tr>
+            <tr><td><code>knowledge-mw-service</code></td><td>Knowlg</td><td>Legacy Node middleware relaying v1 composite search and content proxies to the current knowledge-platform services (<code>knowledge-mw-service:5000</code> in Kong)</td><td>—</td><td class="repo"><a href="https://github.com/KB-iGOT/knowledge-mw-service">knowledge-mw-service</a></td></tr>
+            <tr><td><code>sunbird-lms-service</code></td><td>Lern</td><td>User accounts, organisations, roles, OTP, SSO user creation</td><td>Cassandra · Elasticsearch</td><td class="repo"><a href="https://github.com/KB-iGOT/sunbird-lms-service">sunbird-lms-service</a></td></tr>
+            <tr><td><code>sunbird-course-service</code></td><td>Lern</td><td>Batches, enrolments, content-state progress, external-course enrolment path</td><td>Cassandra · Redis</td><td class="repo"><a href="https://github.com/KB-iGOT/sunbird-course-service">sunbird-course-service</a></td></tr>
+            <tr><td><code>knowledge-platform-jobs</code></td><td>Knowlg</td><td>Flink jobs: search indexer, publish pipeline</td><td>Kafka → Elasticsearch · Neo4j</td><td class="repo"><a href="https://github.com/KB-iGOT/knowledge-platform-jobs">knowledge-platform-jobs</a></td></tr>
           </tbody>
         </table>
         <div class="note"><b>Verification boundary.</b> Components marked <b>◌</b> — <code>assessment-service</code>, certificate / registry services, Druid, MongoDB's owner, Jenkins, CDN / static delivery, email / SMS providers — appear because the feature docs reach them through client contracts, Kong route entries or deployment configuration, not because their source has been traced in this doc set. Attach the missing repo and re-verify before relying on their internals; do not remove the marker when editing.</div>
@@ -276,7 +277,7 @@
   var COLUMNS = [
     {id:'clients',  n:'1', name:'Web portals & mobile', tag:'people',           groups:['clients']},
     {id:'gateway',  n:'2', name:'Proxies & gateways',   tag:'two front doors',  groups:['gateway']},
-    {id:'services', n:'3', name:'Services',             tag:'iGOT + Sunbird-ED', groups:['igot','sunbird']},
+    {id:'services', n:'3', name:'Services',             tag:'iGOT + Sunbird Knowlg + Lern', groups:['igot','knowlg','lern']},
     {id:'data',     n:'4', name:'Data & messaging',     tag:'stores · events',   groups:['live','msg','ana']},
     {id:'ext',      n:'→', name:'External systems',     tag:'outside the boundary', groups:['ext']}
   ];
@@ -284,14 +285,15 @@
     clients:{name:'Web portals & mobile', color:'#EF951E', soft:'#FDF1E0', blurb:'The screens civil servants, department (MDO) admins, SPV super-admins and content creators actually use: four web portals and the mobile app. Nothing here talks to a service directly — every call goes through the gateway layer.'},
     gateway:{name:'Proxies & gateways', color:'#4E5562', soft:'#F0F1F4', blurb:'One public host. Nginx splits traffic onto two front doors — /apis (UI Proxy: browser session, Keycloak token exchange, allow-list) and /api (Kong: the authoritative public-URI → service route map). Keycloak is the single identity provider.'},
     igot:{name:'iGOT services', sub:'Karmayogi Bharat', color:'#1B4CA1', soft:'#E8EEF9', blurb:'Everything that makes iGOT iGOT rather than a generic Sunbird deployment — registration and approvals, organisation hierarchy, competencies, karma points, communities, the partner marketplace, notifications, the nightly analytics pipeline and the AI assistants. Built beside the Sunbird core, calling into it where needed.'},
-    sunbird:{name:'Sunbird-ED core', sub:'upstream, adopted as-is', color:'#0F7A5E', soft:'#E6F4EF', blurb:'The open-source learning platform: content and its lifecycle, search, the competency framework API, user and org accounts, batches, enrolments, progress, assessments, certificates, and the Flink jobs that index and publish. Consumed as-is, never forked.'},
+    knowlg:{name:'Sunbird Knowlg', sub:'knowledge building block · upstream', color:'#0F7A5E', soft:'#E6F4EF', blurb:'Sunbird\'s knowledge building block (knowlg.sunbird.org): content and its lifecycle, composite search, taxonomy / framework, DIAL, players and editors, and the Flink jobs that publish and index. Consumed as-is, never forked.'},
+    lern:{name:'Sunbird Lern', sub:'learning building block · upstream', color:'#B45309', soft:'#FDF3E7', blurb:'Sunbird\'s learning building block (lern.sunbird.org): user and organisation management, course batches, enrolments and progress, certificates, notifications. Consumed as-is, never forked.'},
     live:{name:'Live stores', color:'#5B6472', soft:'#EEF0F4', blurb:'Polyglot persistence — each store does one job.'},
     msg:{name:'Messaging', color:'#7B3FA0', soft:'#F3ECF8', blurb:'The Kafka backbone: services react to each other\'s events instead of calling each other.'},
     ana:{name:'Analytics stores', color:'#0E7490', soft:'#E6F4F7', blurb:'Written nightly by cb-core-data, read by BI.'},
     ext:{name:'External systems', color:'#C8933A', soft:'#FDF1E0', blurb:'Systems outside the platform boundary that iGOT integrates with.'}
   };
   var COLBLURB = {
-    services:'Behind Kong the two service families sit side by side: iGOT services (Karmayogi Bharat) and the Sunbird-ED core. Kong routes to either directly; where iGOT needs core behaviour it calls Sunbird sideways — it extends the core, never forks it.',
+    services:'Behind Kong three service families sit side by side: iGOT services (Karmayogi Bharat) and the two upstream Sunbird building blocks — Knowlg (content, search, taxonomy) and Lern (users, orgs, courses, certificates). Kong routes to any of them directly; where iGOT needs core behaviour it calls the Sunbird blocks sideways — it extends them, never forks them.',
     data:'Three kinds of state: the live stores the services read and write, the Kafka backbone that carries their events, and the analytics stores filled nightly by cb-core-data and read by BI.'
   };
 
@@ -304,7 +306,7 @@
 
     {id:'nginx',   layer:'gateway', label:'Nginx', sub:'edge', owns:'TLS termination; splits /apis → UI Proxy and /api → Kong'},
     {id:'uiproxy', layer:'gateway', label:'UI Proxy', sub:'sunbird-cb-uiproxy · /apis', owns:'Browser session, Keycloak token exchange, allow-listed /apis routes. Most requests are forwarded to Kong; a few routes (competency, FRAC) go straight to iGOT services', repo:'sunbird-cb-uiproxy'},
-    {id:'kong',    layer:'gateway', label:'Kong API gateway', sub:'/api', owns:'Public URI → internal service map (sunbird-devops › kong-api), JWT / CORS / ACL plugins. Routes to iGOT services and Sunbird-ED services alike', repo:'sunbird-devops'},
+    {id:'kong',    layer:'gateway', label:'Kong API gateway', sub:'/api', owns:'Public URI → internal service map (sunbird-devops › kong-api), JWT / CORS / ACL plugins. Routes to iGOT, Knowlg and Lern services alike', repo:'sunbird-devops'},
     {id:'keycloak',layer:'gateway', label:'Keycloak', sub:'identity · SSO', owns:'Identity, login theme, realms, SSO clients (incl. marketplace partner SSO)', repo:'sunbird-devops'},
 
     {id:'cbext',   layer:'igot', label:'sunbird-cb-ext', sub:'registration · org · profile · karma', owns:'Registration orchestration, custom links, org creation/hierarchy, profile, karma points, competency-designation mapping, search-by directory', repo:'sunbird-cb-ext'},
@@ -317,12 +319,13 @@
     {id:'ai',      layer:'igot', label:'AI services', sub:'nlp-search · ai-assessment · profanity', owns:'nlp-search keyword extraction, ai-assessment-service, AI CBP authoring, profanity model — opt-in per client', repo:'nlp-search'},
     {id:'coredata',layer:'igot', label:'cb-core-data', sub:'nightly Spark · DuckDB', owns:'Nightly Spark / DuckDB stages: extract → pre-join → ~46 reports, warehouse, cache, karma, leaderboards', repo:'cb-core-data'},
 
-    {id:'kp',    layer:'sunbird', label:'knowledge-platform', sub:'content · search · taxonomy · mw', owns:'content-service (Draft → Review → Live), search-service, taxonomy / framework API, knowledge-mw relay', repo:'knowledge-platform'},
-    {id:'lms',   layer:'sunbird', label:'sunbird-lms-service', sub:'users · orgs · roles · OTP', owns:'User accounts, organisations, roles, OTP, SSO user creation', repo:'sunbird-lms-service'},
-    {id:'course',layer:'sunbird', label:'sunbird-course-service', sub:'batches · enrolments · progress', owns:'Batches, enrolments, content-state progress, external-course enrolment path', repo:'sunbird-course-service'},
-    {id:'kpjobs',layer:'sunbird', label:'knowledge-platform-jobs', sub:'Flink: indexer · publish', owns:'Flink streaming jobs: search indexer, publish pipeline', repo:'knowledge-platform-jobs'},
-    {id:'assess',layer:'sunbird', label:'assessment-service', sub:'contracts only', owns:'Assessment shell, questions, save/submit, result — contracts only', b:true},
-    {id:'cert',  layer:'sunbird', label:'certificates / registry', sub:'contracts only', owns:'Certificate generation on completion events — contracts and Kafka topics only', b:true},
+    {id:'kp',    layer:'knowlg', label:'knowledge-platform', sub:'content · search · taxonomy', owns:'content-service (Draft → Review → Live), search-service (composite search over Elasticsearch), taxonomy / framework API', repo:'knowledge-platform'},
+    {id:'kmw',   layer:'knowlg', label:'knowledge-mw-service', sub:'legacy middleware relay', owns:'Node middleware in front of the knowledge platform: relays the legacy v1 composite search and content proxies to the current services (knowledge-mw-service:5000 in the Kong route map)', repo:'knowledge-mw-service'},
+    {id:'lms',   layer:'lern', label:'sunbird-lms-service', sub:'users · orgs · roles · OTP', owns:'Lern user-org service: user accounts, organisations, roles, OTP, SSO user creation', repo:'sunbird-lms-service'},
+    {id:'course',layer:'lern', label:'sunbird-course-service', sub:'batches · enrolments · progress', owns:'Lern course service: batches, enrolments, content-state progress, external-course enrolment path', repo:'sunbird-course-service'},
+    {id:'kpjobs',layer:'knowlg', label:'knowledge-platform-jobs', sub:'Flink: indexer · publish', owns:'Knowlg Flink jobs: search indexer, content publish pipeline', repo:'knowledge-platform-jobs'},
+    {id:'assess',layer:'knowlg', label:'assessment-service', sub:'Sunbird inQuiry · contracts only', owns:'Assessment shell, questions, save/submit, result. Upstream this is Sunbird\'s inQuiry building block; shown with Knowlg here — contracts only', b:true},
+    {id:'cert',  layer:'lern', label:'certificates / registry', sub:'contracts only', owns:'Lern certificate generation on completion events — contracts and Kafka topics only', b:true},
 
     {id:'cassandra', layer:'live', label:'Cassandra', sub:'transactional', owns:'Transactional state: users, orgs, batches, enrolments, progress, karma, leaderboards'},
     {id:'es',        layer:'live', label:'Elasticsearch', sub:'search · directory', owns:'Search and directory indexes: compositesearch (content), user/org directory, marketplace catalog'},
@@ -356,7 +359,7 @@
     ['coredata','cassandra'],['coredata','es'],['coredata','postgres'],['coredata','mongo'],['coredata','druid'],['coredata','redis'],['coredata','gcs'],['coredata','warehouse'],['coredata','bigquery'],
     ['cbext','lms'],['cbext','kp'],['cbcourse','course'],['market','course'],['coredata','kp'],['ai','kp'],
     ['kong','cbext'],['kong','cbcourse'],['kong','workflow'],['kong','frac'],['kong','disc'],['kong','market'],['kong','notif'],['kong','ai'],
-    ['kong','kp'],['kong','lms'],['kong','course'],['kong','assess'],
+    ['kong','kp'],['kong','kmw'],['kmw','kp'],['kong','lms'],['kong','course'],['kong','assess'],
     ['nginx','uiproxy'],['nginx','kong'],['uiproxy','kong'],['uiproxy','keycloak'],['keycloak','lms'],
     ['uiproxy','cbext'],['uiproxy','frac'],
     ['portal','nginx'],['mobile','nginx'],['orgportal','nginx'],['adminportal','nginx'],['creation','nginx'],
@@ -458,7 +461,7 @@
   fsBtn.addEventListener('click',function(){ if(document.fullscreenElement) document.exitFullscreen(); else if(card.requestFullscreen) card.requestFullscreen(); });
   document.addEventListener('fullscreenchange',function(){ fsBtn.textContent = document.fullscreenElement ? '⤡ Exit full screen' : '⤢ Full screen'; setTimeout(drawWires,300); });
 
-  var GORDER = ['clients','gateway','igot','sunbird','live','msg','ana','ext'];
+  var GORDER = ['clients','gateway','igot','knowlg','lern','live','msg','ana','ext'];
   function renderDetail(){
     if(!state.picked){ detail.classList.remove('open'); detail.innerHTML='';
       if(state.focus){ var c=colById[state.focus], i=cidx(state.focus), nb=[i>0?COLUMNS[i-1].name:null, i<COLUMNS.length-1?COLUMNS[i+1].name:null].filter(Boolean); hint.textContent=c.name+' focused — connections to '+nb.join(' and '); }
