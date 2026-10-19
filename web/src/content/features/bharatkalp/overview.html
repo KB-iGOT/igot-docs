@@ -1,0 +1,10 @@
+<div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">Bharat Kalp is a program that only exists for the people invited into it. Members get their own landing page — progress at the top, a carousel of communities to join below — and a “see all” browser where each week's courses, programs, events and resources can be searched and filtered by how far along they are. Everyone else never sees it: the entry points are hidden and a direct link turns them away.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> Bharat Kalp has no backend of its own — it composes existing platform services (form config, search, enrolment, and the external CIOS content partner) into one portal module, and its landing hero and cards are rendered by externally-versioned library components this repo cannot see inside. Whether you can see it at all rides on a single profile attribute that is set by an out-of-band process no traced repo covers.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>One flag, four checks</b><p>Visibility hangs on a single profile attribute — but the route guard reads it more strictly than the three checks that show the entry points.</p></div>
+          <div class="fp-card"><b>Config-driven, no domain model</b><p>Weeks, tabs and content buckets are all shaped by CMS-authored JSON consumed untyped, so a malformed config degrades to an empty page rather than an error.</p></div>
+          <div class="fp-card"><b>Composed, not orchestrated</b><p>Four independent calls fan out from the browser — there is no single endpoint that assembles a week for you.</p></div>
+        </div>
+      </div>

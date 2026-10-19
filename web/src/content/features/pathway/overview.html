@@ -1,0 +1,10 @@
+<div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A pathway looks like a course laid out as a staircase of up to five <strong>milestones</strong>, each a small bundle of courses (some mandatory, some optional) ending in its own checkpoint assessment. The next milestone stays locked until the current one's mandatory courses are done and its checkpoint is passed — and every one of those locks is worked out on the learner's own device from ordinary course-progress data, not fetched from a dedicated "pathway progress" API.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> Learning Pathway is not a bespoke backend feature — it is an ordinary content/collection node distinguished only by <code>courseCategory = "Learning Pathway"</code>, with milestones embedded as opaque JSON. There is no attempt-limit/cool-off enforcement anywhere, and several pieces (access control rules, discovery inclusion, certificate/QR/karma issuance) depend on external services or remote config not present in the four repos traced. Treat this page as thorough but bounded by that scope.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Content overlay, not a service</b><p>Every write reuses the generic Content CRUD actors; only the enriched read is pathway-aware.</p></div>
+          <div class="fp-card"><b>Client-derived unlock</b><p>Web and mobile each independently recompute milestone lock state — no server push, no shared code between them.</p></div>
+          <div class="fp-card"><b>Per-milestone achievement</b><p>Finishing a milestone can award its own certificate, not just one at the very end.</p></div>
+        </div>
+      </div>

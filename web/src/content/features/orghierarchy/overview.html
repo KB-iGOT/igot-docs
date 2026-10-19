@@ -1,0 +1,39 @@
+<div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">Every root organisation (a ministry or a state) can own one hierarchy. An admin switches it on once from the hierarchy page, which gives the organisation an empty tree with ten named levels. From then on the tree is filled either one node at a time in the tree view — add a child, rename it, retire it, publish — or all at once by downloading a spreadsheet template, filling one row per path (<code>L1 → L2 → L3 …</code>, each cell written as <code>Name&lt;orgId&gt;</code>) and uploading it. The upload runs in the background; the admin polls a progress list and downloads the same sheet back with a <code>Status</code> and <code>Error</code> column per row. Separately, every new organisation created on the platform is dropped into its root's hierarchy automatically as a top-level node.</p>
+        <div class="note-banner"><strong>The non-obvious mechanism:</strong> a bulk upload does not edit the existing tree — it builds a <strong>fresh</strong> hierarchy copy, loads the rows into that, and if at least one row succeeded retires the previous hierarchy and points the organisation at the new one. The tree after an upload is exactly what the spreadsheet said; an upload where every row failed leaves the old tree untouched.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>One tree per root, ten levels</b><p>A ministry or state owns the hierarchy; departments under it see their parent's tree. Levels are fixed at ten by configuration.</p></div>
+          <div class="fp-card"><b>Two ways to fill it</b><p>Node-by-node in the shared tree view, or a spreadsheet upload validated row by row — chain gaps, unknown orgs, multiple parents, loops are all rejected with a per-row reason.</p></div>
+          <div class="fp-card"><b>Never misses a new org</b><p>Creating an organisation anywhere on the platform also adds it to its root's tree as a top-level node, in the background.</p></div>
+        </div>
+        <h2 class="fp-h2">How an admin experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 · OPEN</b><p>Hierarchy page resolves the root (own org, or the parent ministry/state for a department)</p></div>
+          <div class="fp-step"><b>2 · CREATE</b><p>One click, first time only — the root now carries a hierarchy ID</p></div>
+          <div class="fp-step"><b>3 · EDIT or UPLOAD</b><p>Work the tree view, or download the template (with a master list of orgs under the root) and upload it</p></div>
+          <div class="fp-step"><b>4 · TRACK</b><p>Upload list shows INITIATED → IN_PROGRESS → SUCCESSFUL / FAILED with row counts</p></div>
+          <div class="fp-step"><b>5 · FIX</b><p>Download the annotated sheet, correct only the failed rows, re-upload</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How an admin experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab shows why the tree is a Sunbird <i>framework</i> and which of three stores answers which question; <b style="color:#1B4CA1">LLD</b> has the upload sequence, row rules and config; <b style="color:#1B4CA1">As-Built</b> lists where the implementations disagree.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">User Registration</span>
+            <span class="side-pill">SPV &amp; Admin Registration</span>
+            <span class="side-pill">Bulk Registration</span>
+          </div>
+        </div>
+      </div>

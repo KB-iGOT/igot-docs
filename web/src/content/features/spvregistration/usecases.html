@@ -1,0 +1,11 @@
+<div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-2/3 · Create a state, ministry or volunteer organisation</b><p>Name, category, description and logo; a State Admin's category and state are pre-set. The organisation, its hierarchy row and an event are created.</p><div class="api">POST <code>apis/proxies/v8/org/ext/v1/create</code></div></div>
+          <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-5 · Activate or deactivate a volunteer organisation</b><p>Sets status 0 or 1.</p><div class="api">PATCH <code>apis/proxies/v8/org/v1/status/update</code></div></div>
+          <div class="uc-card"><div class="who">SPV / State Admin</div><b class="t">UC-7 · Create the first administrator</b><p>Choose organisation, name, email, mobile and role; one MDO Leader per organisation; set-password link and welcome mail follow.</p><div class="api">POST <code>apis/protected/v8/user/profileDetails/createUser</code></div></div>
+          <div class="uc-card"><div class="who">SPV / State Admin</div><b class="t">UC-9 · Make an existing person an administrator</b><p>Grants MDO Admin (or State Admin for a state organisation); blocks people who already hold either.</p><div class="api">POST <code>apis/proxies/v8/user/v1/role/assign</code></div></div>
+          <div class="uc-card"><div class="who">SPV / State Admin</div><b class="t">UC-10 · Publish a registration link and QR</b><p>Needs imported designations; generating a new link expires the previous one first.</p><div class="api">POST <code>apis/proxies/v8/customselfregistration</code></div></div>
+          <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-11/12 · Review organisation, designation and domain requests</b><p>Edit the name before approving; give a reason to reject. Only domain approval has an effect.</p><div class="api">POST <code>apis/proxies/v8/workflow/{org,position,domain}/update</code></div></div>
+          <div class="uc-card"><div class="who">SPV Admin</div><b class="t">UC-14 · Approve or reject an AI-generated designation</b><p>Reject needs a non-blank reviewer comment; served by the AI CBP designation service.</p><div class="api">POST <code>apis/proxies/v8/ai/cbp/v1/designation/approval-requests/approve</code></div></div>
+        </div>
+      </div>

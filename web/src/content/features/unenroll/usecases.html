@@ -1,0 +1,9 @@
+<div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 · Discover the option (mobile only)</b><p>Overflow menu on the TOC page — hidden for a completed, featured, player-mode, or non-plain-course item, or if the <code>showMenuIcon</code> remote config flag is off.</p><div class="api">n/a — client-side gate</div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 · Give a reason (mandatory)</b><p>At least one of five fixed reasons must be selected before "Yes, un-enroll" is enabled; comment is optional, ≤500 chars.</p><div class="api">n/a — captured client-side, sent with the call</div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-4 · The call itself</b><p>Reasons/comments travel in the same request as the unenroll call — the backend validator/actor never reads either field.</p><div class="api">POST <code>/api/course/v2/unenroll</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-6 · "Withdraw" a pending blended-program request (web's only unenroll-labelled action)</b><p>Only offered pre-approval; disables mid-flight in a two-step MDO↔PC chain — a different feature from UC-1–5, same endpoint mobile uses for its own blended withdraw.</p><div class="api">POST <code>apis/proxies/v8/workflow/blendedprogram/unenrol</code></div></div>
+          <div class="uc-card"><div class="who">Admin</div><b class="t">UC-8 · Admin force-unenrolls a learner</b><p>Admin variant of the same actor path — no confirmed UI caller in any traced repo.</p><div class="api">POST <code>/v1/course/admin/unenroll</code></div></div>
+        </div>
+      </div>

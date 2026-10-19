@@ -1,0 +1,10 @@
+<div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Content Partner</div><b class="t">UC-1 · Self-register as a partner</b><p>Validated for duplicates, assigned an application ID, saved as PENDING, confirmed by email.</p><div class="api">POST <code>contentpartner/register/v1/create</code></div></div>
+          <div class="uc-card"><div class="who">Marketplace Admin</div><b class="t">UC-2 · Approve a partner application</b><p>Approval auto-provisions a full ContentPartner record with licensing defaults zeroed/disabled.</p><div class="api">POST <code>contentpartner/register/v1/update</code></div></div>
+          <div class="uc-card"><div class="who">Marketplace Admin / Partner</div><b class="t">UC-8 · Upload a partner's course catalog</b><p>Stored to GCS, processed asynchronously via Kafka, transformed per-partner via a JOLT spec.</p><div class="api">POST <code>ciosIntegration/v1/loadContentFromExcel/:partnercode/:partnerId</code></div></div>
+          <div class="uc-card"><div class="who">Content Curator</div><b class="t">UC-11 · Configure and publish a course</b><p>Sets courseType, courseEnrolLimit, requiredKarmaPoints and competency tags — locked once licenseType is set and once the course is live.</p><div class="api">POST <code>cios/v1/onboardContent</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-13 · Discover a partner course</b><p>Via a home spotlight card or the dedicated Browse-by-Provider directory — two independently-built entry points.</p><div class="api">POST <code>contentpartner/v1/search</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-15 · Enroll in a partner course</b><p>Validated against overall/per-user/concurrent/per-course license caps before the enrollment is written.</p><div class="api">POST <code>cios-enroll/v1/create</code></div></div>
+        </div>
+      </div>

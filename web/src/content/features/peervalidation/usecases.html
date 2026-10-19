@@ -1,0 +1,8 @@
+<div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 · Get prompted and submit</b><p>Days after finishing an eligible course, a survey prompt appears; the learner answers, optionally attaches proof, and names 2-3 peers.</p><div class="api">POST <code>peersurvey/submit</code></div></div>
+          <div class="uc-card"><div class="who">Peer</div><b class="t">UC-2 · Review and decide</b><p>Each named peer reviews independently and approves or rejects — a decision that can never be changed once made.</p><div class="api">POST <code>peersurvey/submit</code> (review)</div></div>
+          <div class="uc-card"><div class="who">MDO / SPV Admin</div><b class="t">UC-3 · Configure a survey</b><p>Attach a survey to a live course: trigger window, lookback, up to two custom questions.</p><div class="api">POST <code>mdo/peersurvey/create</code></div></div>
+          <div class="uc-card"><div class="who">MDO / SPV Admin</div><b class="t">UC-4 · Pull a completion report</b><p>Generate a CSV of submissions and outcomes — async, the admin checks back rather than being notified.</p><div class="api">GET <code>peerValidation/v1/report/initiate/:formId</code></div></div>
+        </div>
+      </div>

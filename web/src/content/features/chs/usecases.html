@@ -1,0 +1,10 @@
+<div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">MDO Administrator</div><b class="t">UC-1 · Download a report bundle</b><p>Per-org CSVs are packaged into one password-protected ZIP per org and uploaded to cloud storage.</p><div class="api">zipUpload.py · GCS</div></div>
+          <div class="uc-card"><div class="who">MDO Administrator</div><b class="t">UC-2 · View org-scoped dashboard metrics</b><p>Counters and leaderboards keyed by ministry/org ID, read straight from Redis.</p><div class="api">ministryMetrics.py · dashboardSync.py</div></div>
+          <div class="uc-card"><div class="who">BI / Looker Consumer</div><b class="t">UC-3 · Query the BI warehouse</b><p>12 core Postgres tables, or their BigQuery mirror, rebuilt from scratch every run.</p><div class="api">dataWarehouse.py · bq-scripts.sh</div></div>
+          <div class="uc-card"><div class="who">Platform Dashboard</div><b class="t">UC-4 · Read near-real-time counters</b><p>50+ Redis keys computed via DuckDB, independent of the slower warehouse sync.</p><div class="api">dashboardSync.py</div></div>
+          <div class="uc-card"><div class="who">Pipeline Operator</div><b class="t">UC-5 · Run the orchestrated core chain</b><p>One invocation chains Stage 1 and 4 Stage 2 jobs, logging per-stage duration.</p><div class="api">python jobs/main.py</div></div>
+          <div class="uc-card"><div class="who">Downstream System</div><b class="t">UC-6 · Consume outbox notifications</b><p>Peer-validation and gamification notifications flow through a Postgres-table outbox, not Kafka, despite class names.</p><div class="api">peerValidationEligibleUsers.py · peerValidationNotificationSender.py</div></div>
+        </div>
+      </div>

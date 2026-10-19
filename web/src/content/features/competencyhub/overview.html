@@ -1,0 +1,36 @@
+<div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">There turn out to be two competency taxonomies, not one. <code>frac-backend</code> is a real Spring Boot service — one generic <code>DataNode</code> model for Competency/Role/Activity/Position/etc., MySQL + Elasticsearch storage, and a genuine two-tier (L1/L2) review workflow before a node counts as verified. Almost nothing in this trace calls it directly except <code>sunbird-cb-uiproxy</code>'s two hand-written FRAC routers and Work Allocation verification. Everything else — most competency pickers, and the ODCS admin bulk-upload — reads and writes a framework called <code>kcmfinal_fw</code> living inside <code>knowledge-platform</code>'s generic, content-agnostic Framework/Term API instead. No code anywhere reconciles the two. Layered on top: a learner's <em>acquired</em> competencies live in a third store (one Cassandra table, written by two uncoordinated pipelines), and a fourth, public read-only copy exists in <code>frac-dictionary</code>, which mirrors <code>frac-backend</code>'s Elasticsearch data directly without ever calling its REST API.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> no code in any of these 13 repos moves data between <code>frac-backend</code> and the <code>kcmfinal_fw</code> mirror — whether they're meant to sync via something outside this trace, or have simply diverged, isn't answerable from source. Three closely-related repos — <code>cbp-ai-service</code>, <code>ai-cbp-mdo-service</code>, <code>cbp-ai-ui</code> — are deliberately not re-documented here; they're already covered by <a href="#/features/aicbp">AI CBP Tool</a>, which uses a <em>third</em> static copy of the vocabulary (a bundled dataset) to AI-generate Capacity Building Plans.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>The real backend, found</b><p><code>frac-backend</code>'s <code>FRACController</code> implements the exact method names (<code>addDataNode</code>, <code>searchNodes</code>...) the gateway calls by name — closing what was an external gap, until it revealed a second one.</p></div>
+          <div class="fp-card"><b>A two-tier review workflow, invisible elsewhere</b><p>L1 "technical review" then L2 "review board" gate every new/edited node — no other repo shows any awareness that competency data might be unverified.</p></div>
+          <div class="fp-card"><b>ODCS writes to the mirror, not the real thing</b><p>The admin bulk-upload's "framework term create/publish" calls hit <code>knowledge-platform</code>'s Framework API, never <code>frac-backend</code> — confirmed by an exhaustive search finding zero "framework"/"term" concepts in <code>frac-backend</code>'s own code.</p></div>
+        </div>
+        <h2 class="fp-h2">How a Karmayogi experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 · SEE</b><p>Competency tags on course/content cards, read straight off <code>competencies_v6</code></p></div>
+          <div class="fp-step"><b>2 · PASSBOOK</b><p>Open a Behavioural/Functional/Domain breakdown of every competency earned</p></div>
+          <div class="fp-step"><b>3 · BROWSE</b><p>Find content by competency, not just by course</p></div>
+          <div class="fp-step"><b>4 · SELF-ATTEST</b><p>Declare current vs. desired competencies during profile setup</p></div>
+          <div class="fp-step"><b>5 · EARN PASSIVELY</b><p>A certificate quietly upserts the tagged competency into the Passbook</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How a Karmayogi experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab shows the full topology across the taxonomy, content schema, and the two competency-write pipelines; <b style="color:#1B4CA1">LLD</b> covers the Cassandra/Elasticsearch storage reality and the ODCS write sequence.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+          </div>
+        </div>
+      </div>

@@ -1,0 +1,37 @@
+<div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">An org admin uploads a CSV of new users from the Bulk Creation tab, completes an OTP challenge sent to their own email/phone, and the file is queued asynchronously. Behind that one upload, <code>sunbird-cb-ext</code> parses the file, tracks the batch, and — one HTTP call per row — calls <code>sunbird-lms-service</code>'s <code>/v5/cb/user/bulkcreate</code> (or the NGO variant). A separate, self-contained CSV pipeline also exists natively inside <code>sunbird-lms-service</code> with no confirmed UI caller, and a fourth, legacy tenant-admin flow talks to Keycloak directly.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> the two endpoints literally named "bulkcreate" create <strong>one user per call</strong> — there is no array-of-users handling in <code>SSOUserCreateActor</code> for either operation. The multi-row batching that makes this feature "bulk" happens entirely inside <code>sunbird-cb-ext</code>'s Kafka consumer, a layer above the API most readers would assume does it.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Three unconnected implementations</b><p>A live pipeline through <code>sunbird-cb-ext</code>, a native but seemingly-unused pipeline inside <code>sunbird-lms-service</code>, and a legacy pipeline that talks to Keycloak directly — none share a Cassandra table or a Kafka topic.</p></div>
+          <div class="fp-card"><b>"Bulk create" isn't bulk</b><p><code>/v5/cb/user/bulkcreate</code> and <code>/ngo/bulkcreate</code> both take one flat user object and create exactly one account per HTTP call.</p></div>
+          <div class="fp-card"><b>OTP protects the admin, not the new users</b><p>The verification step guards against an unattended session starting a bulk create — it says nothing about the rows in the file.</p></div>
+        </div>
+        <h2 class="fp-h2">How an org admin experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 · TEMPLATE</b><p>Downloads a per-org CSV field list (no template file ships in any repo)</p></div>
+          <div class="fp-step"><b>2 · VERIFY</b><p>Completes an OTP challenge sent to their own email/phone</p></div>
+          <div class="fp-step"><b>3 · UPLOAD</b><p>≤10&nbsp;MB CSV, queued asynchronously via Kafka</p></div>
+          <div class="fp-step"><b>4 · REFRESH</b><p>Manually reopens a status table — no live polling anywhere</p></div>
+          <div class="fp-step"><b>5 · DOWNLOAD</b><p>Per-row pass/fail is only visible in a downloadable result file</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How an org admin experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab lays out all three pipelines and why they don't share code; <b style="color:#1B4CA1">LLD</b> covers storage, sequence flows and validation rules for each.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">Events Hub</span>
+          </div>
+        </div>
+      </div>

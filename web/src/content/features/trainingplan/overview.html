@@ -1,0 +1,38 @@
+<div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">An MDO Admin or MDO Leader builds a plan in the Org Portal: a title, a set of courses (optionally flagged APAR — mandatory, performance-linked — and, within that, a "gating" subset required before a linked Comprehensive Assessment unlocks), a target audience picked through Reusable User Groups, and an end date. Publishing fans the plan out into per-assignee lookup rows so a Karmayogi's dashboard can find "plans that apply to me" without scanning every plan in the org. Underneath all of this, four independently-tabled generations of the same feature are simultaneously live today.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> v1 (<code>sunbird-cb-ext</code>, table <code>cb_plan</code>), v2 (<code>cb_plan_v2</code>), and v3/v4 (<code>cb_plan_v3</code>, shared by both API versions) all still respond behind the same <code>cbplan/*</code> proxy path family — there is no migration path between them, and the Org Portal's own authoring service calls all four side by side.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Bespoke storage, repeated three times</b><p>Unlike Learning Pathway's generic-Content reuse, a Training Plan is its own Cassandra row — a decision made independently on v1, v2, and v3, each with its own table family, none retired.</p></div>
+          <div class="fp-card"><b>A plan can gate a different feature entirely</b><p>The <code>isApar</code> flag and a Kafka-mirrored <code>calinkedid</code> turn an ordinary plan into an unlock gate for a Comprehensive Assessment — a real cross-feature dependency, not a metaphor.</p></div>
+        </div>
+        <h2 class="fp-h2">How a Karmayogi experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 · AUTHORED</b><p>MDO Admin/Leader builds the plan: content, APAR/gating, audience, timeline</p></div>
+          <div class="fp-step"><b>2 · PUBLISHED</b><p>Fans out into per-assignee lookup rows</p></div>
+          <div class="fp-step"><b>3 · ASSIGNED</b><p>Karmayogi sees it in the <code>cbp</code> portal, bucketed Upcoming/Overdue/APAR/Completed</p></div>
+          <div class="fp-step"><b>4 · GATES (optional)</b><p>Mandatory content can gate a linked Comprehensive Assessment</p></div>
+          <div class="fp-step"><b>5 · OR BULK-GENERATED</b><p>An AI pipeline drafts and bulk-publishes designation-wide plans, independent of the above</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How a Karmayogi experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab covers the topology across all 9 repos and the four-generation split in full; <b style="color:#1B4CA1">LLD</b> covers storage, schemas, sequence flows and state machines.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">Comprehensive Assessment Program</span>
+            <span class="side-pill">My Assigned Courses</span>
+            <span class="side-pill">AI CBP Tool</span>
+          </div>
+        </div>
+      </div>

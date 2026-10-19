@@ -1,0 +1,9 @@
+<div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">CHS is the platform's batch analytics pipeline — the jobs that turn raw activity data into karma points, badges, leaderboards, compliance reports and the BI warehouse. It runs nightly, unattended, and shapes what MDO admins, BI/Looker consumers, the live dashboard, and downstream notification systems see.</p>
+        <div class="fp-cards">
+          <div class="fp-card"><b>No incremental sync, anywhere</b><p>Every warehouse write is a full truncate-and-reload on every run — simple to reason about, but a table is genuinely empty (not stale) during a failed or slow sync.</p></div>
+          <div class="fp-card"><b>Four very different consumers</b><p>MDO admins download ZIP reports, BI/Looker queries the warehouse, the live dashboard reads Redis directly, and downstream systems consume Kafka/Postgres outboxes — the same pipeline run serves all four differently.</p></div>
+          <div class="fp-card"><b>No orchestration DAG in-repo</b><p>Only 5 of ~46 jobs are chained by code; everything else's run order is enforced by an external, out-of-repo scheduler.</p></div>
+        </div>
+      </div>

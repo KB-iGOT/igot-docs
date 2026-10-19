@@ -1,0 +1,15 @@
+<div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 · Search from anywhere</b><p>The top bar and global search page send the query plus filters; facets in the response render the filter rail.</p><div class="api">POST <code>composite/v5/search</code> (legacy strips: <code>sunbirdigot/search</code>)</div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 · Browse by facet</b><p>Explore-menu tiles and filter chips are the same API with <code>filters</code> set and an empty query.</p><div class="api">POST <code>composite/v5/search</code> with <code>filters</code> + <code>facets</code></div></div>
+          <div class="uc-card"><div class="who">Program Coordinator</div><b class="t">UC-3 · Role-aware search</b><p>v5 parses the JWT for roles and org; the PC console uses the dedicated Blended Program search.</p><div class="api">POST <code>composite/v4/bp/search</code></div></div>
+          <div class="uc-card"><div class="who">Author</div><b class="t">UC-4 · Search while authoring</b><p>The Creation Portal searches drafts and published content through v4 search.</p><div class="api">POST <code>sunbirdigot/v4/search</code> → <code>composite/v4/search</code></div></div>
+        </div>
+        <div class="tw"><table>
+          <thead><tr><th>Edge case</th><th>Behaviour</th></tr></thead>
+          <tbody>
+            <tr><td><code>visibility: Private</code> on public search</td><td>Rejected with <code>ERR_ACCESS_DENIED</code> — enforced in the controller</td></tr>
+            <tr><td>Result missing right after publish</td><td>Expected — the index updates via the publish pipeline (eventual consistency)</td></tr>
+          </tbody>
+        </table></div>
+      </div>

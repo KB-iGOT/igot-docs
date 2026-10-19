@@ -1,0 +1,37 @@
+<div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A new Karmayogi starts at the sign-up page (or the app's intro screens), chooses their ministry or state, their organisation and their designation, proves they own their email address and mobile number with one-time codes, and submits. What they have sent is a <strong>request, not an account</strong>. If they came in through their department's registration link or QR code, or their email domain is already approved, the account is created straight away and an activation email follows; otherwise the request waits for approval first. Department admins can add a person directly, and people with a government single sign-on identity are created on their first login and sent to a short welcome form.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> the approval states that decide who approves a held registration are loaded from a platform setting at run time, so they cannot be read from the code. What sends a user to the welcome form after first login is also not in the repositories traced.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>A request first, an account later</b><p>Submitting the form answers "accepted" and stores a registration record; the account, organisation, role and activation email are produced afterwards in the background.</p></div>
+          <div class="fp-card"><b>A link is a pass</b><p>A department's registration link replaces both the email-domain check and the approval step — and each department has only one active link at a time.</p></div>
+        </div>
+        <h2 class="fp-h2">How a Karmayogi experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 · OPEN</b><p>Sign-up page, app intro, or a department link / QR code</p></div>
+          <div class="fp-step"><b>2 · CHOOSE</b><p>Ministry or state, organisation, designation</p></div>
+          <div class="fp-step"><b>3 · VERIFY</b><p>One-time code to the email, another to the mobile</p></div>
+          <div class="fp-step"><b>4 · SUBMIT</b><p>Request accepted — a registration code is emailed if approval is needed</p></div>
+          <div class="fp-step"><b>5 · ACTIVATE</b><p>Welcome email with a set-password link once the account exists</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How a Karmayogi experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">APIs</b> tab carries the gateway chain for every call; <b style="color:#1B4CA1">HLD</b> and <b style="color:#1B4CA1">LLD</b> cover the registration pipeline, account-creation order and OTP rules; <b style="color:#1B4CA1">As-Built</b> lists every known deviation.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">SPV &amp; Admin Registration</span>
+            <span class="side-pill">Bulk Registration</span>
+          </div>
+        </div>
+      </div>

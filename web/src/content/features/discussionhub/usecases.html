@@ -1,0 +1,10 @@
+<div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 · Join a community</b><p>Rejected for private communities with no request-to-join/invite flow implemented anywhere.</p><div class="api">PUT <code>community/v1/join</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 · Post a Question</b><p>Requires active community membership; triggers a synchronous fan-out of up to ~7 ES queries plus an async moderation pipeline.</p><div class="api">POST <code>v1/discussion/create</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-5 · Vote, bookmark, report</b><p>Vote on, bookmark or report a post at any thread level.</p><div class="api">POST <code>v1/discussion/report</code></div></div>
+          <div class="uc-card"><div class="who">MDO Leader</div><b class="t">UC-7 · Create and publish a community</b><p>Draft → publish, emailing every listed moderator on success.</p><div class="api">POST <code>community/v1/create</code> → POST <code>community/v1/publish</code></div></div>
+          <div class="uc-card"><div class="who">MDO Leader / Moderator</div><b class="t">UC-9 · Review and moderate reported content</b><p>Hide or restore reported content through the admin endpoints.</p><div class="api">POST <code>feedDiscussion/admin/removePost</code></div></div>
+          <div class="uc-card"><div class="who">Platform Ops</div><b class="t">UC-10 · Community counters update</b><p>Async Kafka consumer that updates the community counters.</p><div class="api">Kafka: <code>community.discusion.post.count</code></div></div>
+        </div>
+      </div>

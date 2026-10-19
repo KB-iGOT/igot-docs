@@ -1,0 +1,39 @@
+<div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">"Moderated" is a <code>courseCategory</code> value (<code>Moderated Course</code>/<code>Moderated Program</code>/<code>Moderated Assessment</code>) on ordinary Sunbird course content, restricted to specific MDOs via a <code>secureSettings.organisation</code> array and optionally a <code>secureSettings.isVerifiedKarmayogi</code> toggle — enforced as an Elasticsearch nested-query filter inside <code>knowledge-platform</code>'s search actor, not just a client-side hide. Authoring rides the same generic Draft→Review→Live workflow every other content type uses, gated by the <code>CONTENT_REVIEWER</code> role. A structurally unrelated feature also called "moderation" — automatic text-profanity screening of discussion posts — runs through a separate transformer-based service, called asynchronously from <code>cb-discussion-service</code>; a flagged post is soft-hidden from listings, not deleted.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> of the moderation-notification types the platform's own <code>NotificationSubCategory</code> taxonomy is clearly built to support — course/program submitted-for-review, approved, rejected — only the discussion-profanity alert (<code>PROFANITY_CHECK</code>) has a locatable producer across all 13 repos traced, and even that one has a payload-shape mismatch with the endpoint it calls that was never confirmed to work at runtime.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>No dedicated moderated-content service</b><p>It's a <code>courseCategory</code> value plus a <code>secureSettings</code> field on the generic content schema — no separate table, schema, or approval API exists beyond that.</p></div>
+          <div class="fp-card"><b>Enforced at the search engine, not just the UI</b><p><code>SearchProcessor</code>'s nested Elasticsearch query on <code>secureSettings.organisation</code> means a client skipping the filter still can't retrieve out-of-org content.</p></div>
+          <div class="fp-card"><b>Two "moderation" systems, zero shared code</b><p>MDO-restricted course/program visibility and ML discussion-post profanity checking live in different repos, different data models, different notification paths.</p></div>
+        </div>
+        <h2 class="fp-h2">How MDO-scoping is built</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 · AUTHOR</b><p>Sets <code>courseCategory</code> + org list/verified-toggle via the moderated-course widget</p></div>
+          <div class="fp-step"><b>2 · REVIEW</b><p>Generic <code>sendToReview</code>/publish calls — same as any other content</p></div>
+          <div class="fp-step"><b>3 · LIVE</b><p>Content indexed into <code>knowledge-platform</code>'s search with <code>secureSettings</code> intact</p></div>
+          <div class="fp-step"><b>4 · QUERY</b><p><code>SearchActor</code> auto-injects the caller's org if none was passed</p></div>
+          <div class="fp-step"><b>5 · RESULT</b><p>Elasticsearch nested query restricts results to the matching org (and verified-status, if unverified)</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How MDO-scoping is built</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab covers both subsystems' topology and the notification gaps in full; <b style="color:#1B4CA1">LLD</b> covers storage, the review state machine, and the async profanity-check sequence.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">Course</span>
+            <span class="side-pill">Peer Validation</span>
+            <span class="side-pill">Comprehensive Assessment Program</span>
+          </div>
+        </div>
+      </div>

@@ -1,0 +1,9 @@
+<div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 · See claps on the web Home page</b><p>Rendered inside the insight sidebar, gated on a page-config enabled flag — and again as a fallback inside the profile-stats widget.</p><div class="api">POST <code>apis/proxies/v8/read/user/insights</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 · See claps on the web Profile page</b><p>An externally-versioned card in the Achievement section's “My Statistics” tab — a third, separate implementation from the Home-page one.</p></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-6 · See claps on the mobile Home screen</b><p>The legacy, untyped widget; tapping it navigates to the profile dashboard's My Activity view.</p><div class="api">POST <code>api/insights</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-8 · See claps in the mobile Achievement Hub</b><p>Mobile-only, a separately-built typed model — and its request body omits <code>rootOrgId</code>, unlike every other call site.</p></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-9 · Get prompted for an app-store rating after a clap</b><p>Driven by a polled server-side feed item, not a client-side clap-count check — the phone never does that arithmetic.</p><div class="api">GET <code>api/user/v1/feed/&lt;userId&gt;</code></div></div>
+        </div>
+      </div>

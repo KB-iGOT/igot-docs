@@ -1,0 +1,8 @@
+<div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 · Start an attempt</b><p>The player reads the assessment shell (sections, timing, rules), then fetches questions by id in batches as the learner progresses.</p><div class="api">POST <code>assessment/v5/read</code> · <code>question/v5/read</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 · Auto-save &amp; submit</b><p>Answers are saved server-side during the attempt, then submitted; the submit API has evolved v2→v5 and old versions remain for embedded/legacy content.</p><div class="api">POST <code>assessment/save</code> · <code>user/evaluate/assessment/submit/v5</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 · See results &amp; retake</b><p>Result read is versioned alongside submit; retakes are requested per assessment id and honour the configured attempt policy.</p><div class="api">POST <code>user/assessment/v5/result</code> · GET <code>user/assessment/v5/retake/:assessmentId</code></div></div>
+          <div class="uc-card"><div class="who">Author</div><b class="t">UC-4 · Author the question set</b><p>Created in the Creation Portal as a question set with its own review/publish cycle; CQF quality checks have their own create/update/autopublish path.</p><div class="api">POST <code>questionset/v1/create · review · publish</code> · <code>cqfquestionset/…</code></div></div>
+        </div>
+      </div>

@@ -1,0 +1,2560 @@
+[
+  {
+    "id": "blended",
+    "title": "Blended Program",
+    "summary": "Instructor-led learning that mixes self-paced online content with scheduled classroom sessions — batches with seat limits, an approval step, session attendance and assignments.",
+    "icon": "<path d=\"M4 6.5A2.5 2.5 0 0 1 6.5 4H15a3 3 0 0 1 3 3v13H6.5A2.5 2.5 0 0 1 4 17.5z\"></path><circle cx=\"11\" cy=\"10\" r=\"2.2\"></circle><path d=\"M7.5 16c.6-1.7 1.9-2.6 3.5-2.6s2.9.9 3.5 2.6\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "blended/overview.html",
+          "layout": "twoCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "blended/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/blended-program/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/blended-program/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/blended-program/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/blended-program/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/blended-program/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/blended-program/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "course",
+    "title": "Course",
+    "summary": "The standard self-paced unit of learning — one-click enrolment, node-by-node progress, Karma Points and a certificate on completion.",
+    "icon": "<path d=\"M5 4.5h9a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3z\"></path><path d=\"M17 7.5h2v13H8\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "course/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "course/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/course/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/course/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/course/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/course/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/course/operations-manual.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "curated",
+    "title": "Curated Program",
+    "summary": "An editorially assembled collection of courses enrolled as one unit — auto-assigned batch, progress rolled up from the child courses.",
+    "icon": "<path d=\"M12 3 2.5 8 12 13l9.5-5z\"></path><path d=\"M6 10.5V16c0 1.7 2.7 3 6 3s6-1.3 6-3v-5.5\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "curated/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "curated/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/curated-program/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/curated-program/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/curated-program/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/curated-program/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/curated-program/operations-manual.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "assigned",
+    "title": "My Assigned Courses",
+    "summary": "Courses pushed to a learner by their organisation — resolved by an access-settings rules engine, including external partner (CIOS) courses.",
+    "icon": "<circle cx=\"10\" cy=\"8\" r=\"3.2\"></circle><path d=\"M4.5 20c0-3.3 2.5-5.5 5.5-5.5 1.2 0 2.3.3 3.2 1\"></path><path d=\"M14.5 18.5l2 2 3.5-4\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "assigned/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "assigned/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/my-assigned-courses/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/my-assigned-courses/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/my-assigned-courses/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/my-assigned-courses/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/my-assigned-courses/operations-manual.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "standalone",
+    "title": "Standalone Assessment",
+    "summary": "An assessment taken as its own learning object — question sets served securely, auto-saved attempts, versioned submission and result APIs, retakes.",
+    "icon": "<rect x=\"5\" y=\"3.5\" width=\"14\" height=\"17\" rx=\"2\"></rect><path d=\"M9 3.5h6v3H9z\"></path><path d=\"M8.5 12l2 2 4-4.5\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "standalone/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "standalone/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/standalone-assessment/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/standalone-assessment/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/standalone-assessment/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/standalone-assessment/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/standalone-assessment/operations-manual.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "cap",
+    "title": "Comprehensive Assessment Program",
+    "summary": "A program-level assessment category, typically assigned/mandated, that reuses the assessment engine end to end.",
+    "icon": "<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><circle cx=\"12\" cy=\"12\" r=\"4.5\"></circle><circle cx=\"12\" cy=\"12\" r=\"1\"></circle>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "cap/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "cap/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/comprehensive-assessment-program/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/comprehensive-assessment-program/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/comprehensive-assessment-program/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/comprehensive-assessment-program/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/comprehensive-assessment-program/operations-manual.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "pathway",
+    "title": "Learning Pathway",
+    "summary": "A guided, multi-stage journey — milestones of courses and checkpoints that unlock one at a time.",
+    "icon": "<path d=\"M4 19V5a2 2 0 0 1 2-2h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z\"></path><path d=\"M8 12h5M8 16h8M8 8h3\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "pathway/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "pathway/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/learning-pathway/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/learning-pathway/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/learning-pathway/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/learning-pathway/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/learning-pathway/operations-manual.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "bharatkalp",
+    "title": "Bharat Kalp",
+    "summary": "A cohort-gated, week-by-week program with its own microsite — a progress hero, a community carousel, and a searchable library of each week's content.",
+    "icon": "<path d=\"M6 3v18\"></path><path d=\"M6 4h11l-2.5 4L17 12H6\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "bharatkalp/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "bharatkalp/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/bharat-kalp/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/bharat-kalp/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/bharat-kalp/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/bharat-kalp/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/bharat-kalp/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/bharat-kalp/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "peervalidation",
+    "title": "Peer Validation",
+    "summary": "A named colleague, not a machine, has to approve a course completion before it counts.",
+    "icon": "<path d=\"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2\"></path><circle cx=\"9\" cy=\"7\" r=\"4\"></circle><path d=\"m16 11 2 2 4-4\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "peervalidation/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "peervalidation/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/peer-validation/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/peer-validation/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/peer-validation/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/peer-validation/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/peer-validation/operations-manual.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "chs",
+    "title": "CHS",
+    "summary": "A nightly batch pipeline — not a page or a button — that turns raw platform activity into karma points, badges, leaderboards, compliance reports and the BI warehouse.",
+    "icon": "<path d=\"M3 3v18h18\"></path><path d=\"M7 15l4-5 3 3 5-7\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "chs/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "chs/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/chs/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/chs/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/chs/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/chs/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/chs/operations-manual.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "aicbp",
+    "title": "AI CBP Tool",
+    "summary": "Turns a department's own Work Allocation Order and other source documents into a designation-by-designation Capacity Building Plan — role profile, competencies, and a course list — reviewed, approved and published by an MDO admin.",
+    "icon": "<rect x=\"5\" y=\"6\" width=\"14\" height=\"15\" rx=\"2\"></rect><path d=\"M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z\"></path><path d=\"M9 12h6M9 16h4\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "aicbp/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "links",
+        "label": "Key Links",
+        "source": {
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Q11 BRD AI CBP Tool Improvements Integration with MDO and iGOT Tool",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/789708827/Q11+BRD+AI+CBP+Tool+Improvements+Integration+with+MDO+and+iGOT+Tool"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Final AI CBP Tool V3 Requirements",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/773292033/Final+AI+CBP+Tool+V3+Requirements"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Detailed Requirement analysis",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/709296138/Detailed+Requirement+analysis"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "V1 Not needed AI driven CBP Workflows Comparison Analysis Document",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/576421944/V1_Not+needed+AI+driven+CBP+Workflows+Comparison+Analysis+Document"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "MOMs AI CBP V3 Integration Approach Review Meeting 6th Feb 2026",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/754221067/MOMs+AI+CBP+V3+Integration+Approach+Review+Meeting+6th+Feb+2026"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q11 AI CBP Tool User management",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/682721289/Q11+AI+CBP+Tool+User+management"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q11 AI CBP Dashboard",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/764280844/Q11+AI+CBP+Dashboard"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "BRD_AICBPTool_v4.0_r2026_Q1",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1005092865/BRD_AICBPTool_v4.0_r2026_Q1"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "FRS_AICBPTool_v4.0_r2026_Q1",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1004699665/FRS_AICBPTool_v4.0_r2026_Q1"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "AI CBP Course recommendation engine upgrade Requirement document",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1090715675/AI+CBP+Course+recommendation+engine+upgrade+Requirement+document"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "BRD AI CBP Tool CBP Generation Re-generation Publish from Backend",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1165066245/BRD+AI+CBP+Tool+CBP+Generation+Re-generation+Publish+from+Backend"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "FRS AI CBP Tool CBP Generation Re-generation Publish from Backend",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1172209671/FRS+AI+CBP+Tool+CBP+Generation+Re-generation+Publish+from+Backend"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-12635",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12635"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13331",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13331"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13951",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13951"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14603",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14603"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14768",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14768"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15691",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15691"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "AI CBP MDO API Contract - Sprint 37",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/990248961/AI+CBP+MDO+API+Contract+-+Sprint+37"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-cbp-tool/srs.md"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-cbp-tool/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context Diagrams",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-cbp-tool/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-cbp-tool/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-cbp-tool/lld.md"
+        }
+      },
+      {
+        "key": "oldlld",
+        "label": "Old LLD",
+        "hidden": true,
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-cbp-tool/lld-old.md"
+        }
+      },
+      {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-cbp-tool/sdd.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "hidden": true,
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-cbp-tool/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "hidden": true,
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-cbp-tool/as-built-requirements.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "aicbp/usecases.html",
+          "layout": "oneCol"
+        }
+      }
+    ]
+  },
+  {
+    "id": "search",
+    "title": "Search",
+    "summary": "Platform-wide search: an Elasticsearch-backed content/people/community search fronted by every portal and the mobile app, plus an independent LLM keyword-extraction step that two of five clients call before they search.",
+    "icon": "<circle cx=\"11\" cy=\"11\" r=\"6.5\"></circle><path d=\"M16 16l4.5 4.5\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "search/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/search/use-cases.md"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/search/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/search/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/search/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/search/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/search/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/search/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "eventshub",
+    "title": "Events Hub",
+    "summary": "The synchronous and interactive virtual learning subsystem of the iGOT Karmayogi platform. It governs the full lifecycle of virtual sessions — MDO authoring, SPV editorial review and publishing, cohort-based access control, live streaming and in-session chat, watch-time completion tracking, verifiable certificates, and post-event reporting — linking attendance to the Karmayogi Competency Model.",
+    "icon": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"></rect><path d=\"M16 3v4M8 3v4M3 10h18\"></path><circle cx=\"12\" cy=\"15\" r=\"2\"></circle>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/events-hub/index.md"
+        }
+      },
+      {
+        "key": "links",
+        "label": "Key Links",
+        "source": {
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "KY BRD EVE KT Karmayogi talks",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/11960377/KY+BRD+EVE+KT+Karmayogi+talks?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KY FRS EVE KT Karmayogi talks",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/9470839/KY+FRS+EVE+KT+Karmayogi+talks?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page AQDvBw",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/AQDvBw?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page GwDdCQ",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/GwDdCQ?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q7 | BRD | Events Hub",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/pages/resumedraft.action?draftId=253853808&xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page FoBSEg",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/FoBSEg?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page cIAhDw",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/cIAhDw?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page FoBSEg",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/FoBSEg?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page cIAhDw",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/cIAhDw"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page FoBSEg",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/FoBSEg?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page cIAhDw",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/cIAhDw?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page FoBSEg",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/FoBSEg?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page cIAhDw",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/cIAhDw?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page FoBSEg",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/FoBSEg?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page NwAZGQ",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/NwAZGQ?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page CYAfGQ",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/CYAfGQ?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence draft 492044293",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/pages/resumedraft.action?draftId=492044293"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page H4DoHQ",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/H4DoHQ?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page KwB0Hg",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/KwB0Hg"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence draft 511901703",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/pages/resumedraft.action?draftId=511901703&xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkxOTkzMDAxMzk4Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-11643",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11643"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11175",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11175"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10931",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10931"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10519",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10519"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10007",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10007"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9870",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9870"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9796",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9796"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9347",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9347"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9220",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9220"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8980",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8980"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8595",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8595"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8072",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8072"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7934",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7934"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7924",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7924"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7904",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7904"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7854",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7854"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7744",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7744"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7460",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7460"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7446",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7446"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7118",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7118"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7112",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7112"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7034",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7034"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6176",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6176"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-5727",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-5727"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-4107",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-4107"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2508",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2508"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2056",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2056"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2042",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2042"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1708",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1708"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1662",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1662"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1165",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1165"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-395",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-395"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/events-hub/srs.md"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/events-hub/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context Diagrams",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/events-hub/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/events-hub/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/events-hub/lld.md"
+        }
+      },
+      {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/events-hub/sdd.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "hidden": true,
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/events-hub/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "hidden": true,
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/events-hub/as-built-requirements.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "eventshub/usecases.html",
+          "layout": "oneCol"
+        }
+      }
+    ]
+  },
+  {
+    "id": "unenroll",
+    "title": "Unenrollment of Courses",
+    "summary": "A learner-initiated withdrawal from a course/batch — one boolean flip on the same generic enrolment record enroll writes, blocked once the course is completed, and wired up very differently depending on which client the learner is standing in.",
+    "icon": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9 9l6 6M15 9l-6 6\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "unenroll/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "unenroll/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/unenrollment-of-courses/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/unenrollment-of-courses/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/unenrollment-of-courses/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/unenrollment-of-courses/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/unenrollment-of-courses/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/unenrollment-of-courses/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "moderatedcontent",
+    "title": "Moderated Content",
+    "summary": "Two unrelated systems sharing one name: an MDO-restricted courseCategory/secureSettings visibility scheme for Moderated Course/Program/Assessment riding on the generic Sunbird review workflow, and an independent ML text-profanity check on discussion posts.",
+    "icon": "<path d=\"M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6z\"></path><path d=\"M9 12l2 2 4-4.5\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "moderatedcontent/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "moderatedcontent/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-content/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-content/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-content/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-content/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-content/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-content/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "useronboarding",
+    "title": "User Onboarding",
+    "summary": "How a person gets an account — public sign-up, a department's registration link or QR code, an admin adding them, or government single sign-on — and the admin steps behind it. Registering submits a request; the account is created afterwards.",
+    "icon": "<circle cx=\"9.5\" cy=\"8\" r=\"3.5\"></circle><path d=\"M3 20c0-3.3 2.9-6 6.5-6s6.5 2.7 6.5 6\"></path><path d=\"M19 8v6M16 11h6\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "useronboarding/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "useronboarding/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/user-onboarding/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/user-onboarding/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/user-onboarding/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/user-onboarding/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/user-onboarding/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/user-onboarding/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "spvregistration",
+    "title": "SPV & Admin Registration",
+    "summary": "The platform-owner side of onboarding, done from the SPV / super-admin portal: creating organisations, putting their first administrators in place, publishing registration links, and approving requests for new organisations, designations and email domains.",
+    "icon": "<path d=\"M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6z\"></path><path d=\"M12 9v6M9 12h6\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "spvregistration/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "spvregistration/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/spv-admin-registration/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/spv-admin-registration/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/spv-admin-registration/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/spv-admin-registration/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/spv-admin-registration/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/spv-admin-registration/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "marketplace",
+    "title": "Marketplace",
+    "summary": "A partner/external-content ecosystem layered alongside the native Course pipeline — third-party providers are registered, licensed, and have their catalogs ingested through a separate storage, enrollment and entitlement stack that only loosely interoperates with native platform content.",
+    "icon": "<path d=\"M4 8l1.5-4h13L20 8\"></path><path d=\"M4 8h16v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z\"></path><path d=\"M9 8v2a3 3 0 0 1-6 0V8M15 8v2a3 3 0 0 0 6 0V8M9 8v2a3 3 0 0 1-3 3 3 3 0 0 1-3-3\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "marketplace/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "marketplace/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/marketplace/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/marketplace/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/marketplace/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/marketplace/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/marketplace/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/marketplace/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "aiassessment",
+    "title": "AI Assessment Tool",
+    "summary": "Turns a course's PDFs and video subtitles — or just a set of Karmayogi Competency Model selections, with no course at all — into a ready-to-publish, multi-question-type, multilingual assessment, generated by Google Gemini via Vertex AI.",
+    "icon": "<rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"3\"></rect><path d=\"M9 9h.01M15 9h.01M8.5 15c1 1 2 1.5 3.5 1.5s2.5-.5 3.5-1.5\"></path><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "aiassessment/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "aiassessment/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-assessment-tool/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-assessment-tool/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-assessment-tool/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-assessment-tool/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-assessment-tool/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-assessment-tool/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "aitutor",
+    "title": "AI Tutor",
+    "summary": "",
+    "icon": "<path d=\"M2 9l10-5 10 5-10 5z\"></path><path d=\"M6 11.5V16c0 1.4 2.7 3 6 3s6-1.6 6-3v-4.5\"></path><path d=\"M22 9v5\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "aitutor/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "links",
+        "label": "Key Links",
+        "source": {
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": []
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-8927",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8927"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8992",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8992"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9890",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9890"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9942",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9942"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9943",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9943"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-tutor/srs.md"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-tutor/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context Diagrams",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-tutor/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-tutor/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-tutor/lld.md"
+        }
+      },
+      {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-tutor/sdd.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "aitutor/usecases.html",
+          "layout": "oneCol"
+        }
+      }
+    ]
+  },
+  {
+    "id": "competencyhub",
+    "title": "Competency Hub",
+    "summary": "Two parallel competency taxonomies — a real CRUD+review service (frac-backend) almost nothing calls, and a mirror inside Knowledge Platform (kcmfinal_fw) that most of the platform calls instead — plus the Passbook, browse/search and org-designation-mapping surfaces built on top.",
+    "icon": "<circle cx=\"12\" cy=\"8\" r=\"5\"></circle><path d=\"M8.5 12.5 6 21l6-3 6 3-2.5-8.5\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "competencyhub/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "competencyhub/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "competency-hub/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "competency-hub/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "competency-hub/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "competency-hub/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "competency-hub/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "competency-hub/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "discussionhub",
+    "title": "Discussion Hub",
+    "summary": "A community-scoped Q&A/forum feature — MDO leaders create Communities, Karmayogis join and post Questions, other members answer with Answer Posts and nested Answer Post Replies, all owned by one backend service.",
+    "icon": "<path d=\"M4 6.5A2.5 2.5 0 0 1 6.5 4H15a3 3 0 0 1 3 3v13H6.5A2.5 2.5 0 0 1 4 17.5z\"></path><circle cx=\"11\" cy=\"10\" r=\"2.2\"></circle><path d=\"M7.5 16c.6-1.7 1.9-2.6 3.5-2.6s2.9.9 3.5 2.6\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "discussionhub/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "discussionhub/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/discussion-hub/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/discussion-hub/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/discussion-hub/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/discussion-hub/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/discussion-hub/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/discussion-hub/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "bulkregistration",
+    "title": "Bulk Registration",
+    "summary": "Uploading a CSV of new users to create many accounts at once — except the platform actually has three independent, largely disconnected implementations of this, and the backend endpoint named for \"bulk create\" creates exactly one user per call.",
+    "icon": "<path d=\"M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2\"></path><circle cx=\"10\" cy=\"7\" r=\"4\"></circle><path d=\"M19 8v6M22 11h-6\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "bulkregistration/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "bulkregistration/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/bulk-registration/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/bulk-registration/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/bulk-registration/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/bulk-registration/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/bulk-registration/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/bulk-registration/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "weeklyclaps",
+    "title": "Weekly Claps",
+    "summary": "A rolling engagement counter — a “clap” is earned for a week once a Karmayogi spends enough time on the platform in it — surfaced as a small stats widget rather than a page of its own, five times over, across web and mobile.",
+    "icon": "<path d=\"M7 11V7a5 5 0 0 1 10 0v4\"></path><path d=\"M5 11h14l-1 9H6z\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "weeklyclaps/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "weeklyclaps/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/weekly-claps/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/weekly-claps/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/weekly-claps/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/weekly-claps/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/weekly-claps/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/weekly-claps/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "karmapoints",
+    "title": "Karma Points",
+    "summary": "An event-sourced recognition ledger — services emit events, one Flink job decides and writes every point, and the apps read it back as history, rank and a convertible Karma Coin wallet.",
+    "icon": "<path d=\"M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "karmapoints/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "karmapoints/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/karma-points/apis.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/karma-points/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/karma-points/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/karma-points/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/karma-points/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "trainingplan",
+    "title": "Training Plan",
+    "summary": "An MDO-authored, targeted assignment of content to a group of Karmayogis — internally called CbPlan everywhere in code. Not a generic Content node like Learning Pathway: a first-class Cassandra entity, rebuilt as a new API/table generation three times over (v1 → v2 → v3/v4) without ever retiring the one before it.",
+    "icon": "<rect x=\"4\" y=\"3\" width=\"16\" height=\"18\" rx=\"2\"></rect><path d=\"M8 3v4h8V3M9 12h6M9 16h4\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "trainingplan/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "trainingplan/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/training-plan/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/training-plan/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/training-plan/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/training-plan/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/training-plan/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/training-plan/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "agk",
+    "title": "Amrit Gyaan Kosh",
+    "summary": "A knowledge-resource discovery hub — PDFs, videos, audio and links tagged by sector, sub-sector, resource category, SDGs, state/UT and year — shipped as two independent client implementations, web and mobile, with no dedicated backend of its own.",
+    "icon": "<path d=\"M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z\"></path><path d=\"M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "agk/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "agk/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/amrit-gyaan-kosh/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/amrit-gyaan-kosh/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/amrit-gyaan-kosh/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/amrit-gyaan-kosh/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/amrit-gyaan-kosh/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/amrit-gyaan-kosh/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "orghierarchy",
+    "title": "Organisation Hierarchy",
+    "summary": "How a ministry or state lays out the organisations under it as a tree, up to ten levels deep — edited node by node in a tree view or loaded in one go from a spreadsheet — so the rest of the platform can answer \"who sits under whom\".",
+    "icon": "<rect x=\"9\" y=\"3\" width=\"6\" height=\"4\" rx=\"1\"></rect><rect x=\"3\" y=\"17\" width=\"6\" height=\"4\" rx=\"1\"></rect><rect x=\"15\" y=\"17\" width=\"6\" height=\"4\" rx=\"1\"></rect><path d=\"M12 7v4M6 17v-3h12v3\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "orghierarchy/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "orghierarchy/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "org-hierarchy/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "org-hierarchy/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "org-hierarchy/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "org-hierarchy/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "org-hierarchy/operations-manual.md"
+        }
+      },
+      {
+        "key": "asbuilt",
+        "label": "As-Built",
+        "source": {
+          "type": "markdown",
+          "path": "org-hierarchy/as-built-requirements.md"
+        }
+      }
+    ]
+  },
+  {
+    "id": "explore",
+    "title": "Explore Content",
+    "summary": "The platform-wide discovery surface — global search, the Explore menu, facet browsing and every “see all” listing, served by the composite search APIs.",
+    "icon": "<circle cx=\"11\" cy=\"11\" r=\"6.5\"></circle><path d=\"M16 16l4.5 4.5\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "html",
+          "file": "explore/overview.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "Use Cases",
+        "source": {
+          "type": "html",
+          "file": "explore/usecases.html",
+          "layout": "oneCol"
+        }
+      },
+      {
+        "key": "apis",
+        "label": "APIs",
+        "source": {
+          "type": "markdown",
+          "path": "explore-content/apis.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context",
+        "source": {
+          "type": "markdown",
+          "path": "explore-content/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "explore-content/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "explore-content/lld.md"
+        }
+      },
+      {
+        "key": "ops",
+        "label": "Operations Manual",
+        "source": {
+          "type": "markdown",
+          "path": "explore-content/operations-manual.md"
+        }
+      }
+    ]
+  }
+]

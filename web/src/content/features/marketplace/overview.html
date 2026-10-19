@@ -1,0 +1,36 @@
+<div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A content partner is onboarded (directly by an admin, or self-registered then approved), its catalog is ingested by uploading an Excel/CSV file that a dedicated ingestion service transforms per-partner and indexes into its own store — entirely separate from the platform's native content graph. A curator reviews, competency-tags and publishes each course; a learner discovers it via a provider directory or a spotlight card, opens a dedicated CIOS detail page, and enrolls through a third, independent enrollment engine that enforces per-partner license caps before writing the enrollment.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> no single service owns "is this user enrolled in this partner course." At least three independently-implemented enrollment/entitlement code paths exist — <code>cb_external_enrollment_service</code> (the one the UI actually calls), a parallel "external course" subsystem inside <code>sunbird-course-service</code> with its own Cassandra table, and the native Course enrollment pipeline underneath — with no code path found that calls between them.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Three separate content stores</b><p><code>cb-pores-service</code> (partner master data), <code>cios-content-service</code> (ingested catalog) and <code>cb_external_enrollment_service</code> (a third local mirror) each keep their own copy of "CIOS content," with no shared code between them.</p></div>
+        </div>
+        <h2 class="fp-h2">How a Karmayogi experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 · DISCOVER</b><p>Provider directory, or a home spotlight card into the see-all Providers tab</p></div>
+          <div class="fp-step"><b>2 · VIEW</b><p>CIOS detail page, via the @sunbird-cb/collection-v2 library</p></div>
+          <div class="fp-step"><b>3 · ENROLL</b><p>License-limit checks in cb_external_enrollment_service, then written</p></div>
+          <div class="fp-step"><b>4 · PROGRESS</b><p>Synced back from the partner's own LMS via scheduler jobs or Kafka</p></div>
+          <div class="fp-step"><b>5 · CERTIFY</b><p>Certificate + karma points, plus a separate badge-merge in course-service</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How a Karmayogi experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab covers the topology across all 9 repos and the three-enrollment-path split in full; <b style="color:#1B4CA1">LLD</b> covers storage, licensing fields and confirmed bugs.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">Course</span>
+            <span class="side-pill">My Assigned Courses</span>
+          </div>
+        </div>
+      </div>

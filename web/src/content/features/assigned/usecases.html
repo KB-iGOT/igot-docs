@@ -1,0 +1,8 @@
+<div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 · See what's assigned to me</b><p>The portal calls the v2 endpoint with the user's token; the service resolves the org's access-setting rules and returns the matching courses with the learner's enrolment state.</p><div class="api">POST <code>user/v2/assignedcourses</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 · Assigned external (partner) courses</b><p>Marketplace/CIOS content assigned by the org is resolved by a separate endpoint against the CIOS search host.</p><div class="api">POST <code>user/v1/assigned/externalcourses</code></div></div>
+          <div class="uc-card"><div class="who">MDO Admin</div><b class="t">UC-3 · Inspect a learner's assignments</b><p>Support and compliance view: the admin endpoint takes the target userId in the path and answers with that user's assigned set.</p><div class="api">POST <code>admin/user/v2/assignedcourses/:userId</code></div></div>
+          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-4 · Mandatory-course pressure</b><p>Assigned mandatory courses drive the notification modal and the mandatory-course shelf, with deadlines shown until completion.</p><div class="api">Feature route <code>/app/learn/mandatory-course</code> · GET <code>content/user/info</code></div></div>
+        </div>
+      </div>

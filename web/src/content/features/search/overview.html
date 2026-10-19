@@ -1,0 +1,38 @@
+<div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A user types a query into one of five clients. On the learner web portal and the mobile app, the client first sends the raw query to <code>nlp-search</code>, which uses Gemini to extract a ranked keyword list — the top-priority keyword, not the user's literal text, becomes the actual search term. The three admin/authoring portals skip this step and search on the raw query. Whichever term is used, the client calls a versioned content-search endpoint that lands on <code>knowledge-platform</code>'s <code>search-service</code>, which builds an Elasticsearch query against the <code>compositesearch</code> index. That index is kept current by a completely separate pipeline — a Kafka-driven Flink job in <code>knowledge-platform-jobs</code> — not by <code>search-service</code> itself.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> two backends never call each other, and are stitched together only client-side, only in two of five clients. Kong's own routing config — what host <code>/nlp/search</code> and <code>/search/*</code> actually resolve to — lives outside all ten traced repos. See the HLD tab for the full topology and the rest of the honest gaps.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Two backends, stitched only client-side</b><p><code>nlp-search</code> (LLM keyword extraction) and <code>search-service</code> (Elasticsearch) never call each other — confirmed by a repo-wide grep for "nlp" turning up zero hits in either <code>knowledge-platform</code> repo.</p></div>
+          <div class="fp-card"><b>NLP is opt-in per client, not a platform rule</b><p>Only the web portal's <code>search-v3</code> and the mobile app call <code>nlp-search</code> first. The three admin-facing portals search on raw text.</p></div>
+          <div class="fp-card"><b>Indexing is a separate pipeline entirely</b><p><code>search-service</code> is read-only against Elasticsearch. A Kafka-driven Flink job in <code>knowledge-platform-jobs</code> does all the writing, on a completely independent failure/retry path.</p></div>
+        </div>
+        <h2 class="fp-h2">How a learner experiences it (web / mobile)</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 · TYPE</b><p>Query entered in the search box</p></div>
+          <div class="fp-step"><b>2 · EXTRACT</b><p><code>nlp-search</code> returns a ranked keyword list</p></div>
+          <div class="fp-step"><b>3 · SEARCH</b><p>Top keyword sent to per-category Elasticsearch queries</p></div>
+          <div class="fp-step"><b>4 · REFINE</b><p>Facets, sort, and a live typeahead of results</p></div>
+          <div class="fp-step"><b>5 · RECENT</b><p>Search saved server-side, not on-device</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How a learner experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab shows the full topology across <code>nlp-search</code>, <code>search-service</code>, Elasticsearch, the indexing pipeline, uiproxy and Kong; <b style="color:#1B4CA1">LLD</b> covers query-DSL construction and indexing mechanics.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">Course</span>
+            <span class="side-pill">AI CBP Tool</span>
+          </div>
+        </div>
+      </div>

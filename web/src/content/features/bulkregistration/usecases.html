@@ -1,0 +1,9 @@
+<div>
+        <div class="uc-grid">
+          <div class="uc-card"><div class="who">Org Admin</div><b class="t">UC-2 · Bulk-create government/MDO users</b><p>OTP-gated CSV upload, ≤10&nbsp;MB, routed through <code>sunbird-cb-ext</code> to one HTTP call per row into <code>sunbird-lms-service</code>.</p><div class="api">POST <code>proxies/v8/user/v3/bulkupload</code></div></div>
+          <div class="uc-card"><div class="who">Org-onboarding Admin</div><b class="t">UC-3 · Bulk-create NGO/volunteer users</b><p>Same flow, gated on the org being NGO-typed; backend enforces a 10,000-row cap invisible to the UI.</p><div class="api">POST <code>proxies/v8/user/nongovt/v1/bulkupload</code></div></div>
+          <div class="uc-card"><div class="who">Org Admin</div><b class="t">UC-4 · Check batch status</b><p>A one-time (non-polling) refresh of batch-level total/success/failed counts — no per-row detail inline.</p><div class="api">GET <code>user/v1/bulkupload/{rootOrgId}</code></div></div>
+          <div class="uc-card"><div class="who">Platform/Tenant Admin</div><b class="t">UC-6 · Legacy bulk registration (frozen since 2021)</b><p>Department-scoped legacy path that calls Keycloak directly.</p><div class="api">POST <code>admin/userRegistration/bulkUpload</code></div></div>
+          <div class="uc-card"><div class="who">Unverified</div><b class="t">UC-8 · Native lms-service upload (no confirmed caller)</b><p>A complete, self-contained CSV pipeline exists with its own Kong route, but no UI in any of the 8 repos traced was found calling it.</p><div class="api">POST <code>v1/user/upload</code></div></div>
+        </div>
+      </div>

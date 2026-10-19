@@ -1,0 +1,35 @@
+<div>
+        <h2 class="fp-h2">What it is</h2>
+        <p class="fp-p">A Karmayogi joins a Community, posts a Question inside it, and other members answer with Answer Posts and nested Answer Post Replies — all three levels stored by one service (<code>cb-discussion-service</code>) in just two Postgres tables, discriminated by a <code>type</code> field. Reports past a configurable threshold auto-suspend the content; an MDO leader or community moderator then reviews it in the Org Portal's Community → Manage screen. A separate Kafka-driven worker asynchronously keeps each community's engagement counters in sync.</p>
+        <div class="note-banner"><strong>Honest gap:</strong> the platform ships two unconnected "comment thread" systems that share a confusable name — the community Q&amp;A flow documented here is entirely separate from <code>cb-comment-service</code>/<code>comment-tree-service</code>'s workflow-content-comment feature. See the HLD tab for the full naming-collision note.</div>
+        <div class="fp-cards">
+          <div class="fp-card"><b>Two independent CommentTree implementations</b><p><code>comment-tree-service</code> is a read-only Redis-fronted cache facade over the exact same Postgres table <code>cb-comment-service</code> writes — coupled only by a shared table and a shared, weak, checked-in secret.</p></div>
+        </div>
+        <h2 class="fp-h2">How a Karmayogi experiences it</h2>
+        <div class="fp-steps">
+          <div class="fp-step"><b>1 · JOIN</b><p>Join a public community — private communities have no request-to-join flow at all</p></div>
+          <div class="fp-step"><b>2 · POST</b><p>Ask a Question inside a joined community</p></div>
+          <div class="fp-step"><b>3 · ANSWER</b><p>Others reply with Answer Posts and nested Answer Post Replies</p></div>
+          <div class="fp-step"><b>4 · MODERATE</b><p>5 reports auto-suspend; a moderator hides/restores via the admin endpoints</p></div>
+          <div class="fp-step"><b>5 · SYNC</b><p>Community counters update asynchronously via Kafka</p></div>
+        </div>
+      </div>
+      <div class="fp-side">
+        <div class="side-box">
+          <div class="lbl">On this tab</div>
+          <div class="side-links">
+            <div style="color:#1B4CA1">What it is</div>
+            <div>How a Karmayogi experiences it</div>
+          </div>
+        </div>
+        <div class="side-box blue">
+          <div style="font-size:13px; font-weight:900; margin-bottom:5px">Going deeper</div>
+          <div style="font-size:12.5px; color:#4E5562; line-height:1.55">The <b style="color:#1B4CA1">HLD</b> tab covers the topology across all 9 repos and the two-unrelated-comment-systems naming collision in full; <b style="color:#1B4CA1">LLD</b> covers storage, the shared <code>comment_tree</code> table, and every synchronous fan-out.</div>
+        </div>
+        <div class="side-box">
+          <div class="lbl">Related bubbles</div>
+          <div class="side-pills">
+            <span class="side-pill">Events Hub</span>
+          </div>
+        </div>
+      </div>
