@@ -1,0 +1,30 @@
+/* Design tokens and base styles. Component styles live next to their components (*.module.css);
+   documentation content styles are in content.css. */
+:root {
+  --brand: #1B4CA1;
+  --accent: #EF951E;
+  --navy: #13213F;
+  --text: #1F2430;
+  --text-strong: #2F3645;
+  --text-muted: #4E5562;
+  --text-faint: #767E8C;
+  --surface: #FFFFFF;
+  --surface-muted: #F7F9FC;
+  --page: #F5F6F9;
+  --border: #00000014;
+  --border-soft: #0000000F;
+  --shadow-sm: 0 1px 3px #1b214310;
+  --header-h: 64px;
+  --sidebar-w: 240px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--page); color: #241C15;
+  font-family: Lato, 'Trebuchet MS', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 6px; }
+img { max-width: 100%; }
+.content-loading { padding: 12px 0; font-size: 13px; color: var(--text-faint); }

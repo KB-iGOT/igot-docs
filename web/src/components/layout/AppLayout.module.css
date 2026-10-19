@@ -1,0 +1,8 @@
+.app { min-height: 100vh; display: flex; flex-direction: column; }
+.body { flex: 1; display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
+.main { min-width: 0; }
+.scrim { display: none; }
+@media (max-width: 900px) {
+  .body { grid-template-columns: minmax(0, 1fr); }
+  .scrim { display: block; position: fixed; inset: var(--header-h) 0 0 0; background: #0D112055; z-index: 40; }
+}

@@ -1,0 +1,29 @@
+.page { min-height: 100%; }
+.hero { background: linear-gradient(180deg, #F3F7FD 0%, #F7F9FD 100%); padding: 22px 40px 0; border-bottom: 1px solid var(--border-soft); }
+.head { display: flex; align-items: center; gap: 20px; }
+.icon {
+  width: 72px; height: 72px; border-radius: 50%; background: var(--brand); color: #FFFFFF; flex: none; margin: 4px 6px 4px 4px;
+  display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 9px #1B4CA114, 0 12px 26px -12px #1B4CA199;
+}
+.headText { min-width: 0; }
+.title { font-size: 30px; font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; color: var(--navy); margin: 0; }
+.summary { font-size: 14.5px; color: var(--text-muted); margin: 5px 0 0; max-width: 1100px; line-height: 1.5; }
+.chips { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.chip {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; color: var(--text-strong);
+  background: var(--surface); border: 1px solid #0000001A; border-radius: 99px; padding: 7px 15px;
+}
+.chip svg { color: var(--brand); flex: none; }
+.tabs { display: flex; gap: 2px; margin-top: 24px; overflow-x: auto; scrollbar-width: thin; }
+.tab {
+  padding: 12px 18px; font-size: 14px; font-weight: 700; color: var(--text-strong); text-decoration: none; white-space: nowrap;
+  border-bottom: 3px solid transparent;
+}
+.tab:hover { color: var(--text); }
+.active { font-weight: 900; color: var(--brand); border-bottom-color: var(--brand); }
+@media (max-width: 760px) {
+  .hero { padding: 16px 16px 0; }
+  .head { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .icon { width: 52px; height: 52px; margin: 0; box-shadow: 0 0 0 6px #1B4CA114; }
+  .title { font-size: 24px; }
+}

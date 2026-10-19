@@ -1,0 +1,31 @@
+{
+  "name": "igot-docs-explorer",
+  "private": true,
+  "version": "1.0.0",
+  "description": "iGOT Karmayogi Docs Explorer as a React app. Renders the Markdown in ../docs.",
+  "type": "module",
+  "scripts": {
+    "meta": "node scripts/gen-meta.mjs",
+    "predev": "npm run meta",
+    "dev": "vite",
+    "prebuild": "npm run meta",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "marked": "15.0.12",
+    "mermaid": "11.17.2",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
+    "react-router-dom": "7.18.4"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "@vitejs/plugin-react": "4.7.0",
+    "typescript": "5.9.3",
+    "vite": "6.4.4"
+  }
+}
