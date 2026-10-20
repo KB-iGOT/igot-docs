@@ -3,7 +3,8 @@
 import featuresData from '../data/features.json';
 import hubsData from '../data/hubs.json';
 import metaData from '../data/generated/meta.json';
-import type { DocsMeta, Feature, FeatureTab, Hub } from '../types';
+import type { DocsMeta, Feature, FeatureTab, Hub, HubItem } from '../types';
+import type { IconName } from '../components/ui/Icon';
 
 export const features = featuresData as Feature[];
 export const hubs = hubsData as Hub[];
@@ -15,12 +16,9 @@ const hubById = new Map(hubs.map((h) => [h.id, h]));
 export const getFeature = (id: string) => featureById.get(id);
 export const getHub = (id: string) => hubById.get(id);
 
-/** hub ring that lists a feature's bubble (learning / features / registration); null for the platform hubs */
+/** hub that lists a feature (learning / features / registration); null for the platform-hub pages */
 const parentOf = new Map<string, string>();
-for (const h of hubs) {
-  if (h.id === 'map') continue;
-  for (const b of h.bubbles) if ('feature' in b.target && !parentOf.has(b.target.feature)) parentOf.set(b.target.feature, h.id);
-}
+for (const h of hubs) for (const it of h.items) if ('feature' in it.target && !parentOf.has(it.target.feature)) parentOf.set(it.target.feature, h.id);
 export const parentHubOf = (featureId: string) => parentOf.get(featureId) ?? null;
 
 /** tabs shown to the reader, Overview first */
@@ -35,26 +33,54 @@ export function lastUpdated(f: Feature): string | null {
   return meta.dates[md.source.path.replace(/\/[^/]*$/, '')] ?? null;
 }
 
+export const routeOf = (it: HubItem) => ('feature' in it.target ? `/features/${it.target.feature}` : `/hubs/${it.target.hub}`);
+
+const firstSentence = (s: string) => (s.match(/^.*?[.!?](\s|$)/)?.[0] ?? s).trim();
+
+export interface Entry {
+  label: string;
+  to: string;
+  kind: 'feature' | 'hub';
+  description: string;
+  countText: string;
+  /** for nested hubs: the features inside, for sidebar dropdowns */
+  children?: Entry[];
+}
+
+/** a hub's entries as rows: features with their document count, nested hubs with their features */
+export function entriesOf(hubId: string): Entry[] {
+  return (getHub(hubId)?.items ?? []).map((it) => {
+    if ('feature' in it.target) {
+      const f = getFeature(it.target.feature);
+      return { label: it.label, to: routeOf(it), kind: 'feature' as const,
+               description: f ? firstSentence(f.summary) : '', countText: `${f ? docTabs(f).length : 0} Documents` };
+    }
+    const children = entriesOf(it.target.hub);
+    return { label: it.label, to: routeOf(it), kind: 'hub' as const, children,
+             description: children.map((c) => c.label).join(', '), countText: `${children.length} Features` };
+  });
+}
+
 export interface PlatformHub {
   name: string;
-  icon: 'learning' | 'discussion' | 'competency' | 'event' | 'book';
+  icon: IconName;
   to: string;
   description: string;
   /** number shown on the card badge, and what it counts */
   count: number;
   countLabel: string;
+  /** features listed under it (Learning Hub only) */
+  children?: Entry[];
 }
 
-const featurePage = (id: string) => getFeature(id);
 const docsCount = (id: string) => {
-  const f = featurePage(id);
+  const f = getFeature(id);
   return f ? docTabs(f).length : 0;
 };
 
-/** the five platform hubs: Learning Hub is a ring of features, the others are single pages */
 const allPlatformHubs: PlatformHub[] = [
-  { name: 'Learning Hub', icon: 'learning', to: '/hubs/learning', count: getHub('learning')?.bubbles.length ?? 0, countLabel: 'features',
-    description: 'Documentation for learning content: courses, programs, assessments and pathways.' },
+  { name: 'Learning Hub', icon: 'learning', to: '/hubs/learning', count: getHub('learning')?.items.length ?? 0, countLabel: 'features',
+    children: entriesOf('learning'), description: 'Documentation for learning content: courses, programs, assessments and pathways.' },
   { name: 'Discussion Hub', icon: 'discussion', to: '/features/discussionhub', count: docsCount('discussionhub'), countLabel: 'documents',
     description: 'Documentation for communities, questions, answers and discussions.' },
   { name: 'Competency Hub', icon: 'competency', to: '/features/competencyhub', count: docsCount('competencyhub'), countLabel: 'documents',
@@ -64,29 +90,11 @@ const allPlatformHubs: PlatformHub[] = [
   { name: 'Amrit Gyaan Kosh', icon: 'book', to: '/features/agk', count: docsCount('agk'), countLabel: 'documents',
     description: 'Documentation for knowledge resources: documents, videos, audio and links.' },
 ];
-export const platformHubs = allPlatformHubs.filter((h) => !h.to.startsWith('/features/') || featurePage(h.to.split('/')[2]));
+/** the five platform hubs: Learning Hub groups features, the others are single pages */
+export const platformHubs = allPlatformHubs.filter((h) => !h.to.startsWith('/features/') || getFeature(h.to.split('/')[2]));
 
-export interface FeatureEntry {
-  label: string;
-  to: string;
-  kind: 'feature' | 'hub';
-  description: string;
-  countText: string;
-}
-
-const firstSentence = (s: string) => (s.match(/^.*?[.!?](\s|$)/)?.[0] ?? s).trim();
-
-/** the Features hub, in ring order: features and sub-hubs such as Registration */
-export const featureEntries: FeatureEntry[] = (getHub('features')?.bubbles ?? []).map((b) => {
-  if ('feature' in b.target) {
-    const f = getFeature(b.target.feature);
-    return { label: b.label, to: `/features/${b.target.feature}`, kind: 'feature' as const,
-             description: f ? firstSentence(f.summary) : '', countText: `${f ? docTabs(f).length : 0} Documents` };
-  }
-  const sub = getHub(b.target.hub);
-  const kids = sub?.bubbles.map((k) => k.label) ?? [];
-  return { label: b.label, to: `/hubs/${b.target.hub}`, kind: 'hub' as const, description: kids.join(', '), countText: `${kids.length} Features` };
-});
+/** the Features hub: features and nested hubs such as Registration */
+export const featureEntries = entriesOf('features');
 
 const PLATFORM_HUB_PAGES = new Set(['discussionhub', 'competencyhub', 'eventshub', 'agk']);
 

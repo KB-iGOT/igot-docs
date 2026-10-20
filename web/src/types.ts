@@ -26,27 +26,21 @@ export interface Feature {
   tabs: FeatureTab[];
 }
 
-export type BubbleTarget = { feature: string } | { hub: string };
+/** what a hub entry opens: a feature page, or a nested hub (e.g. Features → Registration) */
+export type HubTarget = { feature: string } | { hub: string };
 
-export interface Bubble {
+export interface HubItem {
   label: string;
-  sub?: string;
-  x: number;
-  y: number;
-  size: number;
-  fontSize?: number;
-  variant: 'hub' | 'item' | 'assess';
-  target: BubbleTarget;
+  target: HubTarget;
 }
 
+/** a group of features shown as a dropdown in the sidebar and as a list page */
 export interface Hub {
   id: string;
   name: string;
-  hint: string;
+  /** hub this one sits inside, e.g. Registration inside Features */
   parent: string | null;
-  orbit: { cx: number; cy: number; r: number } | null;
-  center: { label: string; sub: string; x: number; y: number; size: number; icon: string; href?: string };
-  bubbles: Bubble[];
+  items: HubItem[];
 }
 
 export interface DocsMeta {

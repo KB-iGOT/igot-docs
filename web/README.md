@@ -33,19 +33,19 @@ web/
    ├─ assets/brand/            the app's own images (logo)
    ├─ data/
    │  ├─ features.json         every feature: title, summary, icon, tabs and where each tab's content lives
-   │  └─ hubs.json             hub maps: bubbles, positions, parent hub
+   │  └─ hubs.json             hub groups (Learning Hub, Features, Registration) and their features
    ├─ content/features/<id>/   hand-authored panels (overviews, user manuals) as HTML fragments
    ├─ lib/
    │  ├─ catalog.ts            typed access to features/hubs, navigation lists, stats
    │  ├─ docs.ts               lazy Markdown/HTML loading, image URLs from ../docs
    │  ├─ docHtml.ts            rewrites images and .md cross-links inside rendered content
    │  └─ search.ts             header search index
-   ├─ hooks/useFitScale.ts     fits the fixed-size hub map to the available space
    ├─ components/
    │  ├─ layout/               AppLayout, Header, SearchBox, Sidebar, Footer
    │  ├─ content/              TabContent, MarkdownContent, HtmlContent, KeyLinks, MermaidDiagram, DiagramModal
+   │  ├─ catalog/              HubCards, EntryList (shared by Home and the list pages)
    │  └─ ui/                   Icon, Breadcrumbs
-   ├─ pages/                   HomePage, HubPage, FeaturePage, NotFoundPage
+   ├─ pages/                   HomePage, HubListPage, FeaturePage, NotFoundPage
    └─ styles/
       ├─ global.css            design tokens and base styles
       └─ content.css           styles for documentation content
@@ -70,8 +70,12 @@ styles content that comes from Markdown and the HTML fragments.
 - **Edit a Markdown tab**: edit the file in `../docs`. Nothing else to do.
 - **Add a tab**: add an entry to the feature's `tabs` in `src/data/features.json`, with
   `"source": { "type": "markdown", "path": "learning-hub/<feature>/<file>.md" }`.
-- **Add a feature**: add it to `features.json`, and a bubble for it in the right hub in
-  `hubs.json` (the bubble decides its sidebar/home listing and breadcrumb).
+- **Add a feature**: add it to `features.json`, and list it under the right hub in
+  `hubs.json` (that decides its sidebar dropdown, list page and breadcrumb).
+
+Navigation: hubs that group features (Learning Hub, and Registration inside Features) are
+dropdowns in the sidebar; "View all" links and hub breadcrumbs open plain list pages (`/hubs`,
+`/hubs/<id>`).
 
 Markdown links to other docs (`[LLD](lld.md)`) become in-app links to the matching tab;
 ` ```mermaid ` blocks render as diagrams, with a full-screen zoom viewer.

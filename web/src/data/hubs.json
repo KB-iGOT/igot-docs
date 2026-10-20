@@ -1,439 +1,179 @@
 [
   {
-    "id": "map",
-    "name": "iGOT Karmayogi",
-    "hint": "Click a hub to open its features — Competency Hub, Discussion Hub, Event Hub and Amrit Gyaan Kosh open directly · the centre opens the platform architecture",
-    "orbit": {
-      "cx": 720,
-      "cy": 505,
-      "r": 310
-    },
-    "center": {
-      "label": "iGOT Karmayogi",
-      "sub": "4 hubs · 2 features",
-      "x": 618,
-      "y": 403,
-      "size": 204,
-      "icon": "<path d=\"M20 6c-3 4-4 8-4 12M20 6c3 4 4 8 4 12M11 11c-1 5 0 9 2 12M29 11c1 5 0 9-2 12\" stroke=\"#F3AE55\" stroke-width=\"2.2\" stroke-linecap=\"round\"></path>\n        <path d=\"M8 20c2 8 7 12 12 12s10-4 12-12\" stroke=\"#FFFFFF\" stroke-width=\"2.6\" stroke-linecap=\"round\"></path>\n        <circle cx=\"20\" cy=\"24\" r=\"2.6\" fill=\"#F3AE55\"></circle>",
-      "href": "igot-architecture-overview.html"
-    },
-    "bubbles": [
-      {
-        "label": "Learning Hub",
-        "x": 646,
-        "y": 121,
-        "size": 148,
-        "variant": "hub",
-        "target": {
-          "hub": "learning"
-        },
-        "sub": "13 features"
-      },
-      {
-        "label": "Discussion Hub",
-        "x": 914,
-        "y": 276,
-        "size": 148,
-        "variant": "hub",
-        "target": {
-          "feature": "discussionhub"
-        }
-      },
-      {
-        "label": "Event Hub",
-        "x": 646,
-        "y": 741,
-        "size": 148,
-        "variant": "hub",
-        "target": {
-          "feature": "eventshub"
-        }
-      },
-      {
-        "label": "Competency Hub",
-        "x": 378,
-        "y": 586,
-        "size": 148,
-        "variant": "item",
-        "target": {
-          "feature": "competencyhub"
-        },
-        "fontSize": 15
-      },
-      {
-        "label": "Features",
-        "x": 382,
-        "y": 280,
-        "size": 140,
-        "variant": "hub",
-        "target": {
-          "hub": "features"
-        },
-        "sub": "12 features",
-        "fontSize": 15
-      },
-      {
-        "label": "Amrit Gyaan Kosh",
-        "x": 918,
-        "y": 590,
-        "size": 140,
-        "variant": "item",
-        "target": {
-          "feature": "agk"
-        },
-        "fontSize": 14
-      }
-    ],
-    "parent": null
-  },
-  {
     "id": "learning",
     "name": "Learning Hub",
-    "hint": "Every feature is documented — click any bubble to open it",
-    "orbit": {
-      "cx": 720,
-      "cy": 456,
-      "r": 323
-    },
-    "center": {
-      "label": "Learning Hub",
-      "sub": "13 features",
-      "x": 618,
-      "y": 354,
-      "size": 204,
-      "icon": "<path d=\"M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z\"></path><path d=\"M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z\"></path>"
-    },
-    "bubbles": [
+    "parent": null,
+    "items": [
       {
         "label": "Bharat Kalp",
-        "x": 981,
-        "y": 394,
-        "size": 124,
-        "variant": "item",
         "target": {
           "feature": "bharatkalp"
-        },
-        "fontSize": 13.5
+        }
       },
       {
         "label": "Blended Program",
-        "x": 944,
-        "y": 544,
-        "size": 124,
-        "variant": "item",
         "target": {
           "feature": "blended"
-        },
-        "fontSize": 13.5
-      },
-      {
-        "label": "My Assigned Courses",
-        "x": 841,
-        "y": 660,
-        "size": 124,
-        "variant": "item",
-        "target": {
-          "feature": "assigned"
-        },
-        "fontSize": 13.5
-      },
-      {
-        "label": "Standalone Assessment",
-        "x": 697,
-        "y": 715,
-        "size": 124,
-        "variant": "assess",
-        "target": {
-          "feature": "standalone"
-        },
-        "fontSize": 13.5
-      },
-      {
-        "label": "Peer Validation",
-        "x": 544,
-        "y": 696,
-        "size": 124,
-        "variant": "item",
-        "target": {
-          "feature": "peervalidation"
-        },
-        "fontSize": 13.5
+        }
       },
       {
         "label": "Comprehensive Assessment Program",
-        "x": 416,
-        "y": 608,
-        "size": 124,
-        "variant": "assess",
         "target": {
           "feature": "cap"
-        },
-        "fontSize": 12.5
-      },
-      {
-        "label": "Learning Pathway",
-        "x": 345,
-        "y": 472,
-        "size": 124,
-        "variant": "item",
-        "target": {
-          "feature": "pathway"
-        },
-        "fontSize": 13.5
+        }
       },
       {
         "label": "Course",
-        "x": 345,
-        "y": 317,
-        "size": 124,
-        "variant": "item",
         "target": {
           "feature": "course"
-        },
-        "fontSize": 13.5
-      },
-      {
-        "label": "Search",
-        "x": 416,
-        "y": 181,
-        "size": 124,
-        "variant": "item",
-        "target": {
-          "feature": "search"
-        },
-        "fontSize": 13.5
+        }
       },
       {
         "label": "Curated Program",
-        "x": 544,
-        "y": 93,
-        "size": 124,
-        "variant": "item",
         "target": {
           "feature": "curated"
-        },
-        "fontSize": 13.5
+        }
+      },
+      {
+        "label": "Learning Pathway",
+        "target": {
+          "feature": "pathway"
+        }
       },
       {
         "label": "Marketplace",
-        "x": 697,
-        "y": 74,
-        "size": 124,
-        "variant": "item",
         "target": {
           "feature": "marketplace"
-        },
-        "fontSize": 13.5
-      },
-      {
-        "label": "Unenrollment of Courses",
-        "x": 841,
-        "y": 129,
-        "size": 124,
-        "variant": "item",
-        "target": {
-          "feature": "unenroll"
-        },
-        "fontSize": 12.5
+        }
       },
       {
         "label": "Moderated Content",
-        "x": 944,
-        "y": 245,
-        "size": 124,
-        "variant": "item",
         "target": {
           "feature": "moderatedcontent"
-        },
-        "fontSize": 13.5
+        }
+      },
+      {
+        "label": "My Assigned Courses",
+        "target": {
+          "feature": "assigned"
+        }
+      },
+      {
+        "label": "Peer Validation",
+        "target": {
+          "feature": "peervalidation"
+        }
+      },
+      {
+        "label": "Search",
+        "target": {
+          "feature": "search"
+        }
+      },
+      {
+        "label": "Standalone Assessment",
+        "target": {
+          "feature": "standalone"
+        }
+      },
+      {
+        "label": "Unenrollment of Courses",
+        "target": {
+          "feature": "unenroll"
+        }
       }
-    ],
-    "parent": "map"
+    ]
   },
   {
     "id": "features",
     "name": "Features",
-    "hint": "Every feature is documented — click any bubble to open it",
-    "orbit": {
-      "cx": 720,
-      "cy": 505,
-      "r": 276
-    },
-    "center": {
-      "label": "Features",
-      "sub": "12 features",
-      "x": 618,
-      "y": 403,
-      "size": 204,
-      "icon": "<path d=\"M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z\"></path><path d=\"M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z\"></path>"
-    },
-    "bubbles": [
+    "parent": null,
+    "items": [
       {
         "label": "Explore Content",
-        "x": 654,
-        "y": 163,
-        "size": 132,
-        "variant": "item",
         "target": {
           "feature": "explore"
-        },
-        "fontSize": 15
+        }
       },
       {
         "label": "Registration",
-        "x": 813,
-        "y": 213,
-        "size": 138,
-        "variant": "hub",
         "target": {
           "hub": "registration"
-        },
-        "sub": "3 features",
-        "fontSize": 15
+        }
       },
       {
         "label": "Weekly Claps",
-        "x": 916,
-        "y": 354,
-        "size": 132,
-        "variant": "item",
         "target": {
           "feature": "weeklyclaps"
-        },
-        "fontSize": 13
+        }
       },
       {
         "label": "Karma Points",
-        "x": 916,
-        "y": 524,
-        "size": 132,
-        "variant": "item",
         "target": {
           "feature": "karmapoints"
-        },
-        "fontSize": 14
+        }
       },
       {
         "label": "Training Plan",
-        "x": 816,
-        "y": 662,
-        "size": 132,
-        "variant": "item",
         "target": {
           "feature": "trainingplan"
-        },
-        "fontSize": 14
+        }
       },
       {
         "label": "CHS",
-        "x": 654,
-        "y": 715,
-        "size": 132,
-        "variant": "item",
         "target": {
           "feature": "chs"
-        },
-        "fontSize": 14
+        }
       },
       {
         "label": "AI CBP Tool",
-        "x": 492,
-        "y": 662,
-        "size": 132,
-        "variant": "item",
         "target": {
           "feature": "aicbp"
-        },
-        "fontSize": 14
+        }
       },
       {
         "label": "AI Assessment Tool",
-        "x": 392,
-        "y": 524,
-        "size": 132,
-        "variant": "item",
         "target": {
           "feature": "aiassessment"
-        },
-        "fontSize": 13
+        }
       },
       {
         "label": "AI Tutor",
-        "x": 392,
-        "y": 354,
-        "size": 132,
-        "variant": "item",
         "target": {
           "feature": "aitutor"
-        },
-        "fontSize": 14
+        }
       },
       {
         "label": "Organisation Hierarchy",
-        "x": 492,
-        "y": 216,
-        "size": 132,
-        "variant": "item",
         "target": {
           "feature": "orghierarchy"
-        },
-        "fontSize": 12.5
+        }
       }
-    ],
-    "parent": "map"
+    ]
   },
   {
     "id": "registration",
     "name": "Registration",
-    "hint": "Registration brings users onto the platform — click any bubble to open it",
-    "orbit": {
-      "cx": 720,
-      "cy": 505,
-      "r": 310
-    },
-    "center": {
-      "label": "Registration",
-      "sub": "3 features",
-      "x": 618,
-      "y": 403,
-      "size": 204,
-      "icon": "<circle cx=\"9.5\" cy=\"8\" r=\"3.5\"></circle><path d=\"M3 20c0-3.3 2.9-6 6.5-6s6.5 2.7 6.5 6\"></path><path d=\"M19 8v6M16 11h6\"></path>"
-    },
-    "bubbles": [
+    "parent": "features",
+    "items": [
       {
         "label": "User Registration",
-        "x": 650,
-        "y": 125,
-        "size": 140,
-        "variant": "item",
         "target": {
           "feature": "useronboarding"
-        },
-        "fontSize": 14
+        }
       },
       {
         "label": "SPV & Admin Registration",
-        "x": 918,
-        "y": 590,
-        "size": 140,
-        "variant": "item",
         "target": {
           "feature": "spvregistration"
-        },
-        "fontSize": 13
+        }
       },
       {
         "label": "Bulk Registration",
-        "x": 382,
-        "y": 590,
-        "size": 140,
-        "variant": "item",
         "target": {
           "feature": "bulkregistration"
-        },
-        "fontSize": 13
+        }
       }
-    ],
-    "parent": "features"
+    ]
   }
 ]
