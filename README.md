@@ -2,17 +2,16 @@
 
 Documentation and related project assets for the **iGOT-Doc** initiative:
 code-verified technical documentation for the iGOT Karmayogi platform,
-maintained as Markdown (docs-as-code) and paired with a visual, interactive
-**Docs Explorer**.
+maintained as Markdown (docs-as-code) and presented by the **Docs Explorer**,
+a React app in [`web/`](web/README.md).
 
 ## Published site
 
 The **Docs Explorer** is published at **<DOCS_SITE_URL>**
-by `.github/workflows/docs.yml`: on every push to `main` that touches `docs/`,
-`tools/` or the explorer template, it runs `tools/build_docs_explorer.py` and
-deploys the result as the site's `index.html` (so the published copy always
-reflects `docs/`, whether or not the committed `karmayogi-docs-explorer.html`
-was rebuilt).
+by `.github/workflows/docs.yml`: on every push to `main` that touches `docs/`
+or `web/`, it builds the React app (`npm run build` in `web/`) and deploys
+`web/dist/`. The build reads the Markdown in `docs/` directly, so the published
+site always reflects `docs/`; nothing generated is committed.
 
 One-time setup: repo **Settings → Pages → Source: GitHub Actions**. Because this
 repo is private, Pages needs a GitHub Pro / Team / Enterprise plan; on Enterprise
@@ -24,11 +23,9 @@ otherwise it is publicly readable once enabled.
 | Path | What it is |
 |---|---|
 | [`docs/`](docs/index.md) | The Markdown documentation tree — source of truth for all technical content (APIs, HLD, LLD, use cases, operations manuals). Vanilla CommonMark + Mermaid; renders on GitHub, MkDocs, or Astro Starlight/Docusaurus unchanged. |
-| `karmayogi-docs-explorer.html` | The built, static **Docs Explorer** — an orbit-style home page → hub ring → feature pages with tabs. The functional front door for browsing the docs visually. |
-| `karmayogi-docs-explorer.template.html` | Source template for the explorer (authored HTML for Overview/Use Cases panels; APIs/HLD/LLD/Operations Manual tabs render the Markdown files directly). Edit this, not the built HTML. |
+| [`web/`](web/README.md) | The **Docs Explorer**: a React + TypeScript app (Vite). Home dashboard, sidebar navigation, and a page per feature with a tab per document; it renders the Markdown in `docs/` directly. Feature list, tabs and Key Links are in `web/src/data/`; hand-authored Overview / Use Cases panels in `web/src/content/`. |
+| `igot-architecture-overview.html` | The standalone platform-architecture page ("Platform Overview" in the explorer). |
 | `mkdocs.yml` | Site nav/config for rendering `docs/` as a static site with MkDocs Material. |
-| `tools/build_docs_explorer.py` | Rebuilds `karmayogi-docs-explorer.html` from the template after any Markdown change. |
-| `tools/layout_hub_ring.py` | Auto-lays-out the hub-ring bubbles: the Learning Hub's (one ring, radius grows with feature count, `HUB-RING:BEGIN/END`) and the smaller Features and Registration rings (`SIMPLE_RINGS`, `RING:<key>:BEGIN/END`). Run this after adding/removing a feature in any of them, then rebuild the explorer. |
 | `igot-doc-skills.md` | The house style guide / working convention for generating and updating this documentation (research discipline, six-file feature structure, verification-boundary rules, explorer wiring). |
 | `_to_delete/` | Staged for removal — not part of the active documentation set. |
 
@@ -62,12 +59,12 @@ same six files (newer features also add an `as-built-requirements.md`):
 - [Training Plan](docs/learning-hub/training-plan/index.md) — MDO-authored targeted assignment (`CbPlan`) — four live table generations at once
 - [CHS](docs/learning-hub/chs/index.md) — backend batch pipeline feeding karma points, leaderboards, BI warehouse
 - [AI CBP Tool](docs/learning-hub/ai-cbp-tool/index.md) — AI-assisted competency-based program authoring
-- [AI Assessment Tool](docs/learning-hub/ai-assessment-tool/index.md) — Gemini-generated assessments from a course's PDFs/captions or KCM competency selections alone
+- [AI Assessment Tool](docs/learning-hub/ai-assessment-tool/index.md) — AssessAI: generate, review, edit and export curriculum-aligned assessments from course material or KCM selections
 - [AI Tutor](docs/learning-hub/ai-tutor/index.md)
 - [Organisation Hierarchy](docs/org-hierarchy/index.md) — a ministry/state's organisations as a ten-level tree, built as a Sunbird framework — tree-view edits or a replace-the-whole-tree spreadsheet upload; four unreconciled stores
 
-These sit under the explorer's **Features** bubble (Registration is a nested
-bubble holding its three children). Their Markdown folders still live under
+These sit under **Features** in the explorer's sidebar (Registration is a
+dropdown holding its three children). Their Markdown folders still live under
 `docs/learning-hub/` for historical reasons.
 
 ### Hubs
@@ -108,8 +105,15 @@ pip install mkdocs-material
 mkdocs serve
 ```
 
-**As the visual Docs Explorer:** open `karmayogi-docs-explorer.html` directly
-in a browser, or serve the repo root with any static file server.
+**As the Docs Explorer (React):**
+
+```bash
+cd web
+npm install
+npm run dev        # http://localhost:5173
+```
+
+`npm run build` writes the static site to `web/dist/`. See [`web/README.md`](web/README.md).
 
 **On GitHub:** the Markdown under `docs/` renders as-is, including Mermaid
 diagrams.
@@ -124,17 +128,14 @@ This repo follows a strict, code-verified documentation discipline — see
 2. **Unverified claims are labelled, not omitted** — behavior inferred only
    from client contracts is documented and tagged with a **Verification
    boundary** note naming the repo that would close the gap.
-3. After editing any Markdown, rebuild the explorer:
+3. Markdown edits show up in the explorer as they are: there is no rebuild step
+   to commit (`npm run dev` reloads them live).
 
-   ```bash
-   python3 tools/build_docs_explorer.py
-   ```
-
-4. New Learning Hub features need a Markdown folder under `docs/learning-hub/`,
-   an entry in `mkdocs.yml`'s nav, a feature-tab block in
-   `karmayogi-docs-explorer.template.html`, and an entry in
-   `tools/layout_hub_ring.py`'s `FEATURES` list (or `SIMPLE_RINGS` for a Features / Registration bubble) (then re-run that script to
-   place the new hub-ring bubble before rebuilding the explorer).
+4. New features need a Markdown folder under `docs/learning-hub/`, an entry in
+   `mkdocs.yml`'s nav, an entry in `web/src/data/features.json` (its tabs and
+   where each tab's content lives), and a listing under the right hub in
+   `web/src/data/hubs.json` (which decides its sidebar dropdown, list page and
+   breadcrumb). See [`web/README.md`](web/README.md).
 
 Do not remove Verification boundary notes when editing — tighten them by
 attaching the missing repo and re-verifying instead.

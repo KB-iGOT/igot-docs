@@ -32,20 +32,18 @@ documentation trustworthy, and that distinguish it from generic AI output:
 - `iGOT-Doc/docs/**` — Markdown tree, the **source of truth for technical
   content** (APIs, HLD, LLD). Vanilla CommonMark + Mermaid, renderable on
   GitHub / MkDocs / Starlight. `mkdocs.yml` at the root lists the nav.
-- `iGOT-Doc/karmayogi-docs-explorer.html` — the visual explorer (orbit home →
-  hub ring → feature pages with tabs). **Functional content (home, heroes,
-  Overview tab, Use Cases tab) is authored HTML in
-  `karmayogi-docs-explorer.template.html`; the APIs / HLD / LLD tabs render
-  the markdown files directly.** Never write tech content into the HTML.
+- `iGOT-Doc/web/` — the **Docs Explorer**, a React + TypeScript app (Vite):
+  home dashboard, sidebar navigation (hubs that group features are
+  dropdowns), and a page per feature with a tab per document. **Tech tabs
+  render the markdown files directly; functional panels (Overview, Use Cases
+  where authored as cards) are HTML fragments in
+  `web/src/content/features/<id>/<tab>.html`.** The feature list, tabs and Key
+  Links live in `web/src/data/features.json`; which hub lists a feature is in
+  `web/src/data/hubs.json`. Never write tech content into the HTML fragments.
 
-After editing any markdown, rebuild the explorer:
-
-```bash
-cd iGOT-Doc && python3 tools/build_docs_explorer.py
-```
-
-(Optional `--mermaid tools/mermaid.min.js` inlines the diagram renderer for
-offline/NIC hosting; default uses the CDN with a graceful fallback.)
+There is no rebuild step to commit: the app reads `docs/` at build time, and
+`cd web && npm run dev` shows markdown edits live. CI builds and publishes
+`web/dist/` (`.github/workflows/docs.yml`).
 
 ## Workflow for "generate documentation for <feature>"
 
@@ -181,41 +179,16 @@ convention) rather than inventing procedures.
 
 ### 3 · Wire into the explorer
 
-- The tech tabs pick up the new markdown automatically **if** the feature's
-  page exists in the template with `data-md` placeholders pointing at the new
-  paths.
-- A brand-new feature also needs, in `karmayogi-docs-explorer.template.html`:
-  a bubble on the hub ring (`onclick="openFeature('<id>')"`), and an `fdoc`
-  block (hero + authored-HTML Overview and Use Cases panels + four `mdwrap`
-  tech panels: APIs, HLD, LLD, Operations Manual). Copy an existing `fdoc` as
-  the pattern; keep the hero chips factual (Category / Route / verification
-  status).
-- **Placing the new bubble** (a hub with N existing spokes gains an N+1th —
-  the ring is never redrawn from scratch, each addition just adds one more
-  spoke): the hub center for Learning Hub is `(720, 505)`; existing spokes
-  sit on a radius of ~310px, 60° apart. Pick the empty gap between two
-  adjacent spokes closest to where the new feature conceptually belongs,
-  and bisect their angle rather than guessing pixels:
-  1. Find the two neighbouring spokes' centers (`left+width/2`,
-     `top+height/2`).
-  2. Compute the new center as their angular midpoint at the same ~310px
-     radius from the hub center (e.g. Learning Pathway sits between Course
-     `(720,195)` and Comprehensive Assessment Program `(452,350)`, both 310px
-     out at 60° apart, so it landed at `(565,237)` — the 30°-bisector at the
-     same radius).
-  3. Convert to `left`/`top` by subtracting half the bubble's width/height
-     (128px bubbles → subtract 64).
-  4. Add one dashed connector `<line x1="720" y1="505" x2="<center-x>"
-     y2="<center-y>" stroke="#1B4CA138" stroke-width="1.5"
-     stroke-dasharray="4 6"/>` inside `.orbitbg` — every spoke has exactly
-     one connector line back to the hub center, no exceptions.
-  5. Bump the hub's `<div class="sub">N features</div>` count.
-  Never place a bubble by eyeballing free space — it will overlap or drift
-  off-center the way the first Learning Pathway placement did (caught and
-  fixed 2026-09-09). If a hub is gaining several features at once, prefer
-  recomputing all spokes as an evenly-spaced N-gon over serially bisecting
-  gaps, since repeated bisection crowds one side of the ring.
-- Rebuild with `tools/build_docs_explorer.py` and update `mkdocs.yml` nav.
+- An existing feature picks up new markdown automatically if its tab in
+  `web/src/data/features.json` points at the path
+  (`"source": { "type": "markdown", "path": "learning-hub/<slug>/<file>.md" }`).
+- A brand-new feature needs: an entry in `features.json` (id, title, summary,
+  icon, tabs and each tab's source), a listing under the right hub in
+  `hubs.json` (that places it in the sidebar dropdown, the hub's list page and
+  its breadcrumb), and its `mkdocs.yml` nav entry. Copy an existing feature's
+  entry as the pattern.
+- Check it with `cd web && npm run build` (type-checks too) and open the page
+  in `npm run dev`.
 
 ### 4 · Verify before delivering
 
@@ -246,7 +219,7 @@ convention) rather than inventing procedures.
   from `sb-cb-ui-components/sb-cb-ui-design-system/src/styles/_ws-vars.scss`:
   blue `#1B4CA1`, orange `#EF951E`, Lato, tint `#E8EDF6`. Amber = feature/
   learner-facing accents, indigo = service/technical, green = verified.
-- Diagrams in the explorer get the Zoom popup automatically; author them at
+- Diagrams and images in the explorer get the Zoom popup automatically; author them at
   natural size and don't add zoom UI yourself. **Keep a single diagram under
   ~2000 px natural width** (check with a local Mermaid render: viewBox width);
   a topology that needs five LR subgraphs and twenty cross-subgraph edges
@@ -265,6 +238,13 @@ is how the whole team's output stays consistent. When in doubt whether a
 one-off request is a new convention, ask: "should this become the standard?"
 
 ### Changelog
+
+- **2026-10-22** · Explorer migrated to React (`web/`, branch
+  `react-migration`). The static single-file explorer, its template and its
+  build tools (`tools/build_docs_explorer.py`, `tools/layout_hub_ring.py`)
+  were removed; hub rings were replaced by sidebar dropdowns and list pages,
+  so bubble placement no longer applies. Feature wiring is now data
+  (`web/src/data/features.json`, `hubs.json`); CI builds `web/dist/`.
 
 - **2026-10-15** · Diagram width rule (above) and a popup fix: the zoom popup
   now pins the freshly rendered SVG to its viewBox size (Mermaid emits

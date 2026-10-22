@@ -19,6 +19,8 @@ count). It is generated, so it is git-ignored.
 
 The build is plain static files with hash routing (`#/features/aicbp/hld`), so it can be
 served from any folder, including GitHub Pages sub-paths, without server rewrites.
+`.github/workflows/docs.yml` builds it and publishes `web/dist/` to GitHub Pages on every
+push to `main` that touches `docs/` or `web/`.
 
 ## Structure
 
@@ -83,7 +85,8 @@ Markdown links to other docs (`[LLD](lld.md)`) become in-app links to the matchi
 ## Migration notes
 
 The data and content files were extracted once from `karmayogi-docs-explorer.template.html`
-(the static explorer) on the `react-migration` branch. Hand-authored panels were kept as HTML
+(the old static single-file explorer) on the `react-migration` branch; that template, the
+built HTML and its Python build tools have since been removed. Hand-authored panels were kept as HTML
 fragments, not rewritten as JSX: they are content, not UI, and keeping them as fragments means
 they can be edited without touching components. Their interactive parts (Expand/Collapse all,
 journey pills, screenshot zoom) are handled in `HtmlContent`.

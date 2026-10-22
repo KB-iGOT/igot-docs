@@ -1,9 +1,9 @@
 # iGOT Karmayogi — Platform Documentation
 
 Technical documentation for the iGOT Karmayogi platform, maintained as Markdown
-(docs-as-code) and renderable as a static site. The visual **Docs Explorer**
-(`karmayogi-docs-explorer.html`) is the functional front door; these pages are
-the source of truth for the technical content behind it.
+(docs-as-code) and renderable as a static site. The **Docs Explorer** (the
+React app in `web/`) is the functional front door; these pages are the source
+of truth for the technical content behind it.
 
 ## Structure
 
