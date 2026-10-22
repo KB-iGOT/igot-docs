@@ -27,7 +27,8 @@ export function FeaturePage() {
   const tabs = visibleTabs(feature);
   /* hidden tabs (e.g. Old LLD) stay reachable by direct link, as before */
   const tab = feature.tabs.find((t) => t.key === tabKey) ?? tabs[0];
-  if (tabKey && tab.key !== tabKey) return <Navigate to={`/features/${feature.id}`} replace />;
+  /* unknown tab, or the first tab by name: use the feature's own address so the tab bar highlights correctly */
+  if (tabKey && (tab.key !== tabKey || tab.key === tabs[0].key)) return <Navigate to={`/features/${feature.id}`} replace />;
 
   const parent = parentHubOf(feature.id);
   const where = parent ? getHub(parent)?.name : 'Platform Hub';

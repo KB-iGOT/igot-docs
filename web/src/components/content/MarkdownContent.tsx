@@ -3,6 +3,7 @@ import { marked, type Tokens, type TokensList } from 'marked';
 import { loadMarkdown } from '../../lib/docs';
 import { rewriteDocHtml } from '../../lib/docHtml';
 import { MermaidDiagram } from './MermaidDiagram';
+import { DiagramModal } from './DiagramModal';
 
 type Segment = { kind: 'html'; html: string } | { kind: 'mermaid'; source: string };
 
@@ -42,16 +43,29 @@ export function MarkdownContent({ path }: { path: string }) {
   }, [path]);
 
   const segments = useMemo(() => (md === null ? [] : toSegments(md, path)), [md, path]);
+  /* clicking a documentation image opens it full screen */
+  const [zoom, setZoom] = useState<{ src: string; alt: string } | null>(null);
+  const onClick = (e: React.MouseEvent) => {
+    const img = (e.target as HTMLElement).closest('.md-seg img') as HTMLImageElement | null;
+    if (img) setZoom({ src: img.currentSrc || img.src, alt: img.alt });
+  };
 
   if (error) return <div className="md-missing">{error}</div>;
   if (md === null) return <div className="content-loading" aria-busy="true">Loading…</div>;
   return (
-    <article className="mdwrap">
+    <article className="mdwrap" onClick={onClick}>
       {segments.map((s, i) => (
         <Fragment key={i}>
           {s.kind === 'html' ? <div className="md-seg" dangerouslySetInnerHTML={{ __html: s.html }} /> : <MermaidDiagram source={s.source} />}
         </Fragment>
       ))}
+      {zoom && (
+        <DiagramModal
+          title={zoom.alt || 'Image'}
+          svg={`<img src="${zoom.src.replace(/"/g, '&quot;')}" alt="">`}
+          onClose={() => setZoom(null)}
+        />
+      )}
     </article>
   );
 }

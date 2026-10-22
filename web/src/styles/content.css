@@ -182,3 +182,5 @@
   .fp-step:first-child { border-radius: 12px 12px 0 0; }
   .fp-step:last-child { border-radius: 0 0 12px 12px; }
 }
+.mdwrap .md-seg img { cursor: zoom-in; }
+.mmview .mscale img { display: block; background: #FFFFFF; border-radius: 14px; }

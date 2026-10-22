@@ -2,35 +2,48 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { createPortal } from 'react-dom';
 
 interface Props {
+  /** markup to show: a rendered Mermaid SVG, or an <img> */
   svg: string;
+  title?: string;
   onClose: () => void;
 }
 
-/** Full-screen diagram viewer: zoom in / out, fit to screen, drag to pan, Esc to close. */
-export function DiagramModal({ svg, onClose }: Props) {
+/** Full-screen viewer for diagrams and images: zoom in / out, fit to screen, drag to pan, Esc to close. */
+export function DiagramModal({ svg, title = 'Diagram', onClose }: Props) {
   const viewRef = useRef<HTMLDivElement>(null);
   const scaleRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [fit, setFit] = useState(1);
   const drag = useRef<{ x: number; y: number; l: number; t: number } | null>(null);
 
-  /* pin the SVG to its natural (viewBox) size, then fit it to the window */
+  /* show the content at its natural size, then fit it to the window */
   useLayoutEffect(() => {
-    const el = scaleRef.current?.querySelector('svg');
+    const box = scaleRef.current;
+    if (!box) return;
+    const fitTo = (w: number, h: number) => {
+      if (!w || !h) return;
+      const f = Math.max(0.15, Math.min(2.5, Math.min((window.innerWidth - 90) / w, (window.innerHeight - 130) / h)));
+      setFit(f);
+      setScale(f);
+    };
+    const img = box.querySelector('img');
+    if (img) {
+      img.style.maxWidth = 'none';
+      const measure = () => fitTo(img.naturalWidth, img.naturalHeight);
+      if (img.complete) measure();
+      else img.addEventListener('load', measure, { once: true });
+      return;
+    }
+    const el = box.querySelector('svg');
     if (!el) return;
+    /* mermaid emits width=100%: pin the SVG to its viewBox size */
     const vb = el.viewBox?.baseVal;
     if (vb?.width) {
       el.setAttribute('width', String(vb.width));
       el.setAttribute('height', String(vb.height));
       el.style.maxWidth = 'none';
     }
-    const w = vb?.width || el.clientWidth;
-    const h = vb?.height || el.clientHeight;
-    if (w && h) {
-      const f = Math.max(0.15, Math.min(2.5, Math.min((window.innerWidth - 90) / w, (window.innerHeight - 130) / h)));
-      setFit(f);
-      setScale(f);
-    }
+    fitTo(vb?.width || el.clientWidth, vb?.height || el.clientHeight);
   }, [svg]);
 
   useEffect(() => {
@@ -60,9 +73,9 @@ export function DiagramModal({ svg, onClose }: Props) {
   }, []);
 
   return createPortal(
-    <div className="moverlay" role="dialog" aria-modal="true" aria-label="Diagram">
+    <div className="moverlay" role="dialog" aria-modal="true" aria-label={title}>
       <div className="mmbar">
-        <span className="ttl">Diagram</span>
+        <span className="ttl">{title}</span>
         <button type="button" title="Zoom out" aria-label="Zoom out" onClick={() => setScale((s) => Math.max(0.25, s - 0.25))}>&minus;</button>
         <span className="mpct">{Math.round(scale * 100)}%</span>
         <button type="button" title="Zoom in" aria-label="Zoom in" onClick={() => setScale((s) => Math.min(8, s + 0.25))}>+</button>
