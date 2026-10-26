@@ -2382,25 +2382,151 @@
   {
     "id": "trainingplan",
     "title": "Training Plan",
-    "summary": "An MDO-authored, targeted assignment of content to a group of Karmayogis — internally called CbPlan everywhere in code. Not a generic Content node like Learning Pathway: a first-class Cassandra entity, rebuilt as a new API/table generation three times over (v1 → v2 → v3/v4) without ever retiring the one before it.",
+    "summary": "The Capacity Building Plan (CBP), Training Plans and APAR framework lets MDOs and Cadre Controlling Authorities curate, assign, track and enforce targeted learning for civil servants: reusable cohort targeting, in-flight plan edits that keep learner progress, Level-2 Comprehensive Assessments, and automatic feeding of mandatory training and assessment results into annual appraisals (SPARROW, state e-PAR, e-HRMS).",
     "icon": "<rect x=\"4\" y=\"3\" width=\"16\" height=\"18\" rx=\"2\"></rect><path d=\"M8 3v4h8V3M9 12h6M9 16h4\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "trainingplan/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/training-plan/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "trainingplan/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "BRD_Capacity_building_plan",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/kwFn?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzMwODQyMTMwIiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "FRS_Capacity_building_plan_creation",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/toD_/?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzMwODQyMTMwIiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "BRD MDO Channels",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/77955254/BRD+MDO+Channels?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzMwODQyMTMwIiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "FRS MDO Channels",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/85197083/FRS+MDO+Channels?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzMwODQyMTMwIiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-8065 | Q8 | BRD | L2 Assessments",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/g4BIFg?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzMwODQyMTMwIiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-10686 | APAR | BRD",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/UwCwGQ?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzMwODQyMTMwIiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-10686 | APAR | FRS",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/D4DOGQ?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzMwODQyMTMwIiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "BRD_TrainingPlanEnhancements_v1.0_r2025_Q4",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/AgBZKQ?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzMwODQyMTMwIiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q13 | APAR and CA 2026-27 | BRD/PRD",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1031307285/Q13+APAR+and+CA+2026-27+BRD+PRD?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzMwODQyMTMwIiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q13 | APAR and CA 2026-27 | BRD/PRD",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1031307285/Q13+APAR+and+CA+2026-27+BRD+PRD?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzMwODQyMTMwIiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-752",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-752"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-796",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-796"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2479",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2479"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-3837",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-3837"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-5794",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-5794"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-5811",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-5811"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8064",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8064"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10685",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10685"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10518",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10518"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12756",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12756"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13866",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13866"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/training-plan/srs.md"
         }
       },
       {
@@ -2413,7 +2539,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/training-plan/context-diagram.md"
@@ -2436,8 +2562,17 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/training-plan/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/training-plan/operations-manual.md"
@@ -2446,9 +2581,19 @@
       {
         "key": "asbuilt",
         "label": "As-Built",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/training-plan/as-built-requirements.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "trainingplan/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]

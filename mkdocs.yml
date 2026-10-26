@@ -84,6 +84,8 @@ nav:
           - As-Built Requirements: learning-hub/karma-points/as-built-requirements.md
       - Training Plan:
           - learning-hub/training-plan/index.md
+          - SRS: learning-hub/training-plan/srs.md
+          - SDD: learning-hub/training-plan/sdd.md
           - Use Cases: learning-hub/training-plan/use-cases.md
           - APIs: learning-hub/training-plan/apis.md
           - HLD: learning-hub/training-plan/hld.md
