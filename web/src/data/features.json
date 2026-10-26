@@ -1828,15 +1828,6 @@
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
-        "source": {
-          "type": "html",
-          "file": "aiassessment/usecases.html",
-          "layout": "oneCol"
-        }
-      },
-      {
         "key": "apis",
         "label": "APIs",
         "source": {
@@ -1846,7 +1837,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/ai-assessment-tool/context-diagram.md"
@@ -1879,6 +1870,7 @@
       {
         "key": "ops",
         "label": "Operations Manual",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/ai-assessment-tool/operations-manual.md"
@@ -1887,9 +1879,19 @@
       {
         "key": "asbuilt",
         "label": "As-Built",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/ai-assessment-tool/as-built-requirements.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "aiassessment/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]

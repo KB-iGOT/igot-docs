@@ -41,6 +41,26 @@ documentation trustworthy, and that distinguish it from generic AI output:
   Links live in `web/src/data/features.json`; which hub lists a feature is in
   `web/src/data/hubs.json`. Never write tech content into the HTML fragments.
 
+**Feature tab structure (follow Events Hub, AI CBP Tool, AI Tutor).** Every
+reworked feature uses these tabs, in this order, in `features.json`:
+
+| # | key | Label | Source |
+|---|---|---|---|
+| 1 | `overview` | Overview | `index.md` (or `overview.html`) |
+| 2 | `links` | Key Links | `links` groups: PRD, Feature Specification, API Links |
+| 3 | `srs` | SRS | `srs.md` |
+| 4 | `apis` | APIs | `apis.md` |
+| 5 | `context` | Context Diagrams | `context-diagram.md` |
+| 6 | `hld` | HLD | `hld.md` |
+| 7 | `lld` | LLD | `lld.md` |
+| 8 | `sdd` | SDD | `sdd.md` |
+| 9 | `ops` | Operations Manual | `operations-manual.md`, `"hidden": true` |
+| 10 | `asbuilt` | As-Built | `as-built-requirements.md`, `"hidden": true` |
+| 11 | `usecases` | User Manual | `usecases.html`, always last |
+
+Don't invent a different order or labels per feature (e.g. "Use Cases" in
+third place, or "Context" instead of "Context Diagrams").
+
 There is no rebuild step to commit: the app reads `docs/` at build time, and
 `cd web && npm run dev` shows markdown edits live. CI builds and publishes
 `web/dist/` (`.github/workflows/docs.yml`).
