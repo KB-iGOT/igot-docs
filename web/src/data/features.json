@@ -274,25 +274,211 @@
   {
     "id": "standalone",
     "title": "Standalone Assessment",
-    "summary": "An assessment taken as its own learning object — question sets served securely, auto-saved attempts, versioned submission and result APIs, retakes.",
+    "summary": "An assessment published as its own learning object, outside any course: creators build multi-section question sets with marks-based or psychometric scoring, negative marking, sectional cutoffs and 3x randomization; it is offered openly, MDO-moderated or invite-only in scheduled batches, with resilient test delivery, capped re-attempts and a certificate only on passing.",
     "icon": "<rect x=\"5\" y=\"3.5\" width=\"14\" height=\"17\" rx=\"2\"></rect><path d=\"M9 3.5h6v3H9z\"></path><path d=\"M8.5 12l2 2 4-4.5\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "standalone/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/standalone-assessment/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "standalone/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "KB_BRD_CP Redesign",
+                  "href": "https://karmayogibharat.atlassian.net/l/cp/mk5ZY6v2?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzQ2ODE4ODI2Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB_FRS_CP Redesign",
+                  "href": "https://karmayogibharat.atlassian.net/l/cp/uP0VueAs?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzQ2ODE4ODI2Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB_BRD_CP_Assessment",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/75890969/KB+BRD+CP+Assessment?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzQ2ODE4ODI2Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB_FRS_CP_Assessment",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/85295123/KB+FRS+CP+Assessment?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzQ2ODE4ODI2Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Standalone Assessments - Invite-Only Enhancements doc",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/89751668/Standalone+Assessments+-Invite+Only+Enhancements+doc.?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzQ2ODE4ODI2Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-6276 | KB_BRD_Content Portal UI/UX",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/AoAWDw?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzQ2ODE4ODI2Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-6276 | KB_FRS_Content portal UI/UX Revamp",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/AQAlDw?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzQ2ODE4ODI2Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Software Requirements Specification (SRS)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Confluence page dIDQB",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/dIDQB?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzQ2ODE4ODI2Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Assessments",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/87392295/SRS+-+Assessments?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzQ2ODE4ODI2Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Assessments",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/87392295/SRS+-+Assessments?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzQ2ODE4ODI2Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Content Portal | UI/UX Revamp",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/edit-v2/274628785?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyNzQ2ODE4ODI2Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-764",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-764"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1039",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1039"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1040",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1040"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1936",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1936"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2044",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2044"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2960",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2960"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-3958",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-3958"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-3959",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-3959"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-3963",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-3963"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-4212",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-4212"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-5350",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-5350"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-5867",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-5867"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6426",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6426"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6276",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6276"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7067",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7067"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7466",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7466"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9230",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9230"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8936",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8936"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11429",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11429"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11431",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11431"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15641",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15641"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/standalone-assessment/srs.md"
         }
       },
       {
@@ -305,7 +491,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/standalone-assessment/context-diagram.md"
@@ -328,11 +514,29 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/standalone-assessment/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/standalone-assessment/operations-manual.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "standalone/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]

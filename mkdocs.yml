@@ -179,6 +179,8 @@ nav:
           - Context Diagram: learning-hub/my-assigned-courses/context-diagram.md
       - Standalone Assessment:
           - learning-hub/standalone-assessment/index.md
+          - SRS: learning-hub/standalone-assessment/srs.md
+          - SDD: learning-hub/standalone-assessment/sdd.md
           - Use Cases: learning-hub/standalone-assessment/use-cases.md
           - APIs: learning-hub/standalone-assessment/apis.md
           - HLD: learning-hub/standalone-assessment/hld.md

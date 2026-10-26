@@ -1,10 +1,13 @@
 # Standalone Assessment — High-Level Design
 
-Portal assessment player (`sb-cb-ui-assessment`) → gateway → **assessment
-service** for shell/questions/save/submit/result, with progress written back
-through the standard real-time progress API so a passed standalone assessment
-shows as completed learning. Authoring flows through the question-set APIs of
-the knowledge platform.
+## Assessment Consumption
 
-> **Verification boundary:** the assessment service itself is not in the
-> attached repo set — contracts documented from the client.
+![Assessment Consumption](images/hld-assessment-consumption.png)
+
+## Assessment Creation step-1
+
+![Assessment Creation step-1](images/hld-assessment-creation-step-1.png)
+
+## Assessment Creation step-2 (Practice or Final assessment)
+
+![Assessment Creation step-2 (Practice or Final assessment)](images/hld-assessment-creation-step-2.png)
