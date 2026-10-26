@@ -1,191 +1,899 @@
-# Amrit Gyaan Kosh — LLD
+# Amrit Gyan Kosh (AGK) — Low-Level Design (LLD)
 
-File paths below are relative to each repo's root. Companion to the
-[HLD](hld.md). Commits: `sunbird-cb-portal` `origin/cbrelease-4.8.40`
-`eafc3ea71c`; `igot-mobile` `origin/master` `e0deaf599`;
-`sunbird-cb-creationportal` `origin/cbrelease-4.8.40` `1e6a35c52`;
-`knowledge-platform` `origin/cbrelease-4.8.41` `ce1a624f77`;
-`sunbird-cb-ext` `origin/cbrelease-4.8.41` `55e79421`.
-
-## Web portal (`sunbird-cb-portal`)
-
-### File inventory — `project/ws/app/src/lib/routes/gyaan-karmayogi/`
-
-| File | Role |
+| Attribute | Details |
 |---|---|
-| `gyaan-karmayogi.component.ts` | Empty shell hosting the routed children |
-| `gyaan-karmayogi-routing.module.ts` | Child routes: `all` (home), `view-all`, `player/{pdf,audio,youtube,video}/:resourceId` |
-| `models/gyaan-contants.model.ts` | Field-name constants (`sectorDetails_v1.sectorName`/`subSectorName`, `resourceCategory`, `contextStateOrUTs`, `contextSDGs`, `contextYear`), UI labels, debounce/limit constants, sector-chip color palette |
-| `services/gyaan-karmayogi.service.ts` | `searchV6`, `fetchSearchData`, `trendingContentSearch`, `getSeeAllConfigJson` |
-| `resolver/gyaan-resolver.service.ts` | Fetches `/<sitePath>/feature/tenant-admin.json`; redirects to `/` on failure |
-| `components/gyaan-karmayogi-home/` | Landing page: facet dropdowns, content strips, Case Studies / Other Resources tabs |
-| `components/gyaan-karmayogi-view-all/` | Filterable, paginated/infinite-scroll grid |
-| `components/gyaan-filter/` | Bottom-sheet filter panel (sector, sub-sector, category, state, SDG checkboxes, year range slider) |
-| `components/gyaan-player/` | Mime-type dispatcher, breadcrumbs, sector/sub-sector display, related-resources strip |
-| `components/players/gyaan-youtube/`, `gyaan-audio/`, `gyaan-video/`, `pdf/` | Thin wrappers delegating to `@ws/viewer`'s Youtube/Audio/Video/Pdf modules — no logic of their own |
+| Document Identifier | `AGK-DOC-LLD` |
+| Version | 1.0 |
+| Status | Approved for Implementation |
+| Audience | Backend Engineers, Frontend Developers, DevOps/SRE, QA Engineers |
 
-### App-shell integration
+**Target Services & Repositories:**
 
-| File | Role |
-|---|---|
-| `src/app/app-routing.module.ts` (route `app/amrit-gyaan-kosh`) | Lazy-loads `RouteGyaanKarmayogiModule`; resolves `pageData: FormDataResolverService`, `gyaanData: AppGyaanKarmayogiService` |
-| `src/app/routes/route-gyaan-karmayogi.module.ts` | Thin wrapper re-exporting `GyaanKarmayogiModule` from `@ws/app` |
-| `src/app/services/app-gyaan-karmayogi.service.ts` | Route-resolver service: parallel `forkJoin` of facet search (`sunbirdigot/v4/search`) and sector list (`catalog/v1/sector`) |
-| `src/app/component/igot-sarthi/igot-sarthi.component.ts`, `src/app/component/support-ai/support-ai.component.ts` | Build deep-link URLs (`app/amrit-gyaan-kosh/player/<pdf\|video>/<id>?...`) into the AGK player from AI-assistant search results |
-| `project/ws/app/src/lib/routes/search-v3/components/course-content-card/course-content-card.component.ts` | Builds the same deep-link pattern for global search results |
-| `project/ws/app/src/lib/routes/kalp/bharat-kalp-see-all/bharat-kalp-see-all.component.ts` | Same deep-link pattern from Bharat Kalp's content browser |
+- `cios-content-service` (Branch: `cbrelease-4.8.19.1`)
+- `sunbird-cb-creationportal` (Branch: `cbrelease-4.8.19.1`)
+- `sunbird-cb-portal` (Branch: `cbrelease-4.8.19.1`)
+- `cb-enrollment_service` (Branch: `cbrelease-4.8.19.1`)
+- `Flink-Search-Indexer` & `flink-content-publish` (Tag: `cbrelease-4.8.20_RC2`)
 
-### Routing table (web)
+## 1. Feature-Level Design & State Machines
 
-```mermaid
-flowchart LR
-    R0["app/amrit-gyaan-kosh\nresolve: pageData, gyaanData"]
-    R0 -- loadChildren --> RGK["RouteGyaanKarmayogiModule\n→ GyaanKarmayogiModule"]
-    RGK --> R1["'' → redirectTo 'all'"]
-    RGK --> R2["'all' → GyaanKarmayogiHomeComponent\nresolve: tenant-admin.json (GyaanResolverService)"]
-    RGK --> R3["'view-all' → GyaanKarmayogiViewAllComponent\nresolve: pageData (FormDataResolverService)"]
-    RGK --> R4["'player' → GyaanPlayerComponent"]
-    R4 --> R4a["'pdf/:resourceId'"]
-    R4 --> R4b["'audio/:resourceId'"]
-    R4 --> R4c["'youtube/:resourceId'"]
-    R4 --> R4d["'video/:resourceId'"]
+### 1.1 Feature Overview & Preconditions
 
-    style R0 fill:#eef4ff,stroke:#3b5bdb
-    style RGK fill:#eef4ff,stroke:#3b5bdb
+The Low-Level Design defines the concrete internal controllers, handlers, schemas, data validation rules, database tables, and API payloads governing Amrit Gyan Kosh (AGK).
+
+| Feature Module | Scope & Requirements Covered | Component / Handlers Involved | Preconditions |
+|---|---|---|---|
+| **Case Study Authoring** | `AGK-FR-001`, `AGK-FR-002`, `AGK-FR-004` | `ContentCreateController`, `ContentUpdateController`, `SystemSettingsController` | Creator authenticated with `CONTENT_CREATOR` role in CBP Portal. |
+| **Teacher’s Notes Attachment** | `AGK-FR-005` | `ContentUploadController`, `ReferenceNodesAssembler` | Parent Case Study draft exists; uploaded artifact is valid PDF. |
+| **Creation Decoupling & Governance** | `AGK-FR-003`, `AGK-FR-006` | `FormConfigService`, `RoleValidationInterceptor` | User `rootOrgId` equals CBC (`Competency Building Commission`) or KB for Karmayogi Talks. |
+| **Discovery & Search Aggregation** | `AGK-FR-007`, `AGK-FR-008` | `CompositeSearchController`, `ElasticQueryBuilder` | Published Case Studies indexed in Elasticsearch with facets. |
+| **Learner TOC & Zero-Cert Rewards** | `AGK-FR-009`, `AGK-FR-010` | `ContentReadController`, `EnrollmentProgressHandler`, `KafkaProgressProducer` | Learner enrolled (or unauthenticated visitor for public items). |
+| **Public Unauthenticated Access** | `AGK-FR-011` | `GatewayAuthBypassFilter`, `PublicContentProxy` | Target Case Study has `isPublic: true` and `status: "Live"`. |
+| **Multilingual Metadata Lock** | `AGK-FR-012` | `MultilingualContentController`, `CQFInheritanceValidator` | Base language version published (`Live`); CQF approved. |
+
+### 1.2 Case Study Lifecycle State Machine
+
+The Case Study entity follows a deterministic state machine managed by `cios-content-service`:
+
+![Case Study Lifecycle State Machine](images/lld-case-study-state-machine.png)
+
+## 2. Component & Module Design
+
+### 2.1 Backend Module Hierarchy (`cios-content-service`)
+
+#### Detailed Handler Specifications
+
+##### 1. `ContentCreateController.createContent(req, res)`
+
+- **Module:** `app/controllers/ContentController.js`
+- **Purpose:** Handles initial creation of Case Studies and child Reference Resources.
+- **Invocation Sequence:**
+  - `AuthInterceptor.validateSession(req)`
+  - `RoleValidationInterceptor.checkCategoryPermissions(req.body.request.content)`
+  - Generate unique Sunbird ID: `do_{timestamp}_{randomHash}` (e.g., `do_114185114804264960120`)
+  - Inject default fields: `visibility: "Default"`, `status: "Draft"`, `framework: "igot"`
+  - Generate initial `versionKey = String(Date.now())`
+  - Insert into Cassandra `sunbird.content_data`
+  - Return HTTP `200 OK` with `node_id` and `versionKey`.
+
+##### 2. `ReferenceNodeService.attachReferenceNodes(parentContentId, referencePayload, currentVersionKey)`
+
+- **Module:** `app/services/ReferenceNodeService.js`
+- **Purpose:** Assembles and validates instructional PDF nodes (`referenceNodes`) attached to the Case Study.
+- **Validation Logic:**
+  - Validates that each element in `referenceNodes` contains mandatory fields: `identifier`, `artifactUrl`, `mimeType: "application/pdf"`, `audience`.
+  - Verifies that `parentContent.versionKey == currentVersionKey` (Optimistic Concurrency Lock).
+  - Serializes `referenceNodes` as a JSON array of objects within the collection metadata.
+
+### 2.2 Client-Side Module Design (`sunbird-cb-creationportal` & `portal`)
+
+#### 1. CBP Settings Form Component (`CaseStudySettingsComponent`)
+
+- **Path:** `src/app/routes/authoring/case-study/case-study-settings.component.ts`
+- **Responsibilities:**
+  - Subscribes to `SystemSettingsService.getSdgList()` and `SystemSettingsService.getStateAndUTList()`.
+  - Renders Angular Material multi-select chips for `contextSDGs` and `contextStateOrUTs`.
+  - Renders Year multi-select populated from `FormConfigService` (years: 2000–current).
+  - Renders "Teacher's Section" file upload widget restricted to `.pdf` MIME types.
+
+#### 2. Learner Hub Facet Filter Component (`KnowledgeResourceFilterComponent`)
+
+- **Path:** `src/app/routes/public/knowledge-resource/knowledge-resource-filter.component.ts`
+- **Responsibilities:**
+  - Binds selected filter options into the composite search query structure:
+
+```ts
+interface AGKSearchFilters {
+  status: string[];
+  primaryCategory: string[];
+  contextYear?: string[];
+  contextSDGs?: string[];
+  contextStateOrUTs?: string[];
+  sectorName?: string[];
+}
 ```
 
-### Component detail
+- Dispatches debounced search requests to `/api/composite/v4/search`.
 
-**`GyaanKarmayogiHomeComponent`** — builds a `gyaanForm` (sector/sub-sector/
-category dropdowns), calls `GyaanKarmayogiService.searchV6` for facet counts
-(`callFacetApi`) and dynamically reconfigures a `stripConfig` of content
-carousels per selected sector/category/tab (`callStrips`,
-`callPaticualrStrip`). Two tabs (`selectedTabIndex`): Case Studies
-(`contentType: ['Resource','Course']`, filtered to `environment.cbcOrg` via
-`createdFor`) and Other Resources (`contentType: ['Resource']`).
-`viewAllSector()` navigates to `view-all`.
+## 3. API-Level Design & Concrete Contracts
 
-**`GyaanKarmayogiViewAllComponent`** — builds the richer facet set
-(`contentType`, sector, sub-sector, `resourceCategory`, `contextYear`,
-`contextStateOrUTs`, `contextSDGs` — `getFacetsData`), issues paged
-`searchV6` requests, extends on scroll (`onScrollEnd`), and opens
-`GyaanFilterComponent` in a `MatBottomSheet` on narrow viewports.
+### 3.1 Content Creation API (`POST /apis/proxies/v8/action/content/v3/create`)
 
-**`GyaanPlayerComponent`** — resolves viewer type via a mime-type lookup
-(`getMimeType` / `VIEWER_ROUTE_FROM_MIME`), builds breadcrumbs differently
-depending on entry point (TOC/preview vs. normal browsing), fetches a
-related-resources strip filtered by sector/sub-sector/resourceCategory, and
-parses `sectorDetails_v1` into `sectorsList`/`subSectorsList` for display.
+- **Consumer:** `sunbird-cb-creationportal`
+- **Provider:** `cios-content-service`
+- **Headers:**
+  - `Content-Type: application/json`
+  - `Cookie: connect.sid={{sessionCookie}}`
 
-## Mobile app (`igot-mobile`)
+- **Request Schema:**
 
-### File inventory — `lib/features/gyaan_karmayogi/`
-
-| File | Role |
-|---|---|
-| `presentation/screens/gyaan_karmayogi_screen.dart` (`GyaanKarmayogiV2`) | Landing screen: app bar, `TopSection` (search/filter/view-all trigger), `AgkForm` info banner, `GyaanKarmayogiCarousel`, 2-tab bar (Case Studies / Other Resources) |
-| `presentation/screens/mobile/filter_screen/filter_screen.dart` (`FilterScreenV2`) | Filter sheet: sector, sub-sector, resource category, SDGs, state/UT, year slider |
-| `presentation/screens/mobile/view_all_screen/view_all_screen.dart` (`ViewAllScreenV2`) | Paginated resource list for a given sector/sub-sector/category/tab |
-| `presentation/screens/mobile/details_screen/details_screen.dart` (`ResourceDetailsScreen`) | Single-resource detail: header, player, sector/sub-sector display, share |
-| `presentation/widgets/agk_form.dart` | Informational "know more" banner sourced from remote config — not a filter or entry form |
-| `presentation/controllers/gyaan_karmayogi_controller.dart` | State/controller layer (CBC-org filter logic, tab data) |
-| `data/services/gyaan_karmayogi_service.dart` | `getGyaanKarmayogiData`, `getGyaanKarmaYogiResources`, `getGyaanConfig` |
-| `data/repositories/gyaan_karmayogi_repository.dart` | Repository wrapping the service layer |
-| `data/models/gyaan_karmayogi_sector_model.dart`, `gyaan_karmayogi_resource_model.dart` | Response models |
-
-### App-shell integration
-
-| File | Role |
-|---|---|
-| `lib/core/configurations/explore_hub_config.dart` | Static fallback hub-tile config: `title: "AGK"`, `navigationRoute: "/knowledgeResourcesPage"`, `telemetryId: "amritGyaanKosh"` |
-| `lib/features/explore/presentation/screens/mobile/mobile_explore_screen.dart` | Renders hub tiles from remote `AppConfiguration.exploreHubConfigData` (falls back to the static config above); reads each entry's `enabled` flag |
-| `lib/core/router/app_routes.dart`, `lib/core/router/routes.dart` | Route constants `knowledgeResourcesPage`, `resourceDetailsScreen`; `routes.dart` maps `knowledgeResourcesPage → GyaanKarmayogiV2` |
-| `lib/core/shared_repositories/feature_config_repository.dart` | Exposes `amritGyaanOrgId` (from remote `cbcOrg` field) — the CBC-org filter value used to split Case Studies vs. Other Resources |
-| `lib/core/constants/api_endpoints.dart` | `gyaanKarmayogiConfig = '/assets/configurations/feature/knowledge-resource.json'` |
-| `lib/core/telemetry/constants/telemetry_constants.dart` | `amritGyaanKoshPageId = '/app/amrit-gyaan-kosh/all'`; env constants `'amrit-gyaan-kosh'` / `'Amrit Gyaan Kosh'` |
-| `lib/features/toc/presentation/screens/about_tab/about_tab.dart` | Reuses `SectorSubsectorView` (built for AGK) generically for any content with `sectorDetails` |
-| `lib/l10n/app_en.arb`, `lib/l10n/app_hi.arb` | Official display strings: `"Amrit Gyaan Kosh"` / `"AGK"` / `"AGK Case Studies"`, English and Hindi |
-
-### Screen flow
-
-```mermaid
-flowchart TD
-    Tile["Explore hub tile 'AGK'"] --> GKV2["GyaanKarmayogiV2\n(landing)"]
-    GKV2 --> Filter["FilterScreenV2"]
-    GKV2 --> ViewAll["ViewAllScreenV2"]
-    ViewAll --> Filter
-    ViewAll --> Details["ResourceDetailsScreen"]
-    Details --> Player["resource_player.dart"]
-    Details --> SectorView["sector_subsector_view.dart"]
-    Details --> Share["course_sharing_page.dart"]
-
-    style Tile fill:#eef4ff,stroke:#3b5bdb
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "request"
+  ],
+  "properties": {
+    "request": {
+      "type": "object",
+      "required": [
+        "content"
+      ],
+      "properties": {
+        "content": {
+          "type": "object",
+          "required": [
+            "name",
+            "contentType",
+            "primaryCategory",
+            "mimeType",
+            "framework"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 250
+            },
+            "contentType": {
+              "type": "string",
+              "enum": [
+                "Resource",
+                "Collection"
+              ]
+            },
+            "primaryCategory": {
+              "type": "string",
+              "enum": [
+                "Case Study",
+                "Learning Resource"
+              ]
+            },
+            "resourceCategory": {
+              "type": "string"
+            },
+            "mimeType": {
+              "type": "string",
+              "enum": [
+                "application/pdf",
+                "application/vnd.ekstep.content-collection",
+                "text/x-url"
+              ]
+            },
+            "framework": {
+              "type": "string",
+              "enum": [
+                "igot"
+              ]
+            },
+            "description": {
+              "type": "string"
+            },
+            "isExternal": {
+              "type": "boolean",
+              "default": false
+            },
+            "language": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "English"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
 ```
 
-## Content schema (`knowledge-platform`)
+- **Sample Request (Case Study Parent):**
 
-`schemas/content/1.0/schema.json` (and, near-identically,
-`schemas/collection/1.0/schema.json`; `sectorDetails_v1`/`createdFor` only in
-`schemas/questionset/1.0/schema.json`):
+```json
+{
+  "request": {
+    "content": {
+      "name": "Inclusive Public Service Delivery Case Study",
+      "contentType": "Resource",
+      "primaryCategory": "Case Study",
+      "mimeType": "application/vnd.ekstep.content-collection",
+      "framework": "igot",
+      "description": "Analysis of citizen-centric reforms in urban governance.",
+      "language": [
+        "English"
+      ]
+    }
+  }
+}
+```
 
-| Field | Type | Constraint |
-|---|---|---|
-| `resourceCategory` | string | none — free text, no enum |
-| `sectorDetails_v1` | array of object | untyped — no nested property schema for `sectorName`/`subSectorName` |
-| `contextYear` | array of string | none |
-| `contextSDGs` | array of string | none |
-| `contextStateOrUTs` | array of string | none |
-| `createdFor` | array | untyped items |
-| `contentType` (existing, unrelated to AGK) | enum, first value `"Resource"` | pre-existing Sunbird content type, not added for AGK |
+- **Sample Response (HTTP 200 OK):**
 
-These five AGK-relevant fields sit contiguously in the schema, alongside
-`competencies_v5/v6`/`referenceNodes`/`durationInSeconds` — evidence of one
-coordinated schema change, not scattered individual additions. Traced (via
-`git log -m -S` across a merge commit) to merge commit `e4b68cc3` ("Merge
-branch 'cbrelease-4.8.29' into cbrelease-4.8.29.1", 2025-09-29), which also
-touched `SearchActor.java`/`SearchProcessor.java`/`SearchConstants.java`
-(search-side support for the same fields) — a plausible but not
-explicitly-labelled origin commit; no commit message anywhere in this repo's
-history contains "gyaan"/"amrit"/"AGK" as literal text.
+```json
+{
+  "id": "api.content.create",
+  "ver": "3.0",
+  "ts": "2026-10-26T05:20:10ZZ",
+  "params": {
+    "resmsgid": "842d2915-44fc-456a-83fd-dca56bf760f3",
+    "status": "successful"
+  },
+  "responseCode": "OK",
+  "result": {
+    "identifier": "do_114185114804264960120",
+    "node_id": "do_114185114804264960120",
+    "versionKey": "1731581397010"
+  }
+}
+```
 
-Two other matches for `resourceCategory` in this repo are confirmed
-**unrelated** to AGK: `content-api/content-service/conf/application.conf`
-(a generic ~60-field list added for the unrelated Learning Pathway feature,
-<JIRA_ID>) and `ContentActor.scala` (a generic notification-suppression
-fallback check, <JIRA_ID>).
+### 3.2 Binary Upload API (`POST /apis/proxies/v8/upload/action/content/v3/upload/{node_id}`)
 
-## Content authoring (`sunbird-cb-creationportal`)
+- **Consumer:** `sunbird-cb-creationportal`
+- **Provider:** `cios-content-service` (via `CloudStorageService`)
+- **Headers:** `Content-Type: multipart/form-data`, `Cookie: connect.sid={{sessionCookie}}`
+- **Form Parameters:** `data` (Binary file content, `.pdf`, max 100MB)
+- **Sample Response (HTTP 200 OK):**
 
-No AGK-specific authoring component exists. `Resource` is a pre-existing
-`EContentTypes` value (`widget-content.model.ts`), and the generic, shared
-authoring component
-`project/ws/author/.../collection-v2/components/additional-details/additional-details.component.ts`
-has `Resource`-aware conditional branches (~lines 1241, 2111-2130, 2172-2178)
-that surface `resourceCategory` as required, and keep
-`contextStateOrUTs`/`contextSDGs`/`contextYear`/`additionalTags` controls
-only for standalone-resource or case-study content — the same component
-handles every other content type. The one AGK-named artifact in this repo,
-`FORM_TYPES.AGK_PUBLIC_SURVEY` (`widget-content.model.ts`), is commented out
-of the active `FORM_TYPES_LIST` and used only to gate a submission-count UI
-element in the surveys-list component — unrelated to content creation.
+```json
+{
+  "id": "api.content.upload",
+  "ver": "3.0",
+  "ts": "2026-10-26T05:22:15ZZ",
+  "params": {
+    "resmsgid": "642d2915-44fc-456a-83fd-dca56bf760f3",
+    "status": "successful"
+  },
+  "responseCode": "OK",
+  "result": {
+    "identifier": "do_114185114804264960120",
+    "artifactUrl": "https://storage.googleapis.com/<BUCKET>/content/do_114185114804264960120/artifact/sample_teachers_note.pdf",
+    "content_url": "https://storage.googleapis.com/<BUCKET>/content/do_114185114804264960120/artifact/sample_teachers_note.pdf",
+    "node_id": "do_114185114804264960120",
+    "versionKey": "1731581581399"
+  }
+}
+```
 
-## Sector taxonomy API (`sunbird-cb-ext`)
+### 3.3 Case Study Metadata & Reference Nodes Update API (`PATCH /apis/proxies/v8/action/content/v3/update/{content_id}`)
 
-`src/main/java/org/sunbird/catalog/controller/CatalogController.java`
-(`@RequestMapping("/v1/catalog")`) and
-`.../catalog/service/CatalogServiceImpl.java` implement `getSectors()`,
-`readSector()`, `createSector()`, `createSubSector()` by calling the
-Knowledge-Mw framework/term API against a dedicated framework
-(`sector.framework.name=sector-fw`, `sector.category.name=sector`,
-`application.properties:146-158`). Config surfaced via
-`CbExtServerProperties.java` (`getSectorFrameworkName()`,
-`getSectorCategoryName()`, `getSectorFields()`, `getSubSectorFields()`).
+- **Consumer:** `sunbird-cb-creationportal`
+- **Provider:** `cios-content-service`
+- **Request Schema:**
 
----
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "request"
+  ],
+  "properties": {
+    "request": {
+      "type": "object",
+      "required": [
+        "content"
+      ],
+      "properties": {
+        "content": {
+          "type": "object",
+          "required": [
+            "versionKey"
+          ],
+          "properties": {
+            "versionKey": {
+              "type": "string"
+            },
+            "contextYear": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "contextSDGs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "contextStateOrUTs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "isPublic": {
+              "type": "boolean"
+            },
+            "referenceNodes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "identifier",
+                  "name",
+                  "mimeType",
+                  "artifactUrl",
+                  "audience"
+                ],
+                "properties": {
+                  "identifier": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "primaryCategory": {
+                    "type": "string",
+                    "default": "Learning Resource"
+                  },
+                  "resourceCategory": {
+                    "type": "string",
+                    "default": "Reference Resource"
+                  },
+                  "mimeType": {
+                    "type": "string",
+                    "enum": [
+                      "application/pdf"
+                    ]
+                  },
+                  "artifactUrl": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "downloadUrl": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "audience": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "version": {
+                    "type": "integer"
+                  },
+                  "versionKey": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
 
-> **Verification boundary:** facts above are read from the repos/commits
-> listed at the top of this document. The `sunbirdigot/search`,
-> `sunbirdigot/v4/search`, and mobile composite-search endpoints, and the
-> knowledge-mw-service framework/term API itself, are not present in any repo
-> analyzed — behaviour is inferred from the request/response handling in the
-> calling code only.
+- **Sample Request Payload:**
+
+```json
+{
+  "request": {
+    "content": {
+      "versionKey": "1731564201044",
+      "contextYear": [
+        "2022",
+        "2023"
+      ],
+      "contextSDGs": [
+        "SDG 3: Good Health and Well-being",
+        "SDG 11: Sustainable Cities and Communities"
+      ],
+      "contextStateOrUTs": [
+        "Pan India",
+        "Karnataka"
+      ],
+      "isPublic": true,
+      "referenceNodes": [
+        {
+          "channel": "0138043201608089602",
+          "organisation": [
+            "Competency Building Commission"
+          ],
+          "source": "CBC",
+          "mimeType": "application/pdf",
+          "primaryCategory": "Learning Resource",
+          "resourceCategory": "Reference Resource",
+          "artifactUrl": "https://storage.googleapis.com/<BUCKET>/content/do_1141843912879144961107/artifact/teachers_note.pdf",
+          "downloadUrl": "https://<PORTAL_HOST>/content-store/content/do_1141843912879144961107/artifact/teachers_note.pdf",
+          "identifier": "do_1141843912879144961107",
+          "audience": [
+            "Teacher",
+            "Mentor"
+          ],
+          "version": 1,
+          "name": "Pedagogical Guide for Case Study",
+          "versionKey": "1731493234871"
+        }
+      ]
+    }
+  }
+}
+```
+
+- **Sample Response (HTTP 200 OK):**
+
+```json
+{
+  "id": "api.v3.update",
+  "ver": "1.0",
+  "ts": "2026-10-26T05:25:30.112Z",
+  "params": {
+    "resmsgid": "784c7180-a26f-11ef-84c9-55784f866a56",
+    "status": "successful"
+  },
+  "responseCode": "OK",
+  "result": {
+    "content_id": "do_114184986771152896112",
+    "versionKey": "1731578511467"
+  }
+}
+```
+
+### 3.4 Master Data Retrieval API (`GET /apis/proxies/v8/data/v2/system/settings/get/{field}`)
+
+- **Endpoints:**
+  - `GET /apis/proxies/v8/data/v2/system/settings/get/sdgList`
+  - `GET /apis/proxies/v8/data/v2/system/settings/get/stateAndUTList`
+
+- **Response Contract** (`sdgList`):
+
+```json
+{
+  "id": "api.system.settings.get.sdgList",
+  "ver": "v2",
+  "responseCode": "OK",
+  "result": {
+    "response": {
+      "id": "sdgList",
+      "field": "sdgList",
+      "value": [
+        {
+          "index": 1,
+          "name": "SDG 1: No Poverty",
+          "displayName": "SDG 1: No Poverty"
+        },
+        {
+          "index": 2,
+          "name": "SDG 2: Zero Hunger",
+          "displayName": "SDG 2: Zero Hunger"
+        },
+        {
+          "index": 3,
+          "name": "SDG 3: Good Health and Well-being",
+          "displayName": "SDG 3: Good Health and Well-being"
+        },
+        {
+          "index": 4,
+          "name": "SDG 4: Quality Education",
+          "displayName": "SDG 4: Quality Education"
+        },
+        {
+          "index": 5,
+          "name": "SDG 5: Gender Equality",
+          "displayName": "SDG 5: Gender Equality"
+        },
+        {
+          "index": 6,
+          "name": "SDG 6: Clean Water and Sanitation",
+          "displayName": "SDG 6: Clean Water and Sanitation"
+        },
+        {
+          "index": 7,
+          "name": "SDG 7: Affordable and Clean Energy",
+          "displayName": "SDG 7: Affordable and Clean Energy"
+        },
+        {
+          "index": 8,
+          "name": "SDG 8: Decent Work and Economic Growth",
+          "displayName": "SDG 8: Decent Work and Economic Growth"
+        },
+        {
+          "index": 9,
+          "name": "SDG 9: Industry, Innovation, and Infrastructure",
+          "displayName": "SDG 9: Industry, Innovation, and Infrastructure"
+        },
+        {
+          "index": 10,
+          "name": "SDG 10: Reduced Inequality",
+          "displayName": "SDG 10: Reduced Inequality"
+        },
+        {
+          "index": 11,
+          "name": "SDG 11: Sustainable Cities and Communities",
+          "displayName": "SDG 11: Sustainable Cities and Communities"
+        },
+        {
+          "index": 12,
+          "name": "SDG 12: Responsible Consumption and Production",
+          "displayName": "SDG 12: Responsible Consumption and Production"
+        },
+        {
+          "index": 13,
+          "name": "SDG 13: Climate Action",
+          "displayName": "SDG 13: Climate Action"
+        },
+        {
+          "index": 14,
+          "name": "SDG 14: Life Below Water",
+          "displayName": "SDG 14: Life Below Water"
+        },
+        {
+          "index": 15,
+          "name": "SDG 15: Life on Land",
+          "displayName": "SDG 15: Life on Land"
+        },
+        {
+          "index": 16,
+          "name": "SDG 16: Peace, Justice, and Strong Institutions",
+          "displayName": "SDG 16: Peace, Justice, and Strong Institutions"
+        },
+        {
+          "index": 17,
+          "name": "SDG 17: Partnerships for the Goals",
+          "displayName": "SDG 17: Partnerships for the Goals"
+        }
+      ]
+    }
+  }
+}
+```
+
+### 3.5 Composite Search API (`POST /api/composite/v4/search`)
+
+- **Consumer:** `sunbird-cb-portal` (Learner Web & Mobile)
+- **Provider:** `composite-search-service`
+- **Request Payload with Facets:**
+
+```json
+{
+  "request": {
+    "filters": {
+      "status": [
+        "Live"
+      ],
+      "primaryCategory": [
+        "Case Study"
+      ],
+      "contextYear": [
+        "2023"
+      ],
+      "contextSDGs": [
+        "SDG 3: Good Health and Well-being"
+      ],
+      "contextStateOrUTs": [
+        "Pan India"
+      ]
+    },
+    "facets": [
+      "resourceCategory",
+      "sectorName",
+      "subSectorName",
+      "contextStateOrUTs",
+      "contextYear",
+      "contextSDGs",
+      "courseCategory"
+    ],
+    "sort_by": {
+      "lastUpdatedOn": "desc"
+    },
+    "offset": 0,
+    "limit": 20
+  }
+}
+```
+
+- **Sample Response (HTTP 200 OK):**
+
+```json
+{
+  "id": "api.composite.search",
+  "ver": "v4",
+  "ts": "2026-10-26T05:30:00ZZ",
+  "params": {
+    "resmsgid": "992bdee0-a275-11ef-84c9-55784f866a56",
+    "status": "successful"
+  },
+  "responseCode": "OK",
+  "result": {
+    "count": 1,
+    "content": [
+      {
+        "identifier": "do_114184986771152896112",
+        "name": "Inclusive Public Service Delivery Case Study",
+        "primaryCategory": "Case Study",
+        "resourceCategory": "Reference Resource",
+        "contextYear": [
+          "2023"
+        ],
+        "contextSDGs": [
+          "SDG 3: Good Health and Well-being"
+        ],
+        "contextStateOrUTs": [
+          "Pan India"
+        ],
+        "status": "Live",
+        "appIcon": "https://storage.googleapis.com/<BUCKET>/content/do_114184986771152896112/artifact/thumb.png",
+        "posterImage": "https://storage.googleapis.com/<BUCKET>/content/do_114184986771152896112/artifact/poster.png",
+        "organisation": [
+          "Competency Building Commission"
+        ],
+        "lastUpdatedOn": "2026-10-20T10:00:00.000+0000"
+      }
+    ],
+    "facets": [
+      {
+        "name": "contextSDGs",
+        "values": [
+          {
+            "name": "SDG 3: Good Health and Well-being",
+            "count": 12
+          },
+          {
+            "name": "SDG 11: Sustainable Cities and Communities",
+            "count": 8
+          }
+        ]
+      },
+      {
+        "name": "contextYear",
+        "values": [
+          {
+            "name": "2023",
+            "count": 15
+          },
+          {
+            "name": "2024",
+            "count": 9
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## 4. Physical Data Model & Storage Specs
+
+### 4.1 Apache Cassandra (Keyspace: `sunbird`)
+
+#### 1. System Settings Table (`sunbird.system_settings`)
+
+```sql
+CREATE TABLE IF NOT EXISTS sunbird.system_settings (
+    id    text,
+    field text,
+    value text,
+    PRIMARY KEY (id)
+) WITH comment = 'Stores dynamic master lists for AGK SDGs and State/UT values';
+```
+
+#### 2. Content Hierarchy Table (`sunbird.content_hierarchy`)
+
+```sql
+CREATE TABLE IF NOT EXISTS sunbird.content_hierarchy (
+    identifier text,
+    hierarchy  text,
+    PRIMARY KEY (identifier)
+) WITH comment = 'Stores serialized JSON collection hierarchy tree including referenceNodes';
+```
+
+#### 3. Content Data Table (`sunbird.content_data`)
+
+```sql
+CREATE TABLE IF NOT EXISTS sunbird.content_data (
+    content_id      text,
+    body            text,
+    version_key     text,
+    last_updated_on timestamp,
+    PRIMARY KEY (content_id)
+);
+```
+
+### 4.2 PostgreSQL Database (`sunbird`)
+
+#### Table: `public.content_partner`
+
+Governs partner certificates and accreditation hooks.
+
+```sql
+ALTER TABLE public.content_partner RENAME COLUMN trasform_certificate_json TO certificate_template_url;
+ALTER TABLE public.content_partner ALTER COLUMN certificate_template_url SET DATA TYPE varchar(255);
+```
+
+### 4.3 Elasticsearch Index Mapping (`igot_content`)
+
+Snippet of Elasticsearch 7.x schema for AGK facets:
+
+```json
+{
+  "mappings": {
+    "properties": {
+      "identifier": {
+        "type": "keyword"
+      },
+      "primaryCategory": {
+        "type": "keyword"
+      },
+      "resourceCategory": {
+        "type": "keyword"
+      },
+      "contextYear": {
+        "type": "keyword"
+      },
+      "contextSDGs": {
+        "type": "keyword"
+      },
+      "contextStateOrUTs": {
+        "type": "keyword"
+      },
+      "sectorName": {
+        "type": "keyword"
+      },
+      "subSectorName": {
+        "type": "keyword"
+      },
+      "isPublic": {
+        "type": "boolean"
+      },
+      "referenceNodes": {
+        "type": "nested",
+        "properties": {
+          "identifier": {
+            "type": "keyword"
+          },
+          "name": {
+            "type": "text"
+          },
+          "artifactUrl": {
+            "type": "keyword",
+            "index": false
+          },
+          "mimeType": {
+            "type": "keyword"
+          },
+          "audience": {
+            "type": "keyword"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## 5. Concrete Error Codes & Exception Contracts
+
+All errors returned by `cios-content-service` adhere to standard Sunbird envelope specifications:
+
+```json
+{
+  "id": "api.error",
+  "ver": "1.0",
+  "ts": "2026-10-26T05:35:00ZZ",
+  "params": {
+    "resmsgid": "b1e60560-a27b-11ef-84c9-55784f866a56",
+    "msgid": null,
+    "status": "failed",
+    "err": "ERR_INVALID_VERSION_KEY",
+    "errmsg": "Invalid versionKey provided. Content has been modified concurrently."
+  },
+  "responseCode": "CLIENT_ERROR",
+  "result": {}
+}
+```
+
+| HTTP Status | Error Identifier (`err`) | Error Message (`errmsg`) | Root Cause & Resolution |
+|---|---|---|---|
+| **400** | `ERR_INVALID_VERSION_KEY` | "Invalid versionKey provided." | Optimistic lock collision. Client must re-fetch via `/read` and re-apply changes. |
+| **400** | `ERR_INVALID_METADATA_FORMAT` | "contextSDGs must be an array of strings." | Payload schema validation failed in `ContentUpdateController`. |
+| **403** | `ERR_UNAUTHORIZED_CATEGORY` | "Creating Karmayogi Talks is restricted to CBC and KB." | User's `rootOrgId` is not affiliated with CBC/KB. Request rejected by `RoleValidationInterceptor`. |
+| **404** | `ERR_CONTENT_NOT_FOUND` | "No content found for identifier: {id}." | Target content node does not exist in Cassandra. |
+| **413** | `ERR_FILE_SIZE_EXCEEDED` | "Uploaded file exceeds maximum limit of 100MB." | Attached Teacher's Note binary exceeds allowable size. |
+| **500** | `ERR_KAFKA_PUBLISH_FAILED` | "Unable to dispatch publish event to Kafka." | Flink pipeline publisher failed. Content service retries up to 3 times before returning 500. |
+
+## 6. Testing Considerations & Verification Scenarios
+
+### 6.1 Unit & Integration Test Matrix
+
+| Test ID | Test Target | Scenario Description | Expected Outcome | SRS Req Mapping |
+|---|---|---|---|---|
+| **UT-AGK-01** | `RoleValidationInterceptor` | User from Dept of Agriculture attempts `primaryCategory = "Karmayogi Talks"`. | Throws `403 ERR_UNAUTHORIZED_CATEGORY`. | `AGK-FR-006` |
+| **UT-AGK-02** | `ReferenceNodeService` | Attach valid PDF to `referenceNodes` during update. | Serializes object with `artifactUrl` and updates `versionKey`. | `AGK-FR-005` |
+| **UT-AGK-03** | `SystemSettingsController` | Fetch `sdgList` from Cassandra. | Returns HTTP 200 with 17 distinct SDGs. | `AGK-FR-004` |
+| **IT-AGK-01** | `ContentPublishPipeline` | Publish Case Study containing `referenceNodes`. | Kafka event processed by Flink; ES index contains nested referenceNodes. | `AGK-FR-005` |
+| **IT-AGK-02** | `CompositeSearch` | Query ES with `contextYear = ["2023"]` and `contextSDGs = ["SDG 3"]`. | Returns HTTP 200 with matching case studies and dynamic facet counts. | `AGK-FR-008` |
+| **IT-AGK-03** | `EnrollmentService` | Complete 100% of an AGK Case Study. | Progress marks complete, Karma points awarded, **zero** certificate generated. | `AGK-FR-009` |
+| **IT-AGK-04** | `PublicAccessProxy` | Unauthenticated GET request to public case study read API. | Bypasses session auth and returns 200 OK. | `AGK-FR-011` |
+
+## 7. Concrete Deployment Configurations
+
+### 7.1 Flink Streaming Configurations
+
+- **Job:** `Flink-Search-Indexer`
+- **File:** `flink-configuration.yaml`
+
+```yaml
+taskmanager.numberOfTaskSlots: 4
+parallelism.default: 2
+kafka.consumer.topic: "prod.search.indexer.request"
+nested.fields: "referenceNodes"
+elasticsearch.hosts: "http://elasticsearch:9200"
+elasticsearch.index: "igot_content"
+```
+
+### 7.2 Form Configuration API Payload (`cbp-portal`)
+
+CURL executed during release deployment:
+
+```bash
+curl --location 'https://<PORTAL_HOST>/apis/v1/form/create' \
+  --header 'Content-Type: application/json' \
+  --header 'Cookie: connect.sid={{adminSession}}' \
+  --data '{
+  "request": {
+    "type": "cbp-portal",
+    "subType": "cbp-v1",
+    "action": "cbp-configuration",
+    "component": "cbp",
+    "rootOrgId": "*",
+    "data": {
+      "resourceCategory": [
+        {
+          "name": "Case study",
+          "value": "Case study",
+          "enabledFor": [
+            "PDF",
+            "Link"
+          ]
+        },
+        {
+          "name": "Karmayogi Talks",
+          "value": "Karmayogi Talks",
+          "enabledFor": [
+            "Youtube"
+          ]
+        },
+        {
+          "name": "Best Practices",
+          "value": "Best Practices",
+          "enabledFor": [
+            "PDF",
+            "Link"
+          ]
+        },
+        {
+          "name": "Policies and Acts",
+          "value": "Policies and Acts",
+          "enabledFor": [
+            "PDF",
+            "Link"
+          ]
+        }
+      ]
+    }
+  }
+}'
+```
+
+## 8. Open Implementation Items for Engineering Sign-Off
+
+1. **Upper Bound for Year Validation:**
+  - *Observation:* The form config payload hardcodes years up to `2024`.
+  - *Resolution:* The frontend `CaseStudySettingsComponent` shall calculate dynamic years:
+
+```ts
+const currentYear = new Date().getFullYear();
+const years = Array.from({ length: currentYear - 2000 + 1 }, (_, i) => String(2000 + i));
+```
+
+1. **Download Telemetry Mobile Parity** (`KB-11673`):
+  - *Action:* Verify Flutter download service emits `INTERACT` events identical to portal web specifications (`eid: "INTERACT"`, `subtype: "download"`, `id: "teachers-note"`).

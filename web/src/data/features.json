@@ -2805,25 +2805,136 @@
   {
     "id": "agk",
     "title": "Amrit Gyaan Kosh",
-    "summary": "A knowledge-resource discovery hub — PDFs, videos, audio and links tagged by sector, sub-sector, resource category, SDGs, state/UT and year — shipped as two independent client implementations, web and mobile, with no dedicated backend of its own.",
+    "summary": "Amrit Gyaan Kosh (AGK) is iGOT's knowledge repository of government case studies: MDOs and the Capacity Building Commission author Case Studies with Teacher's Notes and reference material, tagged by year, SDGs, state/UT and sector; learners discover and consume them on web and mobile, public users can browse without logging in, and multilingual authoring extends them across languages.",
     "icon": "<path d=\"M3 5.5h7a2 2 0 0 1 2 2V20a2.5 2.5 0 0 0-2.5-2H3z\"></path><path d=\"M21 5.5h-7a2 2 0 0 0-2 2V20a2.5 2.5 0 0 1 2.5-2H21z\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "agk/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/amrit-gyaan-kosh/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "agk/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "KB-7062 BRD AGK",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/258899974/KB-7062+BRD+AGK?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5Mjk4OTkzODIyNCIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "AGK Sector Mapping",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/~6023c38698875800688faaac/pages/237404280/AGK+Sector+Mapping?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5Mjk4OTkzODIyNCIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-7060 | Q8 | BRD | Multilingual Content Creation",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/EADnFQ?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyOTg5OTM4MjI0Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-7060 | Q8 | FRS | Multilingual Content creation",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/x/WgAJFg?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyOTg5OTM4MjI0Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Software Requirements Specification (SRS)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Amrit Gyan Kosh",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/235044867/SRS+-+Amrit+Gyan+Kosh?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyOTg5OTM4MjI0Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Amrit Gyan Kosh",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/235044867/SRS+-+Amrit+Gyan+Kosh?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyOTg5OTM4MjI0Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Multilingual Content Creation and curation",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/480575492/SRS+-+Multilingual+Content+Creation+and+curation?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyOTg5OTM4MjI0Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-7060",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7060"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7062",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7062"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7091",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7091"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10201",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10201"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10525",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10525"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10526",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10526"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10527",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10527"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11672",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11672"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12738",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12738"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12740",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12740"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/amrit-gyaan-kosh/srs.md"
         }
       },
       {
@@ -2836,7 +2947,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/amrit-gyaan-kosh/context-diagram.md"
@@ -2859,8 +2970,17 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/amrit-gyaan-kosh/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/amrit-gyaan-kosh/operations-manual.md"
@@ -2869,9 +2989,19 @@
       {
         "key": "asbuilt",
         "label": "As-Built",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/amrit-gyaan-kosh/as-built-requirements.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "agk/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]

@@ -279,6 +279,8 @@ nav:
       - Context Diagram: learning-hub/discussion-hub/context-diagram.md
   - Amrit Gyaan Kosh:
       - learning-hub/amrit-gyaan-kosh/index.md
+      - SRS: learning-hub/amrit-gyaan-kosh/srs.md
+      - SDD: learning-hub/amrit-gyaan-kosh/sdd.md
       - Use Cases: learning-hub/amrit-gyaan-kosh/use-cases.md
       - APIs: learning-hub/amrit-gyaan-kosh/apis.md
       - HLD: learning-hub/amrit-gyaan-kosh/hld.md
