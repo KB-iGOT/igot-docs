@@ -1820,6 +1820,14 @@
         }
       },
       {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-assessment-tool/srs.md"
+        }
+      },
+      {
         "key": "usecases",
         "label": "Use Cases",
         "source": {
@@ -1858,6 +1866,14 @@
         "source": {
           "type": "markdown",
           "path": "learning-hub/ai-assessment-tool/lld.md"
+        }
+      },
+      {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/ai-assessment-tool/sdd.md"
         }
       },
       {

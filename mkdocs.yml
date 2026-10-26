@@ -112,10 +112,12 @@ nav:
           - As-Built Requirements: learning-hub/ai-cbp-tool/as-built-requirements.md
       - AI Assessment Tool:
           - learning-hub/ai-assessment-tool/index.md
+          - SRS: learning-hub/ai-assessment-tool/srs.md
           - Use Cases: learning-hub/ai-assessment-tool/use-cases.md
           - APIs: learning-hub/ai-assessment-tool/apis.md
           - HLD: learning-hub/ai-assessment-tool/hld.md
           - LLD: learning-hub/ai-assessment-tool/lld.md
+          - SDD: learning-hub/ai-assessment-tool/sdd.md
           - Operations Manual: learning-hub/ai-assessment-tool/operations-manual.md
           - As-Built Requirements: learning-hub/ai-assessment-tool/as-built-requirements.md
           - Context Diagram: learning-hub/ai-assessment-tool/context-diagram.md
