@@ -61,6 +61,20 @@ reworked feature uses these tabs, in this order, in `features.json`:
 Don't invent a different order or labels per feature (e.g. "Use Cases" in
 third place, or "Context" instead of "Context Diagrams").
 
+**Key Links labels.** Keep each link's URL exactly as supplied. Label a link
+with a document title only when the title is certain:
+
+- **Jira:** the ticket key, e.g. `KB-752`.
+- **Confluence URL with a title slug** (`/wiki/spaces/<SPACE>/pages/<id>/<Title>`):
+  that title.
+- **Confluence tiny link** (`/wiki/x/<code>`): decode the code to a page ID
+  (base64 with `-`→`/` and `_`→`+`, padded with `A`, read as a little-endian
+  integer). Use a title only if the source material names that page ID.
+- **Anything else:** `Confluence page <code>`. This covers share links
+  (`/l/cp/<code>`) and tiny links whose ID doesn't match the source.
+
+Never infer a title from a link's position in a list or from context.
+
 There is no rebuild step to commit: the app reads `docs/` at build time, and
 `cd web && npm run dev` shows markdown edits live. CI builds and publishes
 `web/dist/` (`.github/workflows/docs.yml`).
