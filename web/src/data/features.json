@@ -676,25 +676,107 @@
   {
     "id": "bharatkalp",
     "title": "Bharat Kalp",
-    "summary": "A cohort-gated, week-by-week program with its own microsite — a progress hero, a community carousel, and a searchable library of each week's content.",
+    "summary": "Bharat KALP (Knowledge, Action & Leadership Program) is a restricted microsite for IAS officers in the CBC's leadership programme: a 16-week structured curriculum with progress tracking, curated course recommendations, configurable banners and announcements, private mentorship communities, and program-only talks and podcasts with live meeting links, built by reusing existing platform services.",
     "icon": "<path d=\"M6 3v18\"></path><path d=\"M6 4h11l-2.5 4L17 12H6\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "bharatkalp/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/bharat-kalp/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "bharatkalp/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Q12 BRD Bharat KALP",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1082327132/Q12+BRD+Bharat+KALP?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyOTk0ODc5MTY0Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q12 FRS Bharat KALP",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1091043353/Q12+FRS+Bharat+KALP?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkyOTk0ODc5MTY0Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Software Requirements Specification (SRS)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "SRS_BharatKalp_v1.0_r2026_Q1",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1172471809/SRS_BharatKalp_v1.0_r2026_Q1?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5Mjk5NDg3OTE2NCIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-14381",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14381?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5Mjk5NDg3OTE2NCIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15383",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15383?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5Mjk5NDg3OTE2NCIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15220",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15220?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5Mjk5NDg3OTE2NCIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15219",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15219?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5Mjk5NDg3OTE2NCIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15202",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15202?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5Mjk5NDg3OTE2NCIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14949",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14949?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5Mjk5NDg3OTE2NCIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Phase 1 Bharat Kalp Microsite API Contract",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1081704467/Phase+1+Bharat+Kalp+Microsite+API+Contract"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Sprint 38.1 - Bharat KALP",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1096876042/Sprint+38.1+-+Bharat+KALP?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5Mjk5NDg3OTE2NCIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/bharat-kalp/srs.md"
         }
       },
       {
@@ -707,7 +789,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/bharat-kalp/context-diagram.md"
@@ -730,8 +812,17 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/bharat-kalp/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/bharat-kalp/operations-manual.md"
@@ -740,9 +831,19 @@
       {
         "key": "asbuilt",
         "label": "As-Built",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/bharat-kalp/as-built-requirements.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "bharatkalp/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]

@@ -205,6 +205,8 @@ nav:
           - Context Diagram: learning-hub/learning-pathway/context-diagram.md
       - Bharat Kalp:
           - learning-hub/bharat-kalp/index.md
+          - SRS: learning-hub/bharat-kalp/srs.md
+          - SDD: learning-hub/bharat-kalp/sdd.md
           - Use Cases: learning-hub/bharat-kalp/use-cases.md
           - APIs: learning-hub/bharat-kalp/apis.md
           - HLD: learning-hub/bharat-kalp/hld.md
