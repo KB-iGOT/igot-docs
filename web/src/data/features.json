@@ -2547,25 +2547,111 @@
   {
     "id": "weeklyclaps",
     "title": "Weekly Claps",
-    "summary": "A rolling engagement counter — a “clap” is earned for a week once a Karmayogi spends enough time on the platform in it — surfaced as a small stats widget rather than a page of its own, five times over, across web and mobile.",
+    "summary": "Weekly Claps is the learner engagement streak on the home page: a learner earns a clap for every week with at least 60 minutes of platform time, consecutive weeks build a streak that resets after a missed week, and a nightly batch job computes it from telemetry, keeps a rolling four-week history and triggers in-app review prompts for engaged learners.",
     "icon": "<path d=\"M7 11V7a5 5 0 0 1 10 0v4\"></path><path d=\"M5 11h14l-1 9H6z\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "weeklyclaps/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/weekly-claps/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "weeklyclaps/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "KY_FRS_LEA_LH_Learner_Home_page",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/6194373/KY_FRS_LEA_LH_Learner_Home_page?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzAxNTc4ODM2NyIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KY_BRD_LEA_LH_Learner_home_page",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/6258968/KY_BRD_LEA_LH_Learner_home_page?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzAxNTc4ODM2NyIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Software Requirements Specification (SRS)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Weekly Claps - Data",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/15499739/Weekly+Claps+-+Data"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "In-app Review Trigger based on weekly claps",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/~5e9d528aeb50310c17bf543e/pages/55312431/In-app+Review+Trigger+based+on+weekly+claps?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzAxNTc4ODM2NyIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Total time spent by user or check the data on weekly clap table",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/KBNOC/pages/359792697/Total+time+spent+by+user+or+check+the+data+on+weekly+clap+table?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzAxNTc4ODM2NyIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-384",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-384"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7862",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7862"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-3757",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-3757"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-4569",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-4569"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2973",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2973"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7900",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7900"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8973",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8973"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/weekly-claps/srs.md"
         }
       },
       {
@@ -2578,7 +2664,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/weekly-claps/context-diagram.md"
@@ -2601,8 +2687,17 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/weekly-claps/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/weekly-claps/operations-manual.md"
@@ -2611,9 +2706,19 @@
       {
         "key": "asbuilt",
         "label": "As-Built",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/weekly-claps/as-built-requirements.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "weeklyclaps/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]

@@ -1,67 +1,65 @@
-# Weekly Claps — Context Diagram
+# Weekly Claps — Context & Architecture Diagrams
 
-## System boundary
-
-Inside the feature is the read path for the claps widget: the web and mobile widgets that
-render a running total and a four-week strip, and the `InsightsController` in
-`sunbird-cb-ext` that reads a cached or stored stats row and returns it. Outside it are the
-Karmayogi who views the widget, the gateway proxy and Kong in front of the backend, the
-Redis cache and Postgres table the controller reads, and the unidentified external process
-that actually computes and writes the clap data.
-
-## Diagram
+## 2.1 System Context Diagram (Level 0 / Level 1)
 
 ```mermaid
-flowchart LR
-    WEB["Karmayogi (web)"]
-    MOB["Karmayogi (mobile)"]
-    OPS["Platform operator"]
-
-    UIP["Gateway proxy<br/>(sunbird-cb-uiproxy)"]
-    KONG["Kong API Gateway<br/>(path rewrite config)"]
-    JOB["Stats producer<br/>(unidentified external process)"]
-
-    WC(["Weekly Claps<br/>widgets and InsightsController"])
-
-    CLI["Web and mobile widgets<br/>(sunbird-cb-portal,<br/>karmayogi-mobile)"]
-    RED[("UserInsights Redis<br/>24-hour cache")]
-    PG[("PostgreSQL<br/>learner_stats")]
-
-    WEB -->|"views claps on Home, Profile"| CLI
-    MOB -->|"views claps on Home, Activities, Achievement Hub"| CLI
-    CLI -->|"requests insights"| WC
-    WC -->|"web calls via proxy"| UIP
-    UIP -->|"passes through"| KONG
-    WC -->|"mobile calls via gateway"| KONG
-    KONG -->|"routes to controller"| WC
-    OPS -->|"runs and supports"| WC
-
-    WC -->|"reads or writes cache"| RED
-    WC -->|"reads stats row"| PG
-    JOB -.->|"writes clap data"| PG
+C4Context
+    title System Context Diagram - iGOT Karmayogi Weekly Claps
+    Person(learner, "Civil Service Learner", "Interacts with learning content on portal or mobile apps.")
+    Person(admin, "KBNOC / Support Admin", "Investigates user streak or engagement discrepancy queries.")
+    System_Boundary(igot_platform, "iGOT Karmayogi Platform") {
+        System(portal_ui, "Learner Portal (Web / M-Web / App)", "Angular/React Frontend displaying Insights Sidebar and Weekly Claps.")
+        System(telemetry_pipe, "Telemetry & Analytics Pipeline", "Kafka & Druid ingesting and aggregating user active time.")
+        System(batch_engine, "Batch Processing Engine (Spark/Cron)", "Evaluates 60-min cutoff, shifts rolling weeks, and manages streaks.")
+        System(stats_store, "Learner Stats Database (Cassandra)", "Stores rolling 4 weeks data, session counts, and total claps.")
+        System(feed_service, "Feed & Notification Service", "Pushes In-App Review and NPS rating triggers to eligible users.")
+    }
+    Rel(learner, portal_ui, "Engages with courses & views streak", "HTTPS / REST")
+    Rel(portal_ui, telemetry_pipe, "Emits engagement telemetry events", "Kafka ingestion")
+    Rel(batch_engine, telemetry_pipe, "Queries weekly platform engagement time", "SQL / Native Druid Query")
+    Rel(batch_engine, stats_store, "Updates w1-w4 and total_claps", "CQL")
+    Rel(portal_ui, stats_store, "Fetches user stats on login/home load", "REST API")
+    Rel(batch_engine, feed_service, "Triggers in-app review feeds on streak update", "Internal Job / CQL")
+    Rel(feed_service, portal_ui, "Serves review prompts via getFeed", "REST API")
+    Rel(admin, telemetry_pipe, "Audits raw summary events", "Druid Console")
+    Rel(admin, stats_store, "Verifies learner stats record", "CQL / SOP")
 ```
 
-## Elements
+## 2.2 End-to-End Processing & Lifecycle Flow
 
-| Element | Role | Detailed in |
-|---|---|---|
-| Weekly Claps (widgets and `InsightsController`) | Central system: read-only claps widgets plus the one backend endpoint that assembles the response | [hld.md](hld.md) |
-| Karmayogi (web) | Sees the widget on the Home and Profile pages | [use-cases.md](use-cases.md) |
-| Karmayogi (mobile) | Sees the widget on Home, Your Activities and the Achievement Hub | [use-cases.md](use-cases.md) |
-| Web and mobile widgets | Independent client implementations that fetch insights and render total plus week strip | [hld.md](hld.md) |
-| Platform operator | Runs and supports the feature day to day | [index.md](index.md) |
-| Gateway proxy (`sunbird-cb-uiproxy`) | Role-gated fixed-target passthrough for the web insights route | [apis.md](apis.md) |
-| Kong API Gateway | Rewrites client insights paths onto the backend controller route; config is outside the traced repos | [apis.md](apis.md) |
-| UserInsights Redis | Separate 24-hour cache keyed per user, checked before Postgres | [apis.md](apis.md) |
-| PostgreSQL (`learner_stats`) | Stored per-user clap totals and weekly breakdown; read-only for this feature | [apis.md](apis.md) |
-| Stats producer (unidentified) | Computes and writes the clap data; not found in the traced repos | [index.md](index.md) |
-
-> **Verification boundary:** elements and interactions come from the feature's own pages
-> (index, use cases, APIs, HLD), each read in full; the LLD and the operations manual were
-> not read. Spot-checked read-only against `sunbird-cb-uiproxy`, where the
-> `/proxies/v8/read/user/insights` route is present, and the mobile repo directory
-> exists in the workspace as `igot_karmayogi_mobile`. The `sunbird-cb-ext` controller route and the mobile
-> `/api/insights` call were not independently re-found in this pass. The dashed producer
-> link reflects the documented gap: no writer of `learner_stats` was identified. The Kong
-> routing between client paths and the controller is documented but not verifiable from the
-> traced repos.
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Learner as Learner (App / Web)
+    participant Telemetry as Telemetry / Druid
+    participant BatchJob as Nightly Batch Job
+    participant DB as Cassandra (learner_stats)
+    participant FeedJob as Review Trigger Job
+    participant FeedDB as Cassandra (feed)
+    participant UI as Learner Home UI
+    Note over Learner,Telemetry: Throughout the Week (Mon 00:00 to Sun 23:59)
+    Learner->>Telemetry: User active sessions emit summary-events (total_time_spent)
+    Note over BatchJob,DB: Nightly Job Run (e.g., 01:00 AM)
+    BatchJob->>Telemetry: Query SUM(total_time_spent) for current week where dimensions_type='app'
+    Telemetry-->>BatchJob: Returns platformEngagementTime and sessionCount per user
+    BatchJob->>DB: Fetch existing learner_stats (w1, w2, w3, w4, total_claps)
+    alt platformEngagementTime >= 60 minutes
+        BatchJob->>DB: Set claps_updated_this_week = true, increment total_claps (or retain if already credited)
+    else platformEngagementTime < 60 minutes
+        alt End of Week (Sunday night transition)
+            BatchJob->>DB: Reset total_claps = 0, shift columns (w2->w1, w3->w2, w4->w3)
+        else Mid-week daily run
+            BatchJob->>DB: Update current week time spent#59; keep claps_updated_this_week = false
+        end
+    end
+    Note over FeedJob,FeedDB: Post-Streak Update Trigger
+    FeedJob->>DB: Scan for claps_updated_this_week == true
+    FeedJob->>FeedDB: Insert InAppReview feed item (status: 'unread', category: 'InAppReview')
+    Note over Learner,UI: Next User Session
+    Learner->>UI: Visits Learner Homepage
+    UI->>DB: Request learner_stats
+    DB-->>UI: Return w1..w4 and total_claps
+    UI->>FeedDB: Call getFeed API
+    FeedDB-->>UI: Return InAppReview prompt
+    UI->>Learner: Render Weekly Claps widget (ticks/streak) + Review popup
+```

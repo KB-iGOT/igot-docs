@@ -67,6 +67,8 @@ nav:
               - Context Diagram: learning-hub/bulk-registration/context-diagram.md
       - Weekly Claps:
           - learning-hub/weekly-claps/index.md
+          - SRS: learning-hub/weekly-claps/srs.md
+          - SDD: learning-hub/weekly-claps/sdd.md
           - Use Cases: learning-hub/weekly-claps/use-cases.md
           - APIs: learning-hub/weekly-claps/apis.md
           - HLD: learning-hub/weekly-claps/hld.md
