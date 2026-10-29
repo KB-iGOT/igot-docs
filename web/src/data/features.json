@@ -851,25 +851,166 @@
   {
     "id": "peervalidation",
     "title": "Peer Validation",
-    "summary": "A named colleague, not a machine, has to approve a course completion before it counts.",
+    "summary": "Peer Validation checks whether learning shows up on the job: SPV and MDO admins link peer validation surveys to published courses; after a configurable delay following completion, the learner is prompted to submit a workplace-application reflection with evidence and nominate validators, who review it and approve or reject it, with submission tracking and reporting for admins.",
     "icon": "<path d=\"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2\"></path><circle cx=\"9\" cy=\"7\" r=\"4\"></circle><path d=\"m16 11 2 2 4-4\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "peervalidation/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/peer-validation/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "peervalidation/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "BRD_PeerValidation_v1.0_r2025_Q4",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/695468058/BRD_PeerValidation_v1.0_r2025_Q4?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "FRS_PeerValidation_v1.0_r2025_Q4",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/795115522/FRS_PeerValidation_v1.0_r2025_Q4?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsIm"
+                }
+              ]
+            },
+            {
+              "title": "Software Requirements Specification (SRS)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "SRS_PeerValidation_v1.0_r2025_Q4",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/971276289/SRS_PeerValidation_v1.0_r2025_Q4?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-13008",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13008?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13004",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13004?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13016",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13016?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13017",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13017?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13018",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13018?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13020",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13020?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13497",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13497?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13498",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13498?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13499",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13499?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14552",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14552?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15964",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15964?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15978",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15978?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14420",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14420?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14437",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14437?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14179",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14179?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14374",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14374?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Technical Design & Architecture",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Peer Validation - Learner Consumption Side",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/831389705/Peer+Validation+-+Learner+Consumption+Side?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Peer Validation Data Flow Design Document",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/810942465/Peer+Validation+Data+Flow+Design+Document?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Peer Validation Survey View Count Submission Rate Design",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/818511874/Peer+Validation+Survey+View+Count+Submission+Rate+Design?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA4NTEwNDAwNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/peer-validation/srs.md"
         }
       },
       {
@@ -882,7 +1023,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/peer-validation/context-diagram.md"
@@ -905,11 +1046,29 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/peer-validation/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/peer-validation/operations-manual.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "peervalidation/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]

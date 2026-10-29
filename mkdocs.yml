@@ -218,6 +218,8 @@ nav:
           - Context Diagram: learning-hub/bharat-kalp/context-diagram.md
       - Peer Validation:
           - learning-hub/peer-validation/index.md
+          - SRS: learning-hub/peer-validation/srs.md
+          - SDD: learning-hub/peer-validation/sdd.md
           - Use Cases: learning-hub/peer-validation/use-cases.md
           - APIs: learning-hub/peer-validation/apis.md
           - HLD: learning-hub/peer-validation/hld.md
