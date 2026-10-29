@@ -1200,25 +1200,106 @@
   {
     "id": "chs",
     "title": "CHS",
-    "summary": "A nightly batch pipeline — not a page or a button — that turns raw platform activity into karma points, badges, leaderboards, compliance reports and the BI warehouse.",
+    "summary": "Content Health Score (CHS) gives every eligible course a 0–100 quality score: a static content-quality score computed within five working days of publication, plus a dynamic learner-performance score from completion, time spent, drop-off, ratings and feedback sentiment, recalculated monthly. Courses are banded Green, Amber or Red so authors, admins and learners can see and act on quality.",
     "icon": "<path d=\"M3 3v18h18\"></path><path d=\"M7 15l4-5 3 3 5-7\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "chs/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/chs/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "chs/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "PRD_ContentHealthScore_v1.2_r2026_Q1",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/962560029/PRD_ContentHealthScore_v1.2_r2026_Q1"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "BRD_ContentHealthScore_v1.2_r2026_Q1",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/980877313/BRD_ContentHealthScore_v1.2_r2026_Q1"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "FRS_ContentHealthScore_v1.2_r2026_Q1",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/995393542/FRS_ContentHealthScore_v1.2_r2026_Q1"
+                }
+              ]
+            },
+            {
+              "title": "Software Requirements Specification (SRS)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "SRS_ContentHealthScore_v1.0_r2026_Q1",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1047101487/SRS_ContentHealthScore_v1.0_r2026_Q1"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-10347",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10347"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10348",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10348"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13860",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13860"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13896",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13896"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13897",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13897"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14170",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14170"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14323",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14323"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/chs/srs.md"
         }
       },
       {
@@ -1231,7 +1312,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/chs/context-diagram.md"
@@ -1254,11 +1335,29 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/chs/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/chs/operations-manual.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "chs/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]

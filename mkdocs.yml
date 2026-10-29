@@ -101,6 +101,8 @@ nav:
           - Context Diagram: learning-hub/training-plan/context-diagram.md
       - CHS:
           - learning-hub/chs/index.md
+          - SRS: learning-hub/chs/srs.md
+          - SDD: learning-hub/chs/sdd.md
           - Use Cases: learning-hub/chs/use-cases.md
           - APIs: learning-hub/chs/apis.md
           - HLD: learning-hub/chs/hld.md
