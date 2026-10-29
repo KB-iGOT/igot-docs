@@ -195,6 +195,8 @@ nav:
           - Context Diagram: learning-hub/standalone-assessment/context-diagram.md
       - Comprehensive Assessment Program:
           - learning-hub/comprehensive-assessment-program/index.md
+          - SRS: learning-hub/comprehensive-assessment-program/srs.md
+          - SDD: learning-hub/comprehensive-assessment-program/sdd.md
           - Use Cases: learning-hub/comprehensive-assessment-program/use-cases.md
           - APIs: learning-hub/comprehensive-assessment-program/apis.md
           - HLD: learning-hub/comprehensive-assessment-program/hld.md

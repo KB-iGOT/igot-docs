@@ -544,25 +544,186 @@
   {
     "id": "cap",
     "title": "Comprehensive Assessment Program",
-    "summary": "A program-level assessment category, typically assigned/mandated, that reuses the assessment engine end to end.",
+    "summary": "Comprehensive Assessment (CA) is the program-level assessment tied to an officer's APAR: MDO/CCA admins target reusable user groups with an APAR training plan and a linked CA, learners complete the mandatory courses and attempt the CA (50% pass mark, bounded retakes, never-decrease best score), and the results flow nightly to SPARROW / e-HRMS.",
     "icon": "<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><circle cx=\"12\" cy=\"12\" r=\"4.5\"></circle><circle cx=\"12\" cy=\"12\" r=\"1\"></circle>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "cap/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/comprehensive-assessment-program/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "cap/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Tech Design for Best Score in Comprehensive Assessment",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1355612176/Tech+Design+for+Best+Score+in+Comprehensive+Assessment"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q13 APAR and CA 2026-27 BRD PRD",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1031307285/Q13+APAR+and+CA+2026-27+BRD+PRD"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "APAR Training Plan and Comprehensive Assessment Program Process Flow",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/838664193/APAR+Training+Plan+and+Comprehensive+Assessment+Program+Process+Flow"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Comprehensive Assessment Program",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/426311744/SRS+-+Comprehensive+Assessment+Program"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Lifecycle of the CA APAR V4 APIs",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1350467607/Lifecycle+of+the+CA+APAR+V4+APIs"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Lifecycle of the CA APAR V3 APIs",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1350139929/Lifecycle+of+the+CA+APAR+V3+APIs"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-10686 APAR FRS Mandatory Courses and Comprehensive Assessment My IGOT Plan for APAR",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/432963599/KB-10686+APAR+FRS+Mandatory+Courses+and+Comprehensive+Assessment+My+IGOT+Plan+for+APAR"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-10686 APAR BRD Mandatory Courses and Comprehensive Assessment My IGOT Plan for APAR",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/430964819/KB-10686+APAR+BRD+Mandatory+Courses+and+Comprehensive+Assessment+My+IGOT+Plan+for+APAR"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q8 Comprehensive Assessment Program",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/426311735/Q8+Comprehensive+Assessment+Program"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-13866",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13866"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13194",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13194"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13076",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13076"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12764",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12764"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10684",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10684"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10681",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10681"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8066",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8066"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8065",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8065"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10686",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10686"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15357",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15357"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13449",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13449"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13402",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13402"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13111",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13111"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12923",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12923"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13093",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13093"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13086",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13086"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13077",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13077"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12934",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12934"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11524",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11524"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/comprehensive-assessment-program/srs.md"
         }
       },
       {
@@ -575,7 +736,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/comprehensive-assessment-program/context-diagram.md"
@@ -598,11 +759,29 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/comprehensive-assessment-program/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
         "source": {
           "type": "markdown",
           "path": "learning-hub/comprehensive-assessment-program/operations-manual.md"
+        },
+        "hidden": true
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "cap/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]
