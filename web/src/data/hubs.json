@@ -53,12 +53,6 @@
         }
       },
       {
-        "label": "My Assigned Courses",
-        "target": {
-          "feature": "assigned"
-        }
-      },
-      {
         "label": "Peer Validation",
         "target": {
           "feature": "peervalidation"

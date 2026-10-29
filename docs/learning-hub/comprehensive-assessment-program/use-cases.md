@@ -19,7 +19,7 @@ result, with completion feeding the learner's record.
 Assignment and tracking ride content assignment + assigned-courses resolution
 and the standard reports.
 
-- See [My Assigned Courses](../my-assigned-courses/index.md)
+- See My Assigned Courses
 
 ### UC-4 · Author the program (Author)
 

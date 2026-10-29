@@ -9,7 +9,6 @@ enrolments in the LMS, per-node progress state — and each type adds one twist:
 | [Course](course/index.md) | none — the baseline: direct enrolment | ✅ |
 | [Curated Program](curated-program/index.md) | auto-assigned batch, roll-up progress | ✅ |
 | [Blended Program](blended-program/index.md) | approval workflow between request and enrolment | ✅ |
-| [My Assigned Courses](my-assigned-courses/index.md) | rules engine resolves what the org pushed | ✅ |
 | [Standalone Assessment](standalone-assessment/index.md) | assessment engine replaces the player | ✅ |
 | [Comprehensive Assessment Program](comprehensive-assessment-program/index.md) | mandated assessment over shared rails | ⚠️ thin |
 | [Learning Pathway](learning-pathway/index.md) | milestones gate each other — sequential unlock, not one flat list | ⚠️ thin backend |

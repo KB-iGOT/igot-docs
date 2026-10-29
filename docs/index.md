@@ -41,7 +41,7 @@ Each feature folder carries the same six files (newer features also add an
 
 ## Hubs
 
-- [Learning Hub](learning-hub/index.md) — 13 features documented
+- [Learning Hub](learning-hub/index.md) — 12 features documented
 - [Discussion Hub](learning-hub/discussion-hub/index.md) — community-scoped Q&A/forum
 - [Amrit Gyaan Kosh](learning-hub/amrit-gyaan-kosh/index.md) — knowledge-resource discovery hub
 - [Event Hub](learning-hub/events-hub/index.md) — live/virtual event scheduling and participation

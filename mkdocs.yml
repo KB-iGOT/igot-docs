@@ -177,14 +177,6 @@ nav:
           - LLD: learning-hub/curated-program/lld.md
           - Operations Manual: learning-hub/curated-program/operations-manual.md
           - Context Diagram: learning-hub/curated-program/context-diagram.md
-      - My Assigned Courses:
-          - learning-hub/my-assigned-courses/index.md
-          - Use Cases: learning-hub/my-assigned-courses/use-cases.md
-          - APIs: learning-hub/my-assigned-courses/apis.md
-          - HLD: learning-hub/my-assigned-courses/hld.md
-          - LLD: learning-hub/my-assigned-courses/lld.md
-          - Operations Manual: learning-hub/my-assigned-courses/operations-manual.md
-          - Context Diagram: learning-hub/my-assigned-courses/context-diagram.md
       - Standalone Assessment:
           - learning-hub/standalone-assessment/index.md
           - SRS: learning-hub/standalone-assessment/srs.md
@@ -249,6 +241,8 @@ nav:
           - Context Diagram: learning-hub/unenrollment-of-courses/context-diagram.md
       - Marketplace:
           - learning-hub/marketplace/index.md
+          - SRS: learning-hub/marketplace/srs.md
+          - SDD: learning-hub/marketplace/sdd.md
           - Use Cases: learning-hub/marketplace/use-cases.md
           - APIs: learning-hub/marketplace/apis.md
           - HLD: learning-hub/marketplace/hld.md
