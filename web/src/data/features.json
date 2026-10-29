@@ -3009,25 +3009,372 @@
   {
     "id": "karmapoints",
     "title": "Karma Points",
-    "summary": "An event-sourced recognition ledger — services emit events, one Flink job decides and writes every point, and the apps read it back as history, rank and a convertible Karma Coin wallet.",
+    "summary": "The Karma ecosystem rewards learning and lets learners spend it: Karma Points are a permanent, ever-increasing record earned for milestones such as first login, enrolment, course completion, assessments, ratings, live events and ACBP compliance; learners convert them 1:1 into Karma Coins (up to 300 a month) in the Karma Wallet and redeem the coins for marketplace courses, with an append-only transaction history.",
     "icon": "<path d=\"M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "karmapoints/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/karma-points/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "karmapoints/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "BRD Karma Points",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/6783501/BRD+Karma+Points"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "FRS Karma Points",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/6750572/FRS+Karma+Points"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Karma Points",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/9273456/Karma+Points"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "BRD Learner Leaderboard based on Karma Points.",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/36929736/BRD+Learner+Leaderboard+based+on+Karma+Points."
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Karma Points Gap Analysis Across Mobile, Web Learner, and Creation Portal",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/~712020c558029c908d46adb3f33161e3795a77/pages/1197998101/Karma+Points+Gap+Analysis+Across+Mobile+Web+Learner+and+Creation+Portal"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-15271",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15271?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-443",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-443?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2122",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2122?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2145",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2145?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1606",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1606?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-3756",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-3756?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7112",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7112?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15254",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15254?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-800",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-800?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10009",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10009?utm_source=chatgpt.com"
+                }
+              ]
+            },
+            {
+              "title": "Karma Wallet — Core User Stories",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-15294",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15294?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15296",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15296?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15297",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15297?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15298",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15298?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15299",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15299?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15300",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15300?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15301",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15301?utm_source=chatgpt.com"
+                }
+              ]
+            },
+            {
+              "title": "Karma Points — Calculation, Storage, and Rules",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-464",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-464?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-465",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-465?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-467",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-467?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-468",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-468?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15698",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15698?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14235",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14235?utm_source=chatgpt.com"
+                }
+              ]
+            },
+            {
+              "title": "Karma Points — UI, Profile, and User Experience",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-789",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-789?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-790",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-790?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-791",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-791?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-792",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-792?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-793",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-793?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-821",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-821?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1121",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1121?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1139",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1139?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-577",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-577?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9238",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9238?utm_source=chatgpt.com"
+                }
+              ]
+            },
+            {
+              "title": "Karma Points — Leaderboards and Gamification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-2933",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2933?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-5808",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-5808?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-5874",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-5874?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6344",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6344?utm_source=chatgpt.com"
+                }
+              ]
+            },
+            {
+              "title": "Karma Points — Events, Programs, and Campaigns",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-1609",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1609?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7096",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7096?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7116",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7116?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7462",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7462?utm_source=chatgpt.com"
+                }
+              ]
+            },
+            {
+              "title": "Karma Wallet and Marketplace Configuration",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-15036",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15036?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15347",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15347?utm_source=chatgpt.com"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12140",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12140?utm_source=chatgpt.com"
+                }
+              ]
+            },
+            {
+              "title": "Architecture, Data Model & Data Pipeline",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Karma Points V1 to V2 and Karma Coins",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1253441539/Karma+Points+V1+to+V2+and+Karma+Coins"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Karma Points Data Model",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/31031297/Karma+Points+Data+Model"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Karma Points Persist Processor — Unified Kafka Topic Optimization Decision",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1007583244/Karma+Points+Persist+Processor+Unified+Kafka+Topic+Optimization+Decision"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Kafka Producer & Event Mapping – Karma Points Flink Jobs",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1219100678/Kafka+Producer+Event+Mapping+Karma+Points+Flink+Jobs"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Design Document: Reconciliation of Missed First Enrollment Karma Points",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1148485633/Design+Document+Reconciliation+of+Missed+First+Enrollment+Karma+Points"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Karma Points Consumption APIs",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/30408705/Karma+Points+Consumption+APIs"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Total Karma Points",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/71467044/Total+Karma+Points"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Claim ACBP Karma Points",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/123306094/Claim+ACBP+Karma+Points"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Read User Karma Points History",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/123338838/Read+User+Karma+Points+History"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/karma-points/srs.md"
         }
       },
       {
@@ -3055,8 +3402,17 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/karma-points/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/karma-points/operations-manual.md"
@@ -3065,9 +3421,19 @@
       {
         "key": "asbuilt",
         "label": "As-Built",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/karma-points/as-built-requirements.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "karmapoints/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]

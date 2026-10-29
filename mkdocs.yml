@@ -80,6 +80,8 @@ nav:
           - Context Diagram: learning-hub/weekly-claps/context-diagram.md
       - Karma Points:
           - learning-hub/karma-points/index.md
+          - SRS: learning-hub/karma-points/srs.md
+          - SDD: learning-hub/karma-points/sdd.md
           - Use Cases: learning-hub/karma-points/use-cases.md
           - APIs: learning-hub/karma-points/apis.md
           - HLD: learning-hub/karma-points/hld.md
