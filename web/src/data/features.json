@@ -3448,25 +3448,106 @@
   {
     "id": "explore",
     "title": "Explore Content",
-    "summary": "The platform-wide discovery surface — global search, the Explore menu, facet browsing and every “see all” listing, served by the composite search APIs.",
+    "summary": "Explore Content is how learners find learning on iGOT: a centralized course catalog with multi-facet filters and sorting, the revamped learner homepage and navigation across web, mobile web and the app, browsing by competency (KCM), and Explore by Theme, which gives senior officials curated content by strategic theme based on their designation and organisation.",
     "icon": "<circle cx=\"11\" cy=\"11\" r=\"6.5\"></circle><path d=\"M16 16l4.5 4.5\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "explore/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "explore-content/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "explore/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "KB-9332 Q8 Course Catalog Learner Portal Mobile App",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/359792790/KB-9332+Q8+Course+Catalog+Learner+Portal+Mobile+App?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA5MjgzODE0MSIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q12 BRD UI UX Revamp",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1093795854/Q12+BRD+UI+UX+Revamp?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA5MjgzODE0MSIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q12 FRS UI UX Revamp",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1093795907/Q12+FRS+UI+UX+Revamp?xpis=eyJicmlkZ2UiOiJzbWFydExpbmtzIiwiaWQiOiIxNzkzMDkzOTgxNTI5Iiwic291cmNlIjoiamlyYS1KU1cifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q13 BRD Explore by Theme Senior Officials Learning Discovery",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1153662986/Q13+BRD+Explore+by+Theme+Senior+Officials+Learning+Discovery?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA5MjgzODE0MSIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q13 FRS Explore by Theme Senior Officials Learning Discovery",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1155072001/Q13+FRS+Explore+by+Theme+Senior+Officials+Learning+Discovery?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA5MjgzODE0MSIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-6446",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6446?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA5MjgzODE0MSIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9202",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9202?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA5MjgzODE0MSIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9332",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9332?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA5MjgzODE0MSIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9333",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9333?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA5MjgzODE0MSIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9334",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9334?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA5MjgzODE0MSIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12709",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12709?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA5MjgzODE0MSIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14810",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14810?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzA5MjgzODE0MSIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "explore-content/srs.md"
         }
       },
       {
@@ -3479,7 +3560,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "explore-content/context-diagram.md"
@@ -3502,11 +3583,29 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "explore-content/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "explore-content/operations-manual.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "explore/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]

@@ -31,6 +31,8 @@ nav:
   - Features:
       - Explore Content:
           - explore-content/index.md
+          - SRS: explore-content/srs.md
+          - SDD: explore-content/sdd.md
           - Use Cases: explore-content/use-cases.md
           - APIs: explore-content/apis.md
           - HLD: explore-content/hld.md
