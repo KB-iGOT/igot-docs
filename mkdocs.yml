@@ -201,6 +201,8 @@ nav:
           - Context Diagram: learning-hub/comprehensive-assessment-program/context-diagram.md
       - Learning Pathway:
           - learning-hub/learning-pathway/index.md
+          - SRS: learning-hub/learning-pathway/srs.md
+          - SDD: learning-hub/learning-pathway/sdd.md
           - Use Cases: learning-hub/learning-pathway/use-cases.md
           - APIs: learning-hub/learning-pathway/apis.md
           - HLD: learning-hub/learning-pathway/hld.md

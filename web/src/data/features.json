@@ -610,25 +610,131 @@
   {
     "id": "pathway",
     "title": "Learning Pathway",
-    "summary": "A guided, multi-stage journey — milestones of courses and checkpoints that unlock one at a time.",
+    "summary": "Learning Pathways turns standalone courses into milestone-based curricula: an SPV publisher builds a pathway of up to five milestones with a pre-assessment, mandatory and optional courses and a milestone assessment; learners unlock milestones in sequence, earn achievements per milestone and a completion certificate, and since Q13 skill badges. It is built as an overlay on the existing content model.",
     "icon": "<path d=\"M4 19V5a2 2 0 0 1 2-2h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z\"></path><path d=\"M8 12h5M8 16h8M8 8h3\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "pathway/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/learning-pathway/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "pathway/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Q10 BRD Learning Pathways",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/507052069/Q10+BRD+Learning+Pathways?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q10 FRS Learner Pathways",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/568557572/Q10+FRS+Learner+Pathways?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q13 BRD Skill Badge - Learner Pathway",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1248755721/Q13+BRD+Skill+Badge+-+Learner+Pathway?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Software Requirements Specification (SRS)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Q10 Learning Pathway",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/735969281/SRS+-+Q10+Learning+Pathway?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-11804",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11804?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11806",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11806?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15017",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15017?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11953",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11953?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11954",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11954?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11955",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11955?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11956",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11956?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "Technical Design & Architecture",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Learning Pathways As-Built Requirements HLD LLD",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1202814977/Learning+Pathways+As-Built+Requirements+HLD+LLD?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "As-Built Requirements Learning Pathways KB-11806",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1203666945/As-Built+Requirements+Learning+Pathways+KB-11806?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "High-Level Design Learning Pathways",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1202946071/High-Level+Design+Learning+Pathways?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Low-Level Design Learning Pathways",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1202814990/Low-Level+Design+Learning+Pathways?xpis=eyJicmlkZ2UiOiJyb3ZvLWNoYXQuc2lkZWJhciIsImlkIjoiMTc5MzEwMTA0OTMyNiIsInNvdXJjZSI6ImppcmEifQ%3D%3D"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/learning-pathway/srs.md"
         }
       },
       {
@@ -641,7 +747,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/learning-pathway/context-diagram.md"
@@ -664,11 +770,29 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/learning-pathway/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/learning-pathway/operations-manual.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "pathway/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]
