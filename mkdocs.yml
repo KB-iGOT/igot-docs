@@ -284,6 +284,8 @@ nav:
       - User Manual: learning-hub/events-hub/use-cases.md
   - Discussion Hub:
       - learning-hub/discussion-hub/index.md
+      - SRS: learning-hub/discussion-hub/srs.md
+      - SDD: learning-hub/discussion-hub/sdd.md
       - Use Cases: learning-hub/discussion-hub/use-cases.md
       - APIs: learning-hub/discussion-hub/apis.md
       - HLD: learning-hub/discussion-hub/hld.md

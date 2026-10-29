@@ -2781,25 +2781,346 @@
   {
     "id": "discussionhub",
     "title": "Discussion Hub",
-    "summary": "A community-scoped Q&A/forum feature — MDO leaders create Communities, Karmayogis join and post Questions, other members answer with Answer Posts and nested Answer Post Replies, all owned by one backend service.",
+    "summary": "Discuss Hub is the community-scoped discussion engine of iGOT Karmayogi: MDO leaders create competency-mapped Communities under SPV-approved Topics, and members post questions, comments and replies in a 3-level thread, with upvotes, cross-community bookmarks and threshold-based moderation.",
     "icon": "<path d=\"M4 6.5A2.5 2.5 0 0 1 6.5 4H15a3 3 0 0 1 3 3v13H6.5A2.5 2.5 0 0 1 4 17.5z\"></path><circle cx=\"11\" cy=\"10\" r=\"2.2\"></circle><path d=\"M7.5 16c.6-1.7 1.9-2.6 3.5-2.6s2.9.9 3.5 2.6\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "discussionhub/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/discussion-hub/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "discussionhub/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Q7 BRD Discuss Hub",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/294682875/Q7+BRD+Discuss+Hub"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q7 FRS Discuss Hub",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/295993468/Q7+FRS+Discuss+Hub"
+                }
+              ]
+            },
+            {
+              "title": "Software Requirements Specification (SRS)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Discussion hub v2",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/342360352/SRS+-+Discussion+hub+v2"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - MDO Portal - Discussion hub v2",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/367624194/SRS+-+MDO+Portal+-+Discussion+hub+v2"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-10497",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10497"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9261",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9261"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9241",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9241"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7947",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7947"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7941",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7941"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7909",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7909"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7534",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7534"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7533",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7533"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6439",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6439"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6280",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6280"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-627",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-627"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-276",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-276"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10589",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10589"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9783",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9783"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9343",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9343"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9044",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9044"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8918",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8918"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8917",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8917"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8790",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8790"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8787",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8787"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8491",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8491"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8488",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8488"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8487",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8487"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8486",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8486"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8011",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8011"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8010",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8010"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8009",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8009"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8008",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8008"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8007",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8007"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8006",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8006"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8005",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8005"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8004",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8004"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7946",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7946"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7945",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7945"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7944",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7944"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7940",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7940"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7938",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7938"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7937",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7937"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7930",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7930"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7538",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7538"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7269",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7269"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7268",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7268"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7132",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7132"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7131",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7131"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6907",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6907"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6860",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6860"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6851",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6851"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6460",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6460"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6459",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6459"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6458",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6458"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6457",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6457"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6444",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6444"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-655",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-655"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-367",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-367"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-366",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-366"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/discussion-hub/srs.md"
         }
       },
       {
@@ -2812,7 +3133,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/discussion-hub/context-diagram.md"
@@ -2835,12 +3156,21 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/discussion-hub/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
         "source": {
           "type": "markdown",
           "path": "learning-hub/discussion-hub/operations-manual.md"
-        }
+        },
+        "hidden": true
       },
       {
         "key": "asbuilt",
@@ -2848,6 +3178,16 @@
         "source": {
           "type": "markdown",
           "path": "learning-hub/discussion-hub/as-built-requirements.md"
+        },
+        "hidden": true
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "discussionhub/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]
