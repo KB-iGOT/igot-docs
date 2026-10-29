@@ -83,20 +83,18 @@ const allPlatformHubs: PlatformHub[] = [
     children: entriesOf('learning'), description: 'Documentation for learning content: courses, programs, assessments and pathways.' },
   { name: 'Discussion Hub', icon: 'discussion', to: '/features/discussionhub', count: docsCount('discussionhub'), countLabel: 'documents',
     description: 'Documentation for communities, questions, answers and discussions.' },
-  { name: 'Competency Hub', icon: 'competency', to: '/features/competencyhub', count: docsCount('competencyhub'), countLabel: 'documents',
-    description: 'Documentation for the competency framework and competency mapping.' },
   { name: 'Event Hub', icon: 'event', to: '/features/eventshub', count: docsCount('eventshub'), countLabel: 'documents',
     description: 'Documentation for virtual events: authoring, review, attendance and certificates.' },
   { name: 'Amrit Gyaan Kosh', icon: 'book', to: '/features/agk', count: docsCount('agk'), countLabel: 'documents',
     description: 'Documentation for knowledge resources: documents, videos, audio and links.' },
 ];
-/** the five platform hubs: Learning Hub groups features, the others are single pages */
+/** the four platform hubs: Learning Hub groups features, the others are single pages */
 export const platformHubs = allPlatformHubs.filter((h) => !h.to.startsWith('/features/') || getFeature(h.to.split('/')[2]));
 
 /** the Features hub: features and nested hubs such as Registration */
 export const featureEntries = entriesOf('features');
 
-const PLATFORM_HUB_PAGES = new Set(['discussionhub', 'competencyhub', 'eventshub', 'agk']);
+const PLATFORM_HUB_PAGES = new Set(['discussionhub', 'eventshub', 'agk']);
 
 export const stats = {
   hubs: platformHubs.length,

@@ -2705,43 +2705,171 @@
     ]
   },
   {
-    "id": "competencyhub",
-    "title": "Competency Hub",
-    "summary": "Two parallel competency taxonomies — a real CRUD+review service (frac-backend) almost nothing calls, and a mirror inside Knowledge Platform (kcmfinal_fw) that most of the platform calls instead — plus the Passbook, browse/search and org-designation-mapping surfaces built on top.",
+    "id": "competencypassbook",
+    "title": "Competency Passbook",
+    "summary": "The Competency Passbook (Learner Passbook) is a learner's competency record on iGOT: it shows the competencies required for their designation against those already earned through iGOT courses, self-declared external training and ATI/CTI bulk uploads, kept in a real-time Kafka/Flink-fed Cassandra ledger.",
     "icon": "<circle cx=\"12\" cy=\"8\" r=\"5\"></circle><path d=\"M8.5 12.5 6 21l6-3 6 3-2.5-8.5\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "competencyhub/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "competency-passbook/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "competencyhub/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Competency Passbook",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1376190477/Competency+Passbook"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q13 PRD Competency Passbook",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1001783322/Q13+PRD+Competency+Passbook"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Automating Competency Mapping with AI for Course Certificates and Passbook Generation",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/760381444/Automating+Competency+Mapping+with+AI+for+Course+Certificates+and+Passbook+Generation"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Learning Passbook Externally Integrated Training Certification Competency Mapping",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/705757206/Learning+Passbook+Externally+Integrated+Training+Certification+Competency+Mapping"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "WIP Competency Passbook",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/172261415/WIP+Competency+Passbook"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "FRS_LearnerPassbook_v1.0_r2025_Q4",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/684949506/FRS_LearnerPassbook_v1.0_r2025_Q4"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "BRD_LearnerPassbook_v1.0_r2025_Q4",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/684195843/BRD_LearnerPassbook_v1.0_r2025_Q4"
+                }
+              ]
+            },
+            {
+              "title": "Software Requirements Specification (SRS)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "SRS_FRS_LearnerPassbook_v1.0_r2025_Q4",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/777682945/SRS_FRS_LearnerPassbook_v1.0_r2025_Q4"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-293",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-293"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12698",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12698"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12699",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12699"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15792",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15792"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15793",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15793"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-936",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-936"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-940",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-940"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1102",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1102"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1103",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1103"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2928",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2928"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12975",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12975"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13285",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13285"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13319",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13319"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13500",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13500"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
         }
       },
       {
-        "key": "apis",
-        "label": "APIs",
+        "key": "srs",
+        "label": "SRS",
         "source": {
           "type": "markdown",
-          "path": "competency-hub/apis.md"
+          "path": "competency-passbook/srs.md"
         }
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
-          "path": "competency-hub/context-diagram.md"
+          "path": "competency-passbook/context-diagram.md"
         }
       },
       {
@@ -2749,7 +2877,7 @@
         "label": "HLD",
         "source": {
           "type": "markdown",
-          "path": "competency-hub/hld.md"
+          "path": "competency-passbook/hld.md"
         }
       },
       {
@@ -2757,23 +2885,15 @@
         "label": "LLD",
         "source": {
           "type": "markdown",
-          "path": "competency-hub/lld.md"
+          "path": "competency-passbook/lld.md"
         }
       },
       {
-        "key": "ops",
-        "label": "Operations Manual",
+        "key": "sdd",
+        "label": "SDD",
         "source": {
           "type": "markdown",
-          "path": "competency-hub/operations-manual.md"
-        }
-      },
-      {
-        "key": "asbuilt",
-        "label": "As-Built",
-        "source": {
-          "type": "markdown",
-          "path": "competency-hub/as-built-requirements.md"
+          "path": "competency-passbook/sdd.md"
         }
       }
     ]

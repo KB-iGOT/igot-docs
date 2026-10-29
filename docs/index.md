@@ -32,6 +32,7 @@ Each feature folder carries the same six files (newer features also add an
     - [SPV & Admin Registration](learning-hub/spv-admin-registration/index.md) — the super-admin portal: organisations, first administrators, links, request review
     - [Bulk Registration](learning-hub/bulk-registration/index.md) — CSV-upload pipelines for onboarding users
 - [Weekly Claps](learning-hub/weekly-claps/index.md) — a rolling engagement counter
+- [Competency Passbook](competency-passbook/index.md) — a learner's required vs. earned competencies, fed by a real-time Kafka/Flink ledger
 - [Training Plan](learning-hub/training-plan/index.md) — MDO-authored targeted assignment (`CbPlan`)
 - [CHS](learning-hub/chs/index.md) — backend batch pipeline feeding karma points, leaderboards, BI warehouse
 - [AI CBP Tool](learning-hub/ai-cbp-tool/index.md) — AI-assisted competency-based program authoring
@@ -41,7 +42,6 @@ Each feature folder carries the same six files (newer features also add an
 ## Hubs
 
 - [Learning Hub](learning-hub/index.md) — 13 features documented
-- [Competency Hub](competency-hub/index.md) — competency taxonomies, the Passbook, org-designation mapping
 - [Discussion Hub](learning-hub/discussion-hub/index.md) — community-scoped Q&A/forum
 - [Amrit Gyaan Kosh](learning-hub/amrit-gyaan-kosh/index.md) — knowledge-resource discovery hub
 - [Event Hub](learning-hub/events-hub/index.md) — live/virtual event scheduling and participation

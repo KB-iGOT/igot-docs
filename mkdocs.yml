@@ -19,15 +19,6 @@ nav:
       - API Gateway: platform/api-gateway.md
       - Content Lifecycle: platform/content-lifecycle.md
       - Context Diagram: platform/context-diagram.md
-  - Competency Hub:
-      - competency-hub/index.md
-      - Use Cases: competency-hub/use-cases.md
-      - APIs: competency-hub/apis.md
-      - HLD: competency-hub/hld.md
-      - LLD: competency-hub/lld.md
-      - Operations Manual: competency-hub/operations-manual.md
-      - As-Built Requirements: competency-hub/as-built-requirements.md
-      - Context Diagram: competency-hub/context-diagram.md
   - Features:
       - Explore Content:
           - explore-content/index.md
@@ -78,6 +69,13 @@ nav:
           - Operations Manual: learning-hub/weekly-claps/operations-manual.md
           - As-Built Requirements: learning-hub/weekly-claps/as-built-requirements.md
           - Context Diagram: learning-hub/weekly-claps/context-diagram.md
+      - Competency Passbook:
+          - competency-passbook/index.md
+          - SRS: competency-passbook/srs.md
+          - SDD: competency-passbook/sdd.md
+          - HLD: competency-passbook/hld.md
+          - LLD: competency-passbook/lld.md
+          - Context Diagram: competency-passbook/context-diagram.md
       - Karma Points:
           - learning-hub/karma-points/index.md
           - SRS: learning-hub/karma-points/srs.md

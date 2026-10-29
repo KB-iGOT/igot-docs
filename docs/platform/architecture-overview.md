@@ -162,4 +162,4 @@ missing repo and re-verifying.
 
 *See also:* [API Gateway & Routing](api-gateway.md) ·
 [Content Lifecycle](content-lifecycle.md) · per-feature `hld.md` pages under
-`docs/learning-hub/`, `docs/competency-hub/`, `docs/explore-content/`.
+`docs/learning-hub/`, `docs/competency-passbook/`, `docs/explore-content/`.

@@ -56,6 +56,7 @@ same six files (newer features also add an `as-built-requirements.md`):
     - [SPV & Admin Registration](docs/learning-hub/spv-admin-registration/index.md) — the super-admin portal: organisations, first administrators, links, request review
     - [Bulk Registration](docs/learning-hub/bulk-registration/index.md) — three independent, largely disconnected CSV-upload pipelines for onboarding users
 - [Weekly Claps](docs/learning-hub/weekly-claps/index.md) — a rolling engagement counter — five separate widget implementations, one backend endpoint
+- [Competency Passbook](docs/competency-passbook/index.md) — a learner's required vs. earned competencies, fed by a real-time Kafka/Flink ledger
 - [Training Plan](docs/learning-hub/training-plan/index.md) — MDO-authored targeted assignment (`CbPlan`) — four live table generations at once
 - [CHS](docs/learning-hub/chs/index.md) — backend batch pipeline feeding karma points, leaderboards, BI warehouse
 - [AI CBP Tool](docs/learning-hub/ai-cbp-tool/index.md) — AI-assisted competency-based program authoring
@@ -69,7 +70,6 @@ dropdown holding its three children). Their Markdown folders still live under
 
 ### Hubs
 
-- [Competency Hub](docs/competency-hub/index.md) — two parallel competency taxonomies (`frac-backend` and a Knowledge Platform mirror), the Passbook, browse/search and org-designation mapping
 - [Discussion Hub](docs/learning-hub/discussion-hub/index.md) — community-scoped Q&A/forum — Questions, Answer Posts and nested Answer Post Replies
 - [Amrit Gyaan Kosh](docs/learning-hub/amrit-gyaan-kosh/index.md) — a knowledge-resource discovery hub (PDFs, videos, case studies) with no backend service of its own
 - [Event Hub](docs/learning-hub/events-hub/index.md) — live/virtual event scheduling and participation

@@ -114,6 +114,12 @@
         }
       },
       {
+        "label": "Competency Passbook",
+        "target": {
+          "feature": "competencypassbook"
+        }
+      },
+      {
         "label": "Training Plan",
         "target": {
           "feature": "trainingplan"
