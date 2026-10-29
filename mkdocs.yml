@@ -169,6 +169,8 @@ nav:
           - Context Diagram: learning-hub/course/context-diagram.md
       - Curated Program:
           - learning-hub/curated-program/index.md
+          - SRS: learning-hub/curated-program/srs.md
+          - SDD: learning-hub/curated-program/sdd.md
           - Use Cases: learning-hub/curated-program/use-cases.md
           - APIs: learning-hub/curated-program/apis.md
           - HLD: learning-hub/curated-program/hld.md
