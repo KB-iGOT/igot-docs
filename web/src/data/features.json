@@ -2032,25 +2032,86 @@
   {
     "id": "unenroll",
     "title": "Unenrollment of Courses",
-    "summary": "A learner-initiated withdrawal from a course/batch — one boolean flip on the same generic enrolment record enroll writes, blocked once the course is completed, and wired up very differently depending on which client the learner is standing in.",
+    "summary": "Self-unenrollment lets a learner withdraw from an enrolled, not-yet-completed course from the TOC or course-card menu: the enrolment is deactivated, hours, karma and badges are reversed, progress is kept, and the course moves to an Unenrolled tab from which the learner can re-enroll and pick up where they left off.",
     "icon": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9 9l6 6M15 9l-6 6\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "unenroll/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/unenrollment-of-courses/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "unenroll/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "FRS_UnenrollFeatureforCourses_v1.0_r2026_Q1",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1175027713/FRS_UnenrollFeatureforCourses_v1.0_r2026_Q1"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "SRS_UnenrollFeatureforCourses_v1.0_r2026_Q1",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/1172471875/SRS_UnenrollFeatureforCourses_v1.0_r2026_Q1"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Un-Enrollment",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1080983553/Un-Enrollment"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-14109",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14109"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14518",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14518"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14519",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14519"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14520",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14520"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14521",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14521"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/unenrollment-of-courses/srs.md"
         }
       },
       {
@@ -2063,7 +2124,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/unenrollment-of-courses/context-diagram.md"
@@ -2086,12 +2147,21 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/unenrollment-of-courses/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
         "source": {
           "type": "markdown",
           "path": "learning-hub/unenrollment-of-courses/operations-manual.md"
-        }
+        },
+        "hidden": true
       },
       {
         "key": "asbuilt",
@@ -2099,6 +2169,16 @@
         "source": {
           "type": "markdown",
           "path": "learning-hub/unenrollment-of-courses/as-built-requirements.md"
+        },
+        "hidden": true
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "unenroll/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]

@@ -4,6 +4,42 @@ Reverse-engineered from code. Where a client sends data the backend doesn't
 read, or a job exists but isn't scheduled, the as-built reality is
 documented explicitly rather than assumed.
 
+## User flow
+
+![Self-Unenrollment — Lifecycle Flow Maps](images/user-flow.png)
+
+The flow map shows the two learner journeys end to end. Colours mark the kind
+of step: grey for generic steps, blue for navigation, red for unenrollment,
+green for re-enrollment; a dashed border marks an end state.
+
+**1. Unenrollment flow.** Preconditions: the user is logged in, enrolled in the
+course, has not completed it, and the content type is Course.
+
+| Step | Action |
+|---|---|
+| 01 | Login |
+| 02 | Open the course card |
+| 03 | Navigate to the TOC |
+| 04 | Open the ⋯ menu in the TOC header |
+| 05 | Select **Unenroll**, which opens the confirmation modal |
+| 06 | Confirm? The modal explains that the course is removed from the active list, that hours, karma and badges are reversed, and that progress is saved for later. **Cancel** aborts with no change. |
+| 07 | **Confirm Unenrollment** |
+| 08 | The course moves to the Unenrolled section |
+| 09 | Complete: metrics are recalculated and a snapshot is stored |
+
+**2. Re-enrollment flow.** The active surface is My Learning → Unenrolled
+Courses.
+
+| Step | Action |
+|---|---|
+| 01 | User login |
+| 02 | Open My Learning |
+| 03 | Open Unenrolled Courses |
+| 04 | Open the course |
+| 05 | Navigate to the TOC |
+| 06 | Click **Re-enroll** (on the TOC page only) |
+| 07 | End: enrollment and progress are restored |
+
 ## Storage reality
 
 **Cassandra (`sunbird_courses` keyspace)** — no new tables; unenroll writes

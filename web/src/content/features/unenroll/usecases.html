@@ -1,4 +1,29 @@
 <div>
+        <h2 class="fp-h2">User flow</h2>
+        <div class="uc-figs"><figure class="uc-fig"><img src="docs/learning-hub/unenrollment-of-courses/images/user-flow.png" alt="Self-Unenrollment — Lifecycle Flow Maps: the unenrollment and re-enrollment flows" loading="lazy"><figcaption>Self-Unenrollment — Lifecycle Flow Maps. Grey: generic step · blue: navigation · red: unenroll · green: re-enroll · dashed border: end state.</figcaption></figure></div>
+        <p class="fp-p"><strong>1. Unenrollment flow.</strong> Preconditions: the user is logged in, enrolled in the course, has not completed it, and the content type is Course.</p>
+        <ol>
+          <li>Login.</li>
+          <li>Open the course card.</li>
+          <li>Navigate to the TOC.</li>
+          <li>Open the ⋯ menu in the TOC header.</li>
+          <li>Select <strong>Unenroll</strong>, which opens the confirmation modal.</li>
+          <li>Confirm? The modal explains that the course is removed from the active list, that hours, karma and badges are reversed, and that progress is saved for later. <strong>Cancel</strong> aborts with no change.</li>
+          <li><strong>Confirm Unenrollment</strong>.</li>
+          <li>The course moves to the Unenrolled section.</li>
+          <li>Complete: metrics are recalculated and a snapshot is stored.</li>
+        </ol>
+        <p class="fp-p"><strong>2. Re-enrollment flow.</strong> The active surface is My Learning → Unenrolled Courses.</p>
+        <ol>
+          <li>User login.</li>
+          <li>Open My Learning.</li>
+          <li>Open Unenrolled Courses.</li>
+          <li>Open the course.</li>
+          <li>Navigate to the TOC.</li>
+          <li>Click <strong>Re-enroll</strong> (on the TOC page only).</li>
+          <li>End: enrollment and progress are restored.</li>
+        </ol>
+        <h2 class="fp-h2">Use cases</h2>
         <div class="uc-grid">
           <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 · Discover the option (mobile only)</b><p>Overflow menu on the TOC page — hidden for a completed, featured, player-mode, or non-plain-course item, or if the <code>showMenuIcon</code> remote config flag is off.</p><div class="api">n/a — client-side gate</div></div>
           <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 · Give a reason (mandatory)</b><p>At least one of five fixed reasons must be selected before "Yes, un-enroll" is enabled; comment is optional, ≤500 chars.</p><div class="api">n/a — captured client-side, sent with the call</div></div>

@@ -234,6 +234,8 @@ nav:
           - Context Diagram: learning-hub/peer-validation/context-diagram.md
       - Unenrollment of Courses:
           - learning-hub/unenrollment-of-courses/index.md
+          - SRS: learning-hub/unenrollment-of-courses/srs.md
+          - SDD: learning-hub/unenrollment-of-courses/sdd.md
           - Use Cases: learning-hub/unenrollment-of-courses/use-cases.md
           - APIs: learning-hub/unenrollment-of-courses/apis.md
           - HLD: learning-hub/unenrollment-of-courses/hld.md
