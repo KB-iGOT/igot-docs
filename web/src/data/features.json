@@ -294,6 +294,125 @@
     ]
   },
   {
+    "id": "moderatedcourse",
+    "title": "Moderated Course",
+    "summary": "A Moderated Course is a restricted course visible and accessible only to the MDOs it targets, optionally only to Verified Karmayogi profiles: creators set accessSetting and secureSettings in the CBP portal, search hides the course from everyone else, and enrolment, consumption and unenrolment are gated by the same rules.",
+    "icon": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"></rect><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-course/index.md"
+        }
+      },
+      {
+        "key": "links",
+        "label": "Key Links",
+        "source": {
+          "type": "links",
+          "groups": [
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-337",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-337"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-946",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-946"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-582",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-582"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15266",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15266"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14236",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14236"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-743",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-743"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-338",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-338"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-261",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-261"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-355",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-355"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-course/srs.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context Diagrams",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-course/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-course/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-course/lld.md"
+        }
+      },
+      {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-course/sdd.md"
+        }
+      }
+    ]
+  },
+  {
     "id": "curated",
     "title": "Curated Program",
     "summary": "A Curated Program bundles live courses into one Level-2 learning path: creators assemble it in the Content Portal, it passes review and SPV publishing with an auto-created open batch, and learners enrol once, progress through the child courses and, where configured, unlock a gated final program assessment before program certification.",
@@ -4539,7 +4658,7 @@
   },
   {
     "id": "karmapoints",
-    "title": "Karma Points",
+    "title": "Karma Wallet",
     "summary": "The Karma ecosystem rewards learning and lets learners spend it: Karma Points are a permanent, ever-increasing record earned for milestones such as first login, enrolment, course completion, assessments, ratings, live events and ACBP compliance; learners convert them 1:1 into Karma Coins (up to 300 a month) in the Karma Wallet and redeem the coins for marketplace courses, with an append-only transaction history.",
     "icon": "<path d=\"M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z\"></path>",
     "tabs": [

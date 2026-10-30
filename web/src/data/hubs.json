@@ -98,7 +98,7 @@
       {
         "label": "Moderated Course",
         "target": {
-          "soon": true
+          "feature": "moderatedcourse"
         }
       },
       {
@@ -189,7 +189,7 @@
         }
       },
       {
-        "label": "Karma Points",
+        "label": "Karma Wallet",
         "target": {
           "feature": "karmapoints"
         }
