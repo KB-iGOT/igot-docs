@@ -140,6 +140,160 @@
     ]
   },
   {
+    "id": "multilingual",
+    "title": "Multilingual",
+    "summary": "Multilingual courses let one course be offered in several languages: creators add language variants to a live base course in the CBP portal, each variant is reviewed and published on its own, and learners pick a language at enrolment, switch languages while learning, and earn certificates and give ratings per language.",
+    "icon": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/multilingual/index.md"
+        }
+      },
+      {
+        "key": "links",
+        "label": "Key Links",
+        "source": {
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "KB-7060 Q8 BRD Multilingual Content Creation",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/367460368/KB-7060+Q8+BRD+Multilingual+Content+Creation"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-7060 Q8 FRS Multilingual Content creation",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/369688666/KB-7060+Q8+FRS+Multilingual+Content+creation"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Multilingual Course Enrollment V2 API",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/445349895/Multilingual+Course+Enrollment+V2+API"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Multilingual- Content Creation Consumption",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/KQAS/pages/470777876/Multilingual-+Content+Creation+Consumption"
+                }
+              ]
+            },
+            {
+              "title": "Software Requirements Specification (SRS)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Multilingual Content Creation and curation",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/480575492/SRS+-+Multilingual+Content+Creation+and+curation"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-12738",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12738"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12918",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12918"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12740",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12740"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11077",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11077"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11054",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11054"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11053",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11053"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10913",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10913"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9511",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9511"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9470",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9470"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/multilingual/srs.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context Diagrams",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/multilingual/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/multilingual/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/multilingual/lld.md"
+        }
+      },
+      {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/multilingual/sdd.md"
+        }
+      }
+    ]
+  },
+  {
     "id": "curated",
     "title": "Curated Program",
     "summary": "A Curated Program bundles live courses into one Level-2 learning path: creators assemble it in the Content Portal, it passes review and SPV publishing with an auto-created open batch, and learners enrol once, progress through the child courses and, where configured, unlock a gated final program assessment before program certification.",

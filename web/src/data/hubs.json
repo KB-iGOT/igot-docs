@@ -92,7 +92,7 @@
       {
         "label": "Multi lingual",
         "target": {
-          "soon": true
+          "feature": "multilingual"
         }
       },
       {
