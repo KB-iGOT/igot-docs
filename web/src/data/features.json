@@ -76,25 +76,91 @@
   {
     "id": "course",
     "title": "Course",
-    "summary": "The standard self-paced unit of learning — one-click enrolment, node-by-node progress, Karma Points and a certificate on completion.",
+    "summary": "A general platform course is the standard open-access course on iGOT: creators author it in the CBP portal (or generate it with AI), it passes the Course Quality Framework and review before SPV publishing, and every learner can find it, self-enrol into an auto-managed open batch, learn with interactive video, earn a certificate, and unenrol or re-enrol with progress kept.",
     "icon": "<path d=\"M5 4.5h9a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3z\"></path><path d=\"M17 7.5h2v13H8\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "course/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/course/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "course/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Course Creation Review Publish",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/KQAS/pages/271450154/Course+Creation+Review+Publish"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Content Portal UI UX Revamp",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/274628785/SRS+-+Content+Portal+UI+UX+Revamp"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q11 BRD Add interactions in the iGOT Courses Videos",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/499974191/Q11+BRD+Add+interactions+in+the+iGOT+Courses+Videos"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-11977",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11977"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10505",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10505"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9851",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9851"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8909",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8909"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7126",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7126"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1950",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1950"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/course/srs.md"
         }
       },
       {
@@ -107,7 +173,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/course/context-diagram.md"
@@ -130,11 +196,29 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/course/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
         "source": {
           "type": "markdown",
           "path": "learning-hub/course/operations-manual.md"
+        },
+        "hidden": true
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "html",
+          "file": "course/usecases.html",
+          "layout": "oneCol"
         }
       }
     ]
