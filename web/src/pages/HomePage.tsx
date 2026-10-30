@@ -4,6 +4,7 @@ import { HubCards } from '../components/catalog/HubCards';
 import { EntryList } from '../components/catalog/EntryList';
 import { HeroArt } from './HeroArt';
 import { featureEntries, platformHubs, stats } from '../lib/catalog';
+import { TELEMETRY_URL } from '../lib/links';
 import styles from './HomePage.module.css';
 
 const STATS: { value: number; label: string; icon: IconName }[] = [
@@ -79,7 +80,17 @@ export function HomePage() {
       </section>
 
       <ComingSoon title="API Documentation" sub="The platform's APIs: gateway routing, contracts and examples." />
-      <ComingSoon title="Data Pipeline" sub="How platform data flows through ingestion, processing and reporting." />
+      <section className={styles.section}>
+        <SectionHead title="Data Pipeline" sub="How platform data flows through ingestion, processing and reporting." />
+        <div className={styles.pipeline}>
+          <a href={TELEMETRY_URL} target="_blank" rel="noopener noreferrer" className={styles.overview}>
+            <span className={styles.overviewIc}><Icon name="layers" size={22} /></span>
+            <span className={styles.overviewTxt}><b>Telemetry</b><span>Open the telemetry document on SharePoint.</span></span>
+            <Icon name="external" size={16} strokeWidth={2.2} />
+          </a>
+          <div className={styles.soon}><b className={styles.soonTitle}>ETL Analytics</b><span className={styles.soonTag}>Coming soon</span></div>
+        </div>
+      </section>
       <ComingSoon title="Monitoring" sub="Health, alerting and operational monitoring of the platform." />
     </div>
   );

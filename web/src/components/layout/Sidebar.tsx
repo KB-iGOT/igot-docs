@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Icon, type IconName } from '../ui/Icon';
 import { featureEntries, platformHubs, type Entry } from '../../lib/catalog';
+import { TELEMETRY_URL } from '../../lib/links';
 import styles from './Sidebar.module.css';
 
 
@@ -62,6 +63,30 @@ function Dropdown({ label, icon, items, pathname, nested = false }:
   );
 }
 
+/** Data Pipeline: a dropdown of Telemetry (an external document) and ETL Analytics (still to come). */
+function DataPipeline() {
+  const [open, setOpen] = useState(true);
+  return (
+    <div>
+      <button type="button" aria-expanded={open} onClick={() => setOpen(!open)} className={styles.item}>
+        <Icon name="layers" />
+        <span>Data Pipeline</span>
+        <Icon name="chevronDown" size={15} strokeWidth={2} className={`${styles.chev} ${open ? '' : styles.closed}`} />
+      </button>
+      {open && (
+        <div className={styles.nested}>
+          <a href={TELEMETRY_URL} target="_blank" rel="noopener noreferrer" className={`${styles.item} ${styles.nestedItem}`}>
+            <span>Telemetry</span><Icon name="external" size={13} strokeWidth={2} className={styles.ext} />
+          </a>
+          <span className={`${styles.item} ${styles.nestedItem} ${styles.soon}`} title="Documentation coming soon">
+            <span>ETL Analytics</span><span className={styles.soonTag}>Soon</span>
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface Props {
   open: boolean;
   onNavigate: () => void;
@@ -114,7 +139,7 @@ export function Sidebar({ open, onNavigate }: Props) {
 
       <div className={styles.group}>
         <Soon label="API Documentation" icon="guide" />
-        <Soon label="Data Pipeline" icon="layers" />
+        <DataPipeline />
         <Soon label="Monitoring" icon="search" />
       </div>
     </nav>

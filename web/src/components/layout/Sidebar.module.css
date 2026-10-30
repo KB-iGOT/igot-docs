@@ -40,3 +40,4 @@
   }
   .open { transform: none; }
 }
+.ext { margin-left: auto; flex: none; color: var(--text-faint); }
