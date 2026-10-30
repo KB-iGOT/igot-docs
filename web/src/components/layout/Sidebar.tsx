@@ -68,7 +68,17 @@ interface Props {
   onNavigate: () => void;
 }
 
-/** Platform navigation: Home, the architecture overview, the platform hubs and the Features hub. */
+/** A top-level section whose documentation is still to come: listed, but not a link. */
+function Soon({ label, icon }: { label: string; icon: IconName }) {
+  return (
+    <span className={`${styles.item} ${styles.soon}`} title="Documentation coming soon">
+      <Icon name={icon} /><span>{label}</span><span className={styles.soonTag}>Soon</span>
+    </span>
+  );
+}
+
+/** Platform navigation, in the home page's order: Home, Platform Overview, System Architecture,
+ *  the platform hubs, the Features hub, API Documentation, Data Pipeline and Monitoring. */
 export function Sidebar({ open, onNavigate }: Props) {
   const { pathname } = useLocation();
   const link = ({ isActive }: { isActive: boolean }) => `${styles.item} ${styles.subItem} ${isActive ? styles.active : ''}`;
@@ -78,6 +88,7 @@ export function Sidebar({ open, onNavigate }: Props) {
          onClick={(e) => (e.target as HTMLElement).closest('a') && onNavigate()}>
       <NavLink to="/" end className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}><Icon name="home" /><span>Home</span></NavLink>
       <a className={styles.item} href={ARCHITECTURE_URL}><Icon name="layers" /><span>Platform Overview</span></a>
+      <Soon label="System Architecture" icon="tree" />
 
       <Group title="Platform Hubs" icon="box">
         {platformHubs.map((h) =>
@@ -101,6 +112,12 @@ export function Sidebar({ open, onNavigate }: Props) {
           <span>View all features</span><Icon name="chevronRight" size={14} />
         </NavLink>
       </Group>
+
+      <div className={styles.group}>
+        <Soon label="API Documentation" icon="guide" />
+        <Soon label="Data Pipeline" icon="layers" />
+        <Soon label="Monitoring" icon="search" />
+      </div>
     </nav>
   );
 }

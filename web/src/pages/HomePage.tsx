@@ -25,7 +25,20 @@ export function SectionHead({ title, sub, to, more }: { title: string; sub: stri
   );
 }
 
-/** Start page: what the docs cover, the platform hubs, and the Features hub. */
+const ARCHITECTURE_URL = 'igot-architecture-overview.html';
+
+/** A home-page section whose documentation is still to come. */
+function ComingSoon({ title, sub }: { title: string; sub: string }) {
+  return (
+    <section className={styles.section}>
+      <SectionHead title={title} sub={sub} />
+      <div className={styles.soon}><span className={styles.soonTag}>Coming soon</span> Documentation for this section will be added soon.</div>
+    </section>
+  );
+}
+
+/** Start page, in the agreed order: Platform Overview, System Architecture, Platform Hubs,
+ *  Platform Features, API Documentation, Data Pipeline, Monitoring. */
 export function HomePage() {
   return (
     <div className={styles.page}>
@@ -46,11 +59,30 @@ export function HomePage() {
         <HeroArt className={styles.art} />
       </section>
 
-      <SectionHead title="Platform Hubs" sub="Explore the main hubs of the iGOT platform and access detailed documentation." to="/hubs" more="View all hubs" />
-      <HubCards hubs={platformHubs} />
+      <section className={styles.section}>
+        <SectionHead title="Platform Overview" sub="A one-page view of the whole iGOT Karmayogi platform: portals, services, data stores and how they connect." />
+        <a href={ARCHITECTURE_URL} className={styles.overview}>
+          <span className={styles.overviewIc}><Icon name="layers" size={22} /></span>
+          <span className={styles.overviewTxt}><b>Platform Overview</b><span>Open the platform overview page.</span></span>
+          <Icon name="arrowRight" size={16} strokeWidth={2.2} />
+        </a>
+      </section>
 
-      <SectionHead title="Platform Features" sub="Browse key platform features with user guides, APIs, diagrams and operational details." to="/hubs/features" more="View all features" />
-      <EntryList entries={featureEntries} />
+      <ComingSoon title="System Architecture" sub="Architecture of the platform as a whole: components, boundaries and how requests flow." />
+
+      <section className={styles.section}>
+        <SectionHead title="Platform Hubs" sub="Explore the main hubs of the iGOT platform and access detailed documentation." to="/hubs" more="View all hubs" />
+        <HubCards hubs={platformHubs} />
+      </section>
+
+      <section className={styles.section}>
+        <SectionHead title="Platform Features" sub="Browse key platform features with user guides, APIs, diagrams and operational details." to="/hubs/features" more="View all features" />
+        <EntryList entries={featureEntries} />
+      </section>
+
+      <ComingSoon title="API Documentation" sub="The platform's APIs: gateway routing, contracts and examples." />
+      <ComingSoon title="Data Pipeline" sub="How platform data flows through ingestion, processing and reporting." />
+      <ComingSoon title="Monitoring" sub="Health, alerting and operational monitoring of the platform." />
     </div>
   );
 }
