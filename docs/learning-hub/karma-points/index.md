@@ -17,6 +17,9 @@ The iGOT Karmayogi Bharat Karma ecosystem is a dual-currency gamification and cr
 - **Marketplace Pricing:** Marketplace courses price in Karma Coins using a Partner Multiplier (`Course Price in KC = Course KP × Partner Multiplier`, maximum multiplier limit 100). Coins are debited atomically upon enrollment (`KB-15297`, `KB-15347`).
 - **Exempt Enrolments:** Learners on approved partner exemption rosters bypass coin deductions entirely ( coin cost), resulting in **no ledger entries** in the wallet history (`AC-03.9`, `AC-03.10`).
 
+![Karma Points — Key Performance Indicators and Points](images/karma-points-kpis.png)
+*Karma Points — Key Performance Indicators and Points*
+
 ## 2. Business Objectives and Scope
 
 ### 2.1 Strategic Context (Mission Karmayogi)
