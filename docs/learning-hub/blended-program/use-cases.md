@@ -1,318 +1,125 @@
-# Blended Program — Use Cases
-
-API paths are written as the portals call them, with the gateway prefix
-(`/apis/proxies/v8/…` on web, `/api/…` on mobile) stripped — see
-[APIs](apis.md) for the full chain. "Web" means `sunbird-cb-portal` with its
-`@sunbird-cb/toc` package; "mobile" means `igot_karmayogi_mobile`.
-
-## Learner journeys
-
-### UC-1 · Find a program and pick a batch (Learner)
-
-A learner who is not yet enrolled sees the program's batches (all statuses
-0, 1 and 2, newest first). Batches whose **enrolment end date** has passed
-are not offered (web: dropped from the dropdown, day-inclusive; mobile:
-removed from the in-memory list before counts are fetched). A batch with
-**no** `enrollmentEndDate` is never enrollable on web. The default pick is
-the first open batch on web, and the batch with the earliest open deadline
-on mobile. Seat information comes from a per-batch status count: *enrolled*
-is the number of `APPROVED` requests, *applied* is every status except
-`WITHDRAWN`. The page warns at 80% full ("limited seats"), shows a "Full"
-chip, and shows a program-level message when every active batch is full or
-every enrolment window has closed.
-
-- API: `POST learner/course/v1/batch/list` (web) · `POST course/v1/batch/list` (mobile) ·
-  `POST workflow/blendedprogram/enrol/status/count`
-
-### UC-2 · Clear the entry steps (Learner)
-
-Before a request can be sent, up to four gates apply, in this order on web:
-
-1. **Pre-enrolment requisites** — resources the author marked as
-   pre-requisite (`preEnrolmentResources[]`). While a *mandatory* one is
-   incomplete the request area and the seat counts are hidden and a
-   "Pre-Enrollment Requisites" button takes the learner to it.
-2. **Schedule-conflict check** (web only) — see the edge-case table: it is a
-   client-side check that cannot see other programs.
-3. **Profile form** — only if the batch sets `userProfileFileds` to anything
-   other than `"Available user filled iGOT profile"`. The fields come from
-   the batch's `bpEnrolMandatoryProfileFields`. If the batch has a
-   `cadreList`, the learner's civil-service name must be in it, or the flow
-   stops with an eligibility message (web does this only inside the profile
-   step; mobile checks it whenever `cadreList` is non-empty).
-4. **Program survey** — if the program has a `wfSurveyLink`.
-
-Profile and survey answers are **saved before** the final confirmation, so
-a learner who then cancels leaves them submitted. Closing either dialog with
-the X aborts the request.
-
-- API: `GET forms/v2/getFormById` · `POST forms/v2/saveFormSubmit` ·
-  `POST content/v2/state/read` / `PATCH content/v2/state/update` (pre-requisite progress only)
-
-### UC-3 · Request a seat (Learner)
-
-A confirmation dialog states the batch dates. On confirm, the app calls the
-enrol endpoint. The server checks volunteer eligibility, seat room (with a 20% over-subscription
-buffer at this stage), schedule clash — and then writes a workflow row.
-The response is immediate but the row is only `ENROLL_IS_IN_PROGRESS`: a
-Kafka consumer moves it into the first approval state a moment later, and
-the portal shows the pending state on its next fetch. The learner may be
-told "Request sent successfully" a moment before the row reaches its first
-approval state.
-
-- API: `POST workflow/blendedprogram/enrol` (action `INITIATE`)
-
-### UC-4 · Withdraw a pending request (Learner)
-
-While the request is waiting for an approver the learner can withdraw it
-(no reason is captured, on either client). Web disables the button once the
-**first** approver of a two-step route has approved. Neither client offers a
-withdraw after `APPROVED`. If the batch has already started and the request
-is still not approved, web raises a "Request not approved — withdraw and
-request another batch" prompt automatically. A withdrawal does **not**
-un-enrol anyone: only a `REMOVED` row triggers an un-enrol call.
-
-- API: `POST workflow/blendedprogram/unenrol` (action `WITHDRAW`, with `wfId`)
-
-### UC-5 · Self-enrol by scanning a QR (Learner, mobile)
-
-When the program's `selfEnrollment` flag is `Yes`, the mobile app replaces
-the batch picker with a "scan to enrol" button. The QR (printed by the
-coordinator) carries `{courseId, batchId}`; the app rejects it if the
-course id differs or the batch isn't one of the program's batches, refuses
-after the enrolment end date, refuses a full batch, and — if the batch has a
-`latlong` — requires the phone to be within 1000 m of it. The profile form,
-survey and confirmation sheet then run exactly as in UC-2, and the server
-approves the request on the spot (no approver) and enrols the learner.
-
-- API: `POST workflow/blendedprogram/qr/enrolments`
-
-### UC-6 · Learn: self-paced content and sessions (Learner)
-
-The **Start** button needs an `APPROVED` request *and* a batch in progress
-(web: start date passed, end date not yet over, batch not completed). Until
-then the page shows a countdown (to midnight of the start day, not to the
-first session time). Content has two tabs — *Self-paced* and
-*Instructor-led*; the latter lists the batch's `sessionDetails_v2` sorted by
-date, with duration, type, handouts and resource links. Opening a session
-(web) needs the learner to be enrolled; the batch-in-progress check only
-greys the card.
-
-- API: `POST learner/course/v4/user/enrollment/details` ·
-  `POST read/content-progres/:courseId` · `PATCH content-progres/:contentId`
-
-### UC-7 · Mark attendance by QR (Learner, mobile)
-
-Attendance on mobile is a content-progress write on the **session node**.
-The learner taps the session's QR icon; the app checks the session is live
-(start to start + whole hours of the duration + 1 hour buffer), checks the
-phone is within 1000 m of the batch `latlong`, scans a QR holding
-`{courseId, batchId, sessionId}` and requires the session id and batch id
-to match the tapped session. A batch with **no** `latlong` therefore cannot
-mark attendance on mobile. On the web the learner only *sees* attendance
-("marked @ time" when the session's status is 2).
-
-- API: `PATCH course/v5/content/state/update` (`status 2`, `completionPercentage 100`)
-
-### UC-8 · Submit an assignment (Learner)
-
-The Assignment tab appears only for enrolled learners. The learner downloads
-the assignment, uploads a **PDF** (web allows files under 6 MB by an integer
-check, mobile 5 MB, the storage endpoint 5000 KB), previews it, and either
-saves a draft or submits. Web makes a first-time learner press *Download*
-before *Upload* becomes active, and its **Discard** button in the preview
-actually saves a draft. Submitting notifies the instructor; once evaluated
-the learner sees marks and feedback. There is no due date anywhere in the
-learner code.
-
-- API: `POST assignment/v1/search` · `POST forms/v2/submissions/search` ·
-  `POST storage/v1/bp/assignment/answer/:contentId/:batchId/:formId` ·
-  `PUT assignment/v1/submitDraft` · `POST assignment/v1/submit` ·
-  `POST v1/notifyAssignment/submit`
-
-## Approver & coordinator journeys (Creation Portal)
-
-### UC-9 · Work the request queue (Program Coordinator)
-
-The batch page's **New requests** tab lists `SEND_FOR_PC_APPROVAL` items for
-the batch, oldest first. *Approve* asks "Are you sure?" and sends the
-decision; *Reject* requires a reason (≤ 500 characters, HTML blocked).
-For `twoStepPCAndMDOApproval` the success message adds "Further needs to be
-approved by MDO admin". The console only acts on the PC step — it never
-sends `SEND_FOR_MDO_APPROVAL` items. Tabs for *Rejected* requests and
-*Approval status* (derived from the last `modification_history` entry) sit
-next to it.
-
-- API: `POST workflow/blendedprogram/searchV2/pc` · `POST workflow/blendedprogram/update/pc`
-
-### UC-10 · Approve or reject in bulk by CSV (Program Coordinator)
-
-The pending queue downloads as a CSV (`email, userName, wfId, userId,
-action(approve/reject)`); the coordinator fills the `action` column and
-uploads it back. The UI accepts ≤ 30 rows and requires the `userId` and
-`wfId` headers. On the server every row is validated first (any bad row
-rejects the whole file), then applied one by one, with the same seat, start
-date and schedule rules as a single approval. The result comes back as a
-CSV with an `Updated`/`Not updated` column.
-
-- API: `POST workflow/blendedprogram/getUserApprovalDataInCsv` ·
-  `POST workflow/blendedprogram/bulkApprovalDataFromCsv/:contentId`
-
-### UC-11 · Act as MDO admin (MDO admin)
-
-The workflow service has MDO-side endpoints (`update/mdo`, `searchV2/mdo`,
-`read/mdo`, `remove/mdo`, `admin/enrol`) and they are used by
-`MDO_ADMIN` / `MDO_LEADER`. **Verification boundary:** no screen in the
-attached UI repos calls them — the Creation Portal console and the
-`sb-cb-ui-components` service methods only call the `…/pc` variants — so
-the MDO-side user interface (if one exists) is in a repo that was not
-attached.
-
-- API: `POST workflow/blendedprogram/update/mdo` · `searchV2/mdo` · `admin/enrol`
-
-### UC-12 · Nominate learners (Program Coordinator, trainer, MDO admin)
-
-A nomination places learners straight into a batch as `APPROVED`, bypassing
-the approval route. The Creation Portal offers *Select learner* (search by
-name or by organisation and designation) and *Bulk upload* (CSV with
-exactly `Emailid` and `Mobilenumber` headers, ≤ 30 rows). The server caps a
-call at 200 users, drops blank ids, the caller's own id and duplicates,
-and per user returns `APPROVED`, `ALREADY_EXISTS`, `Batch Size Error`,
-`Batch Start Date Error`, `SCHEDULE_CONFLICT`, `INVALID_APPROVAL_TYPE` or a
-failure. A PC nomination **overrides** a pending MDO or self request for the
-same learner; an MDO nomination overrides only a self request. The tab is
-replaced by a notice once the enrolment end date has passed and is hidden
-from instructors.
-
-- API: `POST workflow/blendedprogram/nominate`
-
-### UC-13 · Remove an enrolled learner (Program Coordinator, MDO admin)
-
-Before the batch starts the coordinator can remove an approved learner from
-the Learners tab. The row goes to `REMOVED` and the un-enrol is sent to the
-course service. The web UI hides the remove icon after the batch start date.
-
-- API: `POST workflow/blendedprogram/remove/approved/user` (header `isPc`)
-
-### UC-14 · Mark attendance (Program Coordinator)
-
-A session's attendance dialog opens from the batch's Sessions tab, enabled
-from the **session's start date** until **batch end + 7 days**. The
-coordinator marks each learner present or absent (bulk "all" buttons
-exist); present writes `status 2 / 100%`, absent `0 / 0%` onto the session
-node, then an "ATTENDANCE MARKED" email goes to each learner.
-
-- API: `POST blendedprogram/v1/getUserContentProgress` ·
-  `POST blendedprogram/v1/update/progress`
-
-### UC-15 · Evaluate assignments and add new ones (Program Coordinator, instructor)
-
-The Assignments tab lists a batch's assignments with pending-submission
-counts; a coordinator adds an assignment as a PDF resource (≤ 5 MB, title
-≤ 100 chars) and learners are told by notification. To evaluate, the
-reviewer opens a learner's submission and enters marks (1–99 999, not above
-the maximum) and feedback (≤ 500 chars). Deleting an assignment in the UI
-removes it from the list only — nothing is sent to the server.
-
-- API: `POST assignment/v1/create` · `POST v1/notifyAssignment/upload` ·
-  `POST assignment/v1/feedback` · `POST v1/notifyAssignment/evaluate`
-
-### UC-16 · Generate enrolment and consumption reports (Program Coordinator)
-
-The Reports tab offers an **Enrollment Report** (v1) and a **Consumption
-Report** (v2). Generation is asynchronous: a tracking row, a Kafka event, a
-consumer that writes an Excel file. The UI has no status polling — the
-coordinator presses refresh, which re-lists. The v2 report is an enrolment +
-certificate report; it carries **no** session or attendance columns.
-Attendance reporting is a separate nightly Spark job (see
-[Operations Manual](operations-manual.md)).
-
-- API: `POST bp/v1/generate/report` · `POST bp/v2/generate/report` ·
-  `POST bp/v2/bpreport/list` · `GET bp/v1/bpreport/download/…`
-
-## Authoring & batch management (Creation Portal)
-
-### UC-17 · Author and publish the program (Author, reviewer, publisher)
-
-Create the program from the "Program" tile with the *Blended Program* radio;
-build the hierarchy (a Blended Program holds Modules, Resources, **Session
-Templates** for offline sessions, and optional Pre/Final assessments — the
-client strips the children of any Course node before saving); set
-program-level fields (duration in days, director name, approval type,
-self-enrolment flag, batch settings, up to 5 Program Coordinators); send
-for review; review; publish (children first, then the parent). Reject
-returns the program to Draft with a comment. A Live Blended Program is
-retired only through the generic retire call — scheduled retirement is a
-Course-only feature.
-
-- API: `POST action/content/v3/create` · `PATCH action/content/v3/hierarchy/update` ·
-  `POST action/content/v3/review/:id` · `publish/:id` · `reject/:id` ·
-  `DELETE v1/content/retire`
-
-### UC-18 · Staff the program (Program Coordinator, trainer)
-
-The *Program Coordinator* page lists the program's coordinators; coordinators
-and lead trainers can be added from the allowed types (the program's
-`batchSettings`) and removed — unless they are the "Program Coordinator"
-role, the caller themselves, or still own or co-train a batch that has not
-ended.
-
-- API: `POST program/coordinator/list/:doId` · `PUT program/coordinator/:doId` ·
-  `GET program/coordinator/roles`
-
-### UC-19 · Create a batch, with sessions (Program Coordinator, trainer)
-
-The batch form takes name, size (1–200), start, end, **enrolment end**
-(between today and the start date), venue address and `latlong` (required
-when attendance is *Enable QR*, the default), state / district / PIN,
-instructors, co-trainers, cadre restriction and the profile-field mode.
-One session card per Session Template in the program collects date, start
-and end time (inside the batch dates), facilitators, handouts and links.
-Side effects: for programs created on or after `pbPhaseTwo`, a profile
-survey form is created first; after the batch exists, co-trainers are added
-to the program and the default certificate template is attached.
-
-- API: `POST authApi/batch/create` · `POST forms/v2/createForm` ·
-  `PUT program/coordinator/:doId` · `PATCH course/batch/cert/v1/template/add`
-
-### UC-20 · Maintain a batch (Program Coordinator, trainer)
-
-Name and size are locked on edit; changing the dates warns when sessions
-fall outside them. Only the creator, a coordinator, or (for batch-owner
-screens other than edit) a co-trainer may open a batch. A batch can be
-deleted only **before its start date** — and deleting un-enrols every
-learner and emails them. On an archived batch the only edit is adding
-instructors.
-
-- API: `PATCH authApi/batch/update` · `POST learner/course/v1/batch/delete`
-
-### UC-21 · Print the QR codes (Program Coordinator)
-
-Two different PDFs exist. The **self-enrolment QR** (only when the program
-has `selfEnrollment = Yes`) carries `{courseId, batchId, selfEnrol:true}`;
-the page shows only whether it has been generated. The **attendance QR** is
-one page per offline session of the batch, each carrying
-`{courseId, batchId, sessionId}`.
-
-- API: `GET batch/v1/enrollment/qrcode/status|download/:doId/:batchId` ·
-  `GET batchsesion/qrcode/:courseId/:batchId`
-
-## Edge cases
-
-| Situation | Behaviour |
-|---|---|
-| Learner is in another Blended Program with overlapping dates | The **web client check never fires**: it iterates the learner's enrolments, which the page fetches for this program only. The **server** is the real guard: a clash is rejected at enrol (HTTP 400 "Not allowed to enroll the user to the Blended Program since there is a schedule conflict") — and the same check runs on **every** later approve/withdraw call, where a hit silently turns the action into a **REJECT** |
-| Existing batch fully encloses the new one | **Not detected** — the server tests only whether the existing batch's start or end falls inside the new batch |
-| Batch full (learner request) | Server allows requests up to size + 20%; approval is capped hard at size (counting active enrolments). `currentBatchSize` of 0 or missing always reads as full |
-| Batch full (nomination) | Hard cap, and the nominee's own pending requests are not counted |
-| Enrolment window | Web/mobile hide batches after `enrollmentEndDate`; the single BP enrol in the course service closes at the end of the batch **start date** (IST) |
-| Batch already started | Approvals are refused ("This batch is already in progress") unless the action is `REJECT`/`WITHDRAW`. `REMOVE` is *not* excluded, so removing an approved learner after start is blocked too |
-| `currentBatchSize` stored as a JSON number | Treated as unreadable → batch reads as full. The Creation Portal stores it as a string |
-| Volunteer role without an eligibility entry | HTTP 406 "User is not eligible to enrol into this course." |
-| Withdrawal after approval | Not offered on web or mobile; and a `WITHDRAWN` row never un-enrols (only `REMOVED` does) |
-| Reject with no reason | Blocked in the Creation Portal (reason required); the server itself does not require one |
-| Duplicate request | The workflow service's ordinary learner enrol has **no** duplicate guard (admin enrol and QR enrol do). The web page renders from the latest request it can find; any other prevention would be outside the attached repos |
-| Attendance | The 7-day post-batch window is a Creation Portal button rule; mobile has a live-session window and a 1 km fence |
-| Batch with no `latlong` | No QR self-enrol geofence; **no mobile attendance** |
-| Nominee already in the course on another batch | `ALREADY_EXISTS` |
-| Assignment file | Accepted extensions on the server: `pdf, doc, docx` |
+# Blended Program — Generic Use Cases
+
+## 1. Executive Summary & Evolution Overview
+
+The **Blended Program (BP)** on the iGOT Karmayogi Platform bridges asynchronous self-paced digital learning with synchronous, cohort-based, instructor-led offline/live interactions. The feature evolved across distinct platform increments:
+
+```mermaid
+flowchart LR
+    Q1["Q2 - Q3<br/>Baseline BP<br/>& Forms"] --> Q2["Q4 - Q6<br/>Workflow &<br/>Bulk CSV"]
+    Q2 --> Q3["Q8 - Q9<br/>Decoupling &<br/>Assignments"]
+    Q3 --> Q4["Q10 - Q13<br/>Agility &<br/>Reporting V2"]
+```
+
+- **Q2–Q3 (Foundational BP & Forms):** Structural separation of parent program metadata (`do_id`) from executable batches (`batchId`), dynamic registration forms, and basic CSV reporting (`KB-334`, `KB-325`).
+- **Q4–Q6 (Workflow & Bulk Controls):** Delegation of enrollment requests to `workflow-service`, multi-state queues (`SEND_FOR_PC_APPROVAL`), and bulk CSV approval/rejection (`KB-7028`, `KB-7850`).
+- **Q8–Q9 (Authoring Simplification & Assignments):** Removal of the Content Quality Framework (CQF) publishing bottleneck (`KB-11083`), multi-Program Coordinator (PC) allocation, and introduction of the dedicated `/api/assignment/v1/*` microservice (`KB-11071`).
+- **Q10–Q11 (Cross-MDO Delivery):** Cross-organization instructor onboarding (`KB-11793`), mobile TOC alignment, and multi-format asset delivery via Google Cloud Storage (GCS).
+- **Q12–Q13 (Operational Agility & Asynchronous Reporting):** Same-day batch execution (`KB-14008`), inactive batch cloning (`KB-13991`), Kafka-driven multi-source reporting (`bp_enrolment_report_v2`), and decoupling optional pre-assessments from terminal progress (`KB-15810`).
+
+## 2. Actors & System Touchpoints Matrix
+
+| Actor / System Component | Role Classification | Primary Touchpoints | Core Responsibilities |
+|---|---|---|---|
+| **Content Creator** | Business Author | CBP Authoring Portal, `course-service` | Design program hierarchy, map competencies, link courses, assign Program Coordinators. |
+| **Content Publisher** | Publishing Authority | CBP Authoring Portal, `content-service` | Review program definitions and execute direct publishing to production (bypassing CQF). |
+| **Program Coordinator (PC)** | Batch Administrator | CBP Portal, MDO Portal, `workflow-service` | Configure batch schedules, assign instructors, process bulk enrollment CSVs, clone cohorts. |
+| **Program Instructor / Mentor** | Delivery & Evaluation | Web Interface, `assignment-service` | Create batch assignments, review student submissions, provide marks and qualitative feedback. |
+| **Learner (Civil Servant)** | Program Consumer | Learner Web Portal, Mobile App (Flutter) | Discover programs, self-enroll/scan QR, attend sessions, submit assignments, receive certificates. |
+| **MDO Admin / Leader** | Departmental Oversight | MDO Leadership Portal, `bp-report-service` | Nominate officers, monitor departmental participation, request asynchronous analytics reports. |
+| **Platform SRE / Ops** | Reliability & Support | Monitoring Stack, Kafka, Redis, ES | Reconcile search indexing lag, manage Redis cache eviction, audit report dead-letter queues. |
+
+## 3. End-to-End Frontend-to-Backend Operating Model
+
+```mermaid
+flowchart LR
+    subgraph FC["Frontend Channels"]
+        FE["- CBP Portal (Angular)<br/>- MDO Portal (Angular)<br/>- Learner Web (Angular)<br/>- Mobile App (Flutter)"]
+    end
+    subgraph AG["API Gateway"]
+        KONG["Kong Gateway<br/>(Keycloak JWT)"]
+    end
+    subgraph CS["Core Services"]
+        SVC["- course-service<br/>- workflow-service<br/>- assignment-service<br/>- bp-report-service"]
+    end
+    subgraph PT["Persistence & Async Tier"]
+        PERS["- Apache Cassandra<br/>- Elasticsearch 7.x<br/>- PostgreSQL<br/>- Redis Cache<br/>- Kafka Worker & GCS"]
+    end
+    FE --> KONG
+    KONG --> SVC
+    SVC --> PERS
+```
+
+1. **Authoring Path:** CBP Portal Kong API Gateway `course-service` Cassandra (`course_batch`) Asynchronous Akka sync to Elasticsearch (`course-batch`).
+2. **Approval Path:** MDO/CBP Portal Kong `workflow-service` PostgreSQL (`wingspan.wf_status`) Cassandra (`user_enrolments`) Redis cache invalidation (`bp_active_count_{batchId}`).
+3. **Assignment Path:** Learner Web/Mobile Kong `assignment-service` Storage Proxy GCS (file binary) + PostgreSQL (submission metadata) Instructor grading.
+4. **Reporting Path:** MDO Portal Kong `bp-report-service` Kafka topic `bp-report` Async Report Worker (joins Cassandra, PG, and ES) GCS Excel export.
+
+## 4. Master Generic Use Cases
+
+### 4.1 Program Authoring & Batch Operations (Creation Domain)
+
+| Use Case ID | Use Case Name | Primary Actor | Trigger & Preconditions | Core Flow (Frontend to Backend) | Expected Outcome & Data Impact |
+|---|---|---|---|---|---|
+| **UC-BP-01** | **Create Blended Program Shell** | Content Creator | Need to introduce a hybrid curriculum. | 1. Creator inputs program metadata, competencies, and attached courses in CBP Portal. 2. UI invokes `POST /action/content/v3/create`. 3. Service persists program container in draft state. | Program container (`do_id`) is created in Draft state. |
+| **UC-BP-02** | **Direct Program Publishing** | Content Creator / Publisher | Program shell and syllabus are complete. | 1. Creator reviews content and triggers publish. 2. UI invokes `POST /action/content/v3/publish`. 3. Under Q9 rules (`KB-11083`), CQF is bypassed; status moves directly to `Live`. | Program becomes discoverable for batch creation and scheduling. |
+| **UC-BP-03** | **Create Program Batch** | Program Coordinator | Program is live; cohort schedule defined. | 1. PC defines dates, enrollment mode (`open`/`invite-only`), target MDOs, and mentors. 2. UI calls `POST /v1/course/batch/create`. 3. `course-service` writes Cassandra row and emits Akka event to sync ES. | Batch is created (`status: 0` or `1`) and indexed in Elasticsearch. |
+| **UC-BP-04** | **Same-Day Batch Execution** | Program Coordinator | Ad-hoc or emergency cohort required immediately. | 1. PC configures . 2. System validates relaxed Q12 date constraints (`KB-14008`). 3. `course-service` activates batch immediately. | Cohort becomes instantly active for same-day enrollment and completion. |
+| **UC-BP-05** | **Clone Inactive Batch** | Program Coordinator | Repetitive cohort structure needed. | 1. PC selects archived cohort and clicks Clone. 2. UI invokes `POST /v1/course/batch/copy` (`KB-13991`). 3. Backend deep-copies session structure into a new draft batch. | New draft cohort initialized with pre-filled session templates. |
+| **UC-BP-06** | **Batch Soft Deletion** | Program Coordinator | Cohort canceled before execution. | 1. PC invokes delete batch in CBP Portal. 2. UI calls `POST /v1/course/batch/delete` (`KB-11561`). 3. System marks batch deleted, invalidates enrollments, and notifies learners. | Batch is removed from catalog; active enrollment states invalidated. |
+
+### 4.2 Enrollment, Nominations & Cohort Management (Onboarding Domain)
+
+| Use Case ID | Use Case Name | Primary Actor | Trigger & Preconditions | Core Flow (Frontend to Backend) | Expected Outcome & Data Impact |
+|---|---|---|---|---|---|
+| **UC-BP-07** | **Learner Self-Enrollment** | Learner (Civil Servant) | Open cohort discovered on Web or Mobile. | 1. Learner clicks Enroll. 2. System verifies active capacity via Redis (`bp_active_count_{batchI``d}`). 3. If approval required, state transitions to `SEND_FOR_PC_APPROVAL` in PostgreSQL. | Learner is queued for coordinator approval or enrolled directly. |
+| **UC-BP-08** | **QR-Code Batch Registration** | Learner (Civil Servant) | Physical or digital session QR presented. | 1. Learner scans QR via mobile app. 2. App calls enrollment API with cryptographic batch payload. 3. Backend validates eligibility and registers participation. | Rapid on-premise onboarding without manual search friction. |
+| **UC-BP-09** | **Administrative Nomination** | MDO Admin / Leader | Department selects officers for training. | 1. Admin selects batch and uploads officer identifiers in MDO Portal. 2. UI calls `POST /workflow/blendedprogram/nominate`. 3. System enqueues nominations in PostgreSQL `wf_status`. | Officers are added to the batch nomination roster. |
+| **UC-BP-10** | **Bulk CSV Approval / Rejection** | Program Coordinator | Pending candidates require cohort admission. | 1. PC downloads CSV via `POST /getUserApprovalDataInCsv`. 2. PC sets action column (`APPROVE`/`REJECT`). 3. PC uploads manifest via `POST /bulkApprovalDataFromCs``v/{id}` (`KB-7850`). | Approved learners move to `user_enrolments.status = 1`; Redis count updated. |
+| **UC-BP-11** | **Incomplete Batch Re-Enrollment** | Learner (Civil Servant) | Prior cohort ended with incomplete status. | 1. Learner applies to a new batch of the same program. 2. Backend executes Q13 re-enrollment check (`KB-15880`). 3. Previous incomplete state is preserved; new batch enrollment is activated. | Learner can complete the program in a subsequent cohort. |
+| **UC-BP-12** | **Record Session Attendance** | Learner / Coordinator | Live physical or virtual session conducted. | 1. Attendance marked via QR scan or coordinator console. 2. Service logs attendance in PostgreSQL `session_attendance`. 3. Records linked to learner and batch ID for reporting. | Session attendance stored for completion logic and V2 report exports. |
+
+### 4.3 Learner Consumption & Instructor Delivery (Consumption Domain)
+
+| Use Case ID | Use Case Name | Primary Actor | Trigger & Preconditions | Core Flow (Frontend to Backend) | Expected Outcome & Data Impact |
+|---|---|---|---|---|---|
+| **UC-BP-13** | **Access Program TOC** | Learner (Civil Servant) | Enrollment status is active (`status: 1`). | 1. Learner opens batch on Web or Mobile. 2. UI queries `course-service` and `assignment-service`. 3. System renders curriculum outline, session resources, and Assignments tab. | Learner accesses all learning assets and scheduled session links. |
+| **UC-BP-14** | **Multi-Format Asset Consumption** | Learner (Civil Servant) | Learner navigates modules in TOC. | 1. Learner selects video, PDF, or PPT resource (`KB-13992`). 2. Storage proxy streams asset binary to client player. 3. Telemetry records consumption duration and component progress. | Digital module progress advances towards completion. |
+| **UC-BP-15** | **Author Batch Assignment** | Program Instructor | Batch requires evaluative practical task. | 1. Instructor accesses batch in CBP Portal. 2. UI calls `POST /api/assignment/v1/create` (`KB-11071`). 3. Details (title, instructions, max marks, deadline) persist in database. | Assignment is published and visible under learner TOC Assignments tab. |
+| **UC-BP-16** | **Save Assignment Draft** | Learner (Civil Servant) | Learner prepares uncommitted work. | 1. Learner uploads document (, PDF/DOCX) via storage proxy. 2. File stored in GCS; file URI returned. 3. UI calls `PUT /api/assignment/v1/submitDraft` (`status: DRAFT`). | Work-in-progress is securely saved without evaluator visibility. |
+| **UC-BP-17** | **Final Assignment Submission** | Learner (Civil Servant) | Assignment completed and ready for grading. | 1. Learner reviews draft and clicks Submit. 2. UI calls `POST /api/assignment/v1/submit`. 3. Status locked to `SUBMITTED`; queued in instructor evaluation view. | Terminal submission locked; visible in instructor grading queue. |
+| **UC-BP-18** | **Qualitative Grading & Feedback** | Program Instructor | Submissions pending in evaluation queue. | 1. Instructor inspects submitted artifact via GCS reader. 2. Instructor enters numerical score and qualitative remarks. 3. UI calls `POST /api/assignment/v1/feedback` (`status: EVALUATED`). | Evaluation is recorded; learner views feedback; criteria rollup enabled. |
+| **UC-BP-19** | **Program Completion & Certification** | Learner / Platform System | Mandatory criteria fulfilled. | 1. System verifies attendance, digital modules, and evaluated assignments. 2. Optional pre-assessments excluded per Q13 (`KB-15810`). 3. `user_enrolments.status` moves to `2`; certificate engine dispatches PDF. | Learner is marked Complete; verifiable digital certificate issued. |
+
+### 4.4 Analytics, Reporting & Data Warehousing (Insights Domain)
+
+| Use Case ID | Use Case Name | Primary Actor | Trigger & Preconditions | Core Flow (Frontend to Backend) | Expected Outcome & Data Impact |
+|---|---|---|---|---|---|
+| **UC-BP-20** | **Request Asynchronous V2 Report** | MDO Admin / PC | Batch audit or compliance report required. | 1. Admin triggers export in MDO Portal. 2. UI calls `POST /bp/v2/generate/report` (`KB-14010`). 3. Event published to Kafka `bp-report`; Cassandra V2 row set to `PROCESSING`. | Report job queued asynchronously without blocking portal session. |
+| **UC-BP-21** | **Execute Multi-Store Join** | Async Report Worker | Message received on Kafka topic `bp-report`. | 1. Worker reads payload and queries Cassandra, PostgreSQL, and Elasticsearch. 2. Joins enrollment records, attendance logs, scores, and officer designations. 3. Assembles 6-sheet Excel workbook and uploads to GCS. | Multi-tab analytical workbook generated and stored in cloud storage. |
+| **UC-BP-22** | **Poll Status & Download Report** | MDO Admin / PC | Prior report request submitted. | 1. UI polls `POST /bp/v1/bpreport/status`. 2. When status equals `COMPLETED`, UI renders download button. 3. Client streams signed file via `GET /bp/v1/bpreport/download/...`. | Secure delivery of comprehensive analytical workbook to administrator. |
+
+### 4.5 Platform Operations & Maintenance (SRE Domain)
+
+| Use Case ID | Use Case Name | Primary Actor | Trigger & Preconditions | Core Flow (Frontend to Backend) | Expected Outcome & Data Impact |
+|---|---|---|---|---|---|
+| **UC-BP-23** | **Elasticsearch Index Drift Reconciliation** | Platform SRE | Search catalog shows missing or stale batches. | 1. SRE identifies lag in Akka actor event publishers. 2. SRE triggers batch re-indexing script. 3. Records re-read from Cassandra `course_batch` and re-indexed into ES. | Catalog consistency restored ( eventual consistency). |
+| **UC-BP-24** | **Redis Active Count Cache Eviction** | Platform SRE | Discrepancy detected in active cohort counts. | 1. Database discrepancy identified in `wf_status` vs Redis key. 2. SRE issues eviction command on `bp_active_count_{batchId}`. 3. Next read recomputes count from DB and repopulates cache. | Cache integrity restored; prevents incorrect cohort capacity rejections. |
+| **UC-BP-25** | **Recover Failed Report Jobs (DLQ)** | Platform SRE | Analytical export stalled in `PROCESSING` state. | 1. SRE audits Kafka Dead-Letter Queue (DLQ). 2. Resolves transient timeout or database lock issue. 3. Replays message to topic `bp-report`. | Stalled report job completes; Cassandra status updated to `COMPLETED`. |
+
+## 5. Quarter-Wise Evolution Matrix of Use Cases
+
+| Release Band | Creation & Batch Capabilities | Enrollment & Governance Capabilities | Consumption & Delivery Capabilities | Analytics & Operations Capabilities |
+|---|---|---|---|---|
+| **Q2–Q3** | `UC-BP-01`, `UC-BP-03` (Baseline program and batch setup) | `UC-BP-07` (Direct self-enrollment) | `UC-BP-13`, `UC-BP-14` (Basic TOC navigation) | Baseline batch CSV export (`KB-688`) |
+| **Q4–Q6** | Basic batch metadata editing | `UC-BP-09`, `UC-BP-10` (MDO nominations, bulk CSV approvals) | Self-paced digital learning modules | Relational workflow tracking (`wingspan.wf_status`) |
+| **Q8–Q9** | `UC-BP-02` (Direct publishing, CQF bypass) | Multi-PC batch delegation | `UC-BP-15`, `UC-BP-16`, `UC-BP-17`, `UC-BP-18` (Assignments) | Elasticsearch mapping refactoring (`KB-9984`) |
+| **Q10–Q11** | Cross-MDO instructor setup | `UC-BP-08` (Mobile / QR code attendance paths) | Mobile TOC parity, GCS asset streaming | Cassandra read query optimization |
+| **Q12–Q13** | `UC-BP-04`, `UC-BP-05`, `UC-BP-06` (Same-day batching, cloning) | `UC-BP-11`, `UC-BP-12` (Re-enrollment, Redis capacity) | `UC-BP-19` (Decoupled pre-assessments, certificate sync) | `UC-BP-20`, `UC-BP-21`, `UC-BP-22` (Asynchronous V2 reporting) |
+
+## 6. Cross-Cutting Engineering Guardrails
+
+1. **Authentication & Authorization:** Kong Gateway validates Keycloak JWT tokens on all requests. Roles (`BP_CONTENT_CREATOR`, `BP_PROGRAM_COORDINATOR`, `BP_PROGRAM_TRAINER`, `LEARNER`) are enforced per route.
+2. **Search Clamping:** Catalog queries enforce to prevent cluster memory exhaustion.
+3. **Storage Governance:** Assignment answer uploads are capped at single files (, PDF/DOCX) streamed directly to GCS via proxy.
+4. **Primary Key Isolation:** Cassandra reporting tables use compound keys `(orgid, courseid, batchid, reportrequester, contexttype)` to eliminate row overwrites in multi-context environments.

@@ -2,25 +2,336 @@
   {
     "id": "blended",
     "title": "Blended Program",
-    "summary": "Instructor-led learning that mixes self-paced online content with scheduled classroom sessions — batches with seat limits, an approval step, session attendance and assignments.",
+    "summary": "A Blended Program is a parent container of cohort-based Program Batches that mixes self-paced digital learning with instructor-led live and offline sessions: each batch has its own dates, enrolment quota, coordinators and instructors, an approval workflow with bulk CSV approval, session resources, assignments with evaluation, and batch-wise consumption reports.",
     "icon": "<path d=\"M4 6.5A2.5 2.5 0 0 1 6.5 4H15a3 3 0 0 1 3 3v13H6.5A2.5 2.5 0 0 1 4 17.5z\"></path><circle cx=\"11\" cy=\"10\" r=\"2.2\"></circle><path d=\"M7.5 16c.6-1.7 1.9-2.6 3.5-2.6s2.9.9 3.5 2.6\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "blended/overview.html",
-          "layout": "twoCol"
+          "type": "markdown",
+          "path": "learning-hub/blended-program/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "blended/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Blended Program Batch Details",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1157595153/Blended+Program+Batch+Details"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Blended Program Enhancements - Batch Wise Reports Tech Design",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1042677779/Blended+Program+Enhancements+-+Batch+Wise+Reports+Tech+Design"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Blended Program Enhancements - Batch Wise Reports - Generate Report Api Enhancement",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1061355521/Blended+Program+Enhancements+-+Batch+Wise+Reports+-+Generate+Report+Api+Enhancement"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Blended Program Consumption Report API Contract",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1017937931/Blended+Program+Consumption+Report+API+Contract"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Blended Program Enhancements - Active Batch Enrollments Tech Design",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1045889027/Blended+Program+Enhancements+-+Active+Batch+Enrollments+Tech+Design"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Active Batch Enrollments count API For Blended Program",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/1045889036/Active+Batch+Enrollments+count+API+For+Blended+Program"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Sprint 30 API contract Details For Blended Program Enhancements",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/495419480/Sprint+30+API+contract+Details+For+Blended+Program+Enhancements"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "API Documentation Blended Program Bulk Upload Approval Rejection",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/381780108/API+Documentation+Blended+Program+Bulk+Upload+Approval+Rejection"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Blended program delete batch API",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/478380033/Blended+program+delete+batch+API"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q12 Blended Program Enhancements",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/972423178/Q12+Blended+Program+Enhancements"
+                }
+              ]
+            },
+            {
+              "title": "Software Requirements Specification (SRS)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Q9 l Blended Program Enhancements",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/504430593/SRS+-+Q9+l+Blended+Program+Enhancements"
+                }
+              ]
+            },
+            {
+              "title": "Core Epics & Initiatives (Lifecycle & Architecture)",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-13948",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13948"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11078",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11078"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10855",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10855"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9984",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9984"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8998",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8998"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8997",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8997"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8999",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8999"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7848",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7848"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6962",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6962"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-334",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-334"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-325",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-325"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-7",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-7"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-3",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-3"
+                }
+              ]
+            },
+            {
+              "title": "Creation, Authoring & Batch Operations (Frontend & Backend)",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-13937",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13937"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13996",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13996"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13991",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13991"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11079",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11079"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11080",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11080"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11561",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11561"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11325",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11325"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9604",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9604"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-336",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-336"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7467",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7467"
+                }
+              ]
+            },
+            {
+              "title": "Enrollment, Nomination & Attendance Management (Frontend & Backend)",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-15664",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15664"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7850",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7850"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7028",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7028"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-183",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-183"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-184",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-184"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-393",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-393"
+                }
+              ]
+            },
+            {
+              "title": "Consumption, Instructor Delivery & Assessments (Frontend & Backend)",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-13947",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13947"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11071",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11071"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10860",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10860"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11563",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11563"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11739",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11739"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-187",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-187"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-431",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-431"
+                }
+              ]
+            },
+            {
+              "title": "Analytics, Reporting & Data Warehousing (Frontend & Backend)",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-13972",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13972"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13995",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13995"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-688",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-688"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-430",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-430"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-775",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-775"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10977",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10977"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/blended-program/srs.md"
         }
       },
       {
@@ -33,7 +344,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/blended-program/context-diagram.md"
@@ -56,8 +367,17 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/blended-program/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/blended-program/operations-manual.md"
@@ -66,9 +386,18 @@
       {
         "key": "asbuilt",
         "label": "As-Built",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/blended-program/as-built-requirements.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/blended-program/use-cases.md"
         }
       }
     ]
