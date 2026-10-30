@@ -1,8 +1,0 @@
-<div>
-        <div class="uc-grid">
-          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-1 · Enrol</b><p>From the TOC page, one click enrols into the course's batch. Re-clicking is safe; the record is keyed on user + course + batch.</p><div class="api">POST <code>learner/course/v1/enrol</code></div></div>
-          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-2 · Learn &amp; resume</b><p>The viewer writes real-time progress; <code>lastReadContentId</code> powers the Resume button back into the exact node.</p><div class="api">POST <code>content/v2/state/read</code> · <code>user/realTimeProgress/update</code></div></div>
-          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-3 · Leave a course</b><p>Unenroll is soft — the course leaves My Learning but history and any earned certificate stay.</p><div class="api">POST <code>course/v2/unenroll</code></div></div>
-          <div class="uc-card"><div class="who">Karmayogi</div><b class="t">UC-4 · Complete, claim, certify</b><p>At 100% the learner claims Karma Points and downloads the certificate; ratings and share-with-a-colleague close the loop.</p><div class="api">POST <code>claimkarmapoints</code> · GET <code>cohorts/course/batch/cert/download/:id</code> · POST <code>user/rating</code> · <code>user/v1/content/recommend</code></div></div>
-        </div>
-      </div>

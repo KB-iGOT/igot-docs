@@ -216,9 +216,8 @@
         "key": "usecases",
         "label": "User Manual",
         "source": {
-          "type": "html",
-          "file": "course/usecases.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/course/use-cases.md"
         }
       }
     ]
@@ -374,6 +373,14 @@
           "type": "markdown",
           "path": "learning-hub/multilingual/sdd.md"
         }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/multilingual/use-cases.md"
+        }
       }
     ]
   },
@@ -493,6 +500,14 @@
           "type": "markdown",
           "path": "learning-hub/moderated-course/sdd.md"
         }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-course/use-cases.md"
+        }
       }
     ]
   },
@@ -601,6 +616,14 @@
         "source": {
           "type": "markdown",
           "path": "learning-hub/invite-only-course/sdd.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-course/use-cases.md"
         }
       }
     ]
