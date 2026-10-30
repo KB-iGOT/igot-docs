@@ -9,7 +9,7 @@ const INTRO: Record<string, string> = {
   learning: 'Features for learning content: courses, programs, assessments and pathways.',
   features: 'Platform-wide features with user guides, APIs, diagrams and operational details.',
   registration: 'How users and organisations get onto the platform.',
-  course: 'Courses and course-like content: creation, languages, moderation, invite-only access, pathways, case studies and external providers.',
+  course: 'Courses: creation and management, languages, moderation and invite-only access.',
   programs: 'Programs that bundle courses: blended, invite-only, moderated and curated.',
   assessment: 'Assessments on their own: standalone, moderated and invite-only.',
 };

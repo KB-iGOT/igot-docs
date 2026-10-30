@@ -23,6 +23,24 @@
         }
       },
       {
+        "label": "Learning Pathways",
+        "target": {
+          "feature": "pathway"
+        }
+      },
+      {
+        "label": "AGK (Case Study)",
+        "target": {
+          "feature": "agk"
+        }
+      },
+      {
+        "label": "External Provider Courses (Marketplace)",
+        "target": {
+          "feature": "marketplace"
+        }
+      },
+      {
         "label": "Bharat Kalp",
         "target": {
           "feature": "bharatkalp"
@@ -87,24 +105,6 @@
         "label": "Invite-Only Course / Batch",
         "target": {
           "soon": true
-        }
-      },
-      {
-        "label": "Learning Pathways",
-        "target": {
-          "feature": "pathway"
-        }
-      },
-      {
-        "label": "AGK (Case Study)",
-        "target": {
-          "feature": "agk"
-        }
-      },
-      {
-        "label": "External Provider Courses (Marketplace)",
-        "target": {
-          "feature": "marketplace"
         }
       }
     ]
