@@ -104,7 +104,7 @@
       {
         "label": "Invite-Only Course / Batch",
         "target": {
-          "soon": true
+          "feature": "inviteonlycourse"
         }
       }
     ]

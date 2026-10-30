@@ -497,6 +497,115 @@
     ]
   },
   {
+    "id": "inviteonlycourse",
+    "title": "Invite-Only Course / Batch",
+    "summary": "Invite-only courses, batches and standalone assessments are open only to nominated learners: creators mark content Invite-Only in the CBP portal, auto-batch creation is suppressed, program coordinators create batches and upload the cohort's participant list, and only whitelisted learners can see, enrol in or start the content.",
+    "icon": "<path d=\"M4 6h16v12H4z\"></path><path d=\"m4 7 8 6 8-6\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-course/index.md"
+        }
+      },
+      {
+        "key": "links",
+        "label": "Key Links",
+        "source": {
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Standalone Assessments -Invite Only Enhancements doc.",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/89751668/Standalone+Assessments+-Invite+Only+Enhancements+doc."
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-2960",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2960"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2968",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2968"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-3959",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-3959"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-453",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-453"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1072",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1072"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-course/srs.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context Diagrams",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-course/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-course/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-course/lld.md"
+        }
+      },
+      {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-course/sdd.md"
+        }
+      }
+    ]
+  },
+  {
     "id": "curated",
     "title": "Curated Program",
     "summary": "A Curated Program bundles live courses into one Level-2 learning path: creators assemble it in the Content Portal, it passes review and SPV publishing with an auto-created open batch, and learners enrol once, progress through the child courses and, where configured, unlock a gated final program assessment before program certification.",
