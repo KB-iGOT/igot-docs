@@ -16,10 +16,17 @@ const hubById = new Map(hubs.map((h) => [h.id, h]));
 export const getFeature = (id: string) => featureById.get(id);
 export const getHub = (id: string) => hubById.get(id);
 
-/** hub that lists a feature (learning / features / registration); null for the platform-hub pages */
+/** hub that lists a feature (course / programs / features / registration ...); null for the platform-hub pages */
 const parentOf = new Map<string, string>();
 for (const h of hubs) for (const it of h.items) if ('feature' in it.target && !parentOf.has(it.target.feature)) parentOf.set(it.target.feature, h.id);
 export const parentHubOf = (featureId: string) => parentOf.get(featureId) ?? null;
+
+/** a hub and the hubs it sits inside, outermost first: course → [learning, course] */
+export function hubTrail(hubId: string): Hub[] {
+  const trail: Hub[] = [];
+  for (let h = getHub(hubId); h; h = h.parent ? getHub(h.parent) : undefined) trail.unshift(h);
+  return trail;
+}
 
 /** tabs shown to the reader, Overview first */
 export const visibleTabs = (f: Feature) => f.tabs.filter((t) => !t.hidden);
@@ -33,21 +40,28 @@ export function lastUpdated(f: Feature): string | null {
   return meta.dates[md.source.path.replace(/\/[^/]*$/, '')] ?? null;
 }
 
-export const routeOf = (it: HubItem) => ('feature' in it.target ? `/features/${it.target.feature}` : `/hubs/${it.target.hub}`);
+/** where an entry links to; a "coming soon" placeholder links nowhere */
+export const routeOf = (it: HubItem) =>
+  'feature' in it.target ? `/features/${it.target.feature}` : 'hub' in it.target ? `/hubs/${it.target.hub}` : '';
 
 const firstSentence = (s: string) => (s.match(/^.*?[.!?](\s|$)/)?.[0] ?? s).trim();
 
 export interface Entry {
   label: string;
   to: string;
-  kind: 'feature' | 'hub';
+  kind: 'feature' | 'hub' | 'soon';
   description: string;
   countText: string;
   /** for nested hubs: the features inside, for sidebar dropdowns */
   children?: Entry[];
 }
 
-/** a hub's entries as rows: features with their document count, nested hubs with their features */
+/** documented features in a list of entries, counting inside nested hubs */
+const featureCount = (entries: Entry[]): number =>
+  entries.reduce((n, e) => n + (e.kind === 'feature' ? 1 : e.kind === 'hub' ? featureCount(e.children ?? []) : 0), 0);
+
+/** a hub's entries as rows: features with their document count, nested hubs with their features,
+ *  placeholders marked "coming soon" */
 export function entriesOf(hubId: string): Entry[] {
   return (getHub(hubId)?.items ?? []).map((it) => {
     if ('feature' in it.target) {
@@ -55,9 +69,12 @@ export function entriesOf(hubId: string): Entry[] {
       return { label: it.label, to: routeOf(it), kind: 'feature' as const,
                description: f ? firstSentence(f.summary) : '', countText: `${f ? docTabs(f).length : 0} Documents` };
     }
+    if ('soon' in it.target) {
+      return { label: it.label, to: '', kind: 'soon' as const, description: 'Documentation coming soon.', countText: 'Coming soon' };
+    }
     const children = entriesOf(it.target.hub);
     return { label: it.label, to: routeOf(it), kind: 'hub' as const, children,
-             description: children.map((c) => c.label).join(', '), countText: `${children.length} Features` };
+             description: children.map((c) => c.label).join(', '), countText: `${featureCount(children)} Features` };
   });
 }
 
@@ -79,22 +96,20 @@ const docsCount = (id: string) => {
 };
 
 const allPlatformHubs: PlatformHub[] = [
-  { name: 'Learning Hub', icon: 'learning', to: '/hubs/learning', count: getHub('learning')?.items.length ?? 0, countLabel: 'features',
+  { name: 'Learning Hub', icon: 'learning', to: '/hubs/learning', count: featureCount(entriesOf('learning')), countLabel: 'features',
     children: entriesOf('learning'), description: 'Documentation for learning content: courses, programs, assessments and pathways.' },
   { name: 'Discussion Hub', icon: 'discussion', to: '/features/discussionhub', count: docsCount('discussionhub'), countLabel: 'documents',
     description: 'Documentation for communities, questions, answers and discussions.' },
   { name: 'Event Hub', icon: 'event', to: '/features/eventshub', count: docsCount('eventshub'), countLabel: 'documents',
     description: 'Documentation for virtual events: authoring, review, attendance and certificates.' },
-  { name: 'Amrit Gyaan Kosh', icon: 'book', to: '/features/agk', count: docsCount('agk'), countLabel: 'documents',
-    description: 'Documentation for knowledge resources: documents, videos, audio and links.' },
 ];
-/** the four platform hubs: Learning Hub groups features, the others are single pages */
+/** the three platform hubs: Learning Hub groups features, the others are single pages */
 export const platformHubs = allPlatformHubs.filter((h) => !h.to.startsWith('/features/') || getFeature(h.to.split('/')[2]));
 
 /** the Features hub: features and nested hubs such as Registration */
 export const featureEntries = entriesOf('features');
 
-const PLATFORM_HUB_PAGES = new Set(['discussionhub', 'eventshub', 'agk']);
+const PLATFORM_HUB_PAGES = new Set(['discussionhub', 'eventshub']);
 
 export const stats = {
   hubs: platformHubs.length,

@@ -5,45 +5,33 @@
     "parent": null,
     "items": [
       {
+        "label": "Course",
+        "target": {
+          "hub": "course"
+        }
+      },
+      {
+        "label": "Programs",
+        "target": {
+          "hub": "programs"
+        }
+      },
+      {
+        "label": "Assessment",
+        "target": {
+          "hub": "assessment"
+        }
+      },
+      {
         "label": "Bharat Kalp",
         "target": {
           "feature": "bharatkalp"
         }
       },
       {
-        "label": "Blended Program",
-        "target": {
-          "feature": "blended"
-        }
-      },
-      {
         "label": "Comprehensive Assessment Program",
         "target": {
           "feature": "cap"
-        }
-      },
-      {
-        "label": "Course",
-        "target": {
-          "feature": "course"
-        }
-      },
-      {
-        "label": "Curated Program",
-        "target": {
-          "feature": "curated"
-        }
-      },
-      {
-        "label": "Learning Pathway",
-        "target": {
-          "feature": "pathway"
-        }
-      },
-      {
-        "label": "Marketplace",
-        "target": {
-          "feature": "marketplace"
         }
       },
       {
@@ -65,15 +53,114 @@
         }
       },
       {
+        "label": "Unenrollment of Courses",
+        "target": {
+          "feature": "unenroll"
+        }
+      }
+    ]
+  },
+  {
+    "id": "course",
+    "name": "Course",
+    "parent": "learning",
+    "items": [
+      {
+        "label": "Course (General Platform Course Creation & Management)",
+        "target": {
+          "feature": "course"
+        }
+      },
+      {
+        "label": "Multi lingual",
+        "target": {
+          "soon": true
+        }
+      },
+      {
+        "label": "Moderated Course",
+        "target": {
+          "soon": true
+        }
+      },
+      {
+        "label": "Invite-Only Course / Batch",
+        "target": {
+          "soon": true
+        }
+      },
+      {
+        "label": "Learning Pathways",
+        "target": {
+          "feature": "pathway"
+        }
+      },
+      {
+        "label": "AGK (Case Study)",
+        "target": {
+          "feature": "agk"
+        }
+      },
+      {
+        "label": "External Provider Courses (Marketplace)",
+        "target": {
+          "feature": "marketplace"
+        }
+      }
+    ]
+  },
+  {
+    "id": "programs",
+    "name": "Programs",
+    "parent": "learning",
+    "items": [
+      {
+        "label": "Blended Program",
+        "target": {
+          "feature": "blended"
+        }
+      },
+      {
+        "label": "Invite-Only Program",
+        "target": {
+          "soon": true
+        }
+      },
+      {
+        "label": "Moderated Program",
+        "target": {
+          "soon": true
+        }
+      },
+      {
+        "label": "Curated Program",
+        "target": {
+          "feature": "curated"
+        }
+      }
+    ]
+  },
+  {
+    "id": "assessment",
+    "name": "Assessment",
+    "parent": "learning",
+    "items": [
+      {
         "label": "Standalone Assessment",
         "target": {
           "feature": "standalone"
         }
       },
       {
-        "label": "Unenrollment of Courses",
+        "label": "Moderated Assessment",
         "target": {
-          "feature": "unenroll"
+          "soon": true
+        }
+      },
+      {
+        "label": "Invite-Only Assessment",
+        "target": {
+          "soon": true
         }
       }
     ]

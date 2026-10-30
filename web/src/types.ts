@@ -26,8 +26,9 @@ export interface Feature {
   tabs: FeatureTab[];
 }
 
-/** what a hub entry opens: a feature page, or a nested hub (e.g. Features → Registration) */
-export type HubTarget = { feature: string } | { hub: string };
+/** what a hub entry opens: a feature page, a nested hub (e.g. Features → Registration),
+ *  or nothing yet — a "coming soon" placeholder for documentation still to be supplied */
+export type HubTarget = { feature: string } | { hub: string } | { soon: true };
 
 export interface HubItem {
   label: string;

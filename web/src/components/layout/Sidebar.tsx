@@ -21,28 +21,42 @@ function Group({ title, icon, children }: { title: string; icon: IconName; child
   );
 }
 
-/** A hub that groups features (Learning Hub, Registration): opens as a dropdown of its features.
- *  It opens by itself when the page being read is one of its features. */
-function Dropdown({ label, icon, items, pathname }: { label: string; icon: IconName; items: Entry[]; pathname: string }) {
-  const containsActive = items.some((c) => pathname === c.to || pathname.startsWith(`${c.to}/`));
+/** does a list of entries contain the page being read, looking inside nested hubs too */
+const holds = (items: Entry[], pathname: string): boolean =>
+  items.some((c) => (c.to && (pathname === c.to || pathname.startsWith(`${c.to}/`))) || holds(c.children ?? [], pathname));
+
+/** A hub that groups features (Learning Hub, Registration, and Course / Programs / Assessment inside
+ *  Learning Hub): opens as a dropdown of its entries, nested hubs opening as dropdowns of their own.
+ *  It opens by itself when the page being read is inside it. */
+function Dropdown({ label, icon, items, pathname, nested = false }:
+                  { label: string; icon?: IconName; items: Entry[]; pathname: string; nested?: boolean }) {
+  const containsActive = holds(items, pathname);
   const [open, setOpen] = useState(containsActive);
   useEffect(() => { if (containsActive) setOpen(true); }, [containsActive]);
 
   return (
     <div>
       <button type="button" aria-expanded={open} onClick={() => setOpen(!open)}
-              className={`${styles.item} ${styles.subItem} ${containsActive ? styles.within : ''}`}>
-        <Icon name={icon} />
+              className={`${styles.item} ${nested ? styles.nestedItem : styles.subItem} ${containsActive ? styles.within : ''}`}>
+        {icon && <Icon name={icon} />}
         <span>{label}</span>
-        <Icon name="chevronDown" size={15} strokeWidth={2} className={`${styles.chev} ${open ? '' : styles.closed}`} />
+        <Icon name="chevronDown" size={nested ? 14 : 15} strokeWidth={2} className={`${styles.chev} ${open ? '' : styles.closed}`} />
       </button>
       {open && (
-        <div className={styles.nested}>
-          {items.map((c) => (
-            <NavLink key={c.to} to={c.to} className={({ isActive }) => `${styles.item} ${styles.nestedItem} ${isActive ? styles.active : ''}`}>
-              <span>{c.label}</span>
-            </NavLink>
-          ))}
+        <div className={`${styles.nested} ${nested ? styles.nestedDeep : ''}`}>
+          {items.map((c) =>
+            c.kind === 'hub' ? (
+              <Dropdown key={c.to} label={c.label} items={c.children ?? []} pathname={pathname} nested />
+            ) : c.kind === 'soon' ? (
+              <span key={c.label} className={`${styles.item} ${styles.nestedItem} ${styles.soon}`} title="Documentation coming soon">
+                <span>{c.label}</span><span className={styles.soonTag}>Soon</span>
+              </span>
+            ) : (
+              <NavLink key={c.to} to={c.to} className={({ isActive }) => `${styles.item} ${styles.nestedItem} ${isActive ? styles.active : ''}`}>
+                <span>{c.label}</span>
+              </NavLink>
+            ),
+          )}
         </div>
       )}
     </div>

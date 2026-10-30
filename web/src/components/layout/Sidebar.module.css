@@ -21,7 +21,13 @@
 .within svg { color: var(--brand); }
 .nested { margin: 2px 0 6px 31px; padding-left: 10px; border-left: 1px solid #0000001A; }
 .nestedItem { font-weight: 400; font-size: 12.8px; padding: 6px 10px; }
+/* a dropdown inside a dropdown (Learning Hub → Course): a shallower indent keeps long labels readable */
+.nestedDeep { margin-left: 10px; }
 .nestedItem.active { background: #E8EEF9; color: var(--brand); font-weight: 700; box-shadow: none; }
+/* a placeholder for documentation still to come: listed, but not a link */
+.soon { cursor: default; color: var(--text-muted); }
+.soon:hover { background: transparent; }
+.soonTag { margin-left: auto; flex: none; font-size: 10px; font-weight: 700; letter-spacing: .02em; color: var(--text-muted); background: #F1F3F7; border-radius: 99px; padding: 1px 7px; }
 .group { margin-top: 12px; }
 .head { font-weight: 900; color: var(--text); }
 .chev { margin-left: auto; transition: transform .2s; }

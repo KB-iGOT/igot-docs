@@ -2,7 +2,7 @@ import { Navigate, NavLink, useParams } from 'react-router-dom';
 import { Breadcrumbs, type Crumb } from '../components/ui/Breadcrumbs';
 import { FeatureIcon, Icon } from '../components/ui/Icon';
 import { TabContent } from '../components/content/TabContent';
-import { docTabs, getFeature, getHub, lastUpdated, parentHubOf, visibleTabs } from '../lib/catalog';
+import { docTabs, getFeature, getHub, hubTrail, lastUpdated, parentHubOf, visibleTabs } from '../lib/catalog';
 import styles from './FeaturePage.module.css';
 
 const formatDate = (iso: string) =>
@@ -10,11 +10,11 @@ const formatDate = (iso: string) =>
 
 function crumbsFor(featureId: string, title: string): Crumb[] {
   const parent = parentHubOf(featureId);
+  const hubsAbove = parent ? hubTrail(parent) : [];
   const trail: Crumb[] = [{ label: 'Home', to: '/' }];
-  if (parent === 'learning') trail.push({ label: 'Platform Hubs', to: '/hubs' }, { label: 'Learning Hub', to: '/hubs/learning' });
-  else if (parent === 'features') trail.push({ label: 'Features', to: '/hubs/features' });
-  else if (parent === 'registration') trail.push({ label: 'Features', to: '/hubs/features' }, { label: 'Registration', to: '/hubs/registration' });
-  else trail.push({ label: 'Platform Hubs', to: '/hubs' });
+  /* Learning Hub and the platform-hub pages sit under Platform Hubs; the Features hub stands on its own */
+  if (!hubsAbove.length || hubsAbove[0].id === 'learning') trail.push({ label: 'Platform Hubs', to: '/hubs' });
+  for (const h of hubsAbove) trail.push({ label: h.name, to: `/hubs/${h.id}` });
   return [...trail, { label: title }];
 }
 

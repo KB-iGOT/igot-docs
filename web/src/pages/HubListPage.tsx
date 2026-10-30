@@ -2,21 +2,23 @@ import { Navigate, useParams } from 'react-router-dom';
 import { Breadcrumbs, type Crumb } from '../components/ui/Breadcrumbs';
 import { HubCards } from '../components/catalog/HubCards';
 import { EntryList } from '../components/catalog/EntryList';
-import { entriesOf, getHub, platformHubs } from '../lib/catalog';
+import { entriesOf, getHub, hubTrail, platformHubs } from '../lib/catalog';
 import styles from './HubListPage.module.css';
 
 const INTRO: Record<string, string> = {
   learning: 'Features for learning content: courses, programs, assessments and pathways.',
   features: 'Platform-wide features with user guides, APIs, diagrams and operational details.',
   registration: 'How users and organisations get onto the platform.',
+  course: 'Courses and course-like content: creation, languages, moderation, invite-only access, pathways, case studies and external providers.',
+  programs: 'Programs that bundle courses: blended, invite-only, moderated and curated.',
+  assessment: 'Assessments on their own: standalone, moderated and invite-only.',
 };
 
 function crumbsFor(hubId: string, name: string): Crumb[] {
-  const hub = getHub(hubId);
-  const parent = hub?.parent ? getHub(hub.parent) : null;
+  const above = hubTrail(hubId).slice(0, -1);
   const trail: Crumb[] = [{ label: 'Home', to: '/' }];
-  if (hubId === 'learning') trail.push({ label: 'Platform Hubs', to: '/hubs' });
-  if (parent) trail.push({ label: parent.name, to: `/hubs/${parent.id}` });
+  if ((above[0]?.id ?? hubId) === 'learning') trail.push({ label: 'Platform Hubs', to: '/hubs' });
+  for (const h of above) trail.push({ label: h.name, to: `/hubs/${h.id}` });
   return [...trail, { label: name }];
 }
 
