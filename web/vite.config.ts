@@ -6,8 +6,8 @@ import { resolve } from 'node:path';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 
-/* The standalone architecture page lives at the repo root (shared with the static
-   explorer); serve it in dev and copy it into the build so the app can link to it. */
+/* The old standalone architecture page at the repo root is now a redirect to the app's
+   Platform Overview route; serve it in dev and copy it into the build so old links keep working. */
 function architecturePage(): Plugin {
   const file = resolve(root, 'igot-architecture-overview.html');
   return {

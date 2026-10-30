@@ -30,7 +30,7 @@ taxonomy) and **Lern** ([lern.sunbird.org](https://lern.sunbird.org/): users,
 orgs, courses, certificates). Kong routes to any of the three directly, and
 where iGOT needs core behaviour it calls the Sunbird blocks sideways — it
 extends them, never forks them. The interactive version
-(`igot-architecture-overview.html`) is a colour-coded set of columns: focus a
+(the explorer's Platform Overview page) is a colour-coded set of columns: focus a
 layer to see its connections, click a component to see everything it talks to.
 
 ```mermaid

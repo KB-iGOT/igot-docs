@@ -5,19 +5,19 @@ export type SearchKind = 'hub' | 'feature' | 'page' | 'doc';
 export interface SearchItem {
   label: string;
   kind: SearchKind;
-  /** in-app route, or an absolute page for kind "page" */
+  /** in-app route */
   to: string;
   keywords: string;
 }
 
 const RANK: Record<SearchKind, number> = { hub: 0, feature: 1, page: 2, doc: 3 };
 
-/** Everything the header search can find: hubs, features, every feature's documents, and the architecture page. */
+/** Everything the header search can find: hubs, features, every feature's documents, and the Platform Overview page. */
 export const searchIndex: SearchItem[] = [
   ...hubs.map((h) => ({ label: h.name, kind: 'hub' as const, to: `/hubs/${h.id}`, keywords: h.id })),
   { label: 'Platform hubs', kind: 'hub', to: '/hubs', keywords: 'all hubs overview' },
   ...features.map((f) => ({ label: f.title, kind: 'feature' as const, to: `/features/${f.id}`, keywords: f.id })),
-  { label: 'Platform architecture', kind: 'page', to: 'igot-architecture-overview.html', keywords: 'hld overview architecture' },
+  { label: 'Platform Overview', kind: 'page', to: '/platform-overview', keywords: 'platform architecture hld overview' },
   ...features.flatMap((f) =>
     visibleTabs(f).filter((t) => t.key !== 'overview').map((t) => ({
       label: `${f.title} · ${t.label}`, kind: 'doc' as const, to: `/features/${f.id}/${t.key}`, keywords: `${f.id} ${t.key}`,

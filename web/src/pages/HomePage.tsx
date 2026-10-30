@@ -25,8 +25,6 @@ export function SectionHead({ title, sub, to, more }: { title: string; sub: stri
   );
 }
 
-const ARCHITECTURE_URL = 'igot-architecture-overview.html';
-
 /** A home-page section whose documentation is still to come. */
 function ComingSoon({ title, sub }: { title: string; sub: string }) {
   return (
@@ -61,11 +59,11 @@ export function HomePage() {
 
       <section className={styles.section}>
         <SectionHead title="Platform Overview" sub="A one-page view of the whole iGOT Karmayogi platform: portals, services, data stores and how they connect." />
-        <a href={ARCHITECTURE_URL} className={styles.overview}>
+        <Link to="/platform-overview" className={styles.overview}>
           <span className={styles.overviewIc}><Icon name="layers" size={22} /></span>
           <span className={styles.overviewTxt}><b>Platform Overview</b><span>Open the platform overview page.</span></span>
           <Icon name="arrowRight" size={16} strokeWidth={2.2} />
-        </a>
+        </Link>
       </section>
 
       <ComingSoon title="System Architecture" sub="Architecture of the platform as a whole: components, boundaries and how requests flow." />

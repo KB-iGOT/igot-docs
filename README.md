@@ -24,7 +24,7 @@ otherwise it is publicly readable once enabled.
 |---|---|
 | [`docs/`](docs/index.md) | The Markdown documentation tree — source of truth for all technical content (APIs, HLD, LLD, use cases, operations manuals). Vanilla CommonMark + Mermaid; renders on GitHub, MkDocs, or Astro Starlight/Docusaurus unchanged. |
 | [`web/`](web/README.md) | The **Docs Explorer**: a React + TypeScript app (Vite). Home dashboard, sidebar navigation, and a page per feature with a tab per document; it renders the Markdown in `docs/` directly. Feature list, tabs and Key Links are in `web/src/data/`; hand-authored Overview / Use Cases panels in `web/src/content/`. |
-| `igot-architecture-overview.html` | The standalone platform-architecture page ("Platform Overview" in the explorer). |
+| `igot-architecture-overview.html` | Redirect to the explorer's Platform Overview page (`#/platform-overview`, built in `web/src/pages/PlatformOverviewPage.tsx`), kept so old links still work. |
 | `mkdocs.yml` | Site nav/config for rendering `docs/` as a static site with MkDocs Material. |
 | `igot-doc-skills.md` | The house style guide / working convention for generating and updating this documentation (research discipline, six-file feature structure, verification-boundary rules, explorer wiring). |
 | `_to_delete/` | Staged for removal — not part of the active documentation set. |

@@ -34,8 +34,7 @@ export function SearchBox() {
     setQuery('');
     setOpen(false);
     inputRef.current?.blur();
-    if (item.kind === 'page') window.location.href = item.to;
-    else navigate(item.to);
+    navigate(item.to);
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

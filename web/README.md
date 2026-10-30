@@ -65,7 +65,7 @@ styles content that comes from Markdown and the HTML fragments.
 | App images (logo) | `src/assets/brand/` | imported by components |
 | Hand-authored panels | `src/content/features/<feature>/<tab>.html` | loaded lazily by `HtmlContent` |
 | Key Links | `src/data/features.json` (`source.type = "links"`) | rendered by `KeyLinks` |
-| Architecture page | `../igot-architecture-overview.html` | served in dev and copied into `dist/` by `vite.config.ts` |
+| Platform Overview page | `src/pages/PlatformOverviewPage.tsx`, diagram data in `src/data/platformOverview.ts` | route `#/platform-overview`; the old `../igot-architecture-overview.html` is now a redirect to it, served in dev and copied into `dist/` by `vite.config.ts` |
 
 ## Adding or changing documentation
 

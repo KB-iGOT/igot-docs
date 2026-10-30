@@ -4,7 +4,6 @@ import { Icon, type IconName } from '../ui/Icon';
 import { featureEntries, platformHubs, type Entry } from '../../lib/catalog';
 import styles from './Sidebar.module.css';
 
-const ARCHITECTURE_URL = 'igot-architecture-overview.html';
 
 /** A collapsible section heading (Platform Hubs, Features). */
 function Group({ title, icon, children }: { title: string; icon: IconName; children: ReactNode }) {
@@ -87,7 +86,7 @@ export function Sidebar({ open, onNavigate }: Props) {
     <nav className={`${styles.sidebar} ${open ? styles.open : ''}`} aria-label="Platform navigation"
          onClick={(e) => (e.target as HTMLElement).closest('a') && onNavigate()}>
       <NavLink to="/" end className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}><Icon name="home" /><span>Home</span></NavLink>
-      <a className={styles.item} href={ARCHITECTURE_URL}><Icon name="layers" /><span>Platform Overview</span></a>
+      <NavLink to="/platform-overview" className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}><Icon name="layers" /><span>Platform Overview</span></NavLink>
       <Soon label="System Architecture" icon="tree" />
 
       <Group title="Platform Hubs" icon="box">
