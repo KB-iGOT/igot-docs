@@ -958,6 +958,208 @@
     ]
   },
   {
+    "id": "inviteonlyprogram",
+    "title": "Invite-Only Program",
+    "summary": "An Invite-Only Program is a \"Custom users\" program container of child courses that only nominated civil servants can find and consume: creators publish it without CQS review, program coordinators run it through mandatory closed batches with bulk CSV invitations, search and direct links are masked for everyone else, and progress rolls up from child courses to a program certificate.",
+    "icon": "<path d=\"M4 6h16v12H4z\"></path><path d=\"m4 7 8 6 8-6\"></path><path d=\"M9 3h6\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-program/index.md"
+        }
+      },
+      {
+        "key": "links",
+        "label": "Key Links",
+        "source": {
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "KB_FRS_CP Redesign",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/22217482/KB_FRS_CP+Redesign"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KY_FRS_Karma_Programs",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/90963969/KY_FRS_Karma_Programs"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q7 FRS Search Listing",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/311296099/Q7+FRS+Search+Listing"
+                }
+              ]
+            },
+            {
+              "title": "Software Requirements Specification (SRS)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Karma Programs and Learner Homepage enhancements",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/87359527/SRS+-+Karma+Programs+and+Learner+Homepage+enhancements"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-1936",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1936"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2960",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2960"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1574",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1574"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1575",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1575"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1945",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1945"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1946",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1946"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1950",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1950"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2968",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2968"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1582",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1582"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1587",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1587"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7869",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7869"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7870",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7870"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7871",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7871"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7872",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7872"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-453",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-453"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1072",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1072"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13016",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13016"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13017",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13017"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-program/srs.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context Diagrams",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-program/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-program/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-program/lld.md"
+        }
+      },
+      {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-program/sdd.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-program/use-cases.md"
+        }
+      }
+    ]
+  },
+  {
     "id": "curated",
     "title": "Curated Program",
     "summary": "A Curated Program bundles live courses into one Level-2 learning path: creators assemble it in the Content Portal, it passes review and SPV publishing with an auto-created open batch, and learners enrol once, progress through the child courses and, where configured, unlock a gated final program assessment before program certification.",
