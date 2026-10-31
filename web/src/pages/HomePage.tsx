@@ -67,7 +67,14 @@ export function HomePage() {
         </Link>
       </section>
 
-      <ComingSoon title="System Architecture" sub="Architecture of the platform as a whole: components, boundaries and how requests flow." />
+      <section className={styles.section}>
+        <SectionHead title="System Architecture" sub="Architecture of the platform as a whole: components, boundaries and how requests flow." />
+        <Link to="/system-architecture" className={styles.overview}>
+          <span className={styles.overviewIc}><Icon name="tree" size={22} /></span>
+          <span className={styles.overviewTxt}><b>System Architecture</b><span>Open the system architecture page.</span></span>
+          <Icon name="arrowRight" size={16} strokeWidth={2.2} />
+        </Link>
+      </section>
 
       <section className={styles.section}>
         <SectionHead title="Platform Hubs" sub="Explore the main hubs of the iGOT platform and access detailed documentation." to="/hubs" more="View all hubs" />
@@ -95,7 +102,14 @@ export function HomePage() {
           </Link>
         </div>
       </section>
-      <ComingSoon title="Monitoring" sub="Health, alerting and operational monitoring of the platform." />
+      <section className={styles.section}>
+        <SectionHead title="Monitoring" sub="Health, alerting and operational monitoring of the platform." />
+        <Link to="/monitoring" className={styles.overview}>
+          <span className={styles.overviewIc}><Icon name="search" size={22} /></span>
+          <span className={styles.overviewTxt}><b>Monitoring</b><span>Open the monitoring page.</span></span>
+          <Icon name="arrowRight" size={16} strokeWidth={2.2} />
+        </Link>
+      </section>
     </div>
   );
 }

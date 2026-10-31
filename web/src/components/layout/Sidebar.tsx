@@ -112,7 +112,7 @@ export function Sidebar({ open, onNavigate }: Props) {
          onClick={(e) => (e.target as HTMLElement).closest('a') && onNavigate()}>
       <NavLink to="/" end className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}><Icon name="home" /><span>Home</span></NavLink>
       <NavLink to="/platform-overview" className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}><Icon name="layers" /><span>Platform Overview</span></NavLink>
-      <Soon label="System Architecture" icon="tree" />
+      <NavLink to="/system-architecture" className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}><Icon name="tree" /><span>System Architecture</span></NavLink>
 
       <Group title="Platform Hubs" icon="box">
         {platformHubs.map((h) =>
@@ -140,7 +140,7 @@ export function Sidebar({ open, onNavigate }: Props) {
       <div className={styles.group}>
         <Soon label="API Documentation" icon="guide" />
         <DataPipeline />
-        <Soon label="Monitoring" icon="search" />
+        <NavLink to="/monitoring" className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}><Icon name="search" /><span>Monitoring</span></NavLink>
       </div>
     </nav>
   );

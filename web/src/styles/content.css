@@ -187,3 +187,11 @@
 }
 .mdwrap .md-seg img { cursor: zoom-in; }
 .mmview .mscale img { display: block; background: #FFFFFF; border-radius: 14px; }
+
+/* platform-level documents (System Architecture, Monitoring): breadcrumbs above a single-column body */
+.doc-page-crumbs { padding: 22px 40px 0; }
+.doc-page-crumbs + .fp-body { padding-top: 4px; }
+/* a hand-drawn SVG diagram embedded in the Markdown: framed like a Mermaid figure, scrolls rather than shrinks */
+.mdwrap .diagram { margin: 0 0 18px; border: 1px solid #00000014; border-radius: 12px; overflow: auto; background: #F8FAFC; }
+.mdwrap .diagram svg { display: block; min-width: 900px; width: 100%; height: auto; }
+@media (max-width: 760px) { .doc-page-crumbs { padding: 16px 16px 0; } }
