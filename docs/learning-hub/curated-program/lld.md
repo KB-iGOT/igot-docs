@@ -374,10 +374,9 @@ CREATE TABLE IF NOT EXISTS sunbird.user_enrolment (
     completionpercentage int,  -- Aggregate 0-100%
     completedon timestamp,
     enrolled_date timestamp,
-    issued_certificates list<frozen<map<text,
-    text>>>,
-    -- Stores certificate URL, ID, and
-    mint timestamp lastreadcontentid text,
+    issued_certificates list<frozen<map<text, text>>>,
+    -- Stores certificate URL, ID, and mint timestamp
+    lastreadcontentid text,
     lastreadcontentstatus int,
     progress int,
     status int,  -- 0: Not Started, 1: In Progress, 2: Completed

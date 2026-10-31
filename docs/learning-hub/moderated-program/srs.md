@@ -342,8 +342,7 @@ CREATE TABLE sunbird_courses.user_enrolments (
     active boolean,
     completionpercentage int,
     enrolleddate timestamp,
-    issued_certificates list<frozen<map<text,
-    text>>>,
+    issued_certificates list<frozen<map<text, text>>>,
     progress int,
     status int,  -- 0=Enrolled, 1=In-Progress, 2=Completed
     PRIMARY KEY (userid, courseid, batchid)

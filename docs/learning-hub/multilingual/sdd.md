@@ -310,10 +310,8 @@ CREATE TABLE IF NOT EXISTS sunbird.user_courses (
     lastreadcontentid text,
     lastreadcontentstatus int,
     status int,
-    certificates list<frozen<map<text,
-    text>>>,
-    issued_certificates list<frozen<map<text,
-    text>>>,
+    certificates list<frozen<map<text, text>>>,
+    issued_certificates list<frozen<map<text, text>>>,
     PRIMARY KEY ((userid), courseid, batchid)
 ) WITH CLUSTERING ORDER BY (courseid ASC, batchid ASC);
 CREATE INDEX IF NOT EXISTS idx_user_courses_lang ON sunbird.user_courses (enrolled_language);

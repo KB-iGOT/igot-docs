@@ -248,15 +248,13 @@ CREATE TABLE sunbird_courses.user_enrolments (
     active boolean,
     -- True if currently enrolled
     addedby text,
-    certificates list<frozen<map<text,
-    text>>>,
+    certificates list<frozen<map<text, text>>>,
     completionpercentage int,  -- 0 to 100
     completedon timestamp,
     datetime timestamp,
     -- Creation timestamp
     enrolleddate timestamp,
-    issued_certificates list<frozen<map<text,
-    text>>>,
+    issued_certificates list<frozen<map<text, text>>>,
     lastreadcontentid text,
     lastreadcontentstatus int,
     progress int,

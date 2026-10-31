@@ -103,8 +103,7 @@ CREATE TABLE IF NOT EXISTS sunbird.user_competency_mapping (
     competency_theme_id text,
     competency_subtheme_id text,
     competency_details map<text,
-    frozen<list<frozen<map<text,
-    text>>>>>,
+    frozen<list<frozen<map<text, text>>>>>,
     PRIMARY KEY ( (user_id), competency_area_id, competency_theme_id, competency_subtheme_id )
 ) WITH CLUSTERING ORDER BY ( competency_area_id ASC, competency_theme_id ASC, competency_subtheme_id ASC ) AND compaction = { 'class': 'LeveledCompactionStrategy' } AND comment = 'Pre-computed user competency ledger for instantaneous Passbook serving';
 ```

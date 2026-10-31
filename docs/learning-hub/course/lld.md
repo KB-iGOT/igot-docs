@@ -380,8 +380,7 @@ CREATE TABLE sunbird.user_enrolments_v2 (
     status int,  -- 0 = Not started, 1 = In progress, 2 = Completed
     enrolled_date timestamp,
     unenrolled_date timestamp,
-    certificates list<frozen<map<text,
-    text>>>,
+    certificates list<frozen<map<text, text>>>,
     PRIMARY KEY (userid, courseid, batchid)
 );
 
@@ -396,14 +395,12 @@ CREATE TABLE sunbird_cqf.assessments (
     contentid text,
     userrole text,  -- 'creator', 'reviewer', 'publisher'
     assessmentid text,
-    score map<text,
-    double>,  -- Section-wise percentage map overallscore double,
+    score map<text, double>,  -- Section-wise percentage map overallscore double,
     -- Weighted cumulative score
     qualificationstatus text,
     -- 'iGOT Advanced',
     'iGOT Basic',
-    etc. remarks map<text,
-    text>,  -- Line-item reviewer feedback
+    etc. remarks map<text, text>,  -- Line-item reviewer feedback
     submissiondate timestamp,
     PRIMARY KEY (contentid, userrole)
 );
