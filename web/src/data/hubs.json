@@ -160,7 +160,7 @@
       {
         "label": "Invite-Only Assessment",
         "target": {
-          "soon": true
+          "feature": "inviteonlyassessment"
         }
       }
     ]

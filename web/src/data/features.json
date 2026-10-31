@@ -1579,6 +1579,158 @@
     ]
   },
   {
+    "id": "inviteonlyassessment",
+    "title": "Invite-Only Assessment",
+    "summary": "An Invite-Only Assessment is a \"Custom Users\" assessment that only nominated learners can see and attempt: publishing it suppresses the automatic open batch, program coordinators schedule a batch window and invite learners individually or by CSV, and invited learners take a timed, randomised single sitting that is scored server-side.",
+    "icon": "<path d=\"M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z\"></path><path d=\"M8 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2\"></path><path d=\"M8 12h8l-4 3z\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-assessment/index.md"
+        }
+      },
+      {
+        "key": "links",
+        "label": "Key Links",
+        "source": {
+          "type": "links",
+          "groups": [
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-3959",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-3959"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-5350",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-5350"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-5570",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-5570"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7067",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7067"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-3958",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-3958"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6276",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6276"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1936",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1936"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2960",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2960"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9603",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9603"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9789",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9789"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1950",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1950"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6378",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6378"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9333",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9333"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9337",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9337"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-assessment/srs.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context Diagrams",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-assessment/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-assessment/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-assessment/lld.md"
+        }
+      },
+      {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-assessment/sdd.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/invite-only-assessment/use-cases.md"
+        }
+      }
+    ]
+  },
+  {
     "id": "curated",
     "title": "Curated Program",
     "summary": "A Curated Program bundles live courses into one Level-2 learning path: creators assemble it in the Content Portal, it passes review and SPV publishing with an auto-created open batch, and learners enrol once, progress through the child courses and, where configured, unlock a gated final program assessment before program certification.",
