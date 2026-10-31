@@ -4,10 +4,13 @@ import { marked, type TokenizerAndRendererExtension } from 'marked';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 
-/** the specifications write "100%" meaning per cent (TeX would read % as a comment)
- *  and identifiers such as batch_cvo inside \text{}, where TeX does not allow a bare _ */
+/** the specifications write "100%" meaning per cent (TeX would read % as a comment),
+ *  identifiers such as batch_cvo inside \text{}, where TeX does not allow a bare _,
+ *  and row breaks inside cases/matrices as a single "\ " (the "\\" lost a backslash on the way into the ODT) */
 const prepare = (tex: string) =>
-  tex.replace(/(?<!\\)%/g, '\\%').replace(/\\text\{([^{}]*)\}/g, (_, t: string) => `\\text{${t.replace(/(?<!\\)_/g, '\\_')}}`);
+  tex.replace(/(?<!\\)%/g, '\\%')
+    .replace(/\\text\{([^{}]*)\}/g, (_, t: string) => `\\text{${t.replace(/(?<!\\)_/g, '\\_')}}`)
+    .replace(/\\begin\{(cases|aligned|array|[pbvBV]?matrix)\}[\s\S]*?\\end\{\1\}/g, (env) => env.replace(/(?<!\\)\\ (?=\S)/g, '\\\\ '));
 
 const typeset = (tex: string, displayMode: boolean) =>
   katex.renderToString(prepare(tex), { displayMode, throwOnError: false });

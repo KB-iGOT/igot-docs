@@ -22,7 +22,7 @@ export function MermaidDiagram({ source }: { source: string }) {
   return (
     <div className="mfig">
       <div dangerouslySetInnerHTML={{ __html: svg }} />
-      <button type="button" className="mopen" onClick={() => setZoomed(true)}>
+      <button type="button" className="mzoom" onClick={() => setZoomed(true)}>
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5M11 8v6M8 11h6" /></svg>
         Zoom
       </button>
