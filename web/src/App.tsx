@@ -5,6 +5,7 @@ import { HubListPage } from './pages/HubListPage';
 import { FeaturePage } from './pages/FeaturePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PlatformOverviewPage } from './pages/PlatformOverviewPage';
+import { EtlAnalyticsPage } from './pages/EtlAnalyticsPage';
 
 /* Hash routing: the build is static files (GitHub Pages / any web server) with no server-side rewrites. */
 const router = createHashRouter([
@@ -13,6 +14,7 @@ const router = createHashRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: 'platform-overview', element: <PlatformOverviewPage /> },
+      { path: 'etl-analytics/:view?/:id?', element: <EtlAnalyticsPage /> },
       { path: 'hubs', element: <HubListPage /> },
       { path: 'hubs/:hubId', element: <HubListPage /> },
       { path: 'features/:featureId', element: <FeaturePage /> },

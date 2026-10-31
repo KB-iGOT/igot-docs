@@ -88,7 +88,11 @@ export function HomePage() {
             <span className={styles.overviewTxt}><b>Telemetry</b><span>Open the telemetry document on SharePoint.</span></span>
             <Icon name="external" size={16} strokeWidth={2.2} />
           </a>
-          <div className={styles.soon}><b className={styles.soonTitle}>ETL Analytics</b><span className={styles.soonTag}>Coming soon</span></div>
+          <Link to="/etl-analytics" className={styles.overview}>
+            <span className={styles.overviewIc}><Icon name="tree" size={22} /></span>
+            <span className={styles.overviewTxt}><b>ETL Analytics</b><span>Open the ETL Analytics page.</span></span>
+            <Icon name="arrowRight" size={16} strokeWidth={2.2} />
+          </Link>
         </div>
       </section>
       <ComingSoon title="Monitoring" sub="Health, alerting and operational monitoring of the platform." />

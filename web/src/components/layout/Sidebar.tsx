@@ -63,7 +63,7 @@ function Dropdown({ label, icon, items, pathname, nested = false }:
   );
 }
 
-/** Data Pipeline: a dropdown of Telemetry (an external document) and ETL Analytics (still to come). */
+/** Data Pipeline: a dropdown of Telemetry (an external document) and the ETL Analytics page. */
 function DataPipeline() {
   const [open, setOpen] = useState(true);
   return (
@@ -78,9 +78,9 @@ function DataPipeline() {
           <a href={TELEMETRY_URL} target="_blank" rel="noopener noreferrer" className={`${styles.item} ${styles.nestedItem}`}>
             <span>Telemetry</span><Icon name="external" size={13} strokeWidth={2} className={styles.ext} />
           </a>
-          <span className={`${styles.item} ${styles.nestedItem} ${styles.soon}`} title="Documentation coming soon">
-            <span>ETL Analytics</span><span className={styles.soonTag}>Soon</span>
-          </span>
+          <NavLink to="/etl-analytics" className={({ isActive }) => `${styles.item} ${styles.nestedItem} ${isActive ? styles.active : ''}`}>
+            <span>ETL Analytics</span>
+          </NavLink>
         </div>
       )}
     </div>
