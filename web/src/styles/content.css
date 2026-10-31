@@ -149,6 +149,8 @@
 .mdwrap .mermaid { background: #FFFFFF; border: 1px solid #00000014; border-radius: 12px; padding: 16px; margin: 0 0 18px; overflow-x: auto; text-align: center; }
 .mfig { position: relative; background: #FFFFFF; border: 1px solid #00000014; border-radius: 12px; margin: 0 0 18px; padding: 16px; overflow-x: auto; }
 .mfig > svg { display: block; max-width: none; height: auto; margin: 0 auto; }
+/* diagram labels take the colour Mermaid gives them (e.g. a classDef's color:#fff), not the paragraph colour above */
+.mdwrap .mfig foreignObject p, .mdwrap .mfig foreignObject li { color: inherit; }
 .mopen { position: absolute; top: 10px; right: 10px; display: inline-flex; align-items: center; gap: 7px; background: #1B4CA1; color: #FFFFFF; border: 0; border-radius: 99px; padding: 7px 15px; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px #1B4CA140; z-index: 2; }
 .mopen:hover { background: #194593; }
 .mopen svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; }

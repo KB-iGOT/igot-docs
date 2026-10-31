@@ -2,6 +2,7 @@ import { Fragment, useEffect, useMemo, useState } from 'react';
 import { marked, type Tokens, type TokensList } from 'marked';
 import { loadMarkdown } from '../../lib/docs';
 import { rewriteDocHtml } from '../../lib/docHtml';
+import '../../lib/math';
 import { MermaidDiagram } from './MermaidDiagram';
 import { DiagramModal } from './DiagramModal';
 
