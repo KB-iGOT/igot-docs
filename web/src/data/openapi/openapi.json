@@ -1,0 +1,3718 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "iGOT Karmayogi - Platform APIs",
+    "version": "0.1.0",
+    "description": "Derived from the iGOT docs (apis.md pages), the sunbird-devops Kong route map and the companion Postman collection. Paths use the Kong form `/api/...` unless noted; the browser form is `/apis/proxies/v8/...` via sunbird-cb-uiproxy.\n\nRequest bodies are minimal examples and responses are generic - NOT captured traffic. Schemas are intentionally loose (`type: object`) until verified per feature."
+  },
+  "servers": [
+    {
+      "url": "https://REPLACE-ME.example.gov.in",
+      "description": "Public host (Nginx -> uiproxy / Kong)"
+    }
+  ],
+  "security": [
+    {
+      "keycloakBearer": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "00 Health & Smoke (monitor-ready)",
+      "description": "Cheap, side-effect-free requests intended for Postman Monitors / blackbox parity. See MONITORING.md section 6."
+    },
+    {
+      "name": "01 Registration & Onboarding",
+      "description": "Public sign-up, department link/QR, SSO first login. Docs: learning-hub/user-onboarding."
+    },
+    {
+      "name": "02 Explore & Search",
+      "description": "Docs: explore-content, learning-hub/search."
+    },
+    {
+      "name": "03 Learning: Course, Enrolment, Progress",
+      "description": "Docs: learning-hub/course, my-assigned-courses, unenrollment-of-courses."
+    },
+    {
+      "name": "04 Blended Program (workflow)",
+      "description": "Docs: learning-hub/blended-program. Approval route is data (system_settings), not code."
+    },
+    {
+      "name": "05 Content Authoring Lifecycle (knowledge-platform)",
+      "description": "Docs: platform/content-lifecycle. Draft->Review->Live->Retired. Publish is asynchronous."
+    },
+    {
+      "name": "06 Events Hub (event/v4, eventset/v4)",
+      "description": "Paths are as documented; Kong prefix for event/eventset is unconfirmed - verify against kong-api defaults."
+    },
+    {
+      "name": "07 Competency Hub",
+      "description": "Two taxonomies coexist (see ADR-016). FRAC paths go through /apis/protected/v8 directly to frac-backend."
+    },
+    {
+      "name": "08 Karma Points, Wallet & Leaderboard",
+      "description": "Docs: learning-hub/karma-points, weekly-claps."
+    },
+    {
+      "name": "09 Training Plan (CB Plan)",
+      "description": "Docs: learning-hub/training-plan. v1 is largely superseded by v2/v3."
+    },
+    {
+      "name": "10 Discussion Hub",
+      "description": "Paths from docs (base shown without service prefix); verify gateway prefix in Kong route map."
+    },
+    {
+      "name": "11 Marketplace (partners)",
+      "description": "Docs: learning-hub/marketplace. Service prefixes are not fully traced - treat as templates."
+    },
+    {
+      "name": "12 AI CBP Tool (cbp-ai-service)",
+      "description": "Base URL variable `cbp_ai_url` already includes any /api/v1 prefix if required - the documented health route is /api/v1/health."
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "00 Health & Smoke (monitor-ready)"
+        ],
+        "summary": "search-service /health",
+        "description": "Liveness (HealthController.health). Internal URL - run from an in-cluster runner/monitor.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "search_service_health",
+        "security": [],
+        "servers": [
+          {
+            "url": "http://search-service:9000",
+            "description": "search-service (in-cluster only)"
+          }
+        ]
+      }
+    },
+    "/service/health": {
+      "get": {
+        "tags": [
+          "00 Health & Smoke (monitor-ready)"
+        ],
+        "summary": "search-service /service/health (ES dependency)",
+        "description": "Dependency health (Elasticsearch). Internal URL - use from in-cluster runner/monitor.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "search_service_service_health_ES_dependency",
+        "security": [],
+        "servers": [
+          {
+            "url": "http://search-service:9000",
+            "description": "search-service (in-cluster only)"
+          }
+        ]
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "tags": [
+          "00 Health & Smoke (monitor-ready)"
+        ],
+        "summary": "cbp-ai-service /api/v1/health",
+        "description": "Returns app version and UTC timestamp.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "cbp_ai_service_api_v1_health",
+        "security": [],
+        "servers": [
+          {
+            "url": "https://REPLACE-ME-cbp-ai",
+            "description": "cbp-ai-service"
+          }
+        ]
+      }
+    },
+    "/": {
+      "get": {
+        "tags": [
+          "00 Health & Smoke (monitor-ready)"
+        ],
+        "summary": "nlp-search / (welcome, NOT a real liveness check)",
+        "description": "`nlp-search` only has a welcome route; the Helm chart has no probes.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "nlp_search_welcome_NOT_a_real_liveness_check",
+        "security": [],
+        "servers": [
+          {
+            "url": "https://REPLACE-ME-nlp-search",
+            "description": "nlp-search service"
+          }
+        ]
+      }
+    },
+    "/api/user/registration/v1/getDeptDetails": {
+      "get": {
+        "tags": [
+          "00 Health & Smoke (monitor-ready)"
+        ],
+        "summary": "Public: department list",
+        "description": "Public, Redis-cached; good synthetic probe for the sign-up path.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Public_department_list",
+        "security": []
+      }
+    },
+    "/api/composite/v5/search": {
+      "post": {
+        "tags": [
+          "00 Health & Smoke (monitor-ready)"
+        ],
+        "summary": "Search v5 smoke",
+        "description": "Synthetic end-to-end probe of gateway -> search-service -> ES.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Search_v5_smoke",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {
+                    "primaryCategory": [
+                      "Course"
+                    ],
+                    "status": [
+                      "Live"
+                    ]
+                  },
+                  "limit": 1,
+                  "fields": [
+                    "name",
+                    "identifier"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/v1/email/approvedDomains": {
+      "get": {
+        "tags": [
+          "01 Registration & Onboarding"
+        ],
+        "summary": "Approved email domains",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Approved_email_domains",
+        "security": []
+      }
+    },
+    "/api/otp/ext/v1/generate": {
+      "post": {
+        "tags": [
+          "01 Registration & Onboarding"
+        ],
+        "summary": "Generate OTP (domain validated)",
+        "description": "Email domain must be approved. Used by web /public/signup.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Generate_OTP_domain_validated",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "key": "{{test_email}}",
+                  "type": "email"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/otp/v1/verify": {
+      "post": {
+        "tags": [
+          "01 Registration & Onboarding"
+        ],
+        "summary": "Verify OTP",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Verify_OTP",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "key": "{{test_email}}",
+                  "type": "email",
+                  "otp": "{{otp}}"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/user/registration/v1/register": {
+      "post": {
+        "tags": [
+          "01 Registration & Onboarding"
+        ],
+        "summary": "Submit registration",
+        "description": "Returns 202 with the registration record. Body shape simplified - confirm against portal payload in docs/learning-hub/user-onboarding/apis.md.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          },
+          "202": {
+            "description": "Accepted (asynchronous)"
+          }
+        },
+        "operationId": "Submit_registration",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "firstName": "Test",
+                "lastName": "User",
+                "email": "{{test_email}}",
+                "orgName": "{{org_name}}",
+                "regCode": ""
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/user/registration/v1/getUserRegistrationDetails": {
+      "get": {
+        "tags": [
+          "01 Registration & Onboarding"
+        ],
+        "summary": "Get registration by code",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Get_registration_by_code",
+        "parameters": [
+          {
+            "name": "regCode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "{{reg_code}}"
+          }
+        ],
+        "security": []
+      }
+    },
+    "/api/org/ext/v2/signup/search": {
+      "post": {
+        "tags": [
+          "01 Registration & Onboarding"
+        ],
+        "summary": "Org signup search",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Org_signup_search",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {
+                    "orgName": "{{org_name}}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/org/hierarchy/search": {
+      "post": {
+        "tags": [
+          "01 Registration & Onboarding"
+        ],
+        "summary": "Org hierarchy search",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Org_hierarchy_search",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/designation/search": {
+      "post": {
+        "tags": [
+          "01 Registration & Onboarding"
+        ],
+        "summary": "Designation search",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Designation_search",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/getNodalOfficer": {
+      "get": {
+        "tags": [
+          "01 Registration & Onboarding"
+        ],
+        "summary": "Nodal officer",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Nodal_officer",
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "{{org_id}}"
+          }
+        ]
+      }
+    },
+    "/api/customselfregistration": {
+      "post": {
+        "tags": [
+          "01 Registration & Onboarding"
+        ],
+        "summary": "Custom self-registration: create link/QR",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Custom_self_registration_create_link_QR",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "registrationStartDate": 1767225600000,
+                "registrationEndDate": 1798761600000,
+                "orgId": "{{org_id}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customselfregistration/listallqrs": {
+      "post": {
+        "tags": [
+          "01 Registration & Onboarding"
+        ],
+        "summary": "Custom self-registration: list QRs",
+        "description": "UI takes the LAST element as the latest.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Custom_self_registration_list_QRs",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "orgId": "{{org_id}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/composite/v3/search": {
+      "post": {
+        "tags": [
+          "02 Explore & Search"
+        ],
+        "summary": "Composite search v3",
+        "description": "Rejects filters.visibility=Private.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Composite_search_v3",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {
+                    "primaryCategory": [
+                      "Course"
+                    ]
+                  },
+                  "limit": 10
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/composite/v4/search": {
+      "post": {
+        "tags": [
+          "02 Explore & Search"
+        ],
+        "summary": "Composite search v4",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Composite_search_v4",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {
+                    "primaryCategory": [
+                      "Course"
+                    ]
+                  },
+                  "limit": 10
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/composite/v3/count": {
+      "post": {
+        "tags": [
+          "02 Explore & Search"
+        ],
+        "summary": "Search count",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Search_count",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {
+                    "primaryCategory": [
+                      "Course"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/composite/v4/bp/search": {
+      "post": {
+        "tags": [
+          "02 Explore & Search"
+        ],
+        "summary": "Blended program search (coordinator)",
+        "description": "Requires JWT `sub`; roles PROGRAM_COORDINATOR / BP_PROGRAM_TRAINER; server-filtered to caller.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Blended_program_search_coordinator",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {
+                    "primaryCategory": [
+                      "Blended Program"
+                    ]
+                  },
+                  "limit": 10
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nlp/search": {
+      "post": {
+        "tags": [
+          "02 Explore & Search"
+        ],
+        "summary": "NLP search (Gemini keyword extraction)",
+        "description": "Max query length 400 chars. Non-identical repeat results are expected.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "NLP_search_Gemini_keyword_extraction",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "query": "courses on public finance for new officers",
+                "synonyms": true
+              }
+            }
+          }
+        },
+        "security": [],
+        "servers": [
+          {
+            "url": "https://REPLACE-ME-nlp-search",
+            "description": "nlp-search service"
+          }
+        ]
+      }
+    },
+    "/api/learner/course/v1/batch/list": {
+      "post": {
+        "tags": [
+          "03 Learning: Course, Enrolment, Progress"
+        ],
+        "summary": "Batch list",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Batch_list",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {
+                    "courseId": "{{course_id}}",
+                    "status": [
+                      "0",
+                      "1",
+                      "2"
+                    ]
+                  },
+                  "sort_by": {
+                    "createdDate": "desc"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/course/v1/batch/read/{batch_id}": {
+      "get": {
+        "tags": [
+          "03 Learning: Course, Enrolment, Progress"
+        ],
+        "summary": "Batch read",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Batch_read",
+        "parameters": [
+          {
+            "name": "batch_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/learner/course/v1/enrol": {
+      "post": {
+        "tags": [
+          "03 Learning: Course, Enrolment, Progress"
+        ],
+        "summary": "Enrol (direct, no workflow)",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Enrol_direct_no_workflow",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "userId": "{{user_id}}",
+                  "courseId": "{{course_id}}",
+                  "batchId": "{{batch_id}}"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/learner/course/v4/user/enrollment/details/{user_id}": {
+      "get": {
+        "tags": [
+          "03 Learning: Course, Enrolment, Progress"
+        ],
+        "summary": "My enrolments (v4)",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "My_enrolments_v4",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/learner/course/v4/user/enrollment/details": {
+      "post": {
+        "tags": [
+          "03 Learning: Course, Enrolment, Progress"
+        ],
+        "summary": "Enrolment details for a program",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Enrolment_details_for_a_program",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "retiredCoursesEnabled": true,
+                  "courseId": [
+                    "{{course_id}}"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/content/v2/state/read": {
+      "post": {
+        "tags": [
+          "03 Learning: Course, Enrolment, Progress"
+        ],
+        "summary": "Content state read",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Content_state_read",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "userId": "{{user_id}}",
+                  "courseId": "{{course_id}}",
+                  "batchId": "{{batch_id}}",
+                  "contentIds": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/content/v2/state/update": {
+      "patch": {
+        "tags": [
+          "03 Learning: Course, Enrolment, Progress"
+        ],
+        "summary": "Content state update",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Content_state_update",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "userId": "{{user_id}}",
+                  "contents": [
+                    {
+                      "contentId": "{{content_id}}",
+                      "batchId": "{{batch_id}}",
+                      "courseId": "{{course_id}}",
+                      "status": 2
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/course/v2/unenroll": {
+      "post": {
+        "tags": [
+          "03 Learning: Course, Enrolment, Progress"
+        ],
+        "summary": "Unenrol (soft)",
+        "description": "Blocked once course status is COMPLETED.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Unenrol_soft",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "userId": "{{user_id}}",
+                  "courseId": "{{course_id}}",
+                  "batchId": "{{batch_id}}"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/extended/content/v1/read/{course_id}": {
+      "get": {
+        "tags": [
+          "03 Learning: Course, Enrolment, Progress"
+        ],
+        "summary": "Extended content read",
+        "description": "Blended Programs gain per-batch counters from Redis.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Extended_content_read",
+        "parameters": [
+          {
+            "name": "course_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/cohorts/course/batch/cert/download/{cert_id}": {
+      "get": {
+        "tags": [
+          "03 Learning: Course, Enrolment, Progress"
+        ],
+        "summary": "Certificate download",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Certificate_download",
+        "parameters": [
+          {
+            "name": "cert_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/user/rating": {
+      "post": {
+        "tags": [
+          "03 Learning: Course, Enrolment, Progress"
+        ],
+        "summary": "Rate content",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Rate_content",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "activityId": "{{course_id}}",
+                "activityType": "Course",
+                "rating": 5
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workflow/blendedprogram/enrol": {
+      "post": {
+        "tags": [
+          "04 Blended Program (workflow)"
+        ],
+        "summary": "Request a seat (enrol)",
+        "description": "Writes wf_status row ENROLL_IS_IN_PROGRESS and publishes to Kafka. Returns {message, data:{status, wfIds}}. Body simplified - see apis.md.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Request_a_seat_enrol",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "userId": "{{user_id}}",
+                  "applicationId": "{{batch_id}}",
+                  "courseId": "{{course_id}}",
+                  "batchId": "{{batch_id}}"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workflow/blendedprogram/unenrol": {
+      "post": {
+        "tags": [
+          "04 Blended Program (workflow)"
+        ],
+        "summary": "Withdraw / transition",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Withdraw_transition",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "userId": "{{user_id}}",
+                  "wfId": "{{wf_id}}",
+                  "action": "WITHDRAW",
+                  "applicationId": "{{batch_id}}"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workflow/blendedprogram/user/search": {
+      "post": {
+        "tags": [
+          "04 Blended Program (workflow)"
+        ],
+        "summary": "My requests",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "My_requests",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "applicationIds": [
+                  "{{batch_id}}"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/workflow/blendedprogram/enrol/status/count": {
+      "post": {
+        "tags": [
+          "04 Blended Program (workflow)"
+        ],
+        "summary": "Status counts per batch",
+        "description": "Cached ~1.8 s.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Status_counts_per_batch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "applicationIds": [
+                  "{{batch_id}}"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/course/v1/reenroll": {
+      "post": {
+        "tags": [
+          "04 Blended Program (workflow)"
+        ],
+        "summary": "Re-enrol inactive child course",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Re_enrol_inactive_child_course",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "userId": "{{user_id}}",
+                  "courseId": "{{course_id}}",
+                  "batchId": "{{batch_id}}"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/content/v3/create": {
+      "post": {
+        "tags": [
+          "05 Content Authoring Lifecycle (knowledge-platform)"
+        ],
+        "summary": "Create content",
+        "description": "Portals reach this via `action/content/v3/...` gateway alias.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Create_content",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "content": {
+                    "name": "Test Course",
+                    "code": "test.course",
+                    "mimeType": "application/vnd.ekstep.content-collection",
+                    "primaryCategory": "Course",
+                    "createdBy": "{{user_id}}",
+                    "organisation": [
+                      "{{org_name}}"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/content/v3/read/{content_id}": {
+      "get": {
+        "tags": [
+          "05 Content Authoring Lifecycle (knowledge-platform)"
+        ],
+        "summary": "Read content",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Read_content",
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "edit"
+          }
+        ]
+      }
+    },
+    "/api/action/content/v3/update/{content_id}": {
+      "patch": {
+        "tags": [
+          "05 Content Authoring Lifecycle (knowledge-platform)"
+        ],
+        "summary": "Update metadata",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Update_metadata",
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "content": {
+                    "versionKey": "{{version_key}}",
+                    "description": "updated"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/content/v3/hierarchy/{content_id}": {
+      "get": {
+        "tags": [
+          "05 Content Authoring Lifecycle (knowledge-platform)"
+        ],
+        "summary": "Hierarchy read",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Hierarchy_read",
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/action/content/v3/hierarchy/update": {
+      "patch": {
+        "tags": [
+          "05 Content Authoring Lifecycle (knowledge-platform)"
+        ],
+        "summary": "Hierarchy update",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Hierarchy_update",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "data": {
+                    "nodesModified": {},
+                    "hierarchy": {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/content/v3/review/{content_id}": {
+      "post": {
+        "tags": [
+          "05 Content Authoring Lifecycle (knowledge-platform)"
+        ],
+        "summary": "Send to review",
+        "description": "Refused while status = Processing.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Send_to_review",
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "content": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/content/v3/reject/{content_id}": {
+      "post": {
+        "tags": [
+          "05 Content Authoring Lifecycle (knowledge-platform)"
+        ],
+        "summary": "Reject review",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Reject_review",
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "content": {
+                    "rejectComment": "needs work"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/content/v3/publish/{content_id}": {
+      "post": {
+        "tags": [
+          "05 Content Authoring Lifecycle (knowledge-platform)"
+        ],
+        "summary": "Publish (async -> Kafka -> Flink)",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Publish_async_Kafka_Flink",
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "content": {
+                    "lastPublishedBy": "{{user_id}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/action/content/v3/retire/{content_id}": {
+      "delete": {
+        "tags": [
+          "05 Content Authoring Lifecycle (knowledge-platform)"
+        ],
+        "summary": "Retire",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Retire",
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/action/content/v3/discard/{content_id}": {
+      "delete": {
+        "tags": [
+          "05 Content Authoring Lifecycle (knowledge-platform)"
+        ],
+        "summary": "Discard draft",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Discard_draft",
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/event/v4/create": {
+      "post": {
+        "tags": [
+          "06 Events Hub (event/v4, eventset/v4)"
+        ],
+        "summary": "Create event",
+        "description": "Rejects client-supplied contentType.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Create_event",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "event": {
+                    "name": "Webinar",
+                    "startDateTime": "2026-12-01T10:00:00+05:30",
+                    "endDateTime": "2026-12-01T11:00:00+05:30"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/event/v4/update/{event_id}": {
+      "patch": {
+        "tags": [
+          "06 Events Hub (event/v4, eventset/v4)"
+        ],
+        "summary": "Update event",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Update_event",
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "event": {
+                    "versionKey": "{{version_key}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/event/v4/publish/{event_id}": {
+      "post": {
+        "tags": [
+          "06 Events Hub (event/v4, eventset/v4)"
+        ],
+        "summary": "Publish event",
+        "description": "Rejected if event belongs to an EventSet.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Publish_event",
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/event/v4/read/{event_id}": {
+      "get": {
+        "tags": [
+          "06 Events Hub (event/v4, eventset/v4)"
+        ],
+        "summary": "Read event",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Read_event",
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/eventset/v4/create": {
+      "post": {
+        "tags": [
+          "06 Events Hub (event/v4, eventset/v4)"
+        ],
+        "summary": "Create event set",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Create_event_set",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "event": {
+                    "name": "Series",
+                    "schedule": {
+                      "type": "Recurring",
+                      "value": []
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/eventset/v4/hierarchy/{eventset_id}": {
+      "get": {
+        "tags": [
+          "06 Events Hub (event/v4, eventset/v4)"
+        ],
+        "summary": "Event set hierarchy",
+        "description": "Live from Neo4j - no Cassandra cache.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Event_set_hierarchy",
+        "parameters": [
+          {
+            "name": "eventset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/eventset/v4/publish/{eventset_id}": {
+      "post": {
+        "tags": [
+          "06 Events Hub (event/v4, eventset/v4)"
+        ],
+        "summary": "Publish event set",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Publish_event_set",
+        "parameters": [
+          {
+            "name": "eventset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/framework/v1/read/kcmfinal_fw": {
+      "get": {
+        "tags": [
+          "07 Competency Hub"
+        ],
+        "summary": "Framework read (kcmfinal_fw)",
+        "description": "Served by knowledge-platform generic Framework API, NOT frac-backend.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Framework_read_kcmfinal_fw"
+      }
+    },
+    "/api/competency/v4/search": {
+      "post": {
+        "tags": [
+          "07 Competency Hub"
+        ],
+        "summary": "Competency search (legacy)",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Competency_search_legacy",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/browseByCompetency": {
+      "post": {
+        "tags": [
+          "07 Competency Hub"
+        ],
+        "summary": "Browse by competency v2",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Browse_by_competency_v2",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/competenciesByOrg/{org_id}": {
+      "get": {
+        "tags": [
+          "07 Competency Hub"
+        ],
+        "summary": "Competencies by org",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Competencies_by_org",
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/learner/v1/competency/read": {
+      "get": {
+        "tags": [
+          "07 Competency Hub"
+        ],
+        "summary": "Learner competency passbook",
+        "description": "Cassandra-backed, Redis-cached.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Learner_competency_passbook"
+      }
+    },
+    "/api/competencyTheme/search": {
+      "post": {
+        "tags": [
+          "07 Competency Hub"
+        ],
+        "summary": "Competency theme search",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Competency_theme_search",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apis/protected/v8/frac/searchNodes": {
+      "post": {
+        "tags": [
+          "07 Competency Hub"
+        ],
+        "summary": "FRAC search nodes (uiproxy -> frac-backend)",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "FRAC_search_nodes_uiproxy_frac_backend",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "searches": [
+                  {
+                    "type": "COMPETENCY",
+                    "field": "name",
+                    "keyword": "leadership"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apis/protected/v8/frac/getAllNodes/competencyarea": {
+      "get": {
+        "tags": [
+          "07 Competency Hub"
+        ],
+        "summary": "FRAC get all nodes",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "FRAC_get_all_nodes"
+      }
+    },
+    "/api/user/v1/extPatch": {
+      "post": {
+        "tags": [
+          "07 Competency Hub"
+        ],
+        "summary": "Patch profile competencies",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Patch_profile_competencies",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "userId": "{{user_id}}",
+                  "profileDetails": {
+                    "competencies": [],
+                    "desiredCompetencies": []
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/karmapoints/read": {
+      "post": {
+        "tags": [
+          "08 Karma Points, Wallet & Leaderboard"
+        ],
+        "summary": "Karma points read",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Karma_points_read",
+        "parameters": [
+          {
+            "name": "x-authenticated-userid",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identity header set by the gateway/uiproxy."
+          },
+          {
+            "name": "x-authenticated-user-orgid",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identity header set by the gateway/uiproxy."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "limit": 10,
+                "offset": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/karmapoints/user/course/read": {
+      "post": {
+        "tags": [
+          "08 Karma Points, Wallet & Leaderboard"
+        ],
+        "summary": "Course karma points",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Course_karma_points",
+        "parameters": [
+          {
+            "name": "x-authenticated-userid",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identity header set by the gateway/uiproxy."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {
+                    "contextType": "Course",
+                    "contextId": "{{course_id}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/claimkarmapoints": {
+      "post": {
+        "tags": [
+          "08 Karma Points, Wallet & Leaderboard"
+        ],
+        "summary": "Claim karma points",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Claim_karma_points",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "userId": "{{user_id}}",
+                "courseId": "{{course_id}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/totalkarmapoints": {
+      "post": {
+        "tags": [
+          "08 Karma Points, Wallet & Leaderboard"
+        ],
+        "summary": "Total karma points",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Total_karma_points",
+        "parameters": [
+          {
+            "name": "x-authenticated-userid",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identity header set by the gateway/uiproxy."
+          }
+        ]
+      }
+    },
+    "/api/v1/karmawallet/summary": {
+      "get": {
+        "tags": [
+          "08 Karma Points, Wallet & Leaderboard"
+        ],
+        "summary": "Wallet summary",
+        "description": "cb-ext direct path; Kong prefix unverified. Needs x-authenticated-user-token.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Wallet_summary"
+      }
+    },
+    "/api/v1/karmawallet/transactions": {
+      "post": {
+        "tags": [
+          "08 Karma Points, Wallet & Leaderboard"
+        ],
+        "summary": "Wallet transactions",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Wallet_transactions",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "startDate": "2026-01-01",
+                  "endDate": "2026-10-29",
+                  "type": "ALL"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/karmawallet/redeem": {
+      "post": {
+        "tags": [
+          "08 Karma Points, Wallet & Leaderboard"
+        ],
+        "summary": "Wallet redeem (202 PROCESSING)",
+        "description": "Errors: 400 INSUFFICIENT_KARMA_POINTS, 400 MONTHLY_CAP_EXCEEDED, 409 CONVERSION_REQUEST_IN_PROGRESS.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Wallet_redeem_202_PROCESSING",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "pointsToConvert": 10,
+                  "requestId": "{{$guid}}"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/karmawallet/redeem/status/{redeem_request_id}": {
+      "get": {
+        "tags": [
+          "08 Karma Points, Wallet & Leaderboard"
+        ],
+        "summary": "Wallet redeem status",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Wallet_redeem_status",
+        "parameters": [
+          {
+            "name": "redeem_request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/user/v2/insights": {
+      "post": {
+        "tags": [
+          "08 Karma Points, Wallet & Leaderboard"
+        ],
+        "summary": "Weekly claps / insights (W4)",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Weekly_claps_insights_W4",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {
+                    "mode": "W4"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cbplan/v1/create": {
+      "post": {
+        "tags": [
+          "09 Training Plan (CB Plan)"
+        ],
+        "summary": "Create plan v1 (DRAFT)",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Create_plan_v1_DRAFT",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "name": "Plan",
+                  "contentType": "Course"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cbplan/v1/update": {
+      "post": {
+        "tags": [
+          "09 Training Plan (CB Plan)"
+        ],
+        "summary": "Update plan",
+        "description": "Creator or MDO_LEADER only. On LIVE: name/assignmentTypeInfo/endDate/isApar only.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Update_plan",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "id": "{{cbplan_id}}",
+                  "name": "Plan renamed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cbplan/v1/publish": {
+      "post": {
+        "tags": [
+          "09 Training Plan (CB Plan)"
+        ],
+        "summary": "Publish plan",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Publish_plan",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "id": "{{cbplan_id}}"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cbplan/v1/read/{cbplan_id}": {
+      "get": {
+        "tags": [
+          "09 Training Plan (CB Plan)"
+        ],
+        "summary": "Read plan",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Read_plan",
+        "parameters": [
+          {
+            "name": "cbplan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/cbplan/v1/list": {
+      "post": {
+        "tags": [
+          "09 Training Plan (CB Plan)"
+        ],
+        "summary": "List plans (org)",
+        "description": "filters.status required.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "List_plans_org",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {
+                    "status": "LIVE"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cbplan/v1/user/list": {
+      "get": {
+        "tags": [
+          "09 Training Plan (CB Plan)"
+        ],
+        "summary": "My plans",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "My_plans"
+      }
+    },
+    "/api/cbplan/v1/archive": {
+      "delete": {
+        "tags": [
+          "09 Training Plan (CB Plan)"
+        ],
+        "summary": "Archive plan",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Archive_plan",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "id": "{{cbplan_id}}"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cbplan/v1/admin/requestcontent": {
+      "post": {
+        "tags": [
+          "09 Training Plan (CB Plan)"
+        ],
+        "summary": "Request content (still used by UI)",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Request_content_still_used_by_UI",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "contentName": "Need X",
+                  "orgId": "{{org_id}}"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cbplan/v2/create": {
+      "post": {
+        "tags": [
+          "09 Training Plan (CB Plan)"
+        ],
+        "summary": "Create plan v2",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Create_plan_v2",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "name": "Plan v2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cbplan/v2/aicbp/create": {
+      "post": {
+        "tags": [
+          "09 Training Plan (CB Plan)"
+        ],
+        "summary": "AI-CBP create on behalf of user",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "AI_CBP_create_on_behalf_of_user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "userId": "{{user_id}}"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/discussion/create": {
+      "post": {
+        "tags": [
+          "10 Discussion Hub"
+        ],
+        "summary": "Create discussion",
+        "description": "Rate-limited; caller must be active community member. Gateway prefix unverified.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Create_discussion",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "communityId": "{{community_id}}",
+                "title": "Q",
+                "description": "text"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/discussion/read/{discussion_id}": {
+      "get": {
+        "tags": [
+          "10 Discussion Hub"
+        ],
+        "summary": "Read discussion",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Read_discussion",
+        "parameters": [
+          {
+            "name": "discussion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/discussion/search": {
+      "post": {
+        "tags": [
+          "10 Discussion Hub"
+        ],
+        "summary": "Search discussions",
+        "description": "Forces isActive=true, isProfane=false.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Search_discussions",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {
+                    "communityId": "{{community_id}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/discussion/communityFeed": {
+      "post": {
+        "tags": [
+          "10 Discussion Hub"
+        ],
+        "summary": "Community feed",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Community_feed",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "communityId": "{{community_id}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/discussion/answerPosts": {
+      "post": {
+        "tags": [
+          "10 Discussion Hub"
+        ],
+        "summary": "Answer post",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Answer_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "parentDiscussionId": "{{discussion_id}}",
+                "answer": "text"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/discussion/report": {
+      "post": {
+        "tags": [
+          "10 Discussion Hub"
+        ],
+        "summary": "Report",
+        "description": "Auto-suspends at 5 reporters.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Report",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "type": "question",
+                "id": "{{discussion_id}}",
+                "reason": "spam"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/discussion/enrichData": {
+      "post": {
+        "tags": [
+          "10 Discussion Hub"
+        ],
+        "summary": "Enrich data",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Enrich_data",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "discussionIds": [
+                  "{{discussion_id}}"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/marketplace/v1/search": {
+      "post": {
+        "tags": [
+          "11 Marketplace (partners)"
+        ],
+        "summary": "Partner search",
+        "description": "ES index content_provider_alias. Prefix unverified.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Partner_search",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "request": {
+                  "filters": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/marketplace/v1/read/{partner_id}": {
+      "get": {
+        "tags": [
+          "11 Marketplace (partners)"
+        ],
+        "summary": "Partner read",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Partner_read",
+        "parameters": [
+          {
+            "name": "partner_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/marketplace/v1/readbypartnercode/{partner_code}": {
+      "get": {
+        "tags": [
+          "11 Marketplace (partners)"
+        ],
+        "summary": "Partner by code",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Partner_by_code",
+        "parameters": [
+          {
+            "name": "partner_code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/marketplace/registration/v1/create": {
+      "post": {
+        "tags": [
+          "11 Marketplace (partners)"
+        ],
+        "summary": "Registration create",
+        "description": "Self-registration; status PENDING.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Registration_create",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "orgName": "X",
+                "email": "{{test_email}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/marketplace/registration/v1/read": {
+      "get": {
+        "tags": [
+          "11 Marketplace (partners)"
+        ],
+        "summary": "Registration lookup (id + email)",
+        "description": "Requires BOTH id and email.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Registration_lookup_id_email",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "{{reg_id}}"
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "{{test_email}}"
+          }
+        ]
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "12 AI CBP Tool (cbp-ai-service)"
+        ],
+        "summary": "Login",
+        "description": "Form login; returns JWT access+refresh.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "username": "{{ai_user}}",
+                "password": "{{ai_password}}"
+              }
+            }
+          }
+        },
+        "security": [],
+        "servers": [
+          {
+            "url": "https://REPLACE-ME-cbp-ai",
+            "description": "cbp-ai-service"
+          }
+        ]
+      }
+    },
+    "/refresh": {
+      "post": {
+        "tags": [
+          "12 AI CBP Tool (cbp-ai-service)"
+        ],
+        "summary": "Refresh",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Refresh",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "refresh_token": "{{ai_refresh}}"
+              }
+            }
+          }
+        },
+        "security": [],
+        "servers": [
+          {
+            "url": "https://REPLACE-ME-cbp-ai",
+            "description": "cbp-ai-service"
+          }
+        ]
+      }
+    },
+    "/state-center": {
+      "get": {
+        "tags": [
+          "12 AI CBP Tool (cbp-ai-service)"
+        ],
+        "summary": "State centres",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "State_centres",
+        "security": [],
+        "servers": [
+          {
+            "url": "https://REPLACE-ME-cbp-ai",
+            "description": "cbp-ai-service"
+          }
+        ]
+      }
+    },
+    "/roles": {
+      "get": {
+        "tags": [
+          "12 AI CBP Tool (cbp-ai-service)"
+        ],
+        "summary": "Roles list (admin)",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Roles_list_admin",
+        "security": [],
+        "servers": [
+          {
+            "url": "https://REPLACE-ME-cbp-ai",
+            "description": "cbp-ai-service"
+          }
+        ]
+      }
+    },
+    "/users/me": {
+      "get": {
+        "tags": [
+          "12 AI CBP Tool (cbp-ai-service)"
+        ],
+        "summary": "Current user",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Current_user",
+        "security": [],
+        "servers": [
+          {
+            "url": "https://REPLACE-ME-cbp-ai",
+            "description": "cbp-ai-service"
+          }
+        ]
+      }
+    },
+    "/logout": {
+      "post": {
+        "tags": [
+          "12 AI CBP Tool (cbp-ai-service)"
+        ],
+        "summary": "Logout",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Missing/invalid token"
+          },
+          "403": {
+            "description": "Role not permitted"
+          }
+        },
+        "operationId": "Logout",
+        "security": [],
+        "servers": [
+          {
+            "url": "https://REPLACE-ME-cbp-ai",
+            "description": "cbp-ai-service"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "keycloakBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Keycloak-issued access token."
+      }
+    }
+  }
+}

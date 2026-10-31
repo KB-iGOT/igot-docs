@@ -26,16 +26,6 @@ export function SectionHead({ title, sub, to, more }: { title: string; sub: stri
   );
 }
 
-/** A home-page section whose documentation is still to come. */
-function ComingSoon({ title, sub }: { title: string; sub: string }) {
-  return (
-    <section className={styles.section}>
-      <SectionHead title={title} sub={sub} />
-      <div className={styles.soon}><span className={styles.soonTag}>Coming soon</span> Documentation for this section will be added soon.</div>
-    </section>
-  );
-}
-
 /** Start page, in the agreed order: Platform Overview, System Architecture, Platform Hubs,
  *  Platform Features, API Documentation, Data Pipeline, Monitoring. */
 export function HomePage() {
@@ -86,7 +76,14 @@ export function HomePage() {
         <EntryList entries={featureEntries} />
       </section>
 
-      <ComingSoon title="API Documentation" sub="The platform's APIs: gateway routing, contracts and examples." />
+      <section className={styles.section}>
+        <SectionHead title="API Documentation" sub="The platform's APIs: gateway routing, contracts and examples." />
+        <Link to="/api-docs" className={styles.overview}>
+          <span className={styles.overviewIc}><Icon name="guide" size={22} /></span>
+          <span className={styles.overviewTxt}><b>API Documentation</b><span>Open the API documentation page.</span></span>
+          <Icon name="arrowRight" size={16} strokeWidth={2.2} />
+        </Link>
+      </section>
       <section className={styles.section}>
         <SectionHead title="Data Pipeline" sub="How platform data flows through ingestion, processing and reporting." />
         <div className={styles.pipeline}>

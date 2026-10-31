@@ -92,15 +92,6 @@ interface Props {
   onNavigate: () => void;
 }
 
-/** A top-level section whose documentation is still to come: listed, but not a link. */
-function Soon({ label, icon }: { label: string; icon: IconName }) {
-  return (
-    <span className={`${styles.item} ${styles.soon}`} title="Documentation coming soon">
-      <Icon name={icon} /><span>{label}</span><span className={styles.soonTag}>Soon</span>
-    </span>
-  );
-}
-
 /** Platform navigation, in the home page's order: Home, Platform Overview, System Architecture,
  *  the platform hubs, the Features hub, API Documentation, Data Pipeline and Monitoring. */
 export function Sidebar({ open, onNavigate }: Props) {
@@ -138,7 +129,7 @@ export function Sidebar({ open, onNavigate }: Props) {
       </Group>
 
       <div className={styles.group}>
-        <Soon label="API Documentation" icon="guide" />
+        <NavLink to="/api-docs" className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}><Icon name="guide" /><span>API Documentation</span></NavLink>
         <DataPipeline />
         <NavLink to="/monitoring" className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}><Icon name="search" /><span>Monitoring</span></NavLink>
       </div>
