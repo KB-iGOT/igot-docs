@@ -1160,6 +1160,173 @@
     ]
   },
   {
+    "id": "moderatedprogram",
+    "title": "Moderated Program",
+    "summary": "A Moderated Program is an \"MDO Specific\" program restricted to the ministries, departments and organisations it targets, optionally only to Verified Karmayogi profiles: its child courses must share the program's MDOs, coordinators run it through either one open batch or closed batches, search and direct links are gated for everyone else, and enrolment cascades to the child courses.",
+    "icon": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"></rect><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"></path><path d=\"M9 16h6\"></path>",
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-program/index.md"
+        }
+      },
+      {
+        "key": "links",
+        "label": "Key Links",
+        "source": {
+          "type": "links",
+          "groups": [
+            {
+              "title": "Product Requirements Document (PRD)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "KB_BRD_CP Redesign",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/21332163/KB_BRD_CP+Redesign"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB_FRS_CP Redesign",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/22217482/KB_FRS_CP+Redesign"
+                }
+              ]
+            },
+            {
+              "title": "Software Requirements Specification (SRS)",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Karma Programs and Learner Homepage enhancements",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/87359527/SRS+-+Karma+Programs+and+Learner+Homepage+enhancements"
+                }
+              ]
+            },
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-1936",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1936"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8819",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8819"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-3756",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-3756"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-452",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-452"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1945",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1945"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1946",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1946"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1950",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1950"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7067",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7067"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9603",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9603"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9333",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9333"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9337",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9337"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-4493",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-4493"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-program/srs.md"
+        }
+      },
+      {
+        "key": "context",
+        "label": "Context Diagrams",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-program/context-diagram.md"
+        }
+      },
+      {
+        "key": "hld",
+        "label": "HLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-program/hld.md"
+        }
+      },
+      {
+        "key": "lld",
+        "label": "LLD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-program/lld.md"
+        }
+      },
+      {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-program/sdd.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/moderated-program/use-cases.md"
+        }
+      }
+    ]
+  },
+  {
     "id": "curated",
     "title": "Curated Program",
     "summary": "A Curated Program bundles live courses into one Level-2 learning path: creators assemble it in the Content Portal, it passes review and SPV publishing with an auto-created open batch, and learners enrol once, progress through the child courses and, where configured, unlock a gated final program assessment before program certification.",
