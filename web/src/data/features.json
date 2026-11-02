@@ -3408,24 +3408,436 @@
   {
     "id": "search",
     "title": "Search",
-    "summary": "Platform-wide search: an Elasticsearch-backed content/people/community search fronted by every portal and the mobile app, plus an independent LLM keyword-extraction step that two of five clients call before they search.",
+    "summary": "Search is the discovery backbone of iGOT Karmayogi across the SPV, MDO and CBP portals and the learner portal and mobile app: NLP-assisted, cached search over content, events and people, with portal-specific listings, filters and sorting, and indexing fed from the systems of record.",
     "icon": "<circle cx=\"11\" cy=\"11\" r=\"6.5\"></circle><path d=\"M16 16l4.5 4.5\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "search/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "learning-hub/search/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
+        "source": {
+          "type": "links",
+          "groups": [
+            {
+              "title": "SPV Portal",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-8979",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8979"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7919",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7919"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10562",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10562"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10563",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10563"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10564",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10564"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10565",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10565"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10566",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10566"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9794",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9794"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9738",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9738"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7920",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7920"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7053",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7053"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-5134",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-5134"
+                }
+              ]
+            },
+            {
+              "title": "SPV Portal — PRD",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Org Search Public API Registration Page API Contract",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/616497179/Org+Search+Public+API+Registration+Page+API+Contract"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Search - Inconsistencies",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/773586947/Search+-+Inconsistencies"
+                }
+              ]
+            },
+            {
+              "title": "MDO Portal",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-11175",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11175"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11176",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11176"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11177",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11177"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11178",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11178"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11183",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11183"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11184",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11184"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11185",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11185"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11186",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11186"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11188",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11188"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10579",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10579"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10581",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10581"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10584",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10584"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-3620",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-3620"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1684",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1684"
+                }
+              ]
+            },
+            {
+              "title": "MDO Portal — PRD",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Q9 MDO Search and Listing",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/514916410/Q9+MDO+Search+and+Listing"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q9 BRD Search Sorting Filters MDO Portal",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/423264465/Q9+BRD+Search+Sorting+Filters+MDO+Portal"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q9 FRS Search Sorting Filters MDO Portal",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/423264475/Q9+FRS+Search+Sorting+Filters+MDO+Portal"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q9 KB-8978 Search Sorting Filters MDO Portal",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/423198847/Q9+KB-8978+Search+Sorting+Filters+MDO+Portal"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Search Sorting Filters update-MDO Portal",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/KQAS/pages/503612156/Search+Sorting+Filters+update-MDO+Portal"
+                }
+              ]
+            },
+            {
+              "title": "CBP Portal",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-8980",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8980"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11044",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11044"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11045",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11045"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11046",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11046"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11291",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11291"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2479",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2479"
+                }
+              ]
+            },
+            {
+              "title": "CBP Portal — PRD",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Q9 CBP Search and Listing",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/576323585/Q9+CBP+Search+and+Listing"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q10 BRD Search Sorting Filters Content Portal",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/468647941/Q10+BRD+Search+Sorting+Filters+Content+Portal"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q10 KB-8980 Search Sorting Filters Content Portal",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/468615170/Q10+KB-8980+Search+Sorting+Filters+Content+Portal"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "CBP Portal- Search Sorting",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/KQAS/pages/560365572/CBP+Portal-+Search+Sorting"
+                }
+              ]
+            },
+            {
+              "title": "Learner Portal & Mobile App",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-14937",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14937"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7854",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7854"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15545",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15545"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7869",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7869"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7870",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7870"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7871",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7871"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7872",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7872"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7873",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7873"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7874",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7874"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8701",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8701"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8825",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8825"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10624",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10624"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8487",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8487"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9323",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9323"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9680",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9680"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8926",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8926"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12837",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12837"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9349",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9349"
+                }
+              ]
+            },
+            {
+              "title": "Learner Portal & Mobile App — PRD",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "Q7 BRD Search Listing",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/295108609/Q7+BRD+Search+Listing"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q7 FRS Search Listing",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/311296099/Q7+FRS+Search+Listing"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Search listing",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/351862785/SRS+-+Search+listing"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-7854 Q7 Search Recommendation Learner Portal",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/264503335/KB-7854+Q7+Search+Recommendation+Learner+Portal"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-7858 - Q7 Search Recommendation Learner Portal",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/290488347/KB-7858+-+Q7+Search+Recommendation+Learner+Portal"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-3494 Q4 Platform Search Search Bar and Search Page enhancements",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/69599499/KB-3494+Q4+Platform+Search+Search+Bar+and+Search+Page+enhancements"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Search Listing- Learner Portal",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/KQAS/pages/357138552/Search+Listing-+Learner+Portal"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Search Listing Recent Searches",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/KQAS/pages/414613510/Search+Listing+Recent+Searches"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "NLP Search",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/334725526/NLP+Search"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "NLP Search Deployment Guide",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/338853924/NLP+Search+Deployment+Guide"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Content Search Functionality in iGOT",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/46301539/Content+Search+Functionality+in+iGOT"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
         "source": {
           "type": "markdown",
-          "path": "learning-hub/search/use-cases.md"
+          "path": "learning-hub/search/srs.md"
         }
       },
       {
@@ -3438,7 +3850,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "learning-hub/search/context-diagram.md"
@@ -3461,8 +3873,17 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/search/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/search/operations-manual.md"
@@ -3471,9 +3892,18 @@
       {
         "key": "asbuilt",
         "label": "As-Built",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "learning-hub/search/as-built-requirements.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "markdown",
+          "path": "learning-hub/search/use-cases.md"
         }
       }
     ]
@@ -4081,43 +4511,486 @@
     ]
   },
   {
-    "id": "useronboarding",
-    "title": "User Onboarding",
-    "summary": "How a person gets an account — public sign-up, a department's registration link or QR code, an admin adding them, or government single sign-on — and the admin steps behind it. Registering submits a request; the account is created afterwards.",
-    "icon": "<circle cx=\"9.5\" cy=\"8\" r=\"3.5\"></circle><path d=\"M3 20c0-3.3 2.9-6 6.5-6s6.5 2.7 6.5 6\"></path><path d=\"M19 8v6M16 11h6\"></path>",
+    "id": "registration",
+    "title": "Registration",
+    "summary": "Registration is the identity and organisational onboarding gateway of iGOT Karmayogi: how civil servants, ministries and state cadres, non-government volunteers and marketplace training partners enter the platform, through self-registration, custom registration links and QR codes, admin creation and bulk upload, with approval workflows and e-HRMS linkage.",
+    "icon": "<circle cx=\"9\" cy=\"8\" r=\"3.5\"></circle><path d=\"M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5\"></path><path d=\"M18 8v6M15 11h6\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "useronboarding/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "registration/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "useronboarding/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Epics (17)",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-11937",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11937"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11810",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11810"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9250",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9250"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8561",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8561"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8336",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8336"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8017",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8017"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7897",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7897"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6187",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6187"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-4966",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-4966"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1678",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1678"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-949",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-949"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-806",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-806"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-438",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-438"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-407",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-407"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-396",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-396"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-523",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-523"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-521",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-521"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-13968",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13968"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9959",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9959"
+                }
+              ]
+            },
+            {
+              "title": "User Stories (41) — Q10 – Q12 Releases",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-13988",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-13988"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12283",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12283"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12113",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12113"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-12036",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-12036"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11986",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11986"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-11918",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11918"
+                }
+              ]
+            },
+            {
+              "title": "User Stories (41) — Q6 – Q9 Releases",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-11063",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-11063"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10574",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10574"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9251",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9251"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8582",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8582"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8581",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8581"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8081",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8081"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7127",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7127"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7056",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7056"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7054",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7054"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7027",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7027"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7026",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7026"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-7025",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-7025"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6423",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6423"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6422",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6422"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6421",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6421"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-6188",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6188"
+                }
+              ]
+            },
+            {
+              "title": "User Stories (41) — Q2 – Q4 Releases",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-5321",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-5321"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-14252",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-14252"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1371",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1371"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1152",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1152"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-814",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-814"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-813",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-813"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-657",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-657"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-450",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-450"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-449",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-449"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-439",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-439"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-437",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-437"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-358",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-358"
+                }
+              ]
+            },
+            {
+              "title": "User Stories (41) — KBE Project Stories",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KBE-533",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-533"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-143",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-143"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-118",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-118"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-114",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-114"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-108",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-108"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-107",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-107"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KBE-98",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KBE-98"
+                }
+              ]
+            },
+            {
+              "title": "Related Initiatives & New Features",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-6271",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-6271"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-2185",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-2185"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1316",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1316"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1313",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1313"
+                }
+              ]
+            },
+            {
+              "title": "Specifications & Technical Architecture",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Custom self registration",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/244809765/SRS+-+Custom+self+registration"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Q10 Marketplace Marketplace Partner Onboarding on iGOT via Self-Registration",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/688193565/Q10+Marketplace+Marketplace+Partner+Onboarding+on+iGOT+via+Self-Registration"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Org Search Public API Registration Page API Contract",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/616497179/Org+Search+Public+API+Registration+Page+API+Contract"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Custom Self Registration APIs",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/228818947/Custom+Self+Registration+APIs"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Sprint 19 - Custom Registration",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/221446145/Sprint+19+-+Custom+Registration"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "User Creation API Places and API called",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/198279170/User+Creation+API+Places+and+API+called"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Market place SSO integration and partner registration",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/605093889/Market+place+SSO+integration+and+partner+registration"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Custom Self Registration Workflow V1.0",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/~71202073eb0a87e5564c1bbf4417dce4389ff0/pages/198869003/Custom+Self+Registration+Workflow+V1.0"
+                }
+              ]
+            },
+            {
+              "title": "Product Requirements & UX Documentation",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "KB-8017 Q7 Enhancement Data Tracking User registration",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/273743917/KB-8017+Q7+Enhancement+Data+Tracking+User+registration"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-7897 Q7 Self Registration Page Learner Portal",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/264438795/KB-7897+Q7+Self+Registration+Page+Learner+Portal"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "KB-6187 Custom Self registration URL",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/236912644/KB-6187+Custom+Self+registration+URL"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Self registration",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/160202843/Self+registration"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Onboarding issues -Self-Registration",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/144834600/Onboarding+issues+-Self-Registration"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Onboarding process",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/~6023c38698875800688faaac/pages/161317272/Onboarding+process"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Self-Registration User Messaging",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/9142460/Self-Registration+User+Messaging"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "01 UI UX Review - 1st-time user Onboarding",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TPT/pages/9699329/01+UI+UX+Review+-+1st-time+user+Onboarding"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
         }
       },
       {
-        "key": "apis",
-        "label": "APIs",
+        "key": "srs",
+        "label": "SRS",
         "source": {
           "type": "markdown",
-          "path": "learning-hub/user-onboarding/apis.md"
+          "path": "registration/srs.md"
         }
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
-          "path": "learning-hub/user-onboarding/context-diagram.md"
+          "path": "registration/context-diagram.md"
         }
       },
       {
@@ -4125,7 +4998,7 @@
         "label": "HLD",
         "source": {
           "type": "markdown",
-          "path": "learning-hub/user-onboarding/hld.md"
+          "path": "registration/hld.md"
         }
       },
       {
@@ -4133,97 +5006,23 @@
         "label": "LLD",
         "source": {
           "type": "markdown",
-          "path": "learning-hub/user-onboarding/lld.md"
+          "path": "registration/lld.md"
         }
       },
       {
-        "key": "ops",
-        "label": "Operations Manual",
+        "key": "sdd",
+        "label": "SDD",
         "source": {
           "type": "markdown",
-          "path": "learning-hub/user-onboarding/operations-manual.md"
-        }
-      },
-      {
-        "key": "asbuilt",
-        "label": "As-Built",
-        "source": {
-          "type": "markdown",
-          "path": "learning-hub/user-onboarding/as-built-requirements.md"
-        }
-      }
-    ]
-  },
-  {
-    "id": "spvregistration",
-    "title": "SPV & Admin Registration",
-    "summary": "The platform-owner side of onboarding, done from the SPV / super-admin portal: creating organisations, putting their first administrators in place, publishing registration links, and approving requests for new organisations, designations and email domains.",
-    "icon": "<path d=\"M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6z\"></path><path d=\"M12 9v6M9 12h6\"></path>",
-    "tabs": [
-      {
-        "key": "overview",
-        "label": "Overview",
-        "source": {
-          "type": "html",
-          "file": "spvregistration/overview.html",
-          "layout": "oneCol"
+          "path": "registration/sdd.md"
         }
       },
       {
         "key": "usecases",
-        "label": "Use Cases",
-        "source": {
-          "type": "html",
-          "file": "spvregistration/usecases.html",
-          "layout": "oneCol"
-        }
-      },
-      {
-        "key": "apis",
-        "label": "APIs",
+        "label": "User Manual",
         "source": {
           "type": "markdown",
-          "path": "learning-hub/spv-admin-registration/apis.md"
-        }
-      },
-      {
-        "key": "context",
-        "label": "Context",
-        "source": {
-          "type": "markdown",
-          "path": "learning-hub/spv-admin-registration/context-diagram.md"
-        }
-      },
-      {
-        "key": "hld",
-        "label": "HLD",
-        "source": {
-          "type": "markdown",
-          "path": "learning-hub/spv-admin-registration/hld.md"
-        }
-      },
-      {
-        "key": "lld",
-        "label": "LLD",
-        "source": {
-          "type": "markdown",
-          "path": "learning-hub/spv-admin-registration/lld.md"
-        }
-      },
-      {
-        "key": "ops",
-        "label": "Operations Manual",
-        "source": {
-          "type": "markdown",
-          "path": "learning-hub/spv-admin-registration/operations-manual.md"
-        }
-      },
-      {
-        "key": "asbuilt",
-        "label": "As-Built",
-        "source": {
-          "type": "markdown",
-          "path": "learning-hub/spv-admin-registration/as-built-requirements.md"
+          "path": "registration/use-cases.md"
         }
       }
     ]
@@ -5722,80 +6521,6 @@
     ]
   },
   {
-    "id": "bulkregistration",
-    "title": "Bulk Registration",
-    "summary": "Uploading a CSV of new users to create many accounts at once — except the platform actually has three independent, largely disconnected implementations of this, and the backend endpoint named for \"bulk create\" creates exactly one user per call.",
-    "icon": "<path d=\"M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2\"></path><circle cx=\"10\" cy=\"7\" r=\"4\"></circle><path d=\"M19 8v6M22 11h-6\"></path>",
-    "tabs": [
-      {
-        "key": "overview",
-        "label": "Overview",
-        "source": {
-          "type": "html",
-          "file": "bulkregistration/overview.html",
-          "layout": "oneCol"
-        }
-      },
-      {
-        "key": "usecases",
-        "label": "Use Cases",
-        "source": {
-          "type": "html",
-          "file": "bulkregistration/usecases.html",
-          "layout": "oneCol"
-        }
-      },
-      {
-        "key": "apis",
-        "label": "APIs",
-        "source": {
-          "type": "markdown",
-          "path": "learning-hub/bulk-registration/apis.md"
-        }
-      },
-      {
-        "key": "context",
-        "label": "Context",
-        "source": {
-          "type": "markdown",
-          "path": "learning-hub/bulk-registration/context-diagram.md"
-        }
-      },
-      {
-        "key": "hld",
-        "label": "HLD",
-        "source": {
-          "type": "markdown",
-          "path": "learning-hub/bulk-registration/hld.md"
-        }
-      },
-      {
-        "key": "lld",
-        "label": "LLD",
-        "source": {
-          "type": "markdown",
-          "path": "learning-hub/bulk-registration/lld.md"
-        }
-      },
-      {
-        "key": "ops",
-        "label": "Operations Manual",
-        "source": {
-          "type": "markdown",
-          "path": "learning-hub/bulk-registration/operations-manual.md"
-        }
-      },
-      {
-        "key": "asbuilt",
-        "label": "As-Built",
-        "source": {
-          "type": "markdown",
-          "path": "learning-hub/bulk-registration/as-built-requirements.md"
-        }
-      }
-    ]
-  },
-  {
     "id": "weeklyclaps",
     "title": "Weekly Claps",
     "summary": "Weekly Claps is the learner engagement streak on the home page: a learner earns a clap for every week with at least 60 minutes of platform time, consecutive weeks build a streak that resets after a missed week, and a nightly batch job computes it from telemetry, keeps a rolling four-week history and triggers in-app review prompts for engaged learners.",
@@ -6832,25 +7557,231 @@
   {
     "id": "orghierarchy",
     "title": "Organisation Hierarchy",
-    "summary": "How a ministry or state lays out the organisations under it as a tree, up to ten levels deep — edited node by node in a tree view or loaded in one go from a spreadsheet — so the rest of the platform can answer \"who sits under whom\".",
+    "summary": "Organisation Hierarchy models Ministries, Departments and Organisations as a multi-level administrative tree, up to 10 levels, maintained by SPV and MDO administrators node by node or in bulk, compiled by the Sunbird framework service and consumed across the portals and reporting.",
     "icon": "<rect x=\"9\" y=\"3\" width=\"6\" height=\"4\" rx=\"1\"></rect><rect x=\"3\" y=\"17\" width=\"6\" height=\"4\" rx=\"1\"></rect><rect x=\"15\" y=\"17\" width=\"6\" height=\"4\" rx=\"1\"></rect><path d=\"M12 7v4M6 17v-3h12v3\"></path>",
     "tabs": [
       {
         "key": "overview",
         "label": "Overview",
         "source": {
-          "type": "html",
-          "file": "orghierarchy/overview.html",
-          "layout": "oneCol"
+          "type": "markdown",
+          "path": "org-hierarchy/index.md"
         }
       },
       {
-        "key": "usecases",
-        "label": "Use Cases",
+        "key": "links",
+        "label": "Key Links",
         "source": {
-          "type": "html",
-          "file": "orghierarchy/usecases.html",
-          "layout": "oneCol"
+          "type": "links",
+          "groups": [
+            {
+              "title": "Feature Specification",
+              "links": [
+                {
+                  "kind": "Jira",
+                  "label": "KB-10500",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10500"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10501",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10501"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10502",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10502"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8975",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8975"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8018",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8018"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8441",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8441"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-4441",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-4441"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10513",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10513"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10512",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10512"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10514",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10514"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10515",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10515"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10533",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10533"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10534",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10534"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10535",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10535"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10574",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10574"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10575",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10575"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10576",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10576"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10578",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10578"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9033",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9033"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9197",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9197"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9737",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9737"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9738",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9738"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9740",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9740"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9790",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9790"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9795",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9795"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-9801",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-9801"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-15967",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-15967"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-10577",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-10577"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-8442",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-8442"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-5057",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-5057"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-1312",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-1312"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-838",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-838"
+                },
+                {
+                  "kind": "Jira",
+                  "label": "KB-428",
+                  "href": "https://karmayogibharat.atlassian.net/browse/KB-428"
+                }
+              ]
+            },
+            {
+              "title": "PRD",
+              "links": [
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Organisation Hierarchy MDO Admin MDO Leader MDO Portal",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/517931009/SRS+-+Organisation+Hierarchy+MDO+Admin+MDO+Leader+MDO+Portal"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "SRS - Organisation Hierarchy Update SPV Admin SPV State AdminSPV Portal",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/TES/pages/416317441/SRS+-+Organisation+Hierarchy+Update+SPV+Admin+SPV+State+AdminSPV+Portal"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "L0 Hierarchy Management- MDO Portal",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/KQAS/pages/503612134/L0+Hierarchy+Management-+MDO+Portal"
+                },
+                {
+                  "kind": "Confluence",
+                  "label": "Organization Hierarchy update SPV Admin",
+                  "href": "https://karmayogibharat.atlassian.net/wiki/spaces/KQAS/pages/417071170/Organization+Hierarchy+update+SPV+Admin"
+                }
+              ]
+            },
+            {
+              "title": "API Links",
+              "links": []
+            }
+          ]
+        }
+      },
+      {
+        "key": "srs",
+        "label": "SRS",
+        "source": {
+          "type": "markdown",
+          "path": "org-hierarchy/srs.md"
         }
       },
       {
@@ -6863,7 +7794,7 @@
       },
       {
         "key": "context",
-        "label": "Context",
+        "label": "Context Diagrams",
         "source": {
           "type": "markdown",
           "path": "org-hierarchy/context-diagram.md"
@@ -6886,8 +7817,17 @@
         }
       },
       {
+        "key": "sdd",
+        "label": "SDD",
+        "source": {
+          "type": "markdown",
+          "path": "org-hierarchy/sdd.md"
+        }
+      },
+      {
         "key": "ops",
         "label": "Operations Manual",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "org-hierarchy/operations-manual.md"
@@ -6896,9 +7836,18 @@
       {
         "key": "asbuilt",
         "label": "As-Built",
+        "hidden": true,
         "source": {
           "type": "markdown",
           "path": "org-hierarchy/as-built-requirements.md"
+        }
+      },
+      {
+        "key": "usecases",
+        "label": "User Manual",
+        "source": {
+          "type": "markdown",
+          "path": "org-hierarchy/use-cases.md"
         }
       }
     ]

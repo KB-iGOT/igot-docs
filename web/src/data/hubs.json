@@ -179,7 +179,7 @@
       {
         "label": "Registration",
         "target": {
-          "hub": "registration"
+          "feature": "registration"
         }
       },
       {
@@ -234,31 +234,6 @@
         "label": "Organisation Hierarchy",
         "target": {
           "feature": "orghierarchy"
-        }
-      }
-    ]
-  },
-  {
-    "id": "registration",
-    "name": "Registration",
-    "parent": "features",
-    "items": [
-      {
-        "label": "User Registration",
-        "target": {
-          "feature": "useronboarding"
-        }
-      },
-      {
-        "label": "SPV & Admin Registration",
-        "target": {
-          "feature": "spvregistration"
-        }
-      },
-      {
-        "label": "Bulk Registration",
-        "target": {
-          "feature": "bulkregistration"
         }
       }
     ]
