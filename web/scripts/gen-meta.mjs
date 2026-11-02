@@ -1,6 +1,7 @@
 /* Build-time metadata the app cannot compute in the browser:
    - dates: last git commit date per docs folder (shown as "Last Updated")
-   - diagrams: number of Mermaid diagrams and design-diagram images in the docs
+   - diagrams: number of Mermaid diagrams and design-diagram images in the docs the site publishes
+     (visible feature tabs and the platform pages; unlinked files in docs/ are not counted)
    Writes src/data/generated/meta.json (git-ignored; regenerated before dev/build). */
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
@@ -32,8 +33,13 @@ for (const dir of new Set(mdFiles.map((f) => dirname(f)))) {
   }
 }
 
+/* the Markdown the site shows: visible tabs of features.json, plus the platform-level pages */
+const features = JSON.parse(readFileSync(join(here, '..', 'src', 'data', 'features.json'), 'utf8'));
+const published = new Set(['platform/system-architecture.md', 'platform/monitoring.md']);
+for (const f of features) for (const t of f.tabs) if (!t.hidden && t.source.type === 'markdown') published.add(t.source.path);
+
 let diagrams = 0;
-for (const f of mdFiles) {
+for (const f of mdFiles.filter((p) => published.has(relative(docs, p).split('\\').join('/')))) {
   const text = readFileSync(f, 'utf8');
   diagrams += (text.match(/^```mermaid/gm) || []).length;
   if (/(context-diagram|hld|lld)\.md$/.test(f)) diagrams += (text.match(/!\[[^\]]*\]\(|<img\b/g) || []).length;

@@ -1,6 +1,7 @@
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { readFileSync } from 'node:fs';
+import { execFile } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 
@@ -24,10 +25,31 @@ function architecturePage(): Plugin {
   };
 }
 
+/* In dev, keep up with docs/ while the server runs: watch it (it sits outside web/, so Vite would not),
+   so new Markdown files reach import.meta.glob, and regenerate the build-time metadata (last-updated
+   dates, diagram count) when a doc or the feature list changes. */
+function liveDocs(): Plugin {
+  const docs = resolve(root, 'docs');
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  return {
+    name: 'live-docs',
+    apply: 'serve',
+    configureServer(server) {
+      server.watcher.add(docs);
+      const regenerate = (file: string) => {
+        if (!file.startsWith(docs) && !file.endsWith('features.json')) return;
+        clearTimeout(timer);
+        timer = setTimeout(() => execFile(process.execPath, [resolve(root, 'web/scripts/gen-meta.mjs')], { cwd: resolve(root, 'web') }), 300);
+      };
+      for (const event of ['add', 'unlink', 'change'] as const) server.watcher.on(event, regenerate);
+    },
+  };
+}
+
 export default defineConfig({
   /* relative base: the build works from any sub-path (e.g. GitHub Pages /igot-docs/) */
   base: './',
-  plugins: [react(), architecturePage()],
+  plugins: [react(), architecturePage(), liveDocs()],
   resolve: { alias: { '@docs': resolve(root, 'docs') } },
   /* the Markdown and its images live in ../docs, the single source of truth */
   server: { fs: { allow: [root] } },

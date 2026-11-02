@@ -30,8 +30,8 @@ export function hubTrail(hubId: string): Hub[] {
 
 /** tabs shown to the reader, Overview first */
 export const visibleTabs = (f: Feature) => f.tabs.filter((t) => !t.hidden);
-/** documentation tabs: the visible ones except Overview */
-export const docTabs = (f: Feature) => visibleTabs(f).filter((t) => t.key !== 'overview');
+/** documentation tabs: the visible ones except Overview and Key Links (a list of outside links, not a document) */
+export const docTabs = (f: Feature) => visibleTabs(f).filter((t) => t.key !== 'overview' && t.source.type !== 'links');
 
 /** folder of a feature's Markdown, used to look up its last-updated date */
 export function lastUpdated(f: Feature): string | null {
