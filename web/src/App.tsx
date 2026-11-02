@@ -8,6 +8,7 @@ import { PlatformOverviewPage } from './pages/PlatformOverviewPage';
 import { EtlAnalyticsPage } from './pages/EtlAnalyticsPage';
 import { DocPage } from './pages/DocPage';
 import { ApiDocsPage } from './pages/ApiDocsPage';
+import { docPages } from './lib/docPages';
 
 /* Hash routing: the build is static files (GitHub Pages / any web server) with no server-side rewrites. */
 const router = createHashRouter([
@@ -17,9 +18,8 @@ const router = createHashRouter([
       { index: true, element: <HomePage /> },
       { path: 'platform-overview', element: <PlatformOverviewPage /> },
       { path: 'etl-analytics/:view?/:id?', element: <EtlAnalyticsPage /> },
-      { path: 'system-architecture', element: <DocPage title="System Architecture" path="platform/system-architecture.md" /> },
       { path: 'api-docs', element: <ApiDocsPage /> },
-      { path: 'monitoring', element: <DocPage title="Monitoring" path="platform/monitoring.md" /> },
+      ...docPages.map((d) => ({ path: d.route, element: <DocPage title={d.title} path={d.path} parents={d.parents} /> })),
       { path: 'hubs', element: <HubListPage /> },
       { path: 'hubs/:hubId', element: <HubListPage /> },
       { path: 'features/:featureId', element: <FeaturePage /> },

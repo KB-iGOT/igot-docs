@@ -44,9 +44,16 @@ export function MarkdownContent({ path }: { path: string }) {
   }, [path]);
 
   const segments = useMemo(() => (md === null ? [] : toSegments(md, path)), [md, path]);
-  /* clicking a documentation image opens it full screen */
+  /* clicking a documentation image opens it full screen; an in-page link scrolls to its heading
+     (the hash holds the route, so the browser can't follow "#heading" itself) */
   const [zoom, setZoom] = useState<{ src: string; alt: string } | null>(null);
   const onClick = (e: React.MouseEvent) => {
+    const anchor = (e.target as HTMLElement).closest('a[data-anchor]');
+    if (anchor) {
+      e.preventDefault();
+      document.getElementById(anchor.getAttribute('data-anchor')!)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     const img = (e.target as HTMLElement).closest('.md-seg img') as HTMLImageElement | null;
     if (img) setZoom({ src: img.currentSrc || img.src, alt: img.alt });
   };

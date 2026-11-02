@@ -182,6 +182,12 @@ export function EtlAnalyticsPage() {
           <span className={styles.legendRow}><span className={styles.legendDot} style={{ background: 'var(--stage2)' }} />Stage 2 — Reports &amp; sync</span>
           <span className={styles.legendRow}><span className={styles.legendDot} style={{ background: 'var(--shared)' }} />Shared library</span>
         </div>
+        <div className={`${styles.legend} ${styles.refDocs}`}>
+          <span className={styles.eyebrow}>Written reference</span>
+          <Link to="/etl-analytics/docs/architecture">ARCHITECTURE.md</Link>
+          <Link to="/etl-analytics/docs/job-details">JOB_DETAILS.md</Link>
+          <Link to="/etl-analytics/docs/data-dictionary">DATA_DICTIONARY.md</Link>
+        </div>
       </div>
 
       {page === 'overview' && <OverviewView goTo={goTo} gotoFilter={gotoFilter} />}
@@ -208,8 +214,9 @@ export function EtlAnalyticsPage() {
         Generated from a direct read of <code>cbrelease-4.8.41</code> (every in-repo job, every <code>dfutil</code> helper,
         every deployment script). The Looker dashboard jobs and ClickHouse load are documented from team notes. The performance-profiling/phase-clock instrumentation seen elsewhere lives only on
         the separate, never-merged <code>cbrelease-4.8.39.1-profiling</code> branch — it isn't part of this branch, so
-        there was nothing to exclude here. See <code>docs/ARCHITECTURE.md</code>, <code>docs/JOB_DETAILS.md</code> and{' '}
-        <code>docs/DATA_DICTIONARY.md</code> for the full written reference.
+        there was nothing to exclude here. See <Link to="/etl-analytics/docs/architecture"><code>docs/ARCHITECTURE.md</code></Link>,{' '}
+        <Link to="/etl-analytics/docs/job-details"><code>docs/JOB_DETAILS.md</code></Link> and{' '}
+        <Link to="/etl-analytics/docs/data-dictionary"><code>docs/DATA_DICTIONARY.md</code></Link> for the full written reference.
       </footer>
     </div>
   );

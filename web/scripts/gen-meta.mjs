@@ -35,7 +35,8 @@ for (const dir of new Set(mdFiles.map((f) => dirname(f)))) {
 
 /* the Markdown the site shows: visible tabs of features.json, plus the platform-level pages */
 const features = JSON.parse(readFileSync(join(here, '..', 'src', 'data', 'features.json'), 'utf8'));
-const published = new Set(['platform/system-architecture.md', 'platform/monitoring.md']);
+const published = new Set(['platform/system-architecture.md', 'platform/monitoring.md',
+  'data-pipeline/etl-analytics/ARCHITECTURE.md', 'data-pipeline/etl-analytics/JOB_DETAILS.md', 'data-pipeline/etl-analytics/DATA_DICTIONARY.md']);
 for (const f of features) for (const t of f.tabs) if (!t.hidden && t.source.type === 'markdown') published.add(t.source.path);
 
 let diagrams = 0;

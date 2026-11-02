@@ -35,6 +35,8 @@
 .legend .eyebrow { color: var(--text-faint); font-size: 10.5px; }
 .legendRow { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text-muted); }
 .legendDot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.refDocs { margin-top: 8px; }
+.refDocs a { font-family: Menlo, Consolas, monospace; font-size: 12px; font-weight: 700; color: var(--brand); }
 
 /* ---------- search (three sizes) ---------- */
 .searchbar { position: relative; }
